@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:buttons="clr-namespace:Remembrance.Resources.Buttons"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <ControlTemplate x:Key="DialogTemplate" TargetType="Window">
+        <Border Padding="3" BorderBrush="Black" Background="White" BorderThickness="2" CornerRadius="6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <DockPanel Margin="10" Grid.Row="0">
+                    <Image Source="pack://application:,,/Remembrance.Resources;component/Images/Icon.png" Width="28" />
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <buttons:MinimizeButton />
+                        <buttons:MaximizeButton Visibility="Collapsed" x:Name="Maximize" />
+                        <buttons:RestoreButton Visibility="Collapsed" x:Name="Restore" />
+                        <buttons:CloseButton />
+                    </StackPanel>
+                </DockPanel>
+                <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="WindowState" Value="Maximized">
+                <Setter TargetName="Maximize" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="Restore" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="WindowState" Value="Normal" />
+                    <Condition Property="ResizeMode" Value="CanResize" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter TargetName="Maximize" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="Restore" Property="Visibility" Value="Collapsed" />
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>

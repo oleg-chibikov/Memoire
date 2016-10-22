@@ -1,0 +1,366 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Input;
+using Common.Logging;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
+using JetBrains.Annotations;
+using Remembrance.Card.ViewModel.Contracts;
+using Remembrance.Card.ViewModel.Contracts.Data;
+using Remembrance.DAL.Contracts;
+using Remembrance.DAL.Contracts.Model;
+using Remembrance.Resources;
+using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.TypeAdapter.Contracts;
+using Scar.Common;
+using Scar.Common.WPF;
+using Scar.Common.WPF.Localization;
+
+//TODO: regions
+
+namespace Remembrance.Card.ViewModel
+{
+    [UsedImplicitly]
+    public sealed class AssessmentCardViewModel : ViewModelBase, IRequestCloseViewModel, IAssessmentCardViewModel
+    {
+        [NotNull]
+        private static readonly Random Random = new Random();
+
+        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(2);
+
+        [NotNull]
+        private readonly HashSet<string> acceptedAnswers;
+
+        private bool? accepted;
+
+        private string correctAnswer;
+
+        public AssessmentCardViewModel([NotNull] TranslationInfo translationInfo,
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] IMessenger messenger,
+            [NotNull] ILog logger)
+        {
+            if (translationInfo == null)
+                throw new ArgumentNullException(nameof(translationInfo));
+            if (translationEntryRepository == null)
+                throw new ArgumentNullException(nameof(translationEntryRepository));
+            if (settingsRepository == null)
+                throw new ArgumentNullException(nameof(settingsRepository));
+            if (viewModelAdapter == null)
+                throw new ArgumentNullException(nameof(viewModelAdapter));
+            if (messenger == null)
+                throw new ArgumentNullException(nameof(messenger));
+            if (logger == null)
+                throw new ArgumentNullException(nameof(logger));
+
+            this.translationInfo = translationInfo;
+            this.translationEntryRepository = translationEntryRepository;
+            this.messenger = messenger;
+            this.logger = logger;
+
+            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
+
+            ProvideAnswerCommand = new RelayCommand<string>(ProvideAnswer);
+
+            LanguagePair = $"{this.translationInfo.Key.TargetLanguage} - {this.translationInfo.Key.SourceLanguage}";
+
+            var translationDetailsViewModel = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
+            var translationResult = translationDetailsViewModel.TranslationResult;
+
+            logger.Debug("Initializing card...");
+            var settings = settingsRepository.Get();
+            var hasPriorityItems = FilterPriorityPartOfSpeechTranslations(translationResult);
+            var partOfSpeechGroup = SelectSinglePartOfSpeechGroup(settings, translationResult);
+            var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup);
+            var needRandom = hasPriorityItems || settings.RandomTranslation;
+            var assessmentInfo = IsReverse(settings)
+                ? GetReverseAssessmentInfo(needRandom, acceptedWordGroups)
+                : GetStraightAssessmentInfo(acceptedWordGroups);
+            acceptedAnswers = assessmentInfo.AcceptedAnswers;
+            assessmentInfo.Word.CanLearnWord = false;
+            Word = assessmentInfo.Word;
+            CorrectAnswer = assessmentInfo.CorrectAnswer;
+            logger.Debug("Card is initialized");
+        }
+
+        public WordViewModel Word { get; }
+
+        public string LanguagePair { get; }
+
+        public bool? Accepted
+        {
+            get { return accepted; }
+            private set { Set(() => Accepted, ref accepted, value); }
+        }
+
+        public string CorrectAnswer
+        {
+            get { return correctAnswer; }
+            private set { Set(() => CorrectAnswer, ref correctAnswer, value); }
+        }
+
+        public ICommand ProvideAnswerCommand { get; }
+
+        public event EventHandler RequestClose;
+
+        /// <summary>
+        /// Settings the first variant in the group as the Word and all possible variants as the Acceptable answers
+        /// </summary>
+        [NotNull]
+        private AssessmentInfo GetStraightAssessmentInfo([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        {
+            logger.Debug("Getting straight assessment info...");
+            var accept = new HashSet<string>(acceptedWordGroups.SelectMany(x => x.Value.Select(v => v.Text)));
+            var word = acceptedWordGroups.First().Key;
+            var correct = accept.First();
+            return new AssessmentInfo(accept, word, correct);
+        }
+
+        /// <summary>
+        /// Decide whether the Word would be chosen randomly or not
+        /// </summary>
+        [NotNull]
+        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        {
+            logger.Debug("Getting reverse assessment info...");
+            return needRandom
+                ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups)
+                : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
+        }
+
+        /// <summary>
+        /// The first variant for part of speech will be selected and the first translation inside it
+        /// </summary>
+        [NotNull]
+        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        {
+            logger.Debug("Getting info from first translation...");
+            var acceptedWordGroup = acceptedWordGroups.First();
+            var translation = acceptedWordGroup.Value.First();
+            var correct = acceptedWordGroup.Key.Text;
+            return new AssessmentInfo(new HashSet<string> { correct }, translation, correct);
+        }
+
+        /// <summary>
+        /// Random variant for part of speech will be selected and random translation inside it
+        /// </summary>
+        [NotNull]
+        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        {
+            logger.Debug("Getting info from random translation...");
+            var randomAcceptedWordGroupIndex = Random.Next(acceptedWordGroups.Length);
+            var randomAcceptedWordGroup = acceptedWordGroups.ElementAt(randomAcceptedWordGroupIndex);
+            var randomTranslationIndex = Random.Next(randomAcceptedWordGroup.Value.Length);
+            var randomTranslation = randomAcceptedWordGroup.Value[randomTranslationIndex];
+            var correct = randomAcceptedWordGroup.Key.Text;
+            return new AssessmentInfo(new HashSet<string> { correct }, randomTranslation, correct);
+        }
+
+        /// <summary>
+        /// Decide whether reverse translation is needed
+        /// </summary>
+        private static bool IsReverse([NotNull] Settings settings)
+        {
+            var isReverse = false;
+            if (settings.ReverseTranslation)
+                isReverse = Random.Next(2) == 1;
+            return isReverse;
+        }
+
+        /// <summary>
+        /// Get all possible original word variants of this part of speech
+        /// </summary>
+        [NotNull]
+        private KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] GetAcceptedWordGroups(
+            [NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> partOfSpeechGroup)
+        {
+            logger.Debug($"Getting accepted words groups for {partOfSpeechGroup.Key}...");
+            var acceptedWordGroups = partOfSpeechGroup.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(traslationVariant => GetPossibleTranslations(traslationVariant, partOfSpeechTranslation))).ToArray();
+            if (!acceptedWordGroups.Any())
+                throw new InvalidOperationException(Errors.NoTranslations);
+            logger.Debug($"There are {acceptedWordGroups.Length} accepted words groups");
+            FilterAcceptedWordsGroupsByPriority(ref acceptedWordGroups);
+            return acceptedWordGroups;
+        }
+
+        /// <summary>
+        /// Get all possible translations (including synonyms)
+        /// </summary>
+        private KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]> GetPossibleTranslations(
+            [NotNull] TranslationVariantViewModel traslationVariant, [NotNull] PartOfSpeechTranslationViewModel partOfSpeechTranslation)
+        {
+            logger.Debug($"Getting accepted words groups for {traslationVariant}...");
+            var translations = traslationVariant.Synonyms != null
+                ? new[] { traslationVariant }.Concat(traslationVariant.Synonyms.Select(synonym => synonym)).ToArray()
+                : new[] { traslationVariant };
+            return new KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>(partOfSpeechTranslation, translations);
+        }
+
+        /// <summary>
+        /// Choose the single part of speech group
+        /// </summary>
+        [NotNull]
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> SelectSinglePartOfSpeechGroup([NotNull] Settings settings, [NotNull] TranslationResultViewModel translationResult)
+        {
+            logger.Debug("Selecting single part of speech group...");
+            var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
+            var partOfSpeechGroup = settings.RandomTranslation
+                ? GetRandomPartOfSpeechGroup(partOfSpeechGroups)
+                : partOfSpeechGroups.First();
+            if (partOfSpeechGroup == null)
+                throw new InvalidOperationException(Errors.NoTranslations);
+            return partOfSpeechGroup;
+        }
+
+        /// <summary>
+        /// Get the most suitable part of speech group according to POS priorities
+        /// </summary>
+        [NotNull]
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> GetRandomPartOfSpeechGroup([NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel>[] partOfSpeechGroups)
+        {
+            logger.Debug("Getting random part of speech group...");
+            var randomPartOfSpeechGroupIndex = Random.Next(partOfSpeechGroups.Length);
+            var result = partOfSpeechGroups.ElementAt(randomPartOfSpeechGroupIndex);
+            return result;
+        }
+
+        /// <summary>
+        /// If there are any priority translations - leave only their part of speech groups, otherwise leave all.
+        /// </summary>
+        /// <returns>Try - has priority items</returns>
+        private bool FilterPriorityPartOfSpeechTranslations([NotNull] TranslationResultViewModel translationResult)
+        {
+            logger.Debug("Filtering translations by priority...");
+            var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
+            priorityPartOfSpeechTranslations.RemoveAll(
+                partOfSpeechTranslation => !partOfSpeechTranslation.TranslationVariants.Any(
+                    translationVariant => translationVariant.IsPriority
+                                          || translationVariant.Synonyms != null && translationVariant.Synonyms.Any(synonym => synonym.IsPriority)));
+            var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
+            if (hasPriorityItems)
+            {
+                logger.Debug($"There are {priorityPartOfSpeechTranslations.Count} priority translations. Filtering was applied");
+                translationResult.PartOfSpeechTranslations = priorityPartOfSpeechTranslations.ToArray();
+            }
+            else
+            {
+                logger.Debug("There are no priority translations. Filtering was not applied");
+            }
+            return hasPriorityItems;
+        }
+
+        /// <summary>
+        /// If there are any priority translations - leave only them, otherwise leave all.
+        /// </summary>
+        private void FilterAcceptedWordsGroupsByPriority([NotNull] ref KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        {
+            logger.Debug("Filtering accepted words groups by priority...");
+            var tmp = new List<KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>>();
+
+            foreach (var acceptedWordGroup in acceptedWordGroups)
+            {
+                var lst = acceptedWordGroup.Value.ToList();
+                lst.RemoveAll(x => !x.IsPriority);
+                if (lst.Any())
+                    tmp.Add(new KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>(acceptedWordGroup.Key, lst.ToArray()));
+            }
+            if (tmp.Any())
+            {
+                logger.Debug($"There are {tmp.Count} groups that contain priority translations. Filtering was applied");
+                acceptedWordGroups = tmp.ToArray();
+            }
+            logger.Debug("There are no groups that contain priority translations. Filtering was not applied");
+        }
+
+        private void OnUiLanguageChanged([NotNull] string uiLanguage)
+        {
+            logger.Debug($"Changing UI language to {uiLanguage}...");
+            if (uiLanguage == null)
+                throw new ArgumentNullException(nameof(uiLanguage));
+            CultureUtilities.ChangeCulture(uiLanguage);
+            // ReSharper disable once ExplicitCallerInfoArgument
+            Word.RaisePropertyChanged(nameof(Word.PartOfSpeech));
+        }
+
+        private void ProvideAnswer([CanBeNull] string answer)
+        {
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            logger.Info($"Providing answer {answer}...");
+            string mostSuitable = null;
+            var currentMinDistance = int.MaxValue;
+            if (!string.IsNullOrWhiteSpace(answer))
+                foreach (var acceptedAnswer in acceptedAnswers)
+                {
+                    //20% of the word could be errors
+                    var maxDistance = acceptedAnswer.Length / 5;
+                    var distance = answer.LevenshteinDistance(acceptedAnswer);
+                    if (distance < 0 || distance > maxDistance)
+                        continue;
+                    if (distance < currentMinDistance)
+                    {
+                        currentMinDistance = distance;
+                        mostSuitable = acceptedAnswer;
+                    }
+                    Accepted = true;
+                }
+            if (Accepted == true)
+            {
+                logger.Info($"Answer is correct. Most suitable accepted word was {mostSuitable} with distance {currentMinDistance}. Increasing repeat type for {translationInfo}...");
+                translationInfo.TranslationEntry.IncreaseRepeatType();
+                //The inputed answer can differ from the first one
+                // ReSharper disable once AssignNullToNotNullAttribute - mostSuitable should be always set
+                CorrectAnswer = mostSuitable;
+            }
+            else
+            {
+                logger.Info($"Answer is not correct. Decreasing repeat type for {translationInfo}...");
+                Accepted = false;
+                translationInfo.TranslationEntry.DecreaseRepeatType();
+            }
+            translationEntryRepository.Save(translationInfo.TranslationEntry);
+            messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            logger.Debug($"Closing window in {CloseTimeout}...");
+            ActionExtensions.DoAfter(() =>
+            {
+                RequestClose?.Invoke(null, null);
+                logger.Debug("Window is closed");
+            }, CloseTimeout);
+        }
+
+        private class AssessmentInfo
+        {
+            public AssessmentInfo(HashSet<string> acceptedAnswers, WordViewModel word, string correctAnswer)
+            {
+                AcceptedAnswers = acceptedAnswers;
+                Word = word;
+                CorrectAnswer = correctAnswer;
+            }
+
+            public HashSet<string> AcceptedAnswers { get; }
+            public WordViewModel Word { get; }
+
+            public string CorrectAnswer { get; }
+        }
+
+        #region Dependencies
+
+        [NotNull]
+        private readonly ILog logger;
+
+        [NotNull]
+        private readonly IMessenger messenger;
+
+        [NotNull]
+        private readonly ITranslationEntryRepository translationEntryRepository;
+
+        [NotNull]
+        private readonly TranslationInfo translationInfo;
+
+        #endregion
+    }
+}

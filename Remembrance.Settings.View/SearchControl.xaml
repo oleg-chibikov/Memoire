@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Remembrance.Settings.View.SearchControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:buttons="clr-namespace:Remembrance.Resources.Buttons;assembly=Remembrance.Resources"
+             xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal">
+        <TextBox Width="200"
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Name="SearchTextBox">
+            <TextBox.InputBindings>
+                <KeyBinding Command="{Binding SearchCommand}" Key="Enter"
+                            CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <buttons:SearchButton Margin="{StaticResource CommonLeftMargin}" Command="{Binding SearchCommand}"
+                              CommandParameter="{Binding Text, ElementName=SearchTextBox}" />
+    </StackPanel>
+</UserControl>

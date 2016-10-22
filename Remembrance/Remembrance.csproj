@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6F4F5769-673C-436C-9F84-0CAFAF21AA30}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remembrance</RootNamespace>
+    <AssemblyName>Remembrance</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Remembrance.Installer\bin\Debug\Build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Remembrance.Installer\bin\Release\Build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>IconAlt.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.NLog41, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Common.Logging.NLog41.3.3.1\lib\net40\Common.Logging.NLog41.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\NLog.4.4.1\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WPFLocalizeExtension, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\ThirdParty\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>
+      </SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <Resource Include="FodyWeavers.xml" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="IconAlt.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Scar.Common.IO\Scar.Common.IO.csproj">
+      <Project>{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}</Project>
+      <Name>Scar.Common.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Scar.Common.Logging\Scar.Common.Logging.csproj">
+      <Project>{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}</Project>
+      <Name>Scar.Common.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj">
+      <Project>{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}</Project>
+      <Name>Scar.Common.WPF.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Scar.Common.WPF.Xceed\Scar.Common.WPF.Xceed.csproj">
+      <Project>{cdb110ba-ce3b-49a7-9a22-705a75db11d6}</Project>
+      <Name>Scar.Common.WPF.Xceed</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Scar.Common.WPF\Scar.Common.WPF.csproj">
+      <Project>{b6eb82ba-2a0e-4855-9a17-f5fab9616355}</Project>
+      <Name>Scar.Common.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">
+      <Project>{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}</Project>
+      <Name>Remembrance.Card.Management.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.Management\Remembrance.Card.Management.csproj">
+      <Project>{A10C7E6D-D616-4B99-8BB2-A43035346099}</Project>
+      <Name>Remembrance.Card.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.View.Contracts\Remembrance.Card.View.Contracts.csproj">
+      <Project>{a4dad214-a08f-4a0e-8e26-f7fbcda801fe}</Project>
+      <Name>Remembrance.Card.View.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.ViewModel.Contracts\Remembrance.Card.ViewModel.Contracts.csproj">
+      <Project>{9270fb5c-129f-447c-a4ea-a7e24f2b9d4c}</Project>
+      <Name>Remembrance.Card.ViewModel.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.ViewModel\Remembrance.Card.ViewModel.csproj">
+      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
+      <Name>Remembrance.Card.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Card.View\Remembrance.Card.View.csproj">
+      <Project>{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}</Project>
+      <Name>Remembrance.Card.View</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
+      <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
+      <Name>Remembrance.DAL.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.DAL\Remembrance.DAL.csproj">
+      <Project>{AEA2E53B-FA60-40EB-BEC2-E48990D09BA0}</Project>
+      <Name>Remembrance.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
+      <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
+      <Name>Remembrance.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Settings.View.Contracts\Remembrance.Settings.View.Contracts.csproj">
+      <Project>{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}</Project>
+      <Name>Remembrance.Settings.View.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Settings.ViewModel.Contracts\Remembrance.Settings.ViewModel.Contracts.csproj">
+      <Project>{7e9d21f9-b748-479e-83a2-e8665c1a37e6}</Project>
+      <Name>Remembrance.Settings.ViewModel.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Settings.ViewModel\Remembrance.Settings.ViewModel.csproj">
+      <Project>{DF08286C-C5AD-4448-B300-FD9604CB82AA}</Project>
+      <Name>Remembrance.Settings.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Settings.View\Remembrance.Settings.View.csproj">
+      <Project>{932314DA-0883-4B24-86F9-5888B3214BF5}</Project>
+      <Name>Remembrance.Settings.View</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
+      <Project>{49caa383-f68f-4105-abae-869d71f0d783}</Project>
+      <Name>Remembrance.Translate.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Translate.Yandex\Remembrance.Translate.Yandex.csproj">
+      <Project>{1FA9CAC8-4037-4781-AD36-3A515470AA8C}</Project>
+      <Name>Remembrance.Translate.Yandex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.TypeAdapter.Contracts\Remembrance.TypeAdapter.Contracts.csproj">
+      <Project>{bf7d2fdc-779f-42c5-b5ab-b5617eab3dac}</Project>
+      <Name>Remembrance.TypeAdapter.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.TypeAdapter\Remembrance.TypeAdapter.csproj">
+      <Project>{57152DA4-C73F-4697-8CB7-62CE3CE24797}</Project>
+      <Name>Remembrance.TypeAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.WebApi\Remembrance.WebApi.csproj">
+      <Project>{14958824-6559-4EDE-9954-42E5A22B2144}</Project>
+      <Name>Remembrance.WebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <UsingTask TaskName="CosturaCleanup" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" TaskFactory="CodeTaskFactory">
+    <ParameterGroup>
+      <Config Output="false" Required="true" ParameterType="Microsoft.Build.Framework.ITaskItem" />
+      <Files Output="false" Required="true" ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
+    </ParameterGroup>
+    <Task Evaluate="true">
+      <Reference xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Include="System.Xml" />
+      <Reference xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Include="System.Xml.Linq" />
+      <Using xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Namespace="System" />
+      <Using xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Namespace="System.IO" />
+      <Using xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Namespace="System.Xml.Linq" />
+      <Code xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Type="Fragment" Language="cs"><![CDATA[
+var config = XElement.Load(Config.ItemSpec).Elements("Costura").FirstOrDefault();
+
+if (config == null) return true;
+
+var excludedAssemblies = new List<string>();
+var attribute = config.Attribute("ExcludeAssemblies");
+if (attribute != null)
+    foreach (var item in attribute.Value.Split('|').Select(x => x.Trim()).Where(x => x != string.Empty))
+        excludedAssemblies.Add(item);
+var element = config.Element("ExcludeAssemblies");
+if (element != null)
+    foreach (var item in element.Value.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Where(x => x != string.Empty))
+        excludedAssemblies.Add(item);
+
+var filesToCleanup = Files.Select(f => f.ItemSpec).Where(f => !excludedAssemblies.Contains(Path.GetFileNameWithoutExtension(f), StringComparer.InvariantCultureIgnoreCase));
+
+foreach (var item in filesToCleanup)
+  File.Delete(item);
+]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="CleanReferenceCopyLocalPaths" AfterTargets="AfterBuild;NonWinFodyTarget">
+    <CosturaCleanup Config="FodyWeavers.xml" Files="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
+  </Target>
+  <Import Project="..\..\..\..\ThirdParty\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\..\..\..\ThirdParty\Fody.1.29.4\build\dotnet\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\ThirdParty\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\ThirdParty\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
