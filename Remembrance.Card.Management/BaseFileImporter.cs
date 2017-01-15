@@ -35,20 +35,20 @@ namespace Remembrance.Card.Management
         protected readonly ITranslationEntryRepository TranslationEntryRepository;
 
         [NotNull]
-        protected readonly IWordsChecker WordsChecker;
+        protected readonly IWordsAdder WordsAdder;
 
         public BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsChecker wordsChecker, [NotNull] IMessenger messenger,
+            [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository)
         {
             if (translationEntryRepository == null)
                 throw new ArgumentNullException(nameof(translationEntryRepository));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            if (wordsChecker == null)
-                throw new ArgumentNullException(nameof(wordsChecker));
+            if (wordsAdder == null)
+                throw new ArgumentNullException(nameof(wordsAdder));
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));
             if (translationDetailsRepository == null)
@@ -56,7 +56,7 @@ namespace Remembrance.Card.Management
 
             TranslationEntryRepository = translationEntryRepository;
             Logger = logger;
-            WordsChecker = wordsChecker;
+            WordsAdder = wordsAdder;
             Messenger = messenger;
             TranslationDetailsRepository = translationDetailsRepository;
         }
@@ -98,7 +98,7 @@ namespace Remembrance.Card.Management
                     var key = GetKey(exportEntry);
                     if (existingKeys.Contains(key))
                         continue;
-                    translationInfo = WordsChecker.CheckWord(key.Text, key.SourceLanguage, key.TargetLanguage);
+                    translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
                 }
                 catch (LocalizableException ex)
                 {

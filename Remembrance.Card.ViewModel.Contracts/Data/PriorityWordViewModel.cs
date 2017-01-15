@@ -40,9 +40,9 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
-            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger)
-            : base(textToSpeechPlayer, wordsAdder)
+            : base(textToSpeechPlayer, wordsProcessor)
         {
             if (translationEntryRepository == null)
                 throw new ArgumentNullException(nameof(translationEntryRepository));

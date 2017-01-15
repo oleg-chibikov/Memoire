@@ -9,19 +9,19 @@ namespace Remembrance.WebApi.Controllers
     public sealed class WordsController : ApiController
     {
         [NotNull]
-        private readonly IWordsAdder wordsAdder;
+        private readonly IWordsProcessor wordsProcessor;
 
-        public WordsController([NotNull] IWordsAdder wordsAdder)
+        public WordsController([NotNull] IWordsProcessor wordsProcessor)
         {
-            if (wordsAdder == null)
-                throw new ArgumentNullException(nameof(wordsAdder));
-            this.wordsAdder = wordsAdder;
+            if (wordsProcessor == null)
+                throw new ArgumentNullException(nameof(wordsProcessor));
+            this.wordsProcessor = wordsProcessor;
         }
 
-        [HttpPut]
+        [HttpPut, UsedImplicitly]
         public void Put([FromBody] string word)
         {
-            wordsAdder.AddWord(word);
+            wordsProcessor.ProcessNewWord(word);
         }
     }
 }

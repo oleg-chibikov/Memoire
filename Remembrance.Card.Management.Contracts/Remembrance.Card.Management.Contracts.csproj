@@ -46,8 +46,8 @@
     <Compile Include="IFileImporter.cs" />
     <Compile Include="ITranslationResultCardManager.cs" />
     <Compile Include="IAssessmentCardManager.cs" />
-    <Compile Include="IWordsChecker.cs" />
     <Compile Include="IWordsAdder.cs" />
+    <Compile Include="IWordsProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

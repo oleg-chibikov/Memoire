@@ -6,10 +6,11 @@ using Remembrance.Card.Management.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Translate.Contracts.Interfaces;
 using Scar.Common;
+using Scar.Common.Notification;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
-    public sealed class TranslationEntryViewModel : WordViewModel
+    public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
     {
         private string language;
 
@@ -28,7 +29,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         private ObservableCollection<PriorityWordViewModel> translations;
 
         [UsedImplicitly]
-        public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsAdder wordsAdder) : base(textToSpeechPlayer, wordsAdder)
+        public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor) : base(textToSpeechPlayer, wordsProcessor)
         {
         }
 
@@ -46,15 +47,10 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                     return;
 
                 //For the new item this event should not be fired
-                if (text != null)
+                if (text != null && !NotificationIsSupressed)
                 {
                     var handler = Volatile.Read(ref TextChanged);
-                    var handled = handler?.Invoke(this, new TextChangedEventArgs(newValue, text));
-                    if (!handled.HasValue || handled.Value)
-                    {
-                        Set(() => Text, ref text, newValue);
-                        PlayTts();
-                    }
+                    handler?.Invoke(this, new TextChangedEventArgs(newValue, text));
                 }
                 else
                 {
@@ -117,6 +113,13 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public override string ToString()
         {
             return $"{Text} [{Language}->{TargetLanguage}]";
+        }
+
+        public bool NotificationIsSupressed { get; set; }
+
+        public NotificationSupresser SupressNotification()
+        {
+            return new NotificationSupresser(this);
         }
     }
 }

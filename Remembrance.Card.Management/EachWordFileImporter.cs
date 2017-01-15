@@ -20,7 +20,7 @@ namespace Remembrance.Card.Management
         [NotNull]
         private readonly ILanguageDetector languageDetector;
 
-        public EachWordFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsChecker wordsChecker, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILanguageDetector languageDetector) : base(translationEntryRepository, logger, wordsChecker, messenger, translationDetailsRepository)
+        public EachWordFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILanguageDetector languageDetector) : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
         {
             if (languageDetector == null)
                 throw new ArgumentNullException(nameof(languageDetector));
@@ -30,7 +30,7 @@ namespace Remembrance.Card.Management
         protected override TranslationEntryKey GetKey(EachWordExportEntry exportEntry)
         {
             var sourceLanguage = languageDetector.DetectLanguageAsync(exportEntry.Text).Result.Language ?? Constants.EnLanguage;
-            var targetLanguage = WordsChecker.GetDefaultTargetLanguage(sourceLanguage);
+            var targetLanguage = WordsAdder.GetDefaultTargetLanguage(sourceLanguage);
             return new TranslationEntryKey(exportEntry.Text, sourceLanguage, targetLanguage);
         }
 

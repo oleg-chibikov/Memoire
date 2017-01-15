@@ -16,16 +16,16 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         private readonly ITextToSpeechPlayer textToSpeechPlayer;
 
         [NotNull]
-        private readonly IWordsAdder wordsAdder;
+        private readonly IWordsProcessor wordsProcessor;
 
-        public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsAdder wordsAdder)
+        public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
         {
             if (textToSpeechPlayer == null)
                 throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (wordsAdder == null)
-                throw new ArgumentNullException(nameof(wordsAdder));
+            if (wordsProcessor == null)
+                throw new ArgumentNullException(nameof(wordsProcessor));
             this.textToSpeechPlayer = textToSpeechPlayer;
-            this.wordsAdder = wordsAdder;
+            this.wordsProcessor = wordsProcessor;
             PlayTtsCommand = new RelayCommand(PlayTts);
             LearnWordCommand = new RelayCommand(LearnWord, () => CanLearnWord);
         }
@@ -83,7 +83,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public void LearnWord()
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            wordsAdder.AddWord(Text, Language);
+            wordsProcessor.ProcessNewWord(Text, Language);
         }
 
         public override string ToString()

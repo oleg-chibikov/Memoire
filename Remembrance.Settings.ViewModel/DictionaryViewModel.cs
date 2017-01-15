@@ -26,7 +26,6 @@ using Remembrance.Settings.ViewModel.Contracts;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
-using Scar.Common.Exceptions;
 using Scar.Common.WPF;
 using Scar.Common.WPF.Localization;
 
@@ -44,7 +43,7 @@ namespace Remembrance.Settings.ViewModel
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILanguageDetector languageDetector,
-            [NotNull] IWordsChecker wordsChecker,
+            [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILifetimeScope lifetimeScope,
@@ -58,8 +57,8 @@ namespace Remembrance.Settings.ViewModel
                 throw new ArgumentNullException(nameof(settingsRepository));
             if (languageDetector == null)
                 throw new ArgumentNullException(nameof(languageDetector));
-            if (wordsChecker == null)
-                throw new ArgumentNullException(nameof(wordsChecker));
+            if (wordsProcessor == null)
+                throw new ArgumentNullException(nameof(wordsProcessor));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
             if (viewModelAdapter == null)
@@ -71,12 +70,11 @@ namespace Remembrance.Settings.ViewModel
 
             this.translationEntryRepository = translationEntryRepository;
             this.settingsRepository = settingsRepository;
-            this.wordsChecker = wordsChecker;
+            this.wordsProcessor = wordsProcessor;
             this.logger = logger;
             this.viewModelAdapter = viewModelAdapter;
             this.lifetimeScope = lifetimeScope;
             this.translationDetailsRepository = translationDetailsRepository;
-            this.messenger = messenger;
 
             SaveCommand = new RelayCommand<string>(Save);
             DeleteCommand = new RelayCommand<TranslationEntryViewModel>(Delete);
@@ -158,26 +156,6 @@ namespace Remembrance.Settings.ViewModel
             logger.Debug("Disposed");
         }
 
-        private void UpdateInList(TranslationInfo translationInfo, TranslationEntryViewModel existing)
-        {
-            logger.Debug($"Updating {existing} in the list...");
-            viewModelAdapter.Adapt(translationInfo.TranslationEntry, existing);
-            Application.Current.Dispatcher.InvokeAsync(() => View.MoveCurrentTo(existing));
-            logger.Debug($"{existing} has been updated in the list");
-        }
-
-        private void AddToList([NotNull] TranslationEntryViewModel translationEntryViewModel)
-        {
-            logger.Debug($"Adding {translationEntryViewModel} to the list...");
-            Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                TranslationList.Add(translationEntryViewModel);
-                View.MoveCurrentToLast();
-            });
-            translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
-            logger.Debug($"{translationEntryViewModel} has been added to the list...");
-        }
-
         #region Dependencies
 
         [NotNull]
@@ -185,9 +163,6 @@ namespace Remembrance.Settings.ViewModel
 
         [NotNull]
         private readonly ILog logger;
-
-        [NotNull]
-        private readonly IMessenger messenger;
 
         [NotNull]
         private readonly ISettingsRepository settingsRepository;
@@ -205,7 +180,7 @@ namespace Remembrance.Settings.ViewModel
         private readonly IViewModelAdapter viewModelAdapter;
 
         [NotNull]
-        private readonly IWordsChecker wordsChecker;
+        private readonly IWordsProcessor wordsProcessor;
 
         #endregion
 
@@ -222,9 +197,25 @@ namespace Remembrance.Settings.ViewModel
             {
                 var existing = TranslationList.SingleOrDefault(x => x.Id == translationInfo.TranslationEntry.Id);
                 if (existing != null)
-                    UpdateInList(translationInfo, existing);
+                {
+                    logger.Debug($"Updating {existing} in the list...");
+                    //Prevent text change to fire
+                    using (existing.SupressNotification())
+                        viewModelAdapter.Adapt(translationInfo.TranslationEntry, existing);
+                    Application.Current.Dispatcher.InvokeAsync(() => View.MoveCurrentTo(existing));
+                    logger.Debug($"{existing} has been updated in the list");
+                }
                 else
-                    AddToList(translationEntryViewModel);
+                {
+                    logger.Debug($"Adding {translationEntryViewModel} to the list...");
+                    Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        TranslationList.Add(translationEntryViewModel);
+                        View.MoveCurrentToLast();
+                    });
+                    translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
+                    logger.Debug($"{translationEntryViewModel} has been added to the list...");
+                }
             }
         }
 
@@ -301,9 +292,9 @@ namespace Remembrance.Settings.ViewModel
                 throw new ArgumentNullException(nameof(uiLanguage));
             CultureUtilities.ChangeCulture(uiLanguage);
             foreach (var translationEntryViewModel in TranslationList)
-            foreach (var translation in translationEntryViewModel.Translations)
-                // ReSharper disable once ExplicitCallerInfoArgument
-                translation.RaisePropertyChanged(nameof(translation.PartOfSpeech));
+                foreach (var translation in translationEntryViewModel.Translations)
+                    // ReSharper disable once ExplicitCallerInfoArgument
+                    translation.RaisePropertyChanged(nameof(translation.PartOfSpeech));
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -322,26 +313,7 @@ namespace Remembrance.Settings.ViewModel
 
             var sourceLanguage = translationEntryViewModel.Language;
             var targetLanguage = translationEntryViewModel.TargetLanguage;
-            var text = e.NewValue;
-            TranslationInfo translationInfo;
-
-            try
-            {
-                translationInfo = wordsChecker.CheckWord(text, sourceLanguage, targetLanguage, id: translationEntryViewModel.Id);
-            }
-            catch (LocalizableException ex)
-            {
-                logger.Warn(ex.Message);
-                messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                return false;
-            }
-
-            // hack to prevent second TextChanged event
-            translationInfo.TranslationEntry.Key.Text = translationEntryViewModel.Text;
-            viewModelAdapter.Adapt(translationInfo.TranslationEntry, translationEntryViewModel);
-
-            logger.Debug("Text has been changed");
-            return true;
+            return e.NewValue != null && wordsProcessor.ChangeText(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage);
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
@@ -439,26 +411,8 @@ namespace Remembrance.Settings.ViewModel
 
             var sourceLanguage = SelectedSourceLanguage.Code;
             var targetLanguage = SelectedTargetLanguage.Code;
-            TranslationInfo translationInfo;
 
-            try
-            {
-                translationInfo = wordsChecker.CheckWord(text, sourceLanguage, targetLanguage);
-            }
-            catch (LocalizableException ex)
-            {
-                logger.Warn(ex.Message);
-                messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                return;
-            }
-
-            var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationInfo.TranslationEntry);
-            lock (translationListLock)
-                AddToList(translationEntryViewModel);
-
-            translationEntryViewModel.PlayTtsCommand.Execute(null);
-
-            logger.Debug($"{translationEntryViewModel} has been added");
+            wordsProcessor.ProcessNewWord(text, sourceLanguage, targetLanguage);
         }
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)

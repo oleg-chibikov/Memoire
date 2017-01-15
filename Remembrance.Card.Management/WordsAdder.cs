@@ -1,69 +1,129 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
+using Remembrance.DAL.Contracts;
+using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Interfaces;
+using Scar.Common.Exceptions;
+using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
     internal sealed class WordsAdder : IWordsAdder
     {
+        private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
+        private static readonly string[] DefaultTargetLanguages = { Constants.EnLanguageTwoLetters, CurerntCultureLanguage == Constants.EnLanguageTwoLetters ? Constants.RuLanguageTwoLetters : CurerntCultureLanguage };
+
         [NotNull]
-        private readonly ITranslationResultCardManager cardManager;
+        private readonly ILanguageDetector languageDetector;
 
         [NotNull]
         private readonly ILog logger;
 
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly ISettingsRepository settingsRepository;
 
         [NotNull]
-        private readonly ITextToSpeechPlayer textToSpeechPlayer;
+        private readonly ITranslationDetailsRepository translationDetailsRepository;
 
         [NotNull]
-        private readonly IWordsChecker wordsChecker;
+        private readonly ITranslationEntryRepository translationEntryRepository;
 
-        public WordsAdder([NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IWordsChecker wordsChecker,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationResultCardManager cardManager,
-            [NotNull] IMessenger messenger)
+        [NotNull]
+        private readonly IWordsTranslator wordsTranslator;
+
+        public WordsAdder(
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] IWordsTranslator wordsTranslator,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] ILog logger)
         {
-            if (textToSpeechPlayer == null)
-                throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (wordsChecker == null)
-                throw new ArgumentNullException(nameof(wordsChecker));
+            if (translationEntryRepository == null)
+                throw new ArgumentNullException(nameof(translationEntryRepository));
+            if (settingsRepository == null)
+                throw new ArgumentNullException(nameof(settingsRepository));
+            if (languageDetector == null)
+                throw new ArgumentNullException(nameof(languageDetector));
+            if (wordsTranslator == null)
+                throw new ArgumentNullException(nameof(wordsTranslator));
+            if (translationDetailsRepository == null)
+                throw new ArgumentNullException(nameof(translationDetailsRepository));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            if (cardManager == null)
-                throw new ArgumentNullException(nameof(cardManager));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
 
-            this.textToSpeechPlayer = textToSpeechPlayer;
-            this.wordsChecker = wordsChecker;
+            this.translationEntryRepository = translationEntryRepository;
+            this.settingsRepository = settingsRepository;
+            this.languageDetector = languageDetector;
+            this.wordsTranslator = wordsTranslator;
+            this.translationDetailsRepository = translationDetailsRepository;
             this.logger = logger;
-            this.cardManager = cardManager;
-            this.messenger = messenger;
         }
 
-        public void AddWord(string word, string sourceLanguage = null, string targetLanguage = null)
+        public TranslationInfo AddWordWithChecks(string text, string sourceLanguage, string targetLanguage, bool allowExisting, int id)
         {
-            if (word == null)
-                throw new ArgumentNullException(nameof(word));
-            logger.Info($"Adding word {word}...");
+            logger.Debug($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
+            if (string.IsNullOrWhiteSpace(text))
+                throw new LocalizableException("Text is empty", Errors.WordIsMissing);
+            if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
+                //if not specified or autodetect - try to detect
+                sourceLanguage = languageDetector.DetectLanguageAsync(text).Result.Language;
+            if (sourceLanguage == null)
+                throw new LocalizableException($"Cannot detect language for '{text}'", Errors.CannotDetectLanguage);
+            if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
+                //if not specified - try to find best matching target language
+                targetLanguage = GetDefaultTargetLanguage(sourceLanguage);
 
-            var translationInfo = wordsChecker.CheckWord(word, sourceLanguage, targetLanguage, true);
+            //Used En as ui language to simplify conversion of common words to the enums
+            var translationResult = wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage).Result;
+            if (!translationResult.PartOfSpeechTranslations.Any())
+                throw new LocalizableException($"No translations found for '{text}'", Errors.CannotTranslate);
 
-            textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            //replace the original text with the corrected one
+            text = translationResult.PartOfSpeechTranslations.First().Text;
 
-            messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            var key = new TranslationEntryKey(text, sourceLanguage, targetLanguage);
 
-            cardManager.ShowCard(translationInfo);
-            logger.Debug($"Word {word} has been added");
+            var translationEntry = translationEntryRepository.TryGetByKey(key);
+
+            if (translationEntry != null)
+                if (!allowExisting)
+                    throw new LocalizableException($"An item with the same text ('{text}') and direction ({sourceLanguage}-{targetLanguage}) already exists", Errors.WordIsPresent);
+                else
+                    id = translationEntry.Id;
+
+            translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords()) { Id = id };
+
+            logger.Debug($"Saving translation entry for {text} ({sourceLanguage} - {targetLanguage})...");
+            id = translationEntryRepository.Save(translationEntry);
+            var translationDetails = new TranslationDetails(translationResult) { Id = id };
+            logger.Debug($"Saving translation details for {text} ({sourceLanguage} - {targetLanguage})...");
+            translationDetailsRepository.Save(translationDetails);
+
+            logger.Debug($"Translation for {text} ({sourceLanguage} - {targetLanguage}) has been successfully added");
+
+            return new TranslationInfo(translationEntry, translationDetails);
+        }
+
+        public string GetDefaultTargetLanguage(string sourceLanguage)
+        {
+            if (sourceLanguage == null)
+                throw new ArgumentNullException(nameof(sourceLanguage));
+            var settings = settingsRepository.Get();
+            var lastUsedTargetLanguage = settings.LastUsedTargetLanguage;
+            var possibleTargetLanguages = new Stack<string>(DefaultTargetLanguages);
+            if (lastUsedTargetLanguage != null && lastUsedTargetLanguage != Constants.AutoDetectLanguage)
+                possibleTargetLanguages.Push(lastUsedTargetLanguage); //top priority
+            var targetLanguage = possibleTargetLanguages.Pop();
+            while (targetLanguage == sourceLanguage)
+                targetLanguage = possibleTargetLanguages.Pop();
+            return targetLanguage;
         }
     }
 }

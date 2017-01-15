@@ -15,8 +15,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
-            [NotNull] IWordsAdder wordsAdder,
-            [NotNull] ILog logger) : base(textToSpeechPlayer, translationEntryRepository, translationDetailsRepository, viewModelAdapter, messenger, wordsAdder, logger)
+            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ILog logger) : base(textToSpeechPlayer, translationEntryRepository, translationDetailsRepository, viewModelAdapter, messenger, wordsProcessor, logger)
         {
         }
 
