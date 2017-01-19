@@ -25,6 +25,10 @@
                 <ResourceDictionary Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
+                <!--Do not use lex:loc in the styles setter - can crash while switching language-->
+                <Setter Property="NoGroupContent" Value="☩" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <xceed:XceedAutoFitColumnGrid ItemsSource="{Binding View}"
@@ -45,7 +49,7 @@
                 <TextBlock Text="{Binding Converter={StaticResource RepeatTypeConverter}}" />
             </DataTemplate>
         </xceed:XceedAutoFitColumnGrid.Resources>
-        <xceed:XceedAutoFitColumnGrid.View>
+        <!--<xceed:XceedAutoFitColumnGrid.View>
             <xcdg:TableflowView HorizontalGridLineThickness="1" UseDefaultHeadersFooters="False">
                 <xcdg:TableflowView.FixedHeaders>
                     <DataTemplate>
@@ -56,7 +60,7 @@
                     </DataTemplate>
                 </xcdg:TableflowView.FixedHeaders>
             </xcdg:TableflowView>
-        </xceed:XceedAutoFitColumnGrid.View>
+        </xceed:XceedAutoFitColumnGrid.View>-->
         <xceed:XceedAutoFitColumnGrid.Columns>
             <xcdg:Column IsMainColumn="True" CellVerticalContentAlignment="Center" ReadOnly="False" FieldName="Text"
                          Title="{lex:Loc Word}">
