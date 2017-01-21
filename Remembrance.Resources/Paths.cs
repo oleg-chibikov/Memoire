@@ -1,23 +1,24 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 
-namespace Remembrance.DAL
+namespace Remembrance.Resources
 {
-    internal static class DbPathResolver
+    public static class Paths
     {
-        //TODO: evaluate settings path only once during installation
-        //TODO: change settings path feature
         [NotNull]
-        public static string ResolvePath()
-        {
-            string programName = $"Scar\\{nameof(Remembrance)}";
-            var path = Path.Combine(GetDropboxPath() ?? GetOneDrivePath() ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), programName);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            return path;
-        }
+        private static readonly string ProgramName = $"{((AssemblyCompanyAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
+
+        [NotNull]
+        public static readonly string SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+
+        [CanBeNull]
+        private static readonly string BaseSharedDataPath = GetDropboxPath() ?? GetOneDrivePath();
+
+        [CanBeNull]
+        public static readonly string SharedDataPath = BaseSharedDataPath == null ? null : Path.Combine(BaseSharedDataPath, ProgramName);
 
         [CanBeNull]
         private static string GetOneDrivePath()

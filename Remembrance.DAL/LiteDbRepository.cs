@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using LiteDB;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
+using Remembrance.Resources;
 
 namespace Remembrance.DAL
 {
@@ -27,9 +28,10 @@ namespace Remembrance.DAL
             this.logger = logger;
             // ReSharper disable once VirtualMemberCallInConstructor
             logger.Debug($"Initializing database for {TableName}...");
-            var dbFolder = DbPathResolver.ResolvePath();
+            if (!Directory.Exists(Paths.SettingsPath))
+                Directory.CreateDirectory(Paths.SettingsPath);
             // ReSharper disable once VirtualMemberCallInConstructor
-            Db = new LiteDatabase(Path.Combine(dbFolder, $"{DbName}.db"));
+            Db = new LiteDatabase(Path.Combine(Paths.SettingsPath, $"{DbName}.db"));
             Db.Shrink();
             // ReSharper disable once VirtualMemberCallInConstructor
             logger.Debug($"Database for {TableName} is initialized");

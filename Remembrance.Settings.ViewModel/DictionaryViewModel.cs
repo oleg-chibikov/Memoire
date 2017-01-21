@@ -292,9 +292,9 @@ namespace Remembrance.Settings.ViewModel
                 throw new ArgumentNullException(nameof(uiLanguage));
             CultureUtilities.ChangeCulture(uiLanguage);
             foreach (var translationEntryViewModel in TranslationList)
-                foreach (var translation in translationEntryViewModel.Translations)
-                    // ReSharper disable once ExplicitCallerInfoArgument
-                    translation.RaisePropertyChanged(nameof(translation.PartOfSpeech));
+            foreach (var translation in translationEntryViewModel.Translations)
+                // ReSharper disable once ExplicitCallerInfoArgument
+                translation.RaisePropertyChanged(nameof(translation.PartOfSpeech));
         }
 
         private void Timer_Tick(object sender, EventArgs e)

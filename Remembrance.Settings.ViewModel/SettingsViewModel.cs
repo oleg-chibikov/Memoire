@@ -60,6 +60,9 @@ namespace Remembrance.Settings.ViewModel
             ReverseTranslation = settings.ReverseTranslation;
             RandomTranslation = settings.RandomTranslation;
             CardShowFrequency = settings.CardShowFrequency.TotalMinutes;
+            OpenSharedFolderCommand = new RelayCommand(OpenSharedFolder);
+            OpenSettingsFolderCommand = new RelayCommand(OpenSettingsFolder);
+            SaveCommand = new RelayCommand(Save);
             SaveCommand = new RelayCommand(Save);
             ViewLogsCommand = new RelayCommand(ViewLogs);
             ExportCommand = new RelayCommand(Export);
@@ -78,6 +81,8 @@ namespace Remembrance.Settings.ViewModel
 
         public ICommand SaveCommand { get; }
         public ICommand ViewLogsCommand { get; }
+        public ICommand OpenSharedFolderCommand { get; }
+        public ICommand OpenSettingsFolderCommand { get; }
         public ICommand ExportCommand { get; }
         public ICommand ImportCommand { get; }
 
@@ -104,7 +109,19 @@ namespace Remembrance.Settings.ViewModel
             logger.Debug("Settings has been saved");
         }
 
-        private void ViewLogs()
+        private static void OpenSharedFolder()
+        {
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            Process.Start($@"{Paths.SharedDataPath}");
+        }
+
+        private static void OpenSettingsFolder()
+        {
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            Process.Start($@"{Paths.SettingsPath}");
+        }
+
+        private static void ViewLogs()
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");

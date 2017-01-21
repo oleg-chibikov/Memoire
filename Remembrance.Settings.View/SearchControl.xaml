@@ -5,6 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:buttons="clr-namespace:Remembrance.Resources.Buttons;assembly=Remembrance.Resources"
              xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:LocalizeDictionary.OutputMissingKeys="True"
+             lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+             lex:ResxLocalizationProvider.DefaultDictionary="Texts"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}">
     <UserControl.Resources>
@@ -19,7 +24,11 @@
                             CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             </TextBox.InputBindings>
         </TextBox>
-        <buttons:SearchButton Margin="{StaticResource CommonLeftMargin}" Command="{Binding SearchCommand}"
-                              CommandParameter="{Binding Text, ElementName=SearchTextBox}" />
+        <buttons:ImageButton
+            ToolTip="{lex:Loc Search}"
+            Source="pack://application:,,/Remembrance.Resources;component/Images/32/google_web_search_copyrighted-32.png"
+            Margin="{StaticResource CommonLeftMargin}"
+            Command="{Binding SearchCommand}"
+            CommandParameter="{Binding Text, ElementName=SearchTextBox}" />
     </StackPanel>
 </UserControl>

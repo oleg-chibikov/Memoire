@@ -261,4 +261,10 @@
   <data name="ImportErrors" xml:space="preserve">
     <value>Некоторые слова не были импортированы</value>
   </data>
+  <data name="OpenSettingsFolder" xml:space="preserve">
+    <value>Открыть папку настроек</value>
+  </data>
+  <data name="OpenSharedFolder" xml:space="preserve">
+    <value>Открыть общую папку</value>
+  </data>
 </root>

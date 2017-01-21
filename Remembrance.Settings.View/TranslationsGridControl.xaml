@@ -87,9 +87,12 @@
                             <cardView:WordsControl ItemsSource="{Binding}"
                                                    FontSize="{StaticResource SmallFontSize}"
                                                    MaxWidth="Infinity" />
-                            <buttons:DocumentButton ToolTip="{lex:Loc OpenDetails}" HorizontalAlignment="Right"
-                                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                                    Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" />
+                            <buttons:ImageButton
+                                Source="pack://application:,,/Remembrance.Resources;component/Images/32/document-32.png"
+                                ToolTip="{lex:Loc OpenDetails}"
+                                HorizontalAlignment="Right"
+                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" />
                         </DockPanel>
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
@@ -117,7 +120,9 @@
             <xcdg:UnboundColumn CellVerticalContentAlignment="Center" ReadOnly="True" FieldName="Id">
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
-                        <buttons:DeleteButton
+                        <buttons:ImageButton
+                            ToolTip="{lex:Loc DeleteTranslation}"
+                            Source="pack://application:,,/Remembrance.Resources;component/Images/32/trash-32.png"
                             CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                             Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" />
                     </DataTemplate>

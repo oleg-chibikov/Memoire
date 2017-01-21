@@ -5,9 +5,9 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-                    xmlns:buttons="clr-namespace:Remembrance.Resources.Buttons;assembly=Remembrance.Resources"
                     xmlns:wpf="clr-namespace:Scar.Common.WPF;assembly=Scar.Common.WPF"
                     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
+                    xmlns:buttons="clr-namespace:Remembrance.Resources.Buttons;assembly=Remembrance.Resources"
                     lex:LocalizeDictionary.DesignCulture="en"
                     lex:LocalizeDictionary.OutputMissingKeys="True"
                     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -46,18 +46,31 @@
                    Text="{lex:Loc ReverseTranslation}" />
         <DockPanel Margin="{StaticResource WindowGridMargin}" Grid.Row="0" Grid.Column="1">
             <CheckBox IsChecked="{Binding ReverseTranslation}" />
-            <buttons:DocumentButton
-                HorizontalAlignment="Right"
-                Command="{Binding ViewLogsCommand}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <buttons:ImageButton
+                    ToolTip="{lex:Loc ViewLogs}"
+                    Command="{Binding ViewLogsCommand}"
+                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/document-32.png" />
+                <buttons:ImageButton
+                    ToolTip="{lex:Loc OpenSharedFolder}"
+                    Command="{Binding OpenSharedFolderCommand}"
+                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/dropbox_copyrighted-32.png" />
+                <buttons:ImageButton
+                    ToolTip="{lex:Loc OpenSettingsFolder}"
+                    Command="{Binding OpenSettingsFolderCommand}"
+                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/settings-32.png" />
+            </StackPanel>
         </DockPanel>
 
         <TextBlock Margin="{StaticResource WindowGridMargin}" Grid.Row="1" Grid.Column="0"
                    Text="{lex:Loc RandomTranslation}" />
         <DockPanel Margin="{StaticResource WindowGridMargin}" Grid.Row="1" Grid.Column="1">
             <CheckBox IsChecked="{Binding RandomTranslation}" />
-            <buttons:ExportButton
-                HorizontalAlignment="Right"
-                Command="{Binding ExportCommand}" />
+            <buttons:ImageButton
+                ToolTip="{lex:Loc Export}"
+                Command="{Binding ExportCommand}"
+                Source="pack://application:,,/Remembrance.Resources;component/Images/32/export-32.png"
+                HorizontalAlignment="Right" />
         </DockPanel>
 
         <TextBlock Margin="{StaticResource WindowGridMargin}" Grid.Row="2" Grid.Column="0" Text="{lex:Loc UiLanguage}" />
@@ -68,9 +81,11 @@
                 SelectedItem="{Binding UiLanguage}"
                 SelectedValuePath="Code"
                 DisplayMemberPath="DisplayName" />
-            <buttons:ImportButton
-                HorizontalAlignment="Right"
-                Command="{Binding ImportCommand}" />
+            <buttons:ImageButton
+                ToolTip="{lex:Loc Import}"
+                Command="{Binding ImportCommand}"
+                Source="pack://application:,,/Remembrance.Resources;component/Images/32/import-32.png"
+                HorizontalAlignment="Right" />
         </DockPanel>
 
         <TextBlock Margin="{StaticResource WindowGridMargin}" Grid.Row="3" Grid.Column="0" Text="{lex:Loc TtsSpeaker}" />

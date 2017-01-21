@@ -61,29 +61,15 @@
     <Compile Include="Buttons\MinimizeButton.xaml.cs">
       <DependentUpon>MinimizeButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Buttons\DocumentButton.xaml.cs">
-      <DependentUpon>DocumentButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\ExportButton.xaml.cs">
-      <DependentUpon>ExportButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Buttons\ImageButton.cs" />
-    <Compile Include="Buttons\ImportButton.xaml.cs">
-      <DependentUpon>ImportButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\SearchButton.xaml.cs">
-      <DependentUpon>SearchButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechToVisibilityConverter.cs" />
     <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
-    <Compile Include="Buttons\DeleteButton.xaml.cs">
-      <DependentUpon>DeleteButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MessengerTokens.cs" />
+    <Compile Include="Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Errors.Designer.cs">
       <DependentUpon>Errors.resx</DependentUpon>
@@ -96,14 +82,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="Buttons\SettingsButton.xaml.cs">
-      <DependentUpon>SettingsButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Buttons\CloseButton.xaml.cs">
       <DependentUpon>CloseButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\SoundButton.xaml.cs">
-      <DependentUpon>SoundButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="WordMetadata.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -134,37 +114,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Buttons\DocumentButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\ExportButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\ImportButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\DeleteButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Buttons\SettingsButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Buttons\CloseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\SearchButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\SoundButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="XamlResources\Slider.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -257,6 +209,9 @@
   <ItemGroup>
     <Resource Include="Images\IconInactive.ico" />
     <Resource Include="Images\IconInactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\32\dropbox_copyrighted-32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

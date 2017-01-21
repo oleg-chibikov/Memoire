@@ -53,7 +53,11 @@
         <DockPanel Margin="{StaticResource CommonTopMargin}" Grid.Row="2">
             <Image Width="200" DockPanel.Dock="Left"
                    Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
-            <buttons:SettingsButton Margin="{StaticResource CommonLeftMargin}" Command="{Binding OpenSettingsCommand}" />
+            <buttons:ImageButton
+                ToolTip="{lex:Loc EditSettings}"
+                Source="pack://application:,,/Remembrance.Resources;component/Images/32/settings-32.png"
+                Margin="{StaticResource CommonLeftMargin}"
+                Command="{Binding OpenSettingsCommand}" />
             <view:AddTranslationControl x:Name="AddTranslationControl" DockPanel.Dock="Right"
                                         HorizontalAlignment="Right" VerticalAlignment="Center"
                                         VerticalContentAlignment="Center" />

@@ -313,6 +313,24 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open settings folder.
+        /// </summary>
+        public static string OpenSettingsFolder {
+            get {
+                return ResourceManager.GetString("OpenSettingsFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open shared folder.
+        /// </summary>
+        public static string OpenSharedFolder {
+            get {
+                return ResourceManager.GetString("OpenSharedFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Random translation choice.
         /// </summary>
         public static string RandomTranslation {

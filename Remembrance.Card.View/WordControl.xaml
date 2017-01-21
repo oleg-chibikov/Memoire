@@ -88,7 +88,10 @@
                    Text="{Binding WordInfo}"
                    Foreground="DimGray"
                    FontSize="{StaticResource SmallFontSize}" />
-        <buttons:SoundButton HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
-                             Command="{Binding PlayTtsCommand}" />
+        <buttons:ImageButton
+            ToolTip="{lex:Loc Speak}"
+            Source="pack://application:,,/Remembrance.Resources;component/Images/32/speaker-32.png"
+            HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
+            Command="{Binding PlayTtsCommand}" />
     </DockPanel>
 </UserControl>

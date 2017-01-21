@@ -108,18 +108,18 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             set { Set(() => NextCardShowTime, ref nextCardShowTime, value); }
         }
 
-        public event TextChangedEventHandler TextChanged;
-
-        public override string ToString()
-        {
-            return $"{Text} [{Language}->{TargetLanguage}]";
-        }
-
         public bool NotificationIsSupressed { get; set; }
 
         public NotificationSupresser SupressNotification()
         {
             return new NotificationSupresser(this);
+        }
+
+        public event TextChangedEventHandler TextChanged;
+
+        public override string ToString()
+        {
+            return $"{Text} [{Language}->{TargetLanguage}]";
         }
     }
 }

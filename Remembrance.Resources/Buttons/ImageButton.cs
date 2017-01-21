@@ -6,11 +6,11 @@ using System.Windows.Media;
 
 namespace Remembrance.Resources.Buttons
 {
-    public abstract class ImageButton : Button
+    public class ImageButton : Button
     {
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(ImageSource), typeof(ImageButton), new PropertyMetadata(null));
 
-        protected ImageButton()
+        public ImageButton()
         {
             var binding = new Binding(nameof(Source)) { Source = this };
             var image = new Image { Stretch = Stretch.Fill, Width = 25, Height = 25 };
