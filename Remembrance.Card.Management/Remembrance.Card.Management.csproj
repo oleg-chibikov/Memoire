@@ -82,9 +82,9 @@
     <Compile Include="AssessmentCardManager.cs" />
     <Compile Include="BaseCardManager.cs" />
     <Compile Include="CardsExchanger.cs" />
-    <Compile Include="Data\IExportEntry.cs" />
-    <Compile Include="Data\EachWordExportEntry.cs" />
-    <Compile Include="Data\ExportEntry.cs" />
+    <Compile Include="Data\IExchangeEntry.cs" />
+    <Compile Include="Data\EachWordExchangeEntry.cs" />
+    <Compile Include="Data\RemembranceExchangeEntry.cs" />
     <Compile Include="BaseFileImporter.cs" />
     <Compile Include="RemembranceFileExporter.cs" />
     <Compile Include="EachWordFileImporter.cs" />

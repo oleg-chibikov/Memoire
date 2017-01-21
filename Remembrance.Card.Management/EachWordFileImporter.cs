@@ -13,7 +13,7 @@ using Remembrance.Translate.Contracts.Interfaces;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class EachWordFileImporter : BaseFileImporter<EachWordExportEntry>
+    internal class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
         private static readonly char[] Separator = { ',', ';', '/', '\\' };
 
@@ -27,16 +27,16 @@ namespace Remembrance.Card.Management
             this.languageDetector = languageDetector;
         }
 
-        protected override TranslationEntryKey GetKey(EachWordExportEntry exportEntry)
+        protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry)
         {
-            var sourceLanguage = languageDetector.DetectLanguageAsync(exportEntry.Text).Result.Language ?? Constants.EnLanguage;
+            var sourceLanguage = languageDetector.DetectLanguageAsync(exchangeEntry.Text).Result.Language ?? Constants.EnLanguage;
             var targetLanguage = WordsAdder.GetDefaultTargetLanguage(sourceLanguage);
-            return new TranslationEntryKey(exportEntry.Text, sourceLanguage, targetLanguage);
+            return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
-        protected override ICollection<string> GetPriorityTranslations(EachWordExportEntry exportEntry)
+        protected override ICollection<string> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
         {
-            return exportEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+            return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

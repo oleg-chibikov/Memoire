@@ -20,7 +20,7 @@ namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
     internal abstract class BaseFileImporter<T> : IFileImporter
-        where T : IExportEntry
+        where T : IExchangeEntry
     {
         [NotNull]
         protected readonly ILog Logger;
@@ -89,35 +89,35 @@ namespace Remembrance.Card.Management
             var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
             //TODO: in chunks
-            foreach (var exportEntry in deserialized)
+            foreach (var exchangeEntry in deserialized)
             {
-                Logger.Info($"Importing from {exportEntry.Text}...");
+                Logger.Info($"Importing from {exchangeEntry.Text}...");
                 TranslationInfo translationInfo;
                 try
                 {
-                    var key = GetKey(exportEntry);
+                    var key = GetKey(exchangeEntry);
                     if (existingKeys.Contains(key))
                         continue;
                     translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
                 }
                 catch (LocalizableException ex)
                 {
-                    Logger.Warn($"Cannot translate {exportEntry.Text}. The word is skipped", ex);
-                    e.Add(exportEntry.Text);
+                    Logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
+                    e.Add(exchangeEntry.Text);
                     continue;
                 }
-                var priorityTranslations = GetPriorityTranslations(exportEntry);
+                var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                 if (priorityTranslations != null)
                 {
                     foreach (var partOfSpeechTranslation in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations)
-                    foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
-                    {
-                        AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
-                        if (translationVariant.Synonyms == null)
-                            continue;
-                        foreach (var synonym in translationVariant.Synonyms)
-                            AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
-                    }
+                        foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+                        {
+                            AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
+                            if (translationVariant.Synonyms == null)
+                                continue;
+                            foreach (var synonym in translationVariant.Synonyms)
+                                AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
+                        }
                     if (!translationInfo.TranslationEntry.Translations.Any())
                         translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
                     TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
@@ -130,8 +130,8 @@ namespace Remembrance.Card.Management
             return true;
         }
 
-        protected abstract TranslationEntryKey GetKey([NotNull] T exportEntry);
-        protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exportEntry);
+        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry);
+        protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exchangeEntry);
 
         private static void AddOrRemoveTranslation([NotNull] ICollection<string> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
         {

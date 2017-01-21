@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 namespace Remembrance.Card.Management.Data
 {
     [UsedImplicitly]
-    internal class EachWordExportEntry : IExportEntry
+    internal class EachWordExchangeEntry : IExchangeEntry
     {
-        public EachWordExportEntry([NotNull] string text, [CanBeNull] string translation)
+        public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string translation)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -15,10 +15,10 @@ namespace Remembrance.Card.Management.Data
             Translation = translation;
         }
 
-        [CanBeNull, JsonProperty("Translation")]
+        [CanBeNull, JsonProperty("Translation", Required = Required.Always)]
         public string Translation { get; }
 
-        [JsonProperty("Word")]
+        [JsonProperty("Word", Required = Required.Always)]
         public string Text { get; }
     }
 }

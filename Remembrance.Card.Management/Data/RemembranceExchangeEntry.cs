@@ -7,9 +7,9 @@ using Remembrance.DAL.Contracts.Model;
 namespace Remembrance.Card.Management.Data
 {
     [UsedImplicitly]
-    internal class ExportEntry : IExportEntry
+    internal class RemembranceExchangeEntry : IExchangeEntry
     {
-        public ExportEntry([CanBeNull] HashSet<string> priorityTranslations, [NotNull] TranslationEntry translationEntry)
+        public RemembranceExchangeEntry([CanBeNull] HashSet<string> priorityTranslations, [NotNull] TranslationEntry translationEntry)
         {
             if (translationEntry == null)
                 throw new ArgumentNullException(nameof(translationEntry));
@@ -17,10 +17,10 @@ namespace Remembrance.Card.Management.Data
             TranslationEntry = translationEntry;
         }
 
-        [CanBeNull, JsonProperty("PriorityTranslations")]
+        [CanBeNull, JsonProperty("PriorityTranslations", Required = Required.AllowNull)]
         public HashSet<string> PriorityTranslations { get; }
 
-        [NotNull, JsonProperty("TranslationEntry")]
+        [NotNull, JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
 
         public string Text => TranslationEntry.Key.Text;

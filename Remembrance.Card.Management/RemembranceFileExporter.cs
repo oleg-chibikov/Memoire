@@ -46,7 +46,7 @@ namespace Remembrance.Card.Management
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
             var translationEntries = translationEntryRepository.GetAll();
-            var exportEntries = new List<ExportEntry>(translationEntries.Length);
+            var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
             foreach (var translationEntry in translationEntries)
             {
                 translationEntry.Translations = new PriorityWord[0];
@@ -63,7 +63,7 @@ namespace Remembrance.Card.Management
                         if (synonym.IsPriority)
                             priorityWordsIds.Add(synonym.Text);
                 }
-                exportEntries.Add(new ExportEntry(priorityWordsIds.Any() ? priorityWordsIds : null, translationEntry));
+                exportEntries.Add(new RemembranceExchangeEntry(priorityWordsIds.Any() ? priorityWordsIds : null, translationEntry));
             }
             try
             {

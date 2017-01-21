@@ -10,20 +10,20 @@ using Remembrance.DAL.Contracts.Model;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class RemembranceFileImporter : BaseFileImporter<ExportEntry>
+    internal class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
     {
         public RemembranceFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository) : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
         {
         }
 
-        protected override TranslationEntryKey GetKey(ExportEntry exportEntry)
+        protected override TranslationEntryKey GetKey(RemembranceExchangeEntry exchangeEntry)
         {
-            return exportEntry.TranslationEntry.Key;
+            return exchangeEntry.TranslationEntry.Key;
         }
 
-        protected override ICollection<string> GetPriorityTranslations(ExportEntry exportEntry)
+        protected override ICollection<string> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
-            return exportEntry.PriorityTranslations;
+            return exchangeEntry.PriorityTranslations;
         }
     }
 }
