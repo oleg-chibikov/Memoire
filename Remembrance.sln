@@ -69,6 +69,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer.UI", 
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26} = {A2E7DAAE-8DF9-42AE-A433-8810248A0E26}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Domain", "Remembrance.Domain\Remembrance.Domain.csproj", "{4DA2D198-B14D-43CA-8153-7508A638C3D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.EventSourcing", "..\Common\Scar.Common.EventSourcing\Scar.Common.EventSourcing.csproj", "{1DA1F99A-7034-416C-9A9D-81C5213BF908}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +199,14 @@ Global
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
