@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
@@ -14,6 +13,7 @@ using Remembrance.Resources;
 using Remembrance.Settings.ViewModel.Contracts;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
+using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.ViewModel;
 
 namespace Remembrance.Settings.ViewModel
@@ -47,13 +47,13 @@ namespace Remembrance.Settings.ViewModel
             ReverseTranslation = settings.ReverseTranslation;
             RandomTranslation = settings.RandomTranslation;
             CardShowFrequency = settings.CardShowFrequency.TotalMinutes;
-            OpenSharedFolderCommand = new RelayCommand(OpenSharedFolder);
-            OpenSettingsFolderCommand = new RelayCommand(OpenSettingsFolder);
-            SaveCommand = new RelayCommand(Save);
-            SaveCommand = new RelayCommand(Save);
-            ViewLogsCommand = new RelayCommand(ViewLogs);
-            ExportCommand = new RelayCommand(Export);
-            ImportCommand = new RelayCommand(Import);
+            OpenSharedFolderCommand = new CorrelationCommand(OpenSharedFolder);
+            OpenSettingsFolderCommand = new CorrelationCommand(OpenSettingsFolder);
+            SaveCommand = new CorrelationCommand(Save);
+            SaveCommand = new CorrelationCommand(Save);
+            ViewLogsCommand = new CorrelationCommand(ViewLogs);
+            ExportCommand = new CorrelationCommand(Export);
+            ImportCommand = new CorrelationCommand(Import);
         }
 
         public event EventHandler RequestClose;
@@ -102,31 +102,26 @@ namespace Remembrance.Settings.ViewModel
 
         private static void OpenSharedFolder()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Process.Start($@"{Paths.SharedDataPath}");
         }
 
         private static void OpenSettingsFolder()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Process.Start($@"{Paths.SettingsPath}");
         }
 
         private static void ViewLogs()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
         }
 
         private void Export()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             cardsExchanger.Export();
         }
 
         private void Import()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             cardsExchanger.Import();
         }
 

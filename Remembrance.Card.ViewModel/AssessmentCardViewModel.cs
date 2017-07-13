@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.ViewModel.Contracts;
@@ -16,6 +14,7 @@ using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.TypeAdapter.Contracts;
 using Scar.Common;
+using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.ViewModel;
 
@@ -52,7 +51,7 @@ namespace Remembrance.Card.ViewModel
 
             messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
 
-            ProvideAnswerCommand = new RelayCommand<string>(ProvideAnswer);
+            ProvideAnswerCommand = new CorrelationCommand<string>(ProvideAnswer);
 
             LanguagePair = $"{this.translationInfo.Key.TargetLanguage} - {this.translationInfo.Key.SourceLanguage}";
 
@@ -277,7 +276,6 @@ namespace Remembrance.Card.ViewModel
 
         private void ProvideAnswer([CanBeNull] string answer)
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Info($"Providing answer {answer}...");
             string mostSuitable = null;
             var currentMinDistance = int.MaxValue;

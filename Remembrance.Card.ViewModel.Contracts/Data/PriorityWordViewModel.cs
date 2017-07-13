@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
-using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
@@ -12,6 +11,7 @@ using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
+using Scar.Common.WPF.Commands;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
@@ -42,7 +42,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             this.viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            TogglePriorityCommand = new RelayCommand(TogglePriority);
+            TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
         public Guid CorrelationId { get; set; }

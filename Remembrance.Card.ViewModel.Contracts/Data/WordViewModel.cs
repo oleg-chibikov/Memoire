@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
-using GalaSoft.MvvmLight.Command;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.Translate.Contracts.Interfaces;
+using Scar.Common.WPF.Commands;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
@@ -22,8 +21,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         {
             this.textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             this.wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
-            PlayTtsCommand = new RelayCommand(PlayTts);
-            LearnWordCommand = new RelayCommand(LearnWord, () => CanLearnWord);
+            PlayTtsCommand = new CorrelationCommand(PlayTts);
+            LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
         }
 
         public virtual string Language { get; set; }
@@ -76,15 +75,13 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 NounGender
             }.Where(x => x != null));
 
-        public void LearnWord()
+        private void LearnWord()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             wordsProcessor.ProcessNewWord(Text, Language);
         }
 
-        public void PlayTts()
+        private void PlayTts()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             textToSpeechPlayer.PlayTtsAsync(Text, Language);
         }
 

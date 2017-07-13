@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -11,7 +10,6 @@ using System.Windows.Threading;
 using Autofac;
 using Common.Logging;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
@@ -26,6 +24,7 @@ using Remembrance.Settings.ViewModel.Contracts;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
+using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View;
 
@@ -53,11 +52,11 @@ namespace Remembrance.Settings.ViewModel
             this.lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
             this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
 
-            SaveCommand = new RelayCommand<string>(Save);
-            DeleteCommand = new RelayCommand<TranslationEntryViewModel>(Delete);
-            OpenDetailsCommand = new RelayCommand<TranslationEntryViewModel>(OpenDetails);
-            OpenSettingsCommand = new RelayCommand(OpenSettings);
-            SearchCommand = new RelayCommand<string>(Search);
+            SaveCommand = new CorrelationCommand<string>(Save);
+            DeleteCommand = new CorrelationCommand<TranslationEntryViewModel>(Delete);
+            OpenDetailsCommand = new CorrelationCommand<TranslationEntryViewModel>(OpenDetails);
+            OpenSettingsCommand = new CorrelationCommand(OpenSettings);
+            SearchCommand = new CorrelationCommand<string>(Search);
 
             logger.Info("Starting...");
 
@@ -398,7 +397,6 @@ namespace Remembrance.Settings.ViewModel
 
         private void Save([NotNull] string text)
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Info($"Adding translation for {text}...");
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -413,7 +411,6 @@ namespace Remembrance.Settings.ViewModel
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Debug($"Deleting {translationEntryViewModel} from the list...");
             if (translationEntryViewModel == null)
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
@@ -430,7 +427,6 @@ namespace Remembrance.Settings.ViewModel
 
         private void OpenDetails([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Debug($"Opening details for {translationEntryViewModel}...");
             if (translationEntryViewModel == null)
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
@@ -446,7 +442,6 @@ namespace Remembrance.Settings.ViewModel
 
         private void OpenSettings()
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Debug("Opening settings...");
             var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
@@ -455,7 +450,6 @@ namespace Remembrance.Settings.ViewModel
 
         private void Search([CanBeNull] string text)
         {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Debug($"Searching for {text}...");
             View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel)o).Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }

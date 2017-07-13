@@ -26,7 +26,7 @@
     Icon="IconAlt.ico">
     <view1:AnimatedWindow.Resources>
         <ResourceDictionary
-                Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
     </view1:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>
