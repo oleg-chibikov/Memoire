@@ -8,7 +8,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class SettingsRepository : LiteDbRepository<Settings>, ISettingsRepository
     {
-        public SettingsRepository([NotNull] ILog logger) : base(logger)
+        public SettingsRepository([NotNull] ILog logger)
+            : base(logger)
         {
         }
 

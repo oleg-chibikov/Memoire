@@ -20,12 +20,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
         {
-            if (textToSpeechPlayer == null)
-                throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (wordsProcessor == null)
-                throw new ArgumentNullException(nameof(wordsProcessor));
-            this.textToSpeechPlayer = textToSpeechPlayer;
-            this.wordsProcessor = wordsProcessor;
+            this.textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            this.wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             PlayTtsCommand = new RelayCommand(PlayTts);
             LearnWordCommand = new RelayCommand(LearnWord, () => CanLearnWord);
         }
@@ -45,7 +41,6 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             [UsedImplicitly]
             set;
         }
-
 
         [CanBeNull]
         public string VerbType
@@ -72,18 +67,25 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [NotNull]
-        public string WordInfo => string.Join(", ", new[] { VerbType, NounAnimacy, NounGender }.Where(x => x != null));
-
-        public void PlayTts()
-        {
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            textToSpeechPlayer.PlayTtsAsync(Text, Language);
-        }
+        public string WordInfo => string.Join(
+            ", ",
+            new[]
+            {
+                VerbType,
+                NounAnimacy,
+                NounGender
+            }.Where(x => x != null));
 
         public void LearnWord()
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             wordsProcessor.ProcessNewWord(Text, Language);
+        }
+
+        public void PlayTts()
+        {
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            textToSpeechPlayer.PlayTtsAsync(Text, Language);
         }
 
         public override string ToString()

@@ -8,28 +8,24 @@ using Remembrance.Card.ViewModel.Contracts;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Scar.Common;
-using Scar.Common.WPF;
+using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
     internal class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
-        public TranslationResultCardManager(
-            [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger) : base(lifetimeScope, settingsRepository, logger)
+        public TranslationResultCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
+            : base(lifetimeScope, settingsRepository, logger)
         {
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {
-            var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(
-                new TypedParameter(typeof(TranslationInfo), translationInfo)
-            );
-            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(
-                new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
-            ActionExtensions.DoAfter(() => translationDetailsWindow.Close(), TimeSpan.FromSeconds(5));
+            var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
+            //TODO: async?
+            ActionExtensions.DoAfterAsync(() => translationDetailsWindow.Close(), TimeSpan.FromSeconds(5));
             return translationDetailsWindow;
         }
     }

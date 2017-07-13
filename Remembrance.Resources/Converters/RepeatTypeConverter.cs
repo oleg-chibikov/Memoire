@@ -13,7 +13,9 @@ namespace Remembrance.Resources.Converters
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
             var status = value as RepeatType?;
-            return status == null ? null : Convert(status.Value);
+            return status == null
+                ? null
+                : Convert(status.Value);
         }
 
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)

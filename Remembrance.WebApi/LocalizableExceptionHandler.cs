@@ -4,14 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
+using JetBrains.Annotations;
 using Remembrance.Resources;
 using Scar.Common.Exceptions;
 
 namespace Remembrance.WebApi
 {
-    internal class LocalizableExceptionHandler : IExceptionHandler
+    //TODO: WebApi Library
+    internal sealed class LocalizableExceptionHandler : IExceptionHandler
     {
-        public Task HandleAsync(ExceptionHandlerContext context, CancellationToken cancellationToken)
+        public Task HandleAsync([NotNull] ExceptionHandlerContext context, CancellationToken cancellationToken)
         {
             var localizableException = context.Exception as LocalizableException;
             var message = localizableException?.LocalizedMessage ?? Errors.DefaultError;
@@ -23,7 +25,7 @@ namespace Remembrance.WebApi
             return Task.FromResult(0);
         }
 
-        private class TextPlainErrorResult : IHttpActionResult
+        private sealed class TextPlainErrorResult : IHttpActionResult
         {
             public HttpRequestMessage Request { private get; set; }
 

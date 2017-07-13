@@ -37,28 +37,13 @@ namespace Remembrance.Card.Management
         [NotNull]
         protected readonly IWordsAdder WordsAdder;
 
-        public BaseFileImporter(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+        public BaseFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository)
         {
-            if (translationEntryRepository == null)
-                throw new ArgumentNullException(nameof(translationEntryRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (wordsAdder == null)
-                throw new ArgumentNullException(nameof(wordsAdder));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
-            if (translationDetailsRepository == null)
-                throw new ArgumentNullException(nameof(translationDetailsRepository));
-
-            TranslationEntryRepository = translationEntryRepository;
-            Logger = logger;
-            WordsAdder = wordsAdder;
-            Messenger = messenger;
-            TranslationDetailsRepository = translationDetailsRepository;
+            TranslationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            WordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
+            Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            TranslationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
         }
 
         public bool Import(string fileName, out string[] errors, out int count)
@@ -66,6 +51,7 @@ namespace Remembrance.Card.Management
             //TODO: spinner
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
+
             errors = null;
             var e = new List<string>();
             count = 0;
@@ -85,6 +71,7 @@ namespace Remembrance.Card.Management
                 Logger.Warn("Cannot deserialize object", ex);
                 return false;
             }
+
             var existing = TranslationEntryRepository.GetAll();
             var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
@@ -98,6 +85,7 @@ namespace Remembrance.Card.Management
                     var key = GetKey(exchangeEntry);
                     if (existingKeys.Contains(key))
                         continue;
+
                     translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
                 }
                 catch (LocalizableException ex)
@@ -106,32 +94,34 @@ namespace Remembrance.Card.Management
                     e.Add(exchangeEntry.Text);
                     continue;
                 }
+
                 var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                 if (priorityTranslations != null)
                 {
                     foreach (var partOfSpeechTranslation in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations)
-                        foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
-                        {
-                            AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
-                            if (translationVariant.Synonyms == null)
-                                continue;
-                            foreach (var synonym in translationVariant.Synonyms)
-                                AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
-                        }
+                    foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+                    {
+                        AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
+                        if (translationVariant.Synonyms == null)
+                            continue;
+
+                        foreach (var synonym in translationVariant.Synonyms)
+                            AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
+                    }
+
                     if (!translationInfo.TranslationEntry.Translations.Any())
                         translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
                     TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
                 }
+
                 Messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
                 count++;
             }
+
             if (e.Any())
                 errors = e.ToArray();
             return true;
         }
-
-        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry);
-        protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exchangeEntry);
 
         private static void AddOrRemoveTranslation([NotNull] ICollection<string> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
         {
@@ -148,5 +138,11 @@ namespace Remembrance.Card.Management
                     translations.Remove(toRemove);
             }
         }
+
+        [NotNull]
+        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry);
+
+        [CanBeNull]
+        protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exchangeEntry);
     }
 }

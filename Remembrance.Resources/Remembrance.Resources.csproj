@@ -35,12 +35,27 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.Networking, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Networking.1.0.2\lib\net462\Scar.Common.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.Controls.Buttons, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.Buttons.1.0.6\lib\net462\Scar.Common.WPF.Controls.Buttons.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.5\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
@@ -52,16 +67,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Buttons\RestoreButton.xaml.cs">
-      <DependentUpon>RestoreButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\MaximizeButton.xaml.cs">
-      <DependentUpon>MaximizeButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\MinimizeButton.xaml.cs">
-      <DependentUpon>MinimizeButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\ImageButton.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechToVisibilityConverter.cs" />
@@ -82,9 +87,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="Buttons\CloseButton.xaml.cs">
-      <DependentUpon>CloseButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WordMetadata.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -102,27 +104,7 @@
     <Resource Include="Images\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Buttons\RestoreButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\MaximizeButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\MinimizeButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Buttons\CloseButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="XamlResources\Slider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="XamlResources\DialogTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -136,18 +118,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj">
-      <Project>{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}</Project>
-      <Name>Scar.Common.WPF.Localization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\Scar.Common.WPF\Scar.Common.WPF.csproj">
-      <Project>{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}</Project>
-      <Name>Scar.Common.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\Scar.Common\Scar.Common.csproj">
-      <Project>{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}</Project>
-      <Name>Scar.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
       <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
       <Name>Remembrance.DAL.Contracts</Name>

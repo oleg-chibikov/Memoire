@@ -7,7 +7,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
     public sealed class PartOfSpeechTranslationViewModel : WordViewModel
     {
         // ReSharper disable once NotNullMemberIsNotInitialized
-        public PartOfSpeechTranslationViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor) : base(textToSpeechPlayer, wordsProcessor)
+        public PartOfSpeechTranslationViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
+            : base(textToSpeechPlayer, wordsProcessor)
         {
         }
 

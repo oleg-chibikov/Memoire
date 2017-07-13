@@ -13,8 +13,8 @@ namespace Remembrance.Card.View
 
         public HorizontalAlignment SpeakerAlignment
         {
-            get { return (HorizontalAlignment)GetValue(SpeakerAlignmentProperty); }
-            set { SetValue(SpeakerAlignmentProperty, value); }
+            get => (HorizontalAlignment)GetValue(SpeakerAlignmentProperty);
+            set => SetValue(SpeakerAlignmentProperty, value);
         }
     }
 }

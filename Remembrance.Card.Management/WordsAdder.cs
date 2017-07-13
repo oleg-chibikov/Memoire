@@ -17,7 +17,14 @@ namespace Remembrance.Card.Management
     internal sealed class WordsAdder : IWordsAdder
     {
         private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
-        private static readonly string[] DefaultTargetLanguages = { Constants.EnLanguageTwoLetters, CurerntCultureLanguage == Constants.EnLanguageTwoLetters ? Constants.RuLanguageTwoLetters : CurerntCultureLanguage };
+
+        private static readonly string[] DefaultTargetLanguages =
+        {
+            Constants.EnLanguageTwoLetters,
+            CurerntCultureLanguage == Constants.EnLanguageTwoLetters
+                ? Constants.RuLanguageTwoLetters
+                : CurerntCultureLanguage
+        };
 
         [NotNull]
         private readonly ILanguageDetector languageDetector;
@@ -37,33 +44,14 @@ namespace Remembrance.Card.Management
         [NotNull]
         private readonly IWordsTranslator wordsTranslator;
 
-        public WordsAdder(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILanguageDetector languageDetector,
-            [NotNull] IWordsTranslator wordsTranslator,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] ILog logger)
+        public WordsAdder([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILanguageDetector languageDetector, [NotNull] IWordsTranslator wordsTranslator, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger)
         {
-            if (translationEntryRepository == null)
-                throw new ArgumentNullException(nameof(translationEntryRepository));
-            if (settingsRepository == null)
-                throw new ArgumentNullException(nameof(settingsRepository));
-            if (languageDetector == null)
-                throw new ArgumentNullException(nameof(languageDetector));
-            if (wordsTranslator == null)
-                throw new ArgumentNullException(nameof(wordsTranslator));
-            if (translationDetailsRepository == null)
-                throw new ArgumentNullException(nameof(translationDetailsRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
-            this.translationEntryRepository = translationEntryRepository;
-            this.settingsRepository = settingsRepository;
-            this.languageDetector = languageDetector;
-            this.wordsTranslator = wordsTranslator;
-            this.translationDetailsRepository = translationDetailsRepository;
-            this.logger = logger;
+            this.translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            this.languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
+            this.wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
+            this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public TranslationInfo AddWordWithChecks(string text, string sourceLanguage, string targetLanguage, bool allowExisting, int id)
@@ -71,11 +59,13 @@ namespace Remembrance.Card.Management
             logger.Debug($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
             if (string.IsNullOrWhiteSpace(text))
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
+
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
                 //if not specified or autodetect - try to detect
                 sourceLanguage = languageDetector.DetectLanguageAsync(text).Result.Language;
             if (sourceLanguage == null)
                 throw new LocalizableException($"Cannot detect language for '{text}'", Errors.CannotDetectLanguage);
+
             if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
                 //if not specified - try to find best matching target language
                 targetLanguage = GetDefaultTargetLanguage(sourceLanguage);
@@ -98,11 +88,17 @@ namespace Remembrance.Card.Management
                 else
                     id = translationEntry.Id;
 
-            translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords()) { Id = id };
+            translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords())
+            {
+                Id = id
+            };
 
             logger.Debug($"Saving translation entry for {text} ({sourceLanguage} - {targetLanguage})...");
             id = translationEntryRepository.Save(translationEntry);
-            var translationDetails = new TranslationDetails(translationResult) { Id = id };
+            var translationDetails = new TranslationDetails(translationResult)
+            {
+                Id = id
+            };
             logger.Debug($"Saving translation details for {text} ({sourceLanguage} - {targetLanguage})...");
             translationDetailsRepository.Save(translationDetails);
 
@@ -115,6 +111,7 @@ namespace Remembrance.Card.Management
         {
             if (sourceLanguage == null)
                 throw new ArgumentNullException(nameof(sourceLanguage));
+
             var settings = settingsRepository.Get();
             var lastUsedTargetLanguage = settings.LastUsedTargetLanguage;
             var possibleTargetLanguages = new Stack<string>(DefaultTargetLanguages);
@@ -123,6 +120,7 @@ namespace Remembrance.Card.Management
             var targetLanguage = possibleTargetLanguages.Pop();
             while (targetLanguage == sourceLanguage)
                 targetLanguage = possibleTargetLanguages.Pop();
+
             return targetLanguage;
         }
     }

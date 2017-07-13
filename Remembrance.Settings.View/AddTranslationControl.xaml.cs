@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Settings.View
 {
-    public partial class AddTranslationControl
+    public sealed partial class AddTranslationControl
     {
         public AddTranslationControl()
         {

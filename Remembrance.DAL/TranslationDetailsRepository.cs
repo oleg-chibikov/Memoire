@@ -10,7 +10,8 @@ namespace Remembrance.DAL
     {
         internal const string DictionaryDbName = "Dictionary";
 
-        public TranslationDetailsRepository([NotNull] ILog logger) : base(logger)
+        public TranslationDetailsRepository([NotNull] ILog logger)
+            : base(logger)
         {
         }
 

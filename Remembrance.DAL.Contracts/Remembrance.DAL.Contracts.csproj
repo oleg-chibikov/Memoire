@@ -31,14 +31,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="LiteDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\LiteDB.3.0.0\lib\net35\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\LiteDB.3.1.1\lib\net35\LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="WPFLocalizeExtension, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
@@ -59,14 +68,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj">
-      <Project>{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}</Project>
-      <Name>Scar.Common.WPF.Localization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\Scar.Common.WPF\Scar.Common.WPF.csproj">
-      <Project>{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}</Project>
-      <Name>Scar.Common.WPF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
       <Project>{49CAA383-F68F-4105-ABAE-869D71F0D783}</Project>
       <Name>Remembrance.Translate.Contracts</Name>

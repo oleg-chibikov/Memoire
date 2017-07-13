@@ -12,8 +12,8 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
         [NotNull, UsedImplicitly]
         public string Text
         {
-            get { return text; }
-            set { text = value.Capitalize(); }
+            get => text;
+            set => text = value.Capitalize();
         }
 
         public override string ToString()

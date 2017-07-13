@@ -5,11 +5,10 @@ namespace Remembrance.Translate.Yandex.ContractResolvers
 {
     internal class DetectionResultContractResolver : CustomContractResolver
     {
-        protected override Dictionary<string, string> PropertyMappings { get; } =
-            new Dictionary<string, string>
-            {
-                { nameof(DetectionResult.Code), "code" },
-                { nameof(DetectionResult.Language), "lang" }
-            };
+        protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
+        {
+            { nameof(DetectionResult.Code), "code" },
+            { nameof(DetectionResult.Language), "lang" }
+        };
     }
 }

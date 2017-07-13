@@ -11,10 +11,8 @@ namespace Remembrance.Card.Management.Data
     {
         public RemembranceExchangeEntry([CanBeNull] HashSet<string> priorityTranslations, [NotNull] TranslationEntry translationEntry)
         {
-            if (translationEntry == null)
-                throw new ArgumentNullException(nameof(translationEntry));
             PriorityTranslations = priorityTranslations;
-            TranslationEntry = translationEntry;
+            TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
         }
 
         [CanBeNull, JsonProperty("PriorityTranslations", Required = Required.AllowNull)]

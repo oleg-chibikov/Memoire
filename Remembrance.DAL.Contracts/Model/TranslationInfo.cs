@@ -7,12 +7,8 @@ namespace Remembrance.DAL.Contracts.Model
     {
         public TranslationInfo([NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
         {
-            if (translationEntry == null)
-                throw new ArgumentNullException(nameof(translationEntry));
-            if (translationDetails == null)
-                throw new ArgumentNullException(nameof(translationDetails));
-            TranslationEntry = translationEntry;
-            TranslationDetails = translationDetails;
+            TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
+            TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetails));
         }
 
         [NotNull]

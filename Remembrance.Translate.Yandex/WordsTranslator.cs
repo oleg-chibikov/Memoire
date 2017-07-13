@@ -13,7 +13,10 @@ namespace Remembrance.Translate.Yandex
     internal sealed class WordsTranslator : IWordsTranslator
     {
         [NotNull]
-        private static readonly JsonSerializerSettings TranslationResultSettings = new JsonSerializerSettings { ContractResolver = new TranslationResultContractResolver() };
+        private static readonly JsonSerializerSettings TranslationResultSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new TranslationResultContractResolver()
+        };
 
         /// <summary>
         /// https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
@@ -38,7 +41,11 @@ namespace Remembrance.Translate.Yandex
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
             var response = await dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
-                return new TranslationResult { PartOfSpeechTranslations = new PartOfSpeechTranslation[0] };
+                return new TranslationResult
+                {
+                    PartOfSpeechTranslations = new PartOfSpeechTranslation[0]
+                };
+
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TranslationResult>(result, TranslationResultSettings);
         }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using JetBrains.Annotations;
-using Scar.Common;
+using Scar.Common.Networking;
 
 namespace Remembrance.Resources
 {
@@ -23,6 +21,9 @@ namespace Remembrance.Resources
         [NotNull]
         public const string RuLanguageTwoLetters = "ru";
 
-        public static readonly string MachineKey = Environment.MachineName + (NetworkUtilities.IsNetworkAvailable() ? $"_{NetworkUtilities.GetLocalIpAddress()}" : null);
+        public static readonly string MachineKey = Environment.MachineName
+                                                   + (NetworkUtility.IsNetworkAvailable()
+                                                       ? $"_{NetworkUtility.GetLocalIpAddress()}"
+                                                       : null);
     }
 }

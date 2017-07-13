@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26020.0
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.DAL", "Remembrance.DAL\Remembrance.DAL.csproj", "{AEA2E53B-FA60-40EB-BEC2-E48990D09BA0}"
 EndProject
@@ -18,14 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.ViewModel", "Remembrance.Settings.ViewModel\Remembrance.Settings.ViewModel.csproj", "{DF08286C-C5AD-4448-B300-FD9604CB82AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.View.Contracts", "Remembrance.Settings.View.Contracts\Remembrance.Settings.View.Contracts.csproj", "{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common", "..\Common\Scar.Common\Scar.Common.csproj", "{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.Logging", "..\Common\Scar.Common.Logging\Scar.Common.Logging.csproj", "{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.WPF", "..\Common\Scar.Common.WPF\Scar.Common.WPF.csproj", "{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.Installer", "..\Common\Scar.Common.Installer\Scar.Common.Installer.csproj", "{2B8B9221-628C-4A32-AB3B-61A1B59DCF85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer", "Remembrance.Installer\Remembrance.Installer.csproj", "{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -50,28 +42,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Card.ViewModel.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.ViewModel.Contracts", "Remembrance.Settings.ViewModel.Contracts\Remembrance.Settings.ViewModel.Contracts.csproj", "{7E9D21F9-B748-479E-83A2-E8665C1A37E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.WPF.Xceed", "..\Common\Scar.Common.WPF.Xceed\Scar.Common.WPF.Xceed.csproj", "{CDB110BA-CE3B-49A7-9A22-705A75DB11D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.WebApi.Contracts", "Remembrance.WebApi.Contracts\Remembrance.WebApi.Contracts.csproj", "{406164E6-E234-4B8A-AECF-18BB15DAA876}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Card.Management.Contracts", "Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj", "{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.Installer.UI", "..\Common\Scar.Common.Installer.UI\Scar.Common.Installer.UI.csproj", "{7752B8F1-8020-4E20-B5E7-EEED28209047}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance", "Remembrance\Remembrance.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.IO", "..\Common\Scar.Common.IO\Scar.Common.IO.csproj", "{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.WPF.Localization", "..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj", "{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer.UI", "Remembrance.Installer.UI\Remembrance.Installer.UI.csproj", "{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26} = {A2E7DAAE-8DF9-42AE-A433-8810248A0E26}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Domain", "Remembrance.Domain\Remembrance.Domain.csproj", "{4DA2D198-B14D-43CA-8153-7508A638C3D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scar.Common.EventSourcing", "..\Common\Scar.Common.EventSourcing\Scar.Common.EventSourcing.csproj", "{1DA1F99A-7034-416C-9A9D-81C5213BF908}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,22 +89,6 @@ Global
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3B13172-488A-4EBD-AFC7-67E4FC59DF65}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6EB82BA-2A0E-4855-9A17-F5FAB9616355}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B8B9221-628C-4A32-AB3B-61A1B59DCF85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B8B9221-628C-4A32-AB3B-61A1B59DCF85}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B8B9221-628C-4A32-AB3B-61A1B59DCF85}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B8B9221-628C-4A32-AB3B-61A1B59DCF85}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -167,46 +129,18 @@ Global
 		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDB110BA-CE3B-49A7-9A22-705A75DB11D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDB110BA-CE3B-49A7-9A22-705A75DB11D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDB110BA-CE3B-49A7-9A22-705A75DB11D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDB110BA-CE3B-49A7-9A22-705A75DB11D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{406164E6-E234-4B8A-AECF-18BB15DAA876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{406164E6-E234-4B8A-AECF-18BB15DAA876}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{406164E6-E234-4B8A-AECF-18BB15DAA876}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{406164E6-E234-4B8A-AECF-18BB15DAA876}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7752B8F1-8020-4E20-B5E7-EEED28209047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7752B8F1-8020-4E20-B5E7-EEED28209047}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7752B8F1-8020-4E20-B5E7-EEED28209047}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7752B8F1-8020-4E20-B5E7-EEED28209047}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1CBB589-FECD-47C2-A9A8-084B3FF943DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8082A9E1-E32D-4650-A551-B43E7D1B2C1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DA2D198-B14D-43CA-8153-7508A638C3D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DA1F99A-7034-416C-9A9D-81C5213BF908}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

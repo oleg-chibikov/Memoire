@@ -3,13 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using Common.Logging;
+using JetBrains.Annotations;
 using Scar.Common.Exceptions;
 
 namespace Remembrance.WebApi
 {
-    public class LocalizableExceptionLogger : IExceptionLogger
+    //TODO: WebApi Library
+    public sealed class LocalizableExceptionLogger : IExceptionLogger
     {
-        public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
+        public Task LogAsync([NotNull] ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
             var logger = (ILog)context.Request.GetDependencyScope().GetService(typeof(ILog));
             var localizableException = context.Exception as LocalizableException;

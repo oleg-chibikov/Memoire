@@ -10,6 +10,7 @@ namespace Remembrance.Settings.ViewModel.Contracts.Data
             DisplayName = displayName;
         }
 
+        //TODO: Readonly?
         [NotNull, UsedImplicitly]
         public string Code { get; set; }
 
@@ -20,11 +21,12 @@ namespace Remembrance.Settings.ViewModel.Contracts.Data
         {
             if (obj == this)
                 return true;
+
             var cast = obj as Language;
             return cast != null && Equals(cast);
         }
 
-        private bool Equals(Language other)
+        private bool Equals([NotNull] Language other)
         {
             return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
         }

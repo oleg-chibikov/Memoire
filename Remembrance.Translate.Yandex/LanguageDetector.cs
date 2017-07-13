@@ -14,10 +14,16 @@ namespace Remembrance.Translate.Yandex
     internal sealed class LanguageDetector : ILanguageDetector
     {
         [NotNull]
-        private static readonly JsonSerializerSettings DetectionResultSettings = new JsonSerializerSettings { ContractResolver = new DetectionResultContractResolver() };
+        private static readonly JsonSerializerSettings DetectionResultSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DetectionResultContractResolver()
+        };
 
         [NotNull]
-        private static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings { ContractResolver = new ListResultContractResolver() };
+        private static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new ListResultContractResolver()
+        };
 
         [NotNull]
         private readonly HttpClient client = new HttpClient
@@ -29,10 +35,12 @@ namespace Remembrance.Translate.Yandex
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
+
             var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}";
             var response = await client.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new DetectionResult();
+
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DetectionResult>(result, DetectionResultSettings);
         }
@@ -41,10 +49,12 @@ namespace Remembrance.Translate.Yandex
         {
             if (ui == null)
                 throw new ArgumentNullException(nameof(ui));
+
             var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
             var response = await client.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new ListResult();
+
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<ListResult>(result, ListResultSettings);
         }

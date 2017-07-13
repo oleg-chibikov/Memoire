@@ -29,7 +29,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         private ObservableCollection<PriorityWordViewModel> translations;
 
         [UsedImplicitly]
-        public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor) : base(textToSpeechPlayer, wordsProcessor)
+        public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
+            : base(textToSpeechPlayer, wordsProcessor)
         {
         }
 
@@ -39,7 +40,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [UsedImplicitly]
         public override string Text
         {
-            get { return text ?? string.Empty; }
+            get => text ?? string.Empty;
             set
             {
                 var newValue = value.Capitalize();
@@ -62,54 +63,55 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations
         {
-            get { return translations; }
+            get => translations;
             set { Set(() => Translations, ref translations, value); }
         }
 
         [UsedImplicitly]
         public int ShowCount
         {
-            get { return showCount; }
+            get => showCount;
             set { Set(() => ShowCount, ref showCount, value); }
         }
 
         [NotNull, UsedImplicitly]
         public override string Language
         {
-            get { return language ?? string.Empty; }
+            get => language ?? string.Empty;
             set { Set(() => Language, ref language, value); }
         }
 
         [NotNull, UsedImplicitly]
         public string TargetLanguage
         {
-            get { return targetLanguage ?? string.Empty; }
+            get => targetLanguage ?? string.Empty;
             set { Set(() => TargetLanguage, ref targetLanguage, value); }
         }
 
         [UsedImplicitly]
         public RepeatType RepeatType
         {
-            get { return repeatType; }
+            get => repeatType;
             set { Set(() => RepeatType, ref repeatType, value); }
         }
 
         [UsedImplicitly]
         public DateTime LastCardShowTime
         {
-            get { return lastCardShowTime; }
+            get => lastCardShowTime;
             set { Set(() => LastCardShowTime, ref lastCardShowTime, value); }
         }
 
         [UsedImplicitly]
         public DateTime NextCardShowTime
         {
-            get { return nextCardShowTime; }
+            get => nextCardShowTime;
             set { Set(() => NextCardShowTime, ref nextCardShowTime, value); }
         }
 
         public bool NotificationIsSupressed { get; set; }
 
+        [NotNull]
         public NotificationSupresser SupressNotification()
         {
             return new NotificationSupresser(this);

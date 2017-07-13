@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Settings.View
 {
-    public partial class SearchControl
+    public sealed partial class SearchControl
     {
         public SearchControl()
         {

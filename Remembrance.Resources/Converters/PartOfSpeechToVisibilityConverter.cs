@@ -8,6 +8,9 @@ namespace Remembrance.Resources.Converters
     [ValueConversion(typeof(PartOfSpeech), typeof(Visibility))]
     public sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>
     {
-        protected override bool IsVisible(PartOfSpeech? value) => value != null && value != PartOfSpeech.Unknown;
+        protected override bool IsVisible(PartOfSpeech? value)
+        {
+            return value != null && value != PartOfSpeech.Unknown;
+        }
     }
 }

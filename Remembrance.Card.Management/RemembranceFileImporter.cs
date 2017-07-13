@@ -10,9 +10,10 @@ using Remembrance.DAL.Contracts.Model;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
+    internal sealed class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
     {
-        public RemembranceFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository) : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
+        public RemembranceFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+            : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
         {
         }
 

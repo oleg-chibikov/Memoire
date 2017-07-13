@@ -11,6 +11,7 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
         [NotNull, UsedImplicitly]
         public PartOfSpeechTranslation[] PartOfSpeechTranslations { get; set; }
 
+        [NotNull]
         public IList<PriorityWord> GetDefaultWords()
         {
             return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First()).Cast<PriorityWord>().ToList();

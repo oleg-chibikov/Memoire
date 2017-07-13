@@ -32,43 +32,24 @@ namespace Remembrance.Card.Management
         [NotNull]
         private readonly ISaveFileService saveFileService;
 
-        public CardsExchanger(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] IOpenFileService openFileService,
-            [NotNull] ISaveFileService saveFileService,
-            [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder,
-            [NotNull] IFileExporter exporter,
-            [NotNull] IFileImporter[] importers,
-            [NotNull] IMessenger messenger)
+        public CardsExchanger([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] IOpenFileService openFileService, [NotNull] ISaveFileService saveFileService, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IFileExporter exporter, [NotNull] IFileImporter[] importers, [NotNull] IMessenger messenger)
         {
-            if (openFileService == null)
-                throw new ArgumentNullException(nameof(openFileService));
-            if (saveFileService == null)
-                throw new ArgumentNullException(nameof(saveFileService));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
             if (wordsAdder == null)
                 throw new ArgumentNullException(nameof(wordsAdder));
-            if (exporter == null)
-                throw new ArgumentNullException(nameof(exporter));
-            if (importers == null)
-                throw new ArgumentNullException(nameof(importers));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
 
-            this.openFileService = openFileService;
-            this.saveFileService = saveFileService;
-            this.logger = logger;
-            this.exporter = exporter;
-            this.importers = importers;
-            this.messenger = messenger;
+            this.openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
+            this.saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.exporter = exporter ?? throw new ArgumentNullException(nameof(exporter));
+            this.importers = importers ?? throw new ArgumentNullException(nameof(importers));
+            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
         public void Export()
         {
             if (!saveFileService.SaveFileDialog(Texts.Title, JsonFilesFilter))
                 return;
+
             logger.Info($"Performing export to {saveFileService.FileName}...");
             if (exporter.Export(saveFileService.FileName))
             {
@@ -86,6 +67,7 @@ namespace Remembrance.Card.Management
         {
             if (!openFileService.OpenFileDialog(Texts.Title, JsonFilesFilter))
                 return;
+
             foreach (var importer in importers)
             {
                 logger.Info($"Performing import from {openFileService.FileName} with {importer.GetType().Name}...");
@@ -102,6 +84,7 @@ namespace Remembrance.Card.Management
                     return;
                 }
             }
+
             logger.Warn($"Import from {openFileService.FileName} failed");
             messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
         }

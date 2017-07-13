@@ -7,18 +7,19 @@ namespace Remembrance.DAL.Contracts.Model
     public static class RepeatTypeSettings
     {
         [NotNull]
-        public static readonly LinkedList<RepeatType> RepeatTypes = new LinkedList<RepeatType>(new[]
-        {
-            RepeatType.T1,
-            RepeatType.T2,
-            RepeatType.T3,
-            RepeatType.T4,
-            RepeatType.T5,
-            RepeatType.T6,
-            RepeatType.T7,
-            RepeatType.T8,
-            RepeatType.T9
-        });
+        public static readonly LinkedList<RepeatType> RepeatTypes = new LinkedList<RepeatType>(
+            new[]
+            {
+                RepeatType.T1,
+                RepeatType.T2,
+                RepeatType.T3,
+                RepeatType.T4,
+                RepeatType.T5,
+                RepeatType.T6,
+                RepeatType.T7,
+                RepeatType.T8,
+                RepeatType.T9
+            });
 
         [NotNull]
         public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new Dictionary<RepeatType, TimeSpan>

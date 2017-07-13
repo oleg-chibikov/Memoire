@@ -15,16 +15,21 @@ namespace Remembrance.Card.Management
     [UsedImplicitly]
     internal class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
-        private static readonly char[] Separator = { ',', ';', '/', '\\' };
+        private static readonly char[] Separator =
+        {
+            ',',
+            ';',
+            '/',
+            '\\'
+        };
 
         [NotNull]
         private readonly ILanguageDetector languageDetector;
 
-        public EachWordFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILanguageDetector languageDetector) : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
+        public EachWordFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILanguageDetector languageDetector)
+            : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
         {
-            if (languageDetector == null)
-                throw new ArgumentNullException(nameof(languageDetector));
-            this.languageDetector = languageDetector;
+            this.languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
         protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry)

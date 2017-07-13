@@ -11,13 +11,14 @@ namespace Remembrance.DAL.Contracts.Model
         {
         }
 
-        public TranslationEntryKey(string text, string sourceLanguage, string targetLanguage)
+        public TranslationEntryKey([NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage)
         {
-            Text = text;
-            SourceLanguage = sourceLanguage;
-            TargetLanguage = targetLanguage;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
+            SourceLanguage = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
+            TargetLanguage = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
         }
 
+        //TODO: readonly?
         [NotNull, UsedImplicitly]
         public string Text { get; set; }
 
@@ -33,9 +34,8 @@ namespace Remembrance.DAL.Contracts.Model
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            return Text == other.Text
-                   && SourceLanguage == other.SourceLanguage
-                   && TargetLanguage == other.TargetLanguage;
+
+            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
         public override bool Equals(object obj)

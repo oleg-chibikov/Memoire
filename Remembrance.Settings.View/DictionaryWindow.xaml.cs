@@ -5,7 +5,7 @@ using Remembrance.Settings.ViewModel.Contracts;
 namespace Remembrance.Settings.View
 {
     [UsedImplicitly]
-    internal partial class DictionaryWindow : IDictionaryWindow
+    internal sealed partial class DictionaryWindow : IDictionaryWindow
     {
         public DictionaryWindow([NotNull] IDictionaryViewModel viewModel)
         {

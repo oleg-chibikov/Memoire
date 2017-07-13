@@ -9,9 +9,7 @@ namespace Remembrance.Card.Management.Data
     {
         public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string translation)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
             Translation = translation;
         }
 

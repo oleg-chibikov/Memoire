@@ -11,7 +11,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [NotNull]
         public PartOfSpeechTranslationViewModel[] PartOfSpeechTranslations
         {
-            get { return partOfSpeechTranslations; }
+            get => partOfSpeechTranslations;
             set { Set(() => PartOfSpeechTranslations, ref partOfSpeechTranslations, value); }
         }
     }

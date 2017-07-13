@@ -13,14 +13,15 @@ namespace Remembrance.WebApi.Controllers
 
         public WordsController([NotNull] IWordsProcessor wordsProcessor)
         {
-            if (wordsProcessor == null)
-                throw new ArgumentNullException(nameof(wordsProcessor));
-            this.wordsProcessor = wordsProcessor;
+            this.wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
         }
 
         [HttpPut, UsedImplicitly]
-        public void Put([FromBody] string word)
+        public void Put([NotNull, FromBody] string word)
         {
+            if (word == null)
+                throw new ArgumentNullException(nameof(word));
+
             wordsProcessor.ProcessNewWord(word);
         }
     }

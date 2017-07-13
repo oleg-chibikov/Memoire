@@ -40,8 +40,31 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BootstrapperCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WixSharp.bin.1.4.6.2\lib\BootstrapperCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WixSharp.bin.1.4.6.2\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Scar.Common.Installer, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Installer.1.0.21\lib\net462\Scar.Common.Installer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="WixSharp, Version=1.4.6.2, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WixSharp.bin.1.4.6.2\lib\WixSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WixSharp.Msi, Version=1.4.6.2, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WixSharp.bin.1.4.6.2\lib\WixSharp.Msi.dll</HintPath>
+    </Reference>
+    <Reference Include="WixSharp.UI, Version=1.4.6.2, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WixSharp.bin.1.4.6.2\lib\WixSharp.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
@@ -52,13 +75,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Scar.Common.Installer\Scar.Common.Installer.csproj">
-      <Project>{2b8b9221-628c-4a32-ab3b-61a1b59dcf85}</Project>
-      <Name>Scar.Common.Installer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.ico">

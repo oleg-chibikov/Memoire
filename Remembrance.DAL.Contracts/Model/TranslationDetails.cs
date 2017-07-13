@@ -14,9 +14,7 @@ namespace Remembrance.DAL.Contracts.Model
 
         public TranslationDetails([NotNull] TranslationResult translationResult)
         {
-            if (translationResult == null)
-                throw new ArgumentNullException(nameof(translationResult));
-            TranslationResult = translationResult;
+            TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 
         [NotNull]
@@ -30,12 +28,15 @@ namespace Remembrance.DAL.Contracts.Model
             {
                 if (translationVariant.CorrelationId == correlationId)
                     return translationVariant;
+
                 if (translationVariant.Synonyms == null)
                     continue;
+
                 foreach (var synonym in translationVariant.Synonyms)
                     if (synonym.CorrelationId == correlationId)
                         return synonym;
             }
+
             return null;
         }
     }

@@ -10,9 +10,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public TranslationDetailsViewModel([NotNull] TranslationResultViewModel translationResult)
         {
-            if (translationResult == null)
-                throw new ArgumentNullException(nameof(translationResult));
-            TranslationResult = translationResult;
+            TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 
         public int Id
@@ -25,7 +23,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [NotNull]
         public TranslationResultViewModel TranslationResult
         {
-            get { return translationResult; }
+            get => translationResult;
             set { Set(() => TranslationResult, ref translationResult, value); }
         }
 
@@ -37,12 +35,15 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             {
                 if (translationVariant.CorrelationId == correlationId)
                     return translationVariant;
+
                 if (translationVariant.Synonyms == null)
                     continue;
+
                 foreach (var synonym in translationVariant.Synonyms)
                     if (synonym.CorrelationId == correlationId)
                         return synonym;
             }
+
             return null;
         }
     }

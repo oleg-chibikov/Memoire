@@ -10,7 +10,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry>, ITranslationEntryRepository
     {
-        public TranslationEntryRepository([NotNull] ILog logger) : base(logger)
+        public TranslationEntryRepository([NotNull] ILog logger)
+            : base(logger)
         {
         }
 
@@ -29,8 +30,8 @@ namespace Remembrance.DAL
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            return Db.GetCollection<TranslationEntry>(TableName)
-                .FindOne(x => x.Key.Text == key.Text && x.Key.SourceLanguage == key.SourceLanguage && x.Key.TargetLanguage == key.TargetLanguage);
+
+            return Db.GetCollection<TranslationEntry>(TableName).FindOne(x => x.Key.Text == key.Text && x.Key.SourceLanguage == key.SourceLanguage && x.Key.TargetLanguage == key.TargetLanguage);
         }
     }
 }

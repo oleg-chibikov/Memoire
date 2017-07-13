@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Settings.View
 {
-    public partial class TranslationsGridControl
+    public sealed partial class TranslationsGridControl
     {
         public TranslationsGridControl()
         {

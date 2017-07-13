@@ -23,8 +23,8 @@ using Remembrance.TypeAdapter;
 using Remembrance.WebApi;
 using Scar.Common.IO;
 using Scar.Common.Logging;
-using Scar.Common.WPF;
 using Scar.Common.WPF.Localization;
+using Scar.Common.WPF.View;
 
 namespace Remembrance
 {
@@ -34,6 +34,12 @@ namespace Remembrance
         private ILifetimeScope container;
         private IMessenger messenger;
         private Mutex mutex;
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            container.Dispose();
+            mutex.Dispose();
+        }
 
         protected override void OnStartup([NotNull] StartupEventArgs e)
         {
@@ -93,12 +99,6 @@ namespace Remembrance
             builder.RegisterModule<LoggingModule>();
 
             container = builder.Build();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            container.Dispose();
-            mutex.Dispose();
         }
     }
 }

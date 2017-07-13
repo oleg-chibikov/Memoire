@@ -5,8 +5,8 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
-using Scar.Common.WPF;
 using Scar.Common.WPF.Localization;
+using Scar.Common.WPF.View.Contracts;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -24,40 +24,43 @@ namespace Remembrance.Card.Management
         [NotNull]
         protected readonly ISettingsRepository SettingsRepository;
 
-        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger)
+        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
         {
-            if (lifetimeScope == null)
-                throw new ArgumentNullException(nameof(lifetimeScope));
-            if (settingsRepository == null)
-                throw new ArgumentNullException(nameof(settingsRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
-            Logger = logger;
-            LifetimeScope = lifetimeScope;
-            SettingsRepository = settingsRepository;
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            LifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
+            SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
         public void ShowCard(TranslationInfo translationInfo)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                var window = TryCreateWindow(translationInfo);
-                if (window == null)
+            Application.Current.Dispatcher.Invoke(
+                () =>
                 {
-                    Logger.Debug($"No window to show for {translationInfo}");
-                    return;
-                }
-                window.CanDrag = false;
-                Logger.Info($"Showing {translationInfo}");
-                CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
-                window.SizeChanged += Window_SizeChanged;
-                window.Closed += Window_Closed;
-                window.Topmost = true;
-                window.Show();
-            });
+                    var window = TryCreateWindow(translationInfo);
+                    if (window == null)
+                    {
+                        Logger.Debug($"No window to show for {translationInfo}");
+                        return;
+                    }
+
+                    window.CanDrag = false;
+                    Logger.Info($"Showing {translationInfo}");
+                    CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
+                    window.SizeChanged += Window_SizeChanged;
+                    window.Closed += Window_Closed;
+                    window.Topmost = true;
+                    window.Show();
+                });
+        }
+
+        [CanBeNull]
+        protected abstract IWindow TryCreateWindow([NotNull] TranslationInfo translationInfo);
+
+        private static void Window_Closed(object sender, EventArgs e)
+        {
+            var window = (Window)sender;
+            window.Closed -= Window_Closed;
+            window.SizeChanged -= Window_SizeChanged;
         }
 
         private static void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -67,15 +70,5 @@ namespace Remembrance.Card.Management
             window.Left = r.Right - window.ActualWidth;
             window.Top = r.Bottom - window.ActualHeight;
         }
-
-        private static void Window_Closed(object sender, EventArgs e)
-        {
-            var window = (Window)sender;
-            window.Closed -= Window_Closed;
-            window.SizeChanged -= Window_SizeChanged;
-        }
-
-        [CanBeNull]
-        protected abstract IWindow TryCreateWindow([NotNull] TranslationInfo translationInfo);
     }
 }

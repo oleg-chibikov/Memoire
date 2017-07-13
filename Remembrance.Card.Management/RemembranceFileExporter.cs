@@ -24,27 +24,18 @@ namespace Remembrance.Card.Management
         [NotNull]
         private readonly ITranslationEntryRepository translationEntryRepository;
 
-        public RemembranceFileExporter(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] ILog logger)
+        public RemembranceFileExporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger)
         {
-            if (translationEntryRepository == null)
-                throw new ArgumentNullException(nameof(translationEntryRepository));
-            if (translationDetailsRepository == null)
-                throw new ArgumentNullException(nameof(translationDetailsRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
-            this.translationEntryRepository = translationEntryRepository;
-            this.translationDetailsRepository = translationDetailsRepository;
-            this.logger = logger;
+            this.translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public bool Export(string fileName)
         {
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
+
             var translationEntries = translationEntryRepository.GetAll();
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
             foreach (var translationEntry in translationEntries)
@@ -59,12 +50,20 @@ namespace Remembrance.Card.Management
                         priorityWordsIds.Add(translationVariant.Text);
                     if (translationVariant.Synonyms == null)
                         continue;
+
                     foreach (var synonym in translationVariant.Synonyms)
                         if (synonym.IsPriority)
                             priorityWordsIds.Add(synonym.Text);
                 }
-                exportEntries.Add(new RemembranceExchangeEntry(priorityWordsIds.Any() ? priorityWordsIds : null, translationEntry));
+
+                exportEntries.Add(
+                    new RemembranceExchangeEntry(
+                        priorityWordsIds.Any()
+                            ? priorityWordsIds
+                            : null,
+                        translationEntry));
             }
+
             try
             {
                 var json = JsonConvert.SerializeObject(exportEntries);
@@ -79,6 +78,7 @@ namespace Remembrance.Card.Management
             {
                 logger.Warn("Cannot serialize object", ex);
             }
+
             return false;
         }
     }

@@ -7,14 +7,12 @@ using Remembrance.Settings.ViewModel.Contracts;
 namespace Remembrance.Settings.View
 {
     [UsedImplicitly]
-    internal partial class SettingsWindow : ISettingsWindow
+    internal sealed partial class SettingsWindow : ISettingsWindow
     {
         public SettingsWindow([NotNull] ISettingsViewModel viewModel, [CanBeNull] Window ownerWindow = null)
         {
-            if (viewModel == null)
-                throw new ArgumentNullException(nameof(viewModel));
             Owner = ownerWindow;
-            DataContext = viewModel;
+            DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             InitializeComponent();
         }
     }

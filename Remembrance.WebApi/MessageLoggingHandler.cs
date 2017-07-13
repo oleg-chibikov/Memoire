@@ -6,9 +6,12 @@ using JetBrains.Annotations;
 
 namespace Remembrance.WebApi
 {
+    //TODO: WebApi Library;
+    //TODO: Use version from Albelli.Interview
     [UsedImplicitly]
     internal sealed class MessageLoggingHandler : MessageHandler
     {
+        [NotNull]
         private static string GetMessage([NotNull] string requestInfo, [CanBeNull] string message)
         {
             var stringBuilder = new StringBuilder(requestInfo);

@@ -28,28 +28,13 @@ namespace Remembrance.Card.Management
         [NotNull]
         private readonly IWordsAdder wordsAdder;
 
-        public WordsProcessor([NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IWordsAdder wordsAdder,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationResultCardManager cardManager,
-            [NotNull] IMessenger messenger)
+        public WordsProcessor([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsAdder wordsAdder, [NotNull] ILog logger, [NotNull] ITranslationResultCardManager cardManager, [NotNull] IMessenger messenger)
         {
-            if (textToSpeechPlayer == null)
-                throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (wordsAdder == null)
-                throw new ArgumentNullException(nameof(wordsAdder));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (cardManager == null)
-                throw new ArgumentNullException(nameof(cardManager));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
-
-            this.textToSpeechPlayer = textToSpeechPlayer;
-            this.wordsAdder = wordsAdder;
-            this.logger = logger;
-            this.cardManager = cardManager;
-            this.messenger = messenger;
+            this.textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            this.wordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
+            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
         public bool ProcessNewWord(string word, string sourceLanguage, string targetLanguage, bool showCard)
@@ -57,6 +42,7 @@ namespace Remembrance.Card.Management
             logger.Info($"Processing word {word}...");
             if (word == null)
                 throw new ArgumentNullException(nameof(word));
+
             TranslationInfo translationInfo;
             try
             {
@@ -88,6 +74,7 @@ namespace Remembrance.Card.Management
                 throw new ArgumentNullException(nameof(sourceLanguage));
             if (targetLanguage == null)
                 throw new ArgumentNullException(nameof(targetLanguage));
+
             TranslationInfo translationInfo;
             try
             {

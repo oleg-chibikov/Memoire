@@ -1,17 +1,19 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 
 namespace Remembrance.Translate.Yandex.JsonConverters
 {
-    internal class PartOfSpeechConverter : JsonConverter
+    internal sealed class PartOfSpeechConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(string);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        [NotNull]
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, [NotNull] JsonSerializer serializer)
         {
             var partOfSpeechString = serializer.Deserialize<string>(reader);
             switch (partOfSpeechString.ToLowerInvariant())

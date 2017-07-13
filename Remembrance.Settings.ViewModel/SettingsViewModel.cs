@@ -14,7 +14,7 @@ using Remembrance.Resources;
 using Remembrance.Settings.ViewModel.Contracts;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
-using Scar.Common.WPF;
+using Scar.Common.WPF.ViewModel;
 
 namespace Remembrance.Settings.ViewModel
 {
@@ -33,25 +33,12 @@ namespace Remembrance.Settings.ViewModel
         [NotNull]
         private readonly ISettingsRepository settingsRepository;
 
-        public SettingsViewModel(
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] IMessenger messenger,
-            [NotNull] ICardsExchanger cardsExchanger)
+        public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessenger messenger, [NotNull] ICardsExchanger cardsExchanger)
         {
-            if (settingsRepository == null)
-                throw new ArgumentNullException(nameof(settingsRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
-            if (cardsExchanger == null)
-                throw new ArgumentNullException(nameof(cardsExchanger));
-
-            this.settingsRepository = settingsRepository;
-            this.logger = logger;
-            this.messenger = messenger;
-            this.cardsExchanger = cardsExchanger;
+            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            this.cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
 
             var settings = settingsRepository.Get();
             TtsSpeaker = settings.TtsSpeaker;
@@ -75,7 +62,11 @@ namespace Remembrance.Settings.ViewModel
 
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
-        public Language[] AvailableUiLanguages { get; } = { new Language(Constants.EnLanguage, "English"), new Language(Constants.RuLanguage, "Русский") };
+        public Language[] AvailableUiLanguages { get; } =
+        {
+            new Language(Constants.EnLanguage, "English"),
+            new Language(Constants.RuLanguage, "Русский")
+        };
 
         #region Commands
 
@@ -182,7 +173,6 @@ namespace Remembrance.Settings.ViewModel
             [UsedImplicitly]
             set { Set(() => TtsVoiceEmotion, ref ttsVoiceEmotion, value); }
         }
-
 
         private bool reverseTranslation;
 

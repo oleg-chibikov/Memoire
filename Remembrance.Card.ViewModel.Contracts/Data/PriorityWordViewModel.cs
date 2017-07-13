@@ -34,31 +34,14 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         private bool isPriority;
 
-        public PriorityWordViewModel(
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessenger messenger,
-            [NotNull] IWordsProcessor wordsProcessor,
-            [NotNull] ILog logger)
+        public PriorityWordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
             : base(textToSpeechPlayer, wordsProcessor)
         {
-            if (translationEntryRepository == null)
-                throw new ArgumentNullException(nameof(translationEntryRepository));
-            if (translationDetailsRepository == null)
-                throw new ArgumentNullException(nameof(translationDetailsRepository));
-            if (viewModelAdapter == null)
-                throw new ArgumentNullException(nameof(viewModelAdapter));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            this.translationEntryRepository = translationEntryRepository;
-            this.translationDetailsRepository = translationDetailsRepository;
-            this.viewModelAdapter = viewModelAdapter;
-            this.messenger = messenger;
-            this.logger = logger;
+            this.translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            this.viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
+            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TogglePriorityCommand = new RelayCommand(TogglePriority);
         }
 
@@ -70,7 +53,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public bool IsPriority
         {
-            get { return isPriority; }
+            get => isPriority;
             set { Set(() => IsPriority, ref isPriority, value); }
         }
 
@@ -79,6 +62,39 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         [CanBeNull]
         public TranslationDetailsViewModel ParentTranslationDetails { get; set; }
+
+        private void Add([NotNull] TranslationEntry translationEntry)
+        {
+            logger.Info($"Adding {this} to {translationEntry}...");
+            var priorityWord = viewModelAdapter.Adapt<PriorityWord>(this);
+            translationEntry.Translations.Add(priorityWord);
+            messenger.Send(GetCurrentCopy(translationEntry), MessengerTokens.PriorityAddToken);
+        }
+
+        /// <summary>
+        /// Get a copy of translationEntry in order to prevent links break in external handlers
+        /// </summary>
+        private PriorityWordViewModel GetCurrentCopy([NotNull] TranslationEntry translationEntry)
+        {
+            var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
+            var word = translationEntryViewModel.Translations.Single(x => x.CorrelationId == CorrelationId);
+            return word;
+        }
+
+        private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
+        {
+            logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
+            translationEntry.Translations.Remove(wordInTranslationEntry);
+            messenger.Send(this, MessengerTokens.PriorityRemoveToken);
+            if (!translationEntry.Translations.Any())
+            {
+                logger.Info("Restoring default translations...");
+                translationEntry.Translations = translationDetails.TranslationResult.GetDefaultWords();
+                var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
+                foreach (var word in translationEntryViewModel.Translations)
+                    messenger.Send(word, MessengerTokens.PriorityAddToken);
+            }
+        }
 
         private void TogglePriority()
         {
@@ -131,6 +147,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                     logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
                     return;
                 }
+
                 UpdateCorrelatedPriority(wordInTranslationDetails);
                 translationDetailsRepository.Save(translationDetails);
                 logger.Debug($"TranslationDetails for {this} have been updated");
@@ -142,39 +159,6 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             logger.Info($"Updating priority in correlated word {correlatedWord}...");
             correlatedWord.IsPriority = IsPriority;
             messenger.Send(this, MessengerTokens.PriorityChangeToken);
-        }
-
-        private void Add([NotNull] TranslationEntry translationEntry)
-        {
-            logger.Info($"Adding {this} to {translationEntry}...");
-            var priorityWord = viewModelAdapter.Adapt<PriorityWord>(this);
-            translationEntry.Translations.Add(priorityWord);
-            messenger.Send(GetCurrentCopy(translationEntry), MessengerTokens.PriorityAddToken);
-        }
-
-        private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
-        {
-            logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
-            translationEntry.Translations.Remove(wordInTranslationEntry);
-            messenger.Send(this, MessengerTokens.PriorityRemoveToken);
-            if (!translationEntry.Translations.Any())
-            {
-                logger.Info("Restoring default translations...");
-                translationEntry.Translations = translationDetails.TranslationResult.GetDefaultWords();
-                var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
-                foreach (var word in translationEntryViewModel.Translations)
-                    messenger.Send(word, MessengerTokens.PriorityAddToken);
-            }
-        }
-
-        /// <summary>
-        /// Get a copy of translationEntry in order to prevent links break in external handlers
-        /// </summary>
-        private PriorityWordViewModel GetCurrentCopy([NotNull] TranslationEntry translationEntry)
-        {
-            var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
-            var word = translationEntryViewModel.Translations.Single(x => x.CorrelationId == CorrelationId);
-            return word;
         }
     }
 }

@@ -22,14 +22,10 @@ namespace Remembrance.DAL.Contracts.Model
 
         public TranslationEntry([NotNull] TranslationEntryKey key, [NotNull] IList<PriorityWord> translations)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-            if (translations == null)
-                throw new ArgumentNullException(nameof(translations));
             LastCardShowTime = DateTime.Now;
             RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
-            Key = key;
-            Translations = translations;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Translations = translations ?? throw new ArgumentNullException(nameof(translations));
             current = RepeatTypeSettings.RepeatTypes.First;
         }
 
@@ -42,7 +38,7 @@ namespace Remembrance.DAL.Contracts.Model
         [UsedImplicitly]
         public RepeatType RepeatType
         {
-            get { return repeatType; }
+            get => repeatType;
             set
             {
                 repeatType = value;
@@ -57,7 +53,7 @@ namespace Remembrance.DAL.Contracts.Model
         [UsedImplicitly]
         public DateTime LastCardShowTime
         {
-            get { return lastCardShowTime; }
+            get => lastCardShowTime;
             set
             {
                 lastCardShowTime = value;
@@ -68,22 +64,24 @@ namespace Remembrance.DAL.Contracts.Model
         [UsedImplicitly, BsonIndex(false)]
         public DateTime NextCardShowTime { get; set; }
 
-        public void IncreaseRepeatType()
-        {
-            var next = current.Next;
-            if (next == null)
-                return;
-            RepeatType = next.Value;
-            current = next;
-        }
-
         public void DecreaseRepeatType()
         {
             var prev = current.Previous;
             if (prev == null)
                 return;
+
             RepeatType = prev.Value;
             current = prev;
+        }
+
+        public void IncreaseRepeatType()
+        {
+            var next = current.Next;
+            if (next == null)
+                return;
+
+            RepeatType = next.Value;
+            current = next;
         }
 
         private void SetNextCardShowTime()

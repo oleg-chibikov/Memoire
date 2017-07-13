@@ -1,4 +1,4 @@
-﻿using Scar.Common.WPF;
+﻿using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.View.Contracts
 {

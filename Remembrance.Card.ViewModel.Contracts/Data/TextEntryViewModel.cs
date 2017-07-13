@@ -1,9 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
+using JetBrains.Annotations;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
     public class TextEntryViewModel : ViewModelBase
     {
+        [NotNull]
         public virtual string Text { get; set; }
 
         public override string ToString()

@@ -17,9 +17,9 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [CanBeNull]
-        public string NewValue { get; private set; }
+        public string NewValue { get; }
 
         [CanBeNull]
-        public string OldValue { get; private set; }
+        public string OldValue { get; }
     }
 }

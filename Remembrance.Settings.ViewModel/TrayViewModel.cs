@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 using Remembrance.DAL.Contracts;
 using Remembrance.Settings.View.Contracts;
 using Remembrance.Settings.ViewModel.Contracts;
-using Scar.Common.WPF;
+using Scar.Common.WPF.View;
 
 namespace Remembrance.Settings.ViewModel
 {
@@ -28,15 +28,9 @@ namespace Remembrance.Settings.ViewModel
 
         public TrayViewModel([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
         {
-            if (lifetimeScope == null)
-                throw new ArgumentNullException(nameof(lifetimeScope));
-            if (settingsRepository == null)
-                throw new ArgumentNullException(nameof(settingsRepository));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            this.lifetimeScope = lifetimeScope;
-            this.settingsRepository = settingsRepository;
-            this.logger = logger;
+            this.lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
+            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             ShowSettingsCommand = new RelayCommand(ShowSettings);
             ShowDictionaryCommand = new RelayCommand(ShowDictionary);
             ToggleActiveCommand = new RelayCommand(ToggleActive);
@@ -59,7 +53,7 @@ namespace Remembrance.Settings.ViewModel
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Info("Showing settings...");
-            var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
+            var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
             lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().GetOrCreateWindow(dictionaryWindowParameter).Restore();
         }
@@ -68,21 +62,21 @@ namespace Remembrance.Settings.ViewModel
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             logger.Info("Showing dictionary...");
-            var window = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
-            if (window == null)
+            var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
+            if (dictionaryWindow == null)
             {
                 var splashWindow = lifetimeScope.Resolve<ISplashScreenWindow>();
                 splashWindow.Show();
-                window = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetOrCreateWindow();
+                dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetOrCreateWindow();
                 RoutedEventHandler loadedHandler = null;
                 loadedHandler = (s, e) =>
                 {
-                    window.Loaded -= loadedHandler;
+                    dictionaryWindow.Loaded -= loadedHandler;
                     splashWindow.Close();
                 };
-                window.Loaded += loadedHandler;
+                dictionaryWindow.Loaded += loadedHandler;
             }
-            window.Restore();
+            dictionaryWindow.Restore();
         }
 
         private void ToggleActive()

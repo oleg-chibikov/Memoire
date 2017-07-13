@@ -12,7 +12,9 @@ namespace Remembrance.Resources.Converters
     {
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            return !(value is PartOfSpeech) ? null : CultureUtilities.GetLocalizedValue<string, WordMetadata>(value.ToString());
+            return !(value is PartOfSpeech)
+                ? null
+                : CultureUtilities.GetLocalizedValue<string, WordMetadata>(value.ToString());
         }
 
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)

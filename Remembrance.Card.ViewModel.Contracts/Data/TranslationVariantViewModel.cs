@@ -10,13 +10,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 {
     public sealed class TranslationVariantViewModel : PriorityWordViewModel
     {
-        public TranslationVariantViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessenger messenger,
-            [NotNull] IWordsProcessor wordsProcessor,
-            [NotNull] ILog logger) : base(textToSpeechPlayer, translationEntryRepository, translationDetailsRepository, viewModelAdapter, messenger, wordsProcessor, logger)
+        public TranslationVariantViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
+            : base(textToSpeechPlayer, translationEntryRepository, translationDetailsRepository, viewModelAdapter, messenger, wordsProcessor, logger)
         {
         }
 

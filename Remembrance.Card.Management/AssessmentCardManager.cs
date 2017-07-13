@@ -13,7 +13,7 @@ using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Interfaces;
-using Scar.Common.WPF;
+using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.Management
 {
@@ -39,13 +39,7 @@ namespace Remembrance.Card.Management
 
         private DateTime? lastCardShowTime;
 
-        public AssessmentCardManager([NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+        public AssessmentCardManager([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] ILifetimeScope lifetimeScope, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository)
             : base(lifetimeScope, settingsRepository, logger)
         {
             if (textToSpeechPlayer == null)
@@ -80,13 +74,6 @@ namespace Remembrance.Card.Management
             Logger.Info("Finished showing cards");
         }
 
-        private void OnCardShowFrequencyChanged(TimeSpan freq)
-        {
-            Logger.Debug($"Recreating interval for {freq}...");
-            interval.Dispose();
-            interval = CreateInterval(freq);
-        }
-
         private IDisposable CreateInterval(TimeSpan repeatTime)
         {
             TimeSpan initialDelay;
@@ -102,40 +89,50 @@ namespace Remembrance.Card.Management
                 initialDelay = TimeSpan.Zero;
             }
             return Observable.Timer(initialDelay, repeatTime)
-                .Subscribe(x =>
-                {
-                    Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                    var settings = settingsRepository.Get();
-                    if (!settings.IsActive)
+                .Subscribe(
+                    x =>
                     {
-                        Logger.Debug("Skipped showing card due to inactivity");
-                        return;
-                    }
-                    lastCardShowTime = DateTime.Now;
-                    var translationEntry = translationEntryRepository.GetCurrent();
-                    if (translationEntry == null)
-                    {
-                        Logger.Debug("Skipped showing card due to absence of suitable cards");
-                        return;
-                    }
-                    var translationDetails = translationDetailsRepository.GetById(translationEntry.Id);
-                    var translationInfo = new TranslationInfo(translationEntry, translationDetails);
-                    Logger.Debug($"Trying to show {translationInfo}...");
-                    ShowCard(translationInfo);
-                });
+                        Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+                        var settings = settingsRepository.Get();
+                        if (!settings.IsActive)
+                        {
+                            Logger.Debug("Skipped showing card due to inactivity");
+                            return;
+                        }
+
+                        lastCardShowTime = DateTime.Now;
+                        var translationEntry = translationEntryRepository.GetCurrent();
+                        if (translationEntry == null)
+                        {
+                            Logger.Debug("Skipped showing card due to absence of suitable cards");
+                            return;
+                        }
+
+                        var translationDetails = translationDetailsRepository.GetById(translationEntry.Id);
+                        var translationInfo = new TranslationInfo(translationEntry, translationDetails);
+                        Logger.Debug($"Trying to show {translationInfo}...");
+                        ShowCard(translationInfo);
+                    });
+        }
+
+        private void OnCardShowFrequencyChanged(TimeSpan freq)
+        {
+            Logger.Debug($"Recreating interval for {freq}...");
+            interval.Dispose();
+            interval = CreateInterval(freq);
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {
             if (hasOpenWindows)
                 return null;
+
             translationInfo.TranslationEntry.ShowCount++; //single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
             translationEntryRepository.Save(translationInfo.TranslationEntry);
             messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             var assessmentViewModel = LifetimeScope.Resolve<IAssessmentCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var window = LifetimeScope.Resolve<IAssessmentCardWindow>(
-                new TypedParameter(typeof(IAssessmentCardViewModel), assessmentViewModel));
+            var window = LifetimeScope.Resolve<IAssessmentCardWindow>(new TypedParameter(typeof(IAssessmentCardViewModel), assessmentViewModel));
             window.Closed += Window_Closed;
             hasOpenWindows = true;
             return window;

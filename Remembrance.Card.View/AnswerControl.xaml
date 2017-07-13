@@ -1,37 +1,45 @@
-﻿<UserControl x:Class="Remembrance.Card.View.AnswerControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             xmlns:contracts="clr-namespace:Remembrance.Card.ViewModel.Contracts;assembly=Remembrance.Card.ViewModel.Contracts"
-             lex:LocalizeDictionary.DesignCulture="en"
-             lex:LocalizeDictionary.OutputMissingKeys="True"
-             lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
-             lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance contracts:IAssessmentCardViewModel}">
+﻿<UserControl
+    x:Class="Remembrance.Card.View.AnswerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:contracts="clr-namespace:Remembrance.Card.ViewModel.Contracts;assembly=Remembrance.Card.ViewModel.Contracts"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance contracts:IAssessmentCardViewModel}">
     <UserControl.Resources>
-        <ResourceDictionary Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+        <ResourceDictionary
+            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
     </UserControl.Resources>
-    <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{lex:Loc EnterTheAnswer}"
-                   FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                   FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-        <TextBox Margin="{StaticResource CommonLeftMargin}"
-                 ToolTip="{lex:Loc MistakesTooltip}"
-                 Width="200"
-                 Name="AnswerTextBox"
-                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}">
+    <StackPanel
+        Orientation="Horizontal">
+        <TextBlock
+            Text="{lex:Loc EnterTheAnswer}"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <TextBox
+            Margin="{StaticResource CommonLeftMargin}"
+            ToolTip="{lex:Loc MistakesTooltip}"
+            Width="200"
+            Name="AnswerTextBox"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}">
             <TextBox.InputBindings>
-                <KeyBinding Command="{Binding ProvideAnswerCommand}"
-                            Key="Enter"
-                            CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                <KeyBinding
+                    Command="{Binding ProvideAnswerCommand}"
+                    Key="Enter"
+                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             </TextBox.InputBindings>
         </TextBox>
-        <Button Margin="{StaticResource CommonLeftMargin}" Content="{lex:Loc Ok}"
-                Command="{Binding ProvideAnswerCommand}"
-                CommandParameter="{Binding Text, ElementName=AnswerTextBox}" />
+        <Button
+            Margin="{StaticResource CommonLeftMargin}"
+            Content="{lex:Loc Ok}"
+            Command="{Binding ProvideAnswerCommand}"
+            CommandParameter="{Binding Text, ElementName=AnswerTextBox}" />
     </StackPanel>
 </UserControl>
