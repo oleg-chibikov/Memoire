@@ -7,4 +7,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
 [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyProduct("Remembrance")]
 [assembly: InternalsVisibleTo("Remembrance")]
