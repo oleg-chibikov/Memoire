@@ -4,24 +4,28 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
+using Remembrance.Resources;
+using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry>, ITranslationEntryRepository
+    internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry, int>, ITranslationEntryRepository
     {
         public TranslationEntryRepository([NotNull] ILog logger)
             : base(logger)
         {
         }
 
+        [NotNull]
         protected override string DbName => TranslationDetailsRepository.DictionaryDbName;
-        protected override string TableName => nameof(TranslationEntry);
+
+        [NotNull]
+        protected override string DbPath => Paths.SettingsPath;
 
         public TranslationEntry GetCurrent()
         {
-            return Db.GetCollection<TranslationEntry>(TableName)
-                .Find(x => x.NextCardShowTime < DateTime.Now) //get entries which are ready to show
+            return Collection.Find(x => x.NextCardShowTime < DateTime.Now) //get entries which are ready to show
                 .OrderBy(x => x.ShowCount) //the lower the value, the greater the priority
                 .FirstOrDefault();
         }
@@ -31,7 +35,7 @@ namespace Remembrance.DAL
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            return Db.GetCollection<TranslationEntry>(TableName).FindOne(x => x.Key.Text == key.Text && x.Key.SourceLanguage == key.SourceLanguage && x.Key.TargetLanguage == key.TargetLanguage);
+            return Collection.FindOne(x => x.Key.Text == key.Text && x.Key.SourceLanguage == key.SourceLanguage && x.Key.TargetLanguage == key.TargetLanguage);
         }
     }
 }

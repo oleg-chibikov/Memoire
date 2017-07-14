@@ -55,7 +55,6 @@ namespace Remembrance.DAL
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
-
             return Db.GetCollection<T>(TableName).Find(predicate).ToArray();
         }
 
@@ -64,7 +63,6 @@ namespace Remembrance.DAL
             var record = Db.GetCollection<T>(TableName).FindById(id);
             if (record == null)
                 throw new InvalidOperationException($"No record for {id}");
-
             return record;
         }
 
@@ -82,7 +80,6 @@ namespace Remembrance.DAL
                 logger.Debug($"{entity} is inserted");
                 return id;
             }
-
             var result = dbEntities.Update(entity.Id, entity);
             logger.Debug($"{entity} is{(result ? null : " not")} updated");
             return entity.Id;
@@ -103,7 +100,6 @@ namespace Remembrance.DAL
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
             Delete(entity.Id);
         }
     }

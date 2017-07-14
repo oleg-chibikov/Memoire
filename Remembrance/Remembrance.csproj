@@ -83,6 +83,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Scar.Common.DAL, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.2\lib\net462\Scar.Common.DAL.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.IO, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.IO.1.0.21\lib\net462\Scar.Common.IO.dll</HintPath>
     </Reference>

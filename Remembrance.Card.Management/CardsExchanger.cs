@@ -10,7 +10,7 @@ using Scar.Common.IO;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class CardsExchanger : ICardsExchanger
+    internal sealed class CardsExchanger : ICardsExchanger
     {
         private const string JsonFilesFilter = "Json files (*.json)|*.json;";
 

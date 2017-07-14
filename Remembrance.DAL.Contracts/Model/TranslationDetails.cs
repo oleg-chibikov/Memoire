@@ -1,10 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Scar.Common.DAL.Model;
 
 namespace Remembrance.DAL.Contracts.Model
 {
-    public sealed class TranslationDetails : Entity
+    public sealed class TranslationDetails : Entity<int>
     {
         [UsedImplicitly]
         // ReSharper disable once NotNullMemberIsNotInitialized

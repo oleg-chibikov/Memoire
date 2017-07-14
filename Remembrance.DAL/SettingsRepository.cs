@@ -2,24 +2,28 @@
 using JetBrains.Annotations;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
+using Remembrance.Resources;
+using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class SettingsRepository : LiteDbRepository<Settings>, ISettingsRepository
+    internal sealed class SettingsRepository : LiteDbRepository<Settings, int>, ISettingsRepository
     {
         public SettingsRepository([NotNull] ILog logger)
             : base(logger)
         {
         }
 
+        [NotNull]
         protected override string DbName => nameof(Settings);
 
-        protected override string TableName => nameof(Settings);
+        [NotNull]
+        protected override string DbPath => Paths.SettingsPath;
 
         public Settings Get()
         {
-            return Db.GetCollection<Settings>(TableName).FindById(1) ?? new Settings();
+            return Collection.FindById(1) ?? new Settings();
         }
     }
 }

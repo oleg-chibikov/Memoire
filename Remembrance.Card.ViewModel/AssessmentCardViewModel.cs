@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight;
@@ -26,8 +27,11 @@ namespace Remembrance.Card.ViewModel
     public sealed class AssessmentCardViewModel : ViewModelBase, IRequestCloseViewModel, IAssessmentCardViewModel
     {
         [NotNull]
+        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+        [NotNull]
         private static readonly Random Random = new Random();
 
+        //TODO: config timeout
         private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(2);
 
         [NotNull]
@@ -126,7 +130,8 @@ namespace Remembrance.Card.ViewModel
         {
             logger.Debug("Filtering translations by priority...");
             var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
-            priorityPartOfSpeechTranslations.RemoveAll(partOfSpeechTranslation => !partOfSpeechTranslation.TranslationVariants.Any(translationVariant => translationVariant.IsPriority || translationVariant.Synonyms != null && translationVariant.Synonyms.Any(synonym => synonym.IsPriority)));
+            priorityPartOfSpeechTranslations.RemoveAll(partOfSpeechTranslation => !partOfSpeechTranslation.TranslationVariants.Any(
+                translationVariant => translationVariant.IsPriority || translationVariant.Synonyms?.Any(synonym => synonym.IsPriority) == true));
             var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
             if (hasPriorityItems)
             {
@@ -313,11 +318,10 @@ namespace Remembrance.Card.ViewModel
             translationEntryRepository.Save(translationInfo.TranslationEntry);
             messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             logger.Debug($"Closing window in {CloseTimeout}...");
-            //TODO: await
             ActionExtensions.DoAfterAsync(
                 () =>
                 {
-                    RequestClose?.Invoke(null, null);
+                    _syncContext.Post(x => RequestClose?.Invoke(null, null), null);
                     logger.Debug("Window is closed");
                 },
                 CloseTimeout);
@@ -340,7 +344,7 @@ namespace Remembrance.Card.ViewModel
             return partOfSpeechGroup;
         }
 
-        private class AssessmentInfo
+        private sealed class AssessmentInfo
         {
             public AssessmentInfo(HashSet<string> acceptedAnswers, WordViewModel word, string correctAnswer)
             {

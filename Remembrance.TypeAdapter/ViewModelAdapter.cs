@@ -10,7 +10,7 @@ using Remembrance.TypeAdapter.Contracts;
 namespace Remembrance.TypeAdapter
 {
     [UsedImplicitly]
-    internal class ViewModelAdapter : IViewModelAdapter
+    internal sealed class ViewModelAdapter : IViewModelAdapter
     {
         public ViewModelAdapter([NotNull] ILifetimeScope lifetimeScope)
         {

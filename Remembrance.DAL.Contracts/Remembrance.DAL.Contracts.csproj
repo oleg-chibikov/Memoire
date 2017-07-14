@@ -37,6 +37,9 @@
     <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\LiteDB.3.1.1\lib\net35\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.DAL, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.2\lib\net462\Scar.Common.DAL.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
@@ -53,11 +56,9 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="IRepository.cs" />
     <Compile Include="ISettingsRepository.cs" />
     <Compile Include="ITranslationDetailsRepository.cs" />
     <Compile Include="ITranslationEntryRepository.cs" />
-    <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\RepeatType.cs" />
     <Compile Include="Model\RepeatTypeSettings.cs" />
     <Compile Include="Model\Settings.cs" />

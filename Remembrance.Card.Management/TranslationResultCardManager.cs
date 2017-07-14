@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
@@ -13,19 +14,33 @@ using Scar.Common.WPF.View.Contracts;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
+    internal sealed class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
+        [NotNull]
+        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+
         public TranslationResultCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
             : base(lifetimeScope, settingsRepository, logger)
         {
         }
 
+        //TODO: config timeout
+        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(5);
+
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {
+            Logger.Debug($"Creating window for {translationInfo}...");
             var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
-            //TODO: async?
-            ActionExtensions.DoAfterAsync(() => translationDetailsWindow.Close(), TimeSpan.FromSeconds(5));
+
+            Logger.Debug($"Closing window in {CloseTimeout}...");
+            ActionExtensions.DoAfterAsync(
+                () =>
+                {
+                    _syncContext.Post(x => translationDetailsWindow.Close(), null);
+                    Logger.Debug("Window is closed");
+                },
+                CloseTimeout);
             return translationDetailsWindow;
         }
     }

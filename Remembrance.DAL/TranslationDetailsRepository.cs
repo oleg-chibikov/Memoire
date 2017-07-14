@@ -2,11 +2,13 @@
 using JetBrains.Annotations;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
+using Remembrance.Resources;
+using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails>, ITranslationDetailsRepository
+    internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, int>, ITranslationDetailsRepository
     {
         internal const string DictionaryDbName = "Dictionary";
 
@@ -15,8 +17,10 @@ namespace Remembrance.DAL
         {
         }
 
+        [NotNull]
         protected override string DbName => DictionaryDbName;
 
-        protected override string TableName => nameof(TranslationDetails);
+        [NotNull]
+        protected override string DbPath => Paths.SettingsPath;
     }
 }

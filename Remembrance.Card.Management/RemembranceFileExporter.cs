@@ -13,7 +13,7 @@ using Remembrance.Translate.Contracts.Data.WordsTranslator;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class RemembranceFileExporter : IFileExporter
+    internal sealed class RemembranceFileExporter : IFileExporter
     {
         [NotNull]
         private readonly ILog logger;
@@ -43,17 +43,17 @@ namespace Remembrance.Card.Management
                 translationEntry.Translations = new PriorityWord[0];
                 var details = translationDetailsRepository.GetById(translationEntry.Id);
                 var priorityWordsIds = new HashSet<string>();
-                foreach (var partOfSpeechTranslation in details.TranslationResult.PartOfSpeechTranslations)
-                foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+                foreach (var translationVariant in
+                    details.TranslationResult.PartOfSpeechTranslations
+                    .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                 {
                     if (translationVariant.IsPriority)
                         priorityWordsIds.Add(translationVariant.Text);
                     if (translationVariant.Synonyms == null)
                         continue;
 
-                    foreach (var synonym in translationVariant.Synonyms)
-                        if (synonym.IsPriority)
-                            priorityWordsIds.Add(synonym.Text);
+                    foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.IsPriority))
+                        priorityWordsIds.Add(synonym.Text);
                 }
 
                 exportEntries.Add(

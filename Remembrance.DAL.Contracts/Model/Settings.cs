@@ -1,11 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
+using Scar.Common.DAL.Model;
 using Scar.Common.WPF.Localization;
 
 namespace Remembrance.DAL.Contracts.Model
 {
-    public sealed class Settings : Entity
+    public sealed class Settings : Entity<int>
     {
         public Settings()
         {

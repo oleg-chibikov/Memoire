@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using LiteDB;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Scar.Common.DAL.Model;
 
 namespace Remembrance.DAL.Contracts.Model
 {
-    public sealed class TranslationEntry : Entity
+    public sealed class TranslationEntry : Entity<int>
     {
         [NotNull]
         private LinkedListNode<RepeatType> current;

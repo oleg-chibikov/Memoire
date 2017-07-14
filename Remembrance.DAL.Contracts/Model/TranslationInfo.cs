@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.DAL.Contracts.Model
 {
-    public class TranslationInfo
+    public sealed class TranslationInfo
     {
         public TranslationInfo([NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
         {

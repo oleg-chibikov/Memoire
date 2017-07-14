@@ -13,7 +13,7 @@ using Remembrance.Translate.Contracts.Interfaces;
 namespace Remembrance.Card.Management
 {
     [UsedImplicitly]
-    internal class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
+    internal sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
         private static readonly char[] Separator =
         {
