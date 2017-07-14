@@ -12,21 +12,21 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 {
     public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
     {
-        private string language;
+        private string _language;
 
-        private DateTime lastCardShowTime;
+        private DateTime _lastCardShowTime;
 
-        private DateTime nextCardShowTime;
+        private DateTime _nextCardShowTime;
 
-        private RepeatType repeatType;
+        private RepeatType _repeatType;
 
-        private int showCount;
+        private int _showCount;
 
-        private string targetLanguage;
+        private string _targetLanguage;
 
-        private string text;
+        private string _text;
 
-        private ObservableCollection<PriorityWordViewModel> translations;
+        private ObservableCollection<PriorityWordViewModel> _translations;
 
         [UsedImplicitly]
         public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
@@ -40,22 +40,22 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [UsedImplicitly]
         public override string Text
         {
-            get => text ?? string.Empty;
+            get => _text ?? string.Empty;
             set
             {
                 var newValue = value.Capitalize();
-                if (newValue == text)
+                if (newValue == _text)
                     return;
 
                 //For the new item this event should not be fired
-                if (text != null && !NotificationIsSupressed)
+                if (_text != null && !NotificationIsSupressed)
                 {
                     var handler = Volatile.Read(ref TextChanged);
-                    handler?.Invoke(this, new TextChangedEventArgs(newValue, text));
+                    handler?.Invoke(this, new TextChangedEventArgs(newValue, _text));
                 }
                 else
                 {
-                    Set(() => Text, ref text, newValue);
+                    Set(() => Text, ref _text, newValue);
                 }
             }
         }
@@ -63,50 +63,52 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations
         {
-            get => translations;
-            set { Set(() => Translations, ref translations, value); }
+            get => _translations;
+            set { Set(() => Translations, ref _translations, value); }
         }
 
         [UsedImplicitly]
         public int ShowCount
         {
-            get => showCount;
-            set { Set(() => ShowCount, ref showCount, value); }
+            get => _showCount;
+            set { Set(() => ShowCount, ref _showCount, value); }
         }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public override string Language
         {
-            get => language ?? string.Empty;
-            set { Set(() => Language, ref language, value); }
+            get => _language ?? string.Empty;
+            set { Set(() => Language, ref _language, value); }
         }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string TargetLanguage
         {
-            get => targetLanguage ?? string.Empty;
-            set { Set(() => TargetLanguage, ref targetLanguage, value); }
+            get => _targetLanguage ?? string.Empty;
+            set { Set(() => TargetLanguage, ref _targetLanguage, value); }
         }
 
         [UsedImplicitly]
         public RepeatType RepeatType
         {
-            get => repeatType;
-            set { Set(() => RepeatType, ref repeatType, value); }
+            get => _repeatType;
+            set { Set(() => RepeatType, ref _repeatType, value); }
         }
 
         [UsedImplicitly]
         public DateTime LastCardShowTime
         {
-            get => lastCardShowTime;
-            set { Set(() => LastCardShowTime, ref lastCardShowTime, value); }
+            get => _lastCardShowTime;
+            set { Set(() => LastCardShowTime, ref _lastCardShowTime, value); }
         }
 
         [UsedImplicitly]
         public DateTime NextCardShowTime
         {
-            get => nextCardShowTime;
-            set { Set(() => NextCardShowTime, ref nextCardShowTime, value); }
+            get => _nextCardShowTime;
+            set { Set(() => NextCardShowTime, ref _nextCardShowTime, value); }
         }
 
         public bool NotificationIsSupressed { get; set; }

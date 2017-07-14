@@ -24,17 +24,23 @@ namespace Remembrance.Card.Management
         };
 
         [NotNull]
-        private readonly ILanguageDetector languageDetector;
+        private readonly ILanguageDetector _languageDetector;
 
-        public EachWordFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILanguageDetector languageDetector)
+        public EachWordFileImporter(
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ILog logger,
+            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IMessenger messenger,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] ILanguageDetector languageDetector)
             : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
         {
-            this.languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
+            _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
         protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry)
         {
-            var sourceLanguage = languageDetector.DetectLanguageAsync(exchangeEntry.Text).Result.Language ?? Constants.EnLanguage;
+            var sourceLanguage = _languageDetector.DetectLanguageAsync(exchangeEntry.Text).Result.Language ?? Constants.EnLanguage;
             var targetLanguage = WordsAdder.GetDefaultTargetLanguage(sourceLanguage);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }

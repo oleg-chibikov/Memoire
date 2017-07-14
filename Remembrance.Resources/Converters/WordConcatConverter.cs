@@ -15,7 +15,7 @@ namespace Remembrance.Resources.Converters
             if (words == null)
                 return null;
 
-            var texts = words.Select(x => (string)x.Text).ToArray();
+            var texts = words.Select(x => (string) x.Text).ToArray();
             return base.Convert(texts, targetType, parameter, culture);
         }
     }

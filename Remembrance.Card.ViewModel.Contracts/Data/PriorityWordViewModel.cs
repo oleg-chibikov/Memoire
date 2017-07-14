@@ -18,30 +18,37 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
     public class PriorityWordViewModel : WordViewModel
     {
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository translationDetailsRepository;
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
-        private readonly ITranslationEntryRepository translationEntryRepository;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IViewModelAdapter viewModelAdapter;
+        private readonly IViewModelAdapter _viewModelAdapter;
 
-        private bool isPriority;
+        private bool _isPriority;
 
-        public PriorityWordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
+        public PriorityWordViewModel(
+            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] IMessenger messenger,
+            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ILog logger)
             : base(textToSpeechPlayer, wordsProcessor)
         {
-            this.translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
-            this.viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
-            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
@@ -53,8 +60,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public bool IsPriority
         {
-            get => isPriority;
-            set { Set(() => IsPriority, ref isPriority, value); }
+            get => _isPriority;
+            set { Set(() => IsPriority, ref _isPriority, value); }
         }
 
         [CanBeNull]
@@ -65,10 +72,10 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         private void Add([NotNull] TranslationEntry translationEntry)
         {
-            logger.Info($"Adding {this} to {translationEntry}...");
-            var priorityWord = viewModelAdapter.Adapt<PriorityWord>(this);
+            _logger.Info($"Adding {this} to {translationEntry}...");
+            var priorityWord = _viewModelAdapter.Adapt<PriorityWord>(this);
             translationEntry.Translations.Add(priorityWord);
-            messenger.Send(GetCurrentCopy(translationEntry), MessengerTokens.PriorityAddToken);
+            _messenger.Send(GetCurrentCopy(translationEntry), MessengerTokens.PriorityAddToken);
         }
 
         /// <summary>
@@ -76,39 +83,39 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         /// </summary>
         private PriorityWordViewModel GetCurrentCopy([NotNull] TranslationEntry translationEntry)
         {
-            var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
+            var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
             var word = translationEntryViewModel.Translations.Single(x => x.CorrelationId == CorrelationId);
             return word;
         }
 
         private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
         {
-            logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
+            _logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
             translationEntry.Translations.Remove(wordInTranslationEntry);
-            messenger.Send(this, MessengerTokens.PriorityRemoveToken);
+            _messenger.Send(this, MessengerTokens.PriorityRemoveToken);
             if (!translationEntry.Translations.Any())
             {
-                logger.Info("Restoring default translations...");
+                _logger.Info("Restoring default translations...");
                 translationEntry.Translations = translationDetails.TranslationResult.GetDefaultWords();
-                var translationEntryViewModel = viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
+                var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
                 foreach (var word in translationEntryViewModel.Translations)
-                    messenger.Send(word, MessengerTokens.PriorityAddToken);
+                    _messenger.Send(word, MessengerTokens.PriorityAddToken);
             }
         }
 
         private void TogglePriority()
         {
-            logger.Info($"Changing priority for {this} to {!IsPriority}");
+            _logger.Info($"Changing priority for {this} to {!IsPriority}");
 
             IsPriority = !IsPriority;
             if (ParentTranslationDetails != null)
             {
-                logger.Debug($"Changing priority for {this} in TranslationDetails...");
-                var translationDetails = viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetails);
-                translationDetailsRepository.Save(translationDetails);
+                _logger.Debug($"Changing priority for {this} in TranslationDetails...");
+                var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetails);
+                _translationDetailsRepository.Save(translationDetails);
 
                 //TODO: check already deleted
-                var translationEntry = translationEntryRepository.GetById(ParentTranslationDetails.Id);
+                var translationEntry = _translationEntryRepository.GetById(ParentTranslationDetails.Id);
                 var wordInTranslationEntry = translationEntry.Translations.SingleOrDefault(x => x.CorrelationId == CorrelationId);
                 if (wordInTranslationEntry == null)
                 {
@@ -122,15 +129,15 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                     else
                         UpdateCorrelatedPriority(wordInTranslationEntry);
                 }
-                translationEntryRepository.Save(translationEntry);
-                logger.Debug($"TranslationEntry for {this} has been updated");
+                _translationEntryRepository.Save(translationEntry);
+                _logger.Debug($"TranslationEntry for {this} has been updated");
             }
 
             else if (ParentTranslationEntry != null)
             {
-                logger.Debug($"Changing priority for {this} in TranslationEntry...");
-                var translationEntry = viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry);
-                var translationDetails = translationDetailsRepository.GetById(ParentTranslationEntry.Id);
+                _logger.Debug($"Changing priority for {this} in TranslationEntry...");
+                var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry);
+                var translationDetails = _translationDetailsRepository.GetById(ParentTranslationEntry.Id);
 
                 if (!IsPriority)
                 {
@@ -138,27 +145,27 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                     Remove(priorityWord, translationEntry, translationDetails);
                 }
 
-                translationEntryRepository.Save(translationEntry);
-                logger.Debug($"Updating TranslationDetails for {this}...");
+                _translationEntryRepository.Save(translationEntry);
+                _logger.Debug($"Updating TranslationDetails for {this}...");
 
                 var wordInTranslationDetails = translationDetails.GetWordInTranslationVariants(CorrelationId);
                 if (wordInTranslationDetails == null)
                 {
-                    logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
+                    _logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
                     return;
                 }
 
                 UpdateCorrelatedPriority(wordInTranslationDetails);
-                translationDetailsRepository.Save(translationDetails);
-                logger.Debug($"TranslationDetails for {this} have been updated");
+                _translationDetailsRepository.Save(translationDetails);
+                _logger.Debug($"TranslationDetails for {this} have been updated");
             }
         }
 
         private void UpdateCorrelatedPriority([NotNull] PriorityWord correlatedWord)
         {
-            logger.Info($"Updating priority in correlated word {correlatedWord}...");
+            _logger.Info($"Updating priority in correlated word {correlatedWord}...");
             correlatedWord.IsPriority = IsPriority;
-            messenger.Send(this, MessengerTokens.PriorityChangeToken);
+            _messenger.Send(this, MessengerTokens.PriorityChangeToken);
         }
     }
 }

@@ -7,13 +7,14 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
 {
     public class TextEntry
     {
-        private string text;
+        private string _text;
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string Text
         {
-            get => text;
-            set => text = value.Capitalize();
+            get => _text;
+            set => _text = value.Capitalize();
         }
 
         public override string ToString()

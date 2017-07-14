@@ -13,7 +13,7 @@ namespace Remembrance.WebApi
     {
         public Task LogAsync([NotNull] ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
-            var logger = (ILog)context.Request.GetDependencyScope().GetService(typeof(ILog));
+            var logger = (ILog) context.Request.GetDependencyScope().GetService(typeof(ILog));
             var localizableException = context.Exception as LocalizableException;
             if (localizableException != null)
                 logger.Warn(localizableException.Message);

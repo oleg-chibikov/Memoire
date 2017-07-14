@@ -58,14 +58,14 @@ namespace Remembrance.Card.Management
 
         private static void Window_Closed(object sender, EventArgs e)
         {
-            var window = (Window)sender;
+            var window = (Window) sender;
             window.Closed -= Window_Closed;
             window.SizeChanged -= Window_SizeChanged;
         }
 
         private static void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var window = (Window)sender;
+            var window = (Window) sender;
             var r = SystemParameters.WorkArea;
             window.Left = r.Right - window.ActualWidth;
             window.Top = r.Bottom - window.ActualHeight;

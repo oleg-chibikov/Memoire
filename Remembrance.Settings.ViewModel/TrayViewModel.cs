@@ -17,19 +17,19 @@ namespace Remembrance.Settings.ViewModel
     public sealed class TrayViewModel : ViewModelBase, ITrayViewModel
     {
         [NotNull]
-        private readonly ILifetimeScope lifetimeScope;
+        private readonly ILifetimeScope _lifetimeScope;
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly ISettingsRepository settingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
 
         public TrayViewModel([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
         {
-            this.lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
-            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             ShowSettingsCommand = new CorrelationCommand(ShowSettings);
             ShowDictionaryCommand = new CorrelationCommand(ShowDictionary);
             ToggleActiveCommand = new CorrelationCommand(ToggleActive);
@@ -50,21 +50,21 @@ namespace Remembrance.Settings.ViewModel
 
         private void ShowSettings()
         {
-            logger.Info("Showing settings...");
-            var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
+            _logger.Info("Showing settings...");
+            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().GetOrCreateWindow(dictionaryWindowParameter).Restore();
+            _lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().GetOrCreateWindow(dictionaryWindowParameter).Restore();
         }
 
         private void ShowDictionary()
         {
-            logger.Info("Showing dictionary...");
-            var dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
+            _logger.Info("Showing dictionary...");
+            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
             if (dictionaryWindow == null)
             {
-                var splashWindow = lifetimeScope.Resolve<ISplashScreenWindow>();
+                var splashWindow = _lifetimeScope.Resolve<ISplashScreenWindow>();
                 splashWindow.Show();
-                dictionaryWindow = lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetOrCreateWindow();
+                dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetOrCreateWindow();
 
                 void LoadedHandler(object s, RoutedEventArgs e)
                 {
@@ -79,17 +79,17 @@ namespace Remembrance.Settings.ViewModel
 
         private void ToggleActive()
         {
-            logger.Info("Toggling state...");
+            _logger.Info("Toggling state...");
             IsActive = !IsActive;
-            var settings = settingsRepository.Get();
+            var settings = _settingsRepository.Get();
             settings.IsActive = IsActive;
-            settingsRepository.Save(settings);
-            logger.Info($"New state is {IsActive}");
+            _settingsRepository.Save(settings);
+            _logger.Info($"New state is {IsActive}");
         }
 
         private void Exit()
         {
-            logger.Info("Exitting application...");
+            _logger.Info("Exitting application...");
             Application.Current.Shutdown();
         }
 
@@ -97,13 +97,13 @@ namespace Remembrance.Settings.ViewModel
 
         #region Dependency Properties
 
-        private bool isActive;
+        private bool _isActive;
 
         public bool IsActive
         {
-            get { return isActive; }
+            get { return _isActive; }
             [UsedImplicitly]
-            set { Set(() => IsActive, ref isActive, value); }
+            set { Set(() => IsActive, ref _isActive, value); }
         }
 
         #endregion

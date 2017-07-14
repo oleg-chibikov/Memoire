@@ -15,21 +15,21 @@ namespace Remembrance.WebApi
     public sealed class ApiHoster : IDisposable
     {
         private const string BaseAddress = "http://localhost:2053/";
-        private readonly IDisposable apiHost;
-        private readonly ILifetimeScope innerScope;
+        private readonly IDisposable _apiHost;
+        private readonly ILifetimeScope _innerScope;
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         public ApiHoster([NotNull] ILog logger, [NotNull] ILifetimeScope lifetimeScope)
         {
             if (lifetimeScope == null)
                 throw new ArgumentNullException(nameof(lifetimeScope));
 
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             logger.Debug("Starting WebApi...");
-            innerScope = lifetimeScope.BeginLifetimeScope(innerBuilder => innerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly()).InstancePerDependency());
-            apiHost = WebApp.Start(
+            _innerScope = lifetimeScope.BeginLifetimeScope(innerBuilder => innerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly()).InstancePerDependency());
+            _apiHost = WebApp.Start(
                 new StartOptions(BaseAddress),
                 app =>
                 {
@@ -46,11 +46,11 @@ namespace Remembrance.WebApi
                             word = RouteParameter.Optional
                         });
 
-                    config.DependencyResolver = new AutofacWebApiDependencyResolver(innerScope);
+                    config.DependencyResolver = new AutofacWebApiDependencyResolver(_innerScope);
 
-                    app.UseAutofacMiddleware(innerScope);
+                    app.UseAutofacMiddleware(_innerScope);
                     app.UseAutofacWebApi(config);
-                    app.DisposeScopeOnAppDisposing(innerScope);
+                    app.DisposeScopeOnAppDisposing(_innerScope);
                     app.UseWebApi(config);
                 });
             logger.Debug("WebApi is started");
@@ -58,9 +58,9 @@ namespace Remembrance.WebApi
 
         public void Dispose()
         {
-            apiHost.Dispose();
-            innerScope.Dispose();
-            logger.Debug("WebApi has been stopped...");
+            _apiHost.Dispose();
+            _innerScope.Dispose();
+            _logger.Debug("WebApi has been stopped...");
         }
     }
 }

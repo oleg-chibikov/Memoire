@@ -12,15 +12,15 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
     public class WordViewModel : TextEntryViewModel
     {
         [NotNull]
-        private readonly ITextToSpeechPlayer textToSpeechPlayer;
+        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        private readonly IWordsProcessor wordsProcessor;
+        private readonly IWordsProcessor _wordsProcessor;
 
         public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
         {
-            this.textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            this.wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             PlayTtsCommand = new CorrelationCommand(PlayTts);
             LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
         }
@@ -32,6 +32,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public bool CanEdit => CanLearnWord || CanTogglePriority;
         public bool CanLearnWord { get; set; } = true;
 
+        // ReSharper disable once RedundantDefaultMemberInitializer
         public virtual bool CanTogglePriority { get; } = false;
 
         public PartOfSpeech PartOfSpeech
@@ -77,12 +78,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         private void LearnWord()
         {
-            wordsProcessor.ProcessNewWord(Text, Language);
+            _wordsProcessor.ProcessNewWord(Text, Language);
         }
 
         private void PlayTts()
         {
-            textToSpeechPlayer.PlayTtsAsync(Text, Language);
+            _textToSpeechPlayer.PlayTtsAsync(Text, Language);
         }
 
         public override string ToString()

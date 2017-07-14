@@ -6,13 +6,13 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
     // ReSharper disable NotNullMemberIsNotInitialized
     public class TranslationResultViewModel : ViewModelBase
     {
-        private PartOfSpeechTranslationViewModel[] partOfSpeechTranslations;
+        private PartOfSpeechTranslationViewModel[] _partOfSpeechTranslations;
 
         [NotNull]
         public PartOfSpeechTranslationViewModel[] PartOfSpeechTranslations
         {
-            get => partOfSpeechTranslations;
-            set { Set(() => PartOfSpeechTranslations, ref partOfSpeechTranslations, value); }
+            get => _partOfSpeechTranslations;
+            set { Set(() => PartOfSpeechTranslations, ref _partOfSpeechTranslations, value); }
         }
     }
 }

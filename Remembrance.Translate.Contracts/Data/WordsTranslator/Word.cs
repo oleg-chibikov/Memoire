@@ -9,13 +9,16 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
         [UsedImplicitly]
         public PartOfSpeech PartOfSpeech { get; set; }
 
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string VerbType { get; set; }
 
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string NounAnimacy { get; set; }
 
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string NounGender { get; set; }
     }
 }

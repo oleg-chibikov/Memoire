@@ -16,9 +16,9 @@ namespace Remembrance.Card.ViewModel
     public class TranslationResultCardViewModel : ViewModelBase, ITranslationResultCardViewModel
     {
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
-        private TranslationDetailsViewModel translationDetails;
+        private TranslationDetailsViewModel _translationDetails;
 
         public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger)
         {
@@ -29,7 +29,7 @@ namespace Remembrance.Card.ViewModel
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));
 
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
             messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
@@ -39,8 +39,8 @@ namespace Remembrance.Card.ViewModel
 
         public TranslationDetailsViewModel TranslationDetails
         {
-            get => translationDetails;
-            private set { Set(() => TranslationDetails, ref translationDetails, value); }
+            get => _translationDetails;
+            private set { Set(() => TranslationDetails, ref _translationDetails, value); }
         }
 
         public string Word { get; }
@@ -54,22 +54,22 @@ namespace Remembrance.Card.ViewModel
             if (parentId != TranslationDetails.Id)
                 return;
 
-            logger.Debug($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
+            _logger.Debug($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
             var translation = TranslationDetails.GetWordInTranslationVariants(priorityWordViewModel.CorrelationId);
             if (translation != null)
             {
-                logger.Debug($"Priority for {translation} is updated");
+                _logger.Debug($"Priority for {translation} is updated");
                 translation.IsPriority = priorityWordViewModel.IsPriority;
             }
             else
             {
-                logger.Debug("There is no matching translation in the card");
+                _logger.Debug("There is no matching translation in the card");
             }
         }
 
         private void OnUiLanguageChanged([NotNull] string uiLanguage)
         {
-            logger.Debug($"Changing UI language to {uiLanguage}...");
+            _logger.Debug($"Changing UI language to {uiLanguage}...");
             if (uiLanguage == null)
                 throw new ArgumentNullException(nameof(uiLanguage));
 

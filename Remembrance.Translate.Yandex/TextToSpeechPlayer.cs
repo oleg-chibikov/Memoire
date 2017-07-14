@@ -25,15 +25,15 @@ namespace Remembrance.Translate.Yandex
         };
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly ISettingsRepository settingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
 
         public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
         public async Task<bool> PlayTtsAsync(string text, string lang)
@@ -43,13 +43,14 @@ namespace Remembrance.Translate.Yandex
             if (lang == null)
                 throw new ArgumentNullException(nameof(lang));
 
-            logger.Debug($"Starting speaking {text}...");
+            _logger.Debug($"Starting speaking {text}...");
             return await Task.Run(
                 () =>
                 {
-                    var settings = settingsRepository.Get();
+                    var settings = _settingsRepository.Get();
                     var reset = new AutoResetEvent(false);
-                    var uriPart = $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+                    var uriPart =
+                        $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
                     var response = Client.GetAsync(uriPart).Result;
                     if (!response.IsSuccessStatusCode)
                         return false;
@@ -63,7 +64,7 @@ namespace Remembrance.Translate.Yandex
                         EventHandler<StoppedEventArgs> playbackStoppedHandler = null;
                         playbackStoppedHandler = (s, e) =>
                         {
-                            ((WaveOut)s).PlaybackStopped -= playbackStoppedHandler;
+                            ((WaveOut) s).PlaybackStopped -= playbackStoppedHandler;
                             reset.Set();
                         };
                         waveOut.PlaybackStopped += playbackStoppedHandler;
@@ -71,7 +72,7 @@ namespace Remembrance.Translate.Yandex
                         //Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
                         reset.WaitOne(TimeSpan.FromSeconds(5));
                     }
-                    logger.Debug($"Finished speaking {text}");
+                    _logger.Debug($"Finished speaking {text}");
                     return true;
                 });
         }

@@ -22,23 +22,23 @@ namespace Remembrance.Settings.ViewModel
     public sealed class SettingsViewModel : ViewModelBase, ISettingsViewModel, IRequestCloseViewModel
     {
         [NotNull]
-        private readonly ICardsExchanger cardsExchanger;
+        private readonly ICardsExchanger _cardsExchanger;
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly ISettingsRepository settingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
 
         public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessenger messenger, [NotNull] ICardsExchanger cardsExchanger)
         {
-            this.settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            this.cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
 
             var settings = settingsRepository.Get();
             TtsSpeaker = settings.TtsSpeaker;
@@ -83,9 +83,9 @@ namespace Remembrance.Settings.ViewModel
 
         private void Save()
         {
-            logger.Debug("Saving settings...");
+            _logger.Debug("Saving settings...");
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
-            var settings = settingsRepository.Get();
+            var settings = _settingsRepository.Get();
             var prevFreq = settings.CardShowFrequency;
             settings.CardShowFrequency = freq;
             settings.TtsSpeaker = TtsSpeaker;
@@ -93,11 +93,11 @@ namespace Remembrance.Settings.ViewModel
             settings.ReverseTranslation = ReverseTranslation;
             settings.RandomTranslation = RandomTranslation;
             settings.UiLanguage = UiLanguage.Code;
-            settingsRepository.Save(settings);
+            _settingsRepository.Save(settings);
             if (prevFreq != freq)
-                messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
+                _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
             RequestClose?.Invoke(null, null);
-            logger.Debug("Settings has been saved");
+            _logger.Debug("Settings has been saved");
         }
 
         private static void OpenSharedFolder()
@@ -117,74 +117,74 @@ namespace Remembrance.Settings.ViewModel
 
         private void Export()
         {
-            cardsExchanger.Export();
+            _cardsExchanger.Export();
         }
 
         private void Import()
         {
-            cardsExchanger.Import();
+            _cardsExchanger.Import();
         }
 
         #endregion
 
         #region DependencyProperties
 
-        private double cardShowFrequency;
+        private double _cardShowFrequency;
 
         public double CardShowFrequency
         {
-            get { return cardShowFrequency; }
+            get { return _cardShowFrequency; }
             [UsedImplicitly]
-            set { Set(() => CardShowFrequency, ref cardShowFrequency, value); }
+            set { Set(() => CardShowFrequency, ref _cardShowFrequency, value); }
         }
 
-        private Language uiLanguage;
+        private Language _uiLanguage;
 
         public Language UiLanguage
         {
-            get { return uiLanguage; }
+            get { return _uiLanguage; }
             [UsedImplicitly]
             set
             {
-                Set(() => UiLanguage, ref uiLanguage, value);
-                messenger.Send(uiLanguage.Code, MessengerTokens.UiLanguageToken);
+                Set(() => UiLanguage, ref _uiLanguage, value);
+                _messenger.Send(_uiLanguage.Code, MessengerTokens.UiLanguageToken);
             }
         }
 
-        private Speaker ttsSpeaker;
+        private Speaker _ttsSpeaker;
 
         public Speaker TtsSpeaker
         {
-            get { return ttsSpeaker; }
+            get { return _ttsSpeaker; }
             [UsedImplicitly]
-            set { Set(() => TtsSpeaker, ref ttsSpeaker, value); }
+            set { Set(() => TtsSpeaker, ref _ttsSpeaker, value); }
         }
 
-        private VoiceEmotion ttsVoiceEmotion;
+        private VoiceEmotion _ttsVoiceEmotion;
 
         public VoiceEmotion TtsVoiceEmotion
         {
-            get { return ttsVoiceEmotion; }
+            get { return _ttsVoiceEmotion; }
             [UsedImplicitly]
-            set { Set(() => TtsVoiceEmotion, ref ttsVoiceEmotion, value); }
+            set { Set(() => TtsVoiceEmotion, ref _ttsVoiceEmotion, value); }
         }
 
-        private bool reverseTranslation;
+        private bool _reverseTranslation;
 
         public bool ReverseTranslation
         {
-            get { return reverseTranslation; }
+            get { return _reverseTranslation; }
             [UsedImplicitly]
-            set { Set(() => ReverseTranslation, ref reverseTranslation, value); }
+            set { Set(() => ReverseTranslation, ref _reverseTranslation, value); }
         }
 
-        private bool randomTranslation;
+        private bool _randomTranslation;
 
         public bool RandomTranslation
         {
-            get { return randomTranslation; }
+            get { return _randomTranslation; }
             [UsedImplicitly]
-            set { Set(() => RandomTranslation, ref randomTranslation, value); }
+            set { Set(() => RandomTranslation, ref _randomTranslation, value); }
         }
 
         #endregion

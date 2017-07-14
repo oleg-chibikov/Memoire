@@ -6,10 +6,12 @@ namespace Remembrance.Translate.Contracts.Interfaces
 {
     public interface ILanguageDetector
     {
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         Task<DetectionResult> DetectLanguageAsync([NotNull] string text);
 
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         Task<ListResult> ListLanguagesAsync([NotNull] string ui);
     }
 }

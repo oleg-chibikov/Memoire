@@ -11,10 +11,12 @@ namespace Remembrance.Settings.ViewModel.Contracts.Data
         }
 
         //TODO: Readonly?
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string Code { get; set; }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string DisplayName { get; set; }
 
         public override bool Equals(object obj)

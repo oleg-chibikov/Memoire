@@ -15,78 +15,86 @@ namespace Remembrance.Card.Management
         private const string JsonFilesFilter = "Json files (*.json)|*.json;";
 
         [NotNull]
-        private readonly IFileExporter exporter;
+        private readonly IFileExporter _exporter;
 
         [NotNull]
-        private readonly IFileImporter[] importers;
+        private readonly IFileImporter[] _importers;
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly IOpenFileService openFileService;
+        private readonly IOpenFileService _openFileService;
 
         [NotNull]
-        private readonly ISaveFileService saveFileService;
+        private readonly ISaveFileService _saveFileService;
 
-        public CardsExchanger([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] IOpenFileService openFileService, [NotNull] ISaveFileService saveFileService, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IFileExporter exporter, [NotNull] IFileImporter[] importers, [NotNull] IMessenger messenger)
+        public CardsExchanger(
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] IOpenFileService openFileService,
+            [NotNull] ISaveFileService saveFileService,
+            [NotNull] ILog logger,
+            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IFileExporter exporter,
+            [NotNull] IFileImporter[] importers,
+            [NotNull] IMessenger messenger)
         {
             if (wordsAdder == null)
                 throw new ArgumentNullException(nameof(wordsAdder));
 
-            this.openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
-            this.saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.exporter = exporter ?? throw new ArgumentNullException(nameof(exporter));
-            this.importers = importers ?? throw new ArgumentNullException(nameof(importers));
-            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
+            _saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _exporter = exporter ?? throw new ArgumentNullException(nameof(exporter));
+            _importers = importers ?? throw new ArgumentNullException(nameof(importers));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
         public void Export()
         {
-            if (!saveFileService.SaveFileDialog(Texts.Title, JsonFilesFilter))
+            if (!_saveFileService.SaveFileDialog(Texts.Title, JsonFilesFilter))
                 return;
 
-            logger.Info($"Performing export to {saveFileService.FileName}...");
-            if (exporter.Export(saveFileService.FileName))
+            _logger.Info($"Performing export to {_saveFileService.FileName}...");
+            if (_exporter.Export(_saveFileService.FileName))
             {
-                logger.Info($"Export to {saveFileService.FileName} has been performed");
-                messenger.Send(Texts.ExportSucceeded, MessengerTokens.UserMessageToken);
+                _logger.Info($"Export to {_saveFileService.FileName} has been performed");
+                _messenger.Send(Texts.ExportSucceeded, MessengerTokens.UserMessageToken);
             }
             else
             {
-                logger.Warn($"Export to {saveFileService.FileName} failed");
-                messenger.Send(Texts.ExportFailed, MessengerTokens.UserWarningToken);
+                _logger.Warn($"Export to {_saveFileService.FileName} failed");
+                _messenger.Send(Texts.ExportFailed, MessengerTokens.UserWarningToken);
             }
         }
 
         public void Import()
         {
-            if (!openFileService.OpenFileDialog(Texts.Title, JsonFilesFilter))
+            if (!_openFileService.OpenFileDialog(Texts.Title, JsonFilesFilter))
                 return;
 
-            foreach (var importer in importers)
+            foreach (var importer in _importers)
             {
-                logger.Info($"Performing import from {openFileService.FileName} with {importer.GetType().Name}...");
+                _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType().Name}...");
                 string[] errors;
                 int count;
-                if (importer.Import(openFileService.FileName, out errors, out count))
+                if (importer.Import(_openFileService.FileName, out errors, out count))
                 {
-                    logger.Info($"Import from {openFileService.FileName} has been performed");
+                    _logger.Info($"Import from {_openFileService.FileName} has been performed");
                     var mainMessage = string.Format(Texts.ImportSucceeded, count);
                     if (errors != null)
-                        messenger.Send($"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}", MessengerTokens.UserWarningToken);
+                        _messenger.Send($"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}", MessengerTokens.UserWarningToken);
                     else
-                        messenger.Send($"[{importer.GetType().Name}] {mainMessage}", MessengerTokens.UserMessageToken);
+                        _messenger.Send($"[{importer.GetType().Name}] {mainMessage}", MessengerTokens.UserMessageToken);
                     return;
                 }
             }
 
-            logger.Warn($"Import from {openFileService.FileName} failed");
-            messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
+            _logger.Warn($"Import from {_openFileService.FileName} failed");
+            _messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
         }
     }
 }

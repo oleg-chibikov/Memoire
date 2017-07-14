@@ -8,7 +8,8 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
 {
     public sealed class TranslationResult
     {
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public PartOfSpeechTranslation[] PartOfSpeechTranslations { get; set; }
 
         [NotNull]

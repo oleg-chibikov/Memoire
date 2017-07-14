@@ -16,19 +16,19 @@ namespace Remembrance.Card.Management
     internal sealed class RemembranceFileExporter : IFileExporter
     {
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository translationDetailsRepository;
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
-        private readonly ITranslationEntryRepository translationEntryRepository;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         public RemembranceFileExporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger)
         {
-            this.translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            this.translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public bool Export(string fileName)
@@ -36,16 +36,14 @@ namespace Remembrance.Card.Management
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            var translationEntries = translationEntryRepository.GetAll();
+            var translationEntries = _translationEntryRepository.GetAll();
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
             foreach (var translationEntry in translationEntries)
             {
                 translationEntry.Translations = new PriorityWord[0];
-                var details = translationDetailsRepository.GetById(translationEntry.Id);
+                var details = _translationDetailsRepository.GetById(translationEntry.Id);
                 var priorityWordsIds = new HashSet<string>();
-                foreach (var translationVariant in
-                    details.TranslationResult.PartOfSpeechTranslations
-                    .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                foreach (var translationVariant in details.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                 {
                     if (translationVariant.IsPriority)
                         priorityWordsIds.Add(translationVariant.Text);
@@ -72,11 +70,11 @@ namespace Remembrance.Card.Management
             }
             catch (IOException ex)
             {
-                logger.Warn("Cannot save file to disk", ex);
+                _logger.Warn("Cannot save file to disk", ex);
             }
             catch (JsonSerializationException ex)
             {
-                logger.Warn("Cannot serialize object", ex);
+                _logger.Warn("Cannot serialize object", ex);
             }
 
             return false;

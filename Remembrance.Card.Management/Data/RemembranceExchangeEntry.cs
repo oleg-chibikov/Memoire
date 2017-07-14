@@ -15,10 +15,12 @@ namespace Remembrance.Card.Management.Data
             TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
         }
 
-        [CanBeNull, JsonProperty("PriorityTranslations", Required = Required.AllowNull)]
+        [CanBeNull]
+        [JsonProperty("PriorityTranslations", Required = Required.AllowNull)]
         public HashSet<string> PriorityTranslations { get; }
 
-        [NotNull, JsonProperty("TranslationEntry", Required = Required.Always)]
+        [NotNull]
+        [JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
 
         public string Text => TranslationEntry.Key.Text;

@@ -19,13 +19,16 @@ namespace Remembrance.DAL.Contracts.Model
         }
 
         //TODO: readonly?
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string Text { get; set; }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string SourceLanguage { get; set; }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string TargetLanguage { get; set; }
 
         public bool Equals(TranslationEntryKey other)

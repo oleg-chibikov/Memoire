@@ -14,60 +14,65 @@ namespace Remembrance.Card.Management
     internal sealed class WordsProcessor : IWordsProcessor
     {
         [NotNull]
-        private readonly ITranslationResultCardManager cardManager;
+        private readonly ITranslationResultCardManager _cardManager;
 
         [NotNull]
-        private readonly ILog logger;
+        private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly ITextToSpeechPlayer textToSpeechPlayer;
+        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        private readonly IWordsAdder wordsAdder;
+        private readonly IWordsAdder _wordsAdder;
 
-        public WordsProcessor([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsAdder wordsAdder, [NotNull] ILog logger, [NotNull] ITranslationResultCardManager cardManager, [NotNull] IMessenger messenger)
+        public WordsProcessor(
+            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
+            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] ILog logger,
+            [NotNull] ITranslationResultCardManager cardManager,
+            [NotNull] IMessenger messenger)
         {
-            this.textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            this.wordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
-            this.messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            _wordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
         public bool ProcessNewWord(string word, string sourceLanguage, string targetLanguage, bool showCard)
         {
-            logger.Info($"Processing word {word}...");
+            _logger.Info($"Processing word {word}...");
             if (word == null)
                 throw new ArgumentNullException(nameof(word));
 
             TranslationInfo translationInfo;
             try
             {
-                translationInfo = wordsAdder.AddWordWithChecks(word, sourceLanguage, targetLanguage, true);
+                translationInfo = _wordsAdder.AddWordWithChecks(word, sourceLanguage, targetLanguage, true);
             }
             catch (LocalizableException ex)
             {
-                logger.Warn(ex.Message);
-                messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                logger.Warn($"Word {word} has not been processed");
+                _logger.Warn(ex.Message);
+                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
+                _logger.Warn($"Word {word} has not been processed");
                 return false;
             }
 
-            textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
 
-            messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             if (showCard)
-                cardManager.ShowCard(translationInfo);
-            logger.Debug($"Word {word} has been processed");
+                _cardManager.ShowCard(translationInfo);
+            _logger.Debug($"Word {word} has been processed");
             return true;
         }
 
         public bool ChangeText(int id, string newWord, string sourceLanguage, string targetLanguage, bool showCard)
         {
-            logger.Info($"Changing text for {newWord} for word {id}...");
+            _logger.Info($"Changing text for {newWord} for word {id}...");
             if (newWord == null)
                 throw new ArgumentNullException(nameof(newWord));
             if (sourceLanguage == null)
@@ -78,22 +83,22 @@ namespace Remembrance.Card.Management
             TranslationInfo translationInfo;
             try
             {
-                translationInfo = wordsAdder.AddWordWithChecks(newWord, sourceLanguage, targetLanguage, true, id);
+                translationInfo = _wordsAdder.AddWordWithChecks(newWord, sourceLanguage, targetLanguage, true, id);
             }
             catch (LocalizableException ex)
             {
-                logger.Warn(ex.Message);
-                messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                logger.Warn($"Text was not changed for word {id}");
+                _logger.Warn(ex.Message);
+                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
+                _logger.Warn($"Text was not changed for word {id}");
                 return false;
             }
 
-            textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
 
-            messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             if (showCard)
-                cardManager.ShowCard(translationInfo);
-            logger.Debug($"Text has been changed for word {id}");
+                _cardManager.ShowCard(translationInfo);
+            _logger.Debug($"Text has been changed for word {id}");
             return true;
         }
     }

@@ -10,10 +10,10 @@ namespace Remembrance.DAL.Contracts.Model
     public sealed class TranslationEntry : Entity<int>
     {
         [NotNull]
-        private LinkedListNode<RepeatType> current;
+        private LinkedListNode<RepeatType> _current;
 
-        private DateTime lastCardShowTime;
-        private RepeatType repeatType;
+        private DateTime _lastCardShowTime;
+        private RepeatType _repeatType;
 
         [UsedImplicitly]
         // ReSharper disable once NotNullMemberIsNotInitialized
@@ -27,23 +27,26 @@ namespace Remembrance.DAL.Contracts.Model
             RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Translations = translations ?? throw new ArgumentNullException(nameof(translations));
-            current = RepeatTypeSettings.RepeatTypes.First;
+            _current = RepeatTypeSettings.RepeatTypes.First;
         }
 
-        [NotNull, UsedImplicitly, BsonIndex(true)]
+        [NotNull]
+        [UsedImplicitly]
+        [BsonIndex(true)]
         public TranslationEntryKey Key { get; set; }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public IList<PriorityWord> Translations { get; set; }
 
         [UsedImplicitly]
         public RepeatType RepeatType
         {
-            get => repeatType;
+            get => _repeatType;
             set
             {
-                repeatType = value;
-                current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First;
+                _repeatType = value;
+                _current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First;
                 SetNextCardShowTime();
             }
         }
@@ -54,40 +57,41 @@ namespace Remembrance.DAL.Contracts.Model
         [UsedImplicitly]
         public DateTime LastCardShowTime
         {
-            get => lastCardShowTime;
+            get => _lastCardShowTime;
             set
             {
-                lastCardShowTime = value;
+                _lastCardShowTime = value;
                 SetNextCardShowTime();
             }
         }
 
-        [UsedImplicitly, BsonIndex(false)]
+        [UsedImplicitly]
+        [BsonIndex(false)]
         public DateTime NextCardShowTime { get; set; }
 
         public void DecreaseRepeatType()
         {
-            var prev = current.Previous;
+            var prev = _current.Previous;
             if (prev == null)
                 return;
 
             RepeatType = prev.Value;
-            current = prev;
+            _current = prev;
         }
 
         public void IncreaseRepeatType()
         {
-            var next = current.Next;
+            var next = _current.Next;
             if (next == null)
                 return;
 
             RepeatType = next.Value;
-            current = next;
+            _current = next;
         }
 
         private void SetNextCardShowTime()
         {
-            NextCardShowTime = lastCardShowTime.Add(RepeatTypeSettings.RepeatTimes[repeatType]);
+            NextCardShowTime = _lastCardShowTime.Add(RepeatTypeSettings.RepeatTimes[_repeatType]);
         }
 
         public override string ToString()

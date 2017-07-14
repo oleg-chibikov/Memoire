@@ -6,10 +6,12 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
 {
     public sealed class PartOfSpeechTranslation : Word
     {
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string Transcription { get; set; }
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public TranslationVariant[] TranslationVariants { get; set; }
     }
 }

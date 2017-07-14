@@ -13,7 +13,8 @@ namespace Remembrance.Card.Management.Data
             Translation = translation;
         }
 
-        [CanBeNull, JsonProperty("Translation", Required = Required.Always)]
+        [CanBeNull]
+        [JsonProperty("Translation", Required = Required.Always)]
         public string Translation { get; }
 
         [JsonProperty("Word", Required = Required.Always)]

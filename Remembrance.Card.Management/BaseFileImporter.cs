@@ -37,7 +37,12 @@ namespace Remembrance.Card.Management
         [NotNull]
         protected readonly IWordsAdder WordsAdder;
 
-        protected BaseFileImporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ILog logger, [NotNull] IWordsAdder wordsAdder, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+        protected BaseFileImporter(
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ILog logger,
+            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IMessenger messenger,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
         {
             TranslationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -98,9 +103,7 @@ namespace Remembrance.Card.Management
                 var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                 if (priorityTranslations != null)
                 {
-                    foreach (var translationVariant in
-                        translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations
-                        .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                    foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                     {
                         AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
                         if (translationVariant.Synonyms == null)

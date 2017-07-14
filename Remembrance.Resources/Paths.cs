@@ -9,7 +9,8 @@ namespace Remembrance.Resources
     public static class Paths
     {
         [NotNull]
-        private static readonly string ProgramName = $"{((AssemblyCompanyAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
+        private static readonly string ProgramName =
+            $"{((AssemblyCompanyAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
 
         [NotNull]
         public static readonly string SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
@@ -39,7 +40,7 @@ namespace Remembrance.Resources
         private static string GetOneDrivePath()
         {
             const string notDetected = "ND";
-            var path = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\OneDrive", "UserFolder", notDetected);
+            var path = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\OneDrive", "UserFolder", notDetected);
             return path == notDetected || string.IsNullOrWhiteSpace(path)
                 ? null
                 : path;

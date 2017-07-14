@@ -16,6 +16,9 @@ namespace Remembrance.Card.Management
     [UsedImplicitly]
     internal sealed class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
+        //TODO: config timeout
+        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(5);
+
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
@@ -23,9 +26,6 @@ namespace Remembrance.Card.Management
             : base(lifetimeScope, settingsRepository, logger)
         {
         }
-
-        //TODO: config timeout
-        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(5);
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {

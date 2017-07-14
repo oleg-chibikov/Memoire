@@ -26,7 +26,7 @@ namespace Remembrance.Translate.Yandex
         };
 
         [NotNull]
-        private readonly HttpClient client = new HttpClient
+        private readonly HttpClient _client = new HttpClient
         {
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
@@ -37,7 +37,7 @@ namespace Remembrance.Translate.Yandex
                 throw new ArgumentNullException(nameof(text));
 
             var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}";
-            var response = await client.GetAsync(uriPart).ConfigureAwait(false);
+            var response = await _client.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new DetectionResult();
 
@@ -51,7 +51,7 @@ namespace Remembrance.Translate.Yandex
                 throw new ArgumentNullException(nameof(ui));
 
             var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
-            var response = await client.GetAsync(uriPart).ConfigureAwait(false);
+            var response = await _client.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new ListResult();
 

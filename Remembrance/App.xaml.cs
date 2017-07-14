@@ -30,15 +30,15 @@ namespace Remembrance
 {
     public sealed partial class App
     {
-        private static readonly string appGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
-        private ILifetimeScope container;
-        private IMessenger messenger;
-        private Mutex mutex;
+        private static readonly string AppGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+        private ILifetimeScope _container;
+        private IMessenger _messenger;
+        private Mutex _mutex;
 
         protected override void OnExit(ExitEventArgs e)
         {
-            container.Dispose();
-            mutex.Dispose();
+            _container.Dispose();
+            _mutex.Dispose();
         }
 
         protected override void OnStartup([NotNull] StartupEventArgs e)
@@ -48,29 +48,29 @@ namespace Remembrance
 
             RegisterDependencies();
 
-            CultureUtilities.ChangeCulture(container.Resolve<ISettingsRepository>().Get().UiLanguage);
+            CultureUtilities.ChangeCulture(_container.Resolve<ISettingsRepository>().Get().UiLanguage);
 
-            messenger = container.Resolve<IMessenger>();
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
-            messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Information));
-            messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Warning));
+            _messenger = _container.Resolve<IMessenger>();
+            _messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
+            _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Information));
+            _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Warning));
             var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
             var mutexSecurity = new MutexSecurity();
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
             bool createdNew;
-            mutex = new Mutex(false, $"Global\\{nameof(Remembrance)}-{appGuid}", out createdNew, mutexSecurity);
+            _mutex = new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
 
-            if (!mutex.WaitOne(0, false))
+            if (!_mutex.WaitOne(0, false))
             {
-                messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
+                _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
                 return;
             }
 
-            container.Resolve<ITrayWindow>().ShowDialog();
-            container.Resolve<IAssessmentCardManager>();
-            container.Resolve<ApiHoster>();
+            _container.Resolve<ITrayWindow>().ShowDialog();
+            _container.Resolve<IAssessmentCardManager>();
+            _container.Resolve<ApiHoster>();
         }
 
         private void RegisterDependencies()
@@ -98,7 +98,7 @@ namespace Remembrance
 
             builder.RegisterModule<LoggingModule>();
 
-            container = builder.Build();
+            _container = builder.Build();
         }
     }
 }

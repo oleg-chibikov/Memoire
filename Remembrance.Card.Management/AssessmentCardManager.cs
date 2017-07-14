@@ -21,65 +21,63 @@ namespace Remembrance.Card.Management
     internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, IDisposable
     {
         [NotNull]
-        private readonly IMessenger messenger;
+        private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly ISettingsRepository settingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository translationDetailsRepository;
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
-        private readonly ITranslationEntryRepository translationEntryRepository;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        private bool hasOpenWindows;
+        private bool _hasOpenWindows;
 
         [NotNull]
-        private IDisposable interval;
+        private IDisposable _interval;
 
-        private DateTime? lastCardShowTime;
+        private DateTime? _lastCardShowTime;
 
-        public AssessmentCardManager([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] ILifetimeScope lifetimeScope, [NotNull] IMessenger messenger, [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+        public AssessmentCardManager(
+            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILog logger,
+            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] IMessenger messenger,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
             : base(lifetimeScope, settingsRepository, logger)
         {
             if (textToSpeechPlayer == null)
                 throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (translationEntryRepository == null)
-                throw new ArgumentNullException(nameof(translationEntryRepository));
-            if (settingsRepository == null)
-                throw new ArgumentNullException(nameof(settingsRepository));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
             if (lifetimeScope == null)
                 throw new ArgumentNullException(nameof(lifetimeScope));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
-            if (translationDetailsRepository == null)
-                throw new ArgumentNullException(nameof(translationDetailsRepository));
-
             logger.Info("Starting showing cards...");
 
-            this.translationEntryRepository = translationEntryRepository;
-            this.messenger = messenger;
-            this.translationDetailsRepository = translationDetailsRepository;
-            this.settingsRepository = settingsRepository;
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             messenger.Register<TimeSpan>(this, MessengerTokens.CardShowFrequencyToken, OnCardShowFrequencyChanged);
             var repeatTime = settingsRepository.Get().CardShowFrequency;
-            interval = CreateInterval(repeatTime);
+            _interval = CreateInterval(repeatTime);
         }
 
         public void Dispose()
         {
-            interval.Dispose();
+            _interval.Dispose();
             Logger.Info("Finished showing cards");
         }
 
         private IDisposable CreateInterval(TimeSpan repeatTime)
         {
             TimeSpan initialDelay;
-            if (lastCardShowTime.HasValue)
+            if (_lastCardShowTime.HasValue)
             {
-                var diff = DateTime.Now - lastCardShowTime.Value;
+                var diff = DateTime.Now - _lastCardShowTime.Value;
                 initialDelay = repeatTime - diff;
                 if (initialDelay < TimeSpan.Zero)
                     initialDelay = TimeSpan.Zero;
@@ -93,22 +91,22 @@ namespace Remembrance.Card.Management
                     x =>
                     {
                         Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                        var settings = settingsRepository.Get();
+                        var settings = _settingsRepository.Get();
                         if (!settings.IsActive)
                         {
                             Logger.Debug("Skipped showing card due to inactivity");
                             return;
                         }
 
-                        lastCardShowTime = DateTime.Now;
-                        var translationEntry = translationEntryRepository.GetCurrent();
+                        _lastCardShowTime = DateTime.Now;
+                        var translationEntry = _translationEntryRepository.GetCurrent();
                         if (translationEntry == null)
                         {
                             Logger.Debug("Skipped showing card due to absence of suitable cards");
                             return;
                         }
 
-                        var translationDetails = translationDetailsRepository.GetById(translationEntry.Id);
+                        var translationDetails = _translationDetailsRepository.GetById(translationEntry.Id);
                         var translationInfo = new TranslationInfo(translationEntry, translationDetails);
                         Logger.Debug($"Trying to show {translationInfo}...");
                         ShowCard(translationInfo);
@@ -118,30 +116,34 @@ namespace Remembrance.Card.Management
         private void OnCardShowFrequencyChanged(TimeSpan freq)
         {
             Logger.Debug($"Recreating interval for {freq}...");
-            interval.Dispose();
-            interval = CreateInterval(freq);
+            _interval.Dispose();
+            _interval = CreateInterval(freq);
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {
-            if (hasOpenWindows)
+            if (_hasOpenWindows)
+            {
+                Logger.Debug("There is another window opened. Skipping creation...");
                 return null;
+            }
 
+            Logger.Debug($"Creating window for {translationInfo}...");
             translationInfo.TranslationEntry.ShowCount++; //single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
-            translationEntryRepository.Save(translationInfo.TranslationEntry);
-            messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _translationEntryRepository.Save(translationInfo.TranslationEntry);
+            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             var assessmentViewModel = LifetimeScope.Resolve<IAssessmentCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var window = LifetimeScope.Resolve<IAssessmentCardWindow>(new TypedParameter(typeof(IAssessmentCardViewModel), assessmentViewModel));
             window.Closed += Window_Closed;
-            hasOpenWindows = true;
+            _hasOpenWindows = true;
             return window;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            hasOpenWindows = false;
-            ((Window)sender).Closed -= Window_Closed;
+            _hasOpenWindows = false;
+            ((Window) sender).Closed -= Window_Closed;
         }
     }
 }

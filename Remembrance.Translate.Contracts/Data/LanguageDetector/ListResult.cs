@@ -5,10 +5,12 @@ namespace Remembrance.Translate.Contracts.Data.LanguageDetector
 {
     public sealed class ListResult
     {
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public string[] Directions { get; set; } = new string[0];
 
-        [NotNull, UsedImplicitly]
+        [NotNull]
+        [UsedImplicitly]
         public Dictionary<string, string> Languages { get; set; } = new Dictionary<string, string>();
     }
 }

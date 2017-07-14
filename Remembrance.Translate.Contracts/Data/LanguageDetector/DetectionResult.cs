@@ -4,10 +4,12 @@ namespace Remembrance.Translate.Contracts.Data.LanguageDetector
 {
     public sealed class DetectionResult
     {
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string Code { get; set; }
 
-        [CanBeNull, UsedImplicitly]
+        [CanBeNull]
+        [UsedImplicitly]
         public string Language { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 {
     public sealed class TranslationDetailsViewModel : ViewModelBase
     {
-        private TranslationResultViewModel translationResult;
+        private TranslationResultViewModel _translationResult;
 
         public TranslationDetailsViewModel([NotNull] TranslationResultViewModel translationResult)
         {
@@ -23,8 +23,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         [NotNull]
         public TranslationResultViewModel TranslationResult
         {
-            get => translationResult;
-            set { Set(() => TranslationResult, ref translationResult, value); }
+            get => _translationResult;
+            set { Set(() => TranslationResult, ref _translationResult, value); }
         }
 
         [CanBeNull]
