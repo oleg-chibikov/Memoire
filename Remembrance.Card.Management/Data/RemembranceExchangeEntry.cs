@@ -7,7 +7,7 @@ using Remembrance.DAL.Contracts.Model;
 namespace Remembrance.Card.Management.Data
 {
     [UsedImplicitly]
-    internal class RemembranceExchangeEntry : IExchangeEntry
+    internal sealed class RemembranceExchangeEntry : IExchangeEntry
     {
         public RemembranceExchangeEntry([CanBeNull] HashSet<string> priorityTranslations, [NotNull] TranslationEntry translationEntry)
         {

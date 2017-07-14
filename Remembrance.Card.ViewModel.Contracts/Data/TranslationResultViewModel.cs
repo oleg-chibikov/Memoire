@@ -1,18 +1,12 @@
-﻿using GalaSoft.MvvmLight;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using PropertyChanged;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
-    // ReSharper disable NotNullMemberIsNotInitialized
-    public class TranslationResultViewModel : ViewModelBase
+    [AddINotifyPropertyChangedInterface]
+    public sealed class TranslationResultViewModel
     {
-        private PartOfSpeechTranslationViewModel[] _partOfSpeechTranslations;
-
         [NotNull]
-        public PartOfSpeechTranslationViewModel[] PartOfSpeechTranslations
-        {
-            get => _partOfSpeechTranslations;
-            set { Set(() => PartOfSpeechTranslations, ref _partOfSpeechTranslations, value); }
-        }
+        public PartOfSpeechTranslationViewModel[] PartOfSpeechTranslations { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
@@ -15,6 +16,7 @@ using Scar.Common.WPF.Commands;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
+    [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
         [NotNull]
@@ -31,8 +33,6 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         [NotNull]
         private readonly IViewModelAdapter _viewModelAdapter;
-
-        private bool _isPriority;
 
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
@@ -52,22 +52,25 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
+        [DoNotNotify]
         public Guid CorrelationId { get; set; }
+
+        #region Commands
 
         public ICommand TogglePriorityCommand { get; }
 
+        #endregion
+
         public override bool CanTogglePriority { get; } = true;
 
-        public bool IsPriority
-        {
-            get => _isPriority;
-            set { Set(() => IsPriority, ref _isPriority, value); }
-        }
+        public bool IsPriority { get; set; }
 
         [CanBeNull]
+        [DoNotNotify]
         public TranslationEntryViewModel ParentTranslationEntry { get; set; }
 
         [CanBeNull]
+        [DoNotNotify]
         public TranslationDetailsViewModel ParentTranslationDetails { get; set; }
 
         private void Add([NotNull] TranslationEntry translationEntry)
@@ -110,7 +113,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             IsPriority = !IsPriority;
             if (ParentTranslationDetails != null)
             {
-                _logger.Debug($"Changing priority for {this} in TranslationDetails...");
+                _logger.Trace($"Changing priority for {this} in TranslationDetails...");
                 var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetails);
                 _translationDetailsRepository.Save(translationDetails);
 
@@ -130,12 +133,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                         UpdateCorrelatedPriority(wordInTranslationEntry);
                 }
                 _translationEntryRepository.Save(translationEntry);
-                _logger.Debug($"TranslationEntry for {this} has been updated");
+                _logger.Trace($"TranslationEntry for {this} has been updated");
             }
 
             else if (ParentTranslationEntry != null)
             {
-                _logger.Debug($"Changing priority for {this} in TranslationEntry...");
+                _logger.Trace($"Changing priority for {this} in TranslationEntry...");
                 var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry);
                 var translationDetails = _translationDetailsRepository.GetById(ParentTranslationEntry.Id);
 
@@ -146,7 +149,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 }
 
                 _translationEntryRepository.Save(translationEntry);
-                _logger.Debug($"Updating TranslationDetails for {this}...");
+                _logger.Trace($"Updating TranslationDetails for {this}...");
 
                 var wordInTranslationDetails = translationDetails.GetWordInTranslationVariants(CorrelationId);
                 if (wordInTranslationDetails == null)
@@ -157,7 +160,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
                 UpdateCorrelatedPriority(wordInTranslationDetails);
                 _translationDetailsRepository.Save(translationDetails);
-                _logger.Debug($"TranslationDetails for {this} have been updated");
+                _logger.Trace($"TranslationDetails for {this} have been updated");
             }
         }
 

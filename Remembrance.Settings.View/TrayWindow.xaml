@@ -49,7 +49,7 @@
                         </Style>
                     </ContextMenu.Resources>
                     <MenuItem
-                        Header="{lex:Loc Settings}"
+                        Header="{lex:Loc Remembrance.Resources:Texts:Settings}"
                         Command="{Binding ShowSettingsCommand}">
                         <MenuItem.Icon>
                             <Image
@@ -58,7 +58,7 @@
                     </MenuItem>
 
                     <MenuItem
-                        Header="{lex:Loc Dictionary}"
+                        Header="{lex:Loc Remembrance.Resources:Texts:Dictionary}"
                         Command="{Binding ShowDictionaryCommand}">
                         <MenuItem.Icon>
                             <Image
@@ -70,7 +70,7 @@
 
                     <MenuItem
                         Command="{Binding ToggleActiveCommand}"
-                        Header="{lex:Loc Deactivate}"
+                        Header="{lex:Loc Remembrance.Resources:Texts:Deactivate}"
                         Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <Image
@@ -80,7 +80,7 @@
 
                     <MenuItem
                         Command="{Binding ToggleActiveCommand}"
-                        Header="{lex:Loc Activate}"
+                        Header="{lex:Loc Remembrance.Resources:Texts:Activate}"
                         Visibility="{Binding IsActive, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <Image
@@ -91,7 +91,7 @@
                     <Separator />
 
                     <MenuItem
-                        Header="{lex:Loc Exit}"
+                        Header="{lex:Loc Remembrance.Resources:Texts:Exit}"
                         Command="{Binding ExitCommand}">
                         <MenuItem.Icon>
                             <Image

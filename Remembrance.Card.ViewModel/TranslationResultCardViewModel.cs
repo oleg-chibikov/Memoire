@@ -1,8 +1,8 @@
 ﻿using System;
 using Common.Logging;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Card.ViewModel.Contracts;
 using Remembrance.Card.ViewModel.Contracts.Data;
 using Remembrance.DAL.Contracts.Model;
@@ -13,12 +13,11 @@ using Scar.Common.WPF.Localization;
 namespace Remembrance.Card.ViewModel
 {
     [UsedImplicitly]
-    public class TranslationResultCardViewModel : ViewModelBase, ITranslationResultCardViewModel
+    [AddINotifyPropertyChangedInterface]
+    public sealed class TranslationResultCardViewModel : ITranslationResultCardViewModel
     {
         [NotNull]
         private readonly ILog _logger;
-
-        private TranslationDetailsViewModel _translationDetails;
 
         public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger)
         {
@@ -37,11 +36,7 @@ namespace Remembrance.Card.ViewModel
             Word = translationInfo.Key.Text;
         }
 
-        public TranslationDetailsViewModel TranslationDetails
-        {
-            get => _translationDetails;
-            private set { Set(() => TranslationDetails, ref _translationDetails, value); }
-        }
+        public TranslationDetailsViewModel TranslationDetails { get; }
 
         public string Word { get; }
 
@@ -54,41 +49,40 @@ namespace Remembrance.Card.ViewModel
             if (parentId != TranslationDetails.Id)
                 return;
 
-            _logger.Debug($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
+            _logger.Trace($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
             var translation = TranslationDetails.GetWordInTranslationVariants(priorityWordViewModel.CorrelationId);
             if (translation != null)
             {
-                _logger.Debug($"Priority for {translation} is updated");
+                _logger.Trace($"Priority for {translation} is updated");
                 translation.IsPriority = priorityWordViewModel.IsPriority;
             }
             else
             {
-                _logger.Debug("There is no matching translation in the card");
+                _logger.Trace("There is no matching translation in the card");
             }
         }
 
         private void OnUiLanguageChanged([NotNull] string uiLanguage)
         {
-            _logger.Debug($"Changing UI language to {uiLanguage}...");
+            _logger.Trace($"Changing UI language to {uiLanguage}...");
             if (uiLanguage == null)
                 throw new ArgumentNullException(nameof(uiLanguage));
 
             CultureUtilities.ChangeCulture(uiLanguage);
+
             foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
             {
-                // ReSharper disable ExplicitCallerInfoArgument
-                partOfSpeechTranslation.RaisePropertyChanged(nameof(partOfSpeechTranslation.PartOfSpeech));
+                partOfSpeechTranslation.ReRender();
                 foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                 {
-                    translationVariant.RaisePropertyChanged(nameof(translationVariant.PartOfSpeech));
+                    translationVariant.ReRender();
                     if (translationVariant.Synonyms != null)
                         foreach (var synonym in translationVariant.Synonyms)
-                            synonym.RaisePropertyChanged(nameof(synonym.PartOfSpeech));
+                            synonym.ReRender();
                     if (translationVariant.Meanings != null)
                         foreach (var meaning in translationVariant.Meanings)
-                            meaning.RaisePropertyChanged(nameof(meaning.PartOfSpeech));
+                            meaning.ReRender();
                 }
-                // ReSharper restore ExplicitCallerInfoArgument
             }
         }
     }

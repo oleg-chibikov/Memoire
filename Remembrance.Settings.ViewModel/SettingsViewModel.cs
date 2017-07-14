@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
@@ -19,7 +19,8 @@ using Scar.Common.WPF.ViewModel;
 namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
-    public sealed class SettingsViewModel : ViewModelBase, ISettingsViewModel, IRequestCloseViewModel
+    [AddINotifyPropertyChangedInterface]
+    public sealed class SettingsViewModel : ISettingsViewModel, IRequestCloseViewModel
     {
         [NotNull]
         private readonly ICardsExchanger _cardsExchanger;
@@ -71,10 +72,15 @@ namespace Remembrance.Settings.ViewModel
         #region Commands
 
         public ICommand SaveCommand { get; }
+
         public ICommand ViewLogsCommand { get; }
+
         public ICommand OpenSharedFolderCommand { get; }
+
         public ICommand OpenSettingsFolderCommand { get; }
+
         public ICommand ExportCommand { get; }
+
         public ICommand ImportCommand { get; }
 
         #endregion
@@ -83,7 +89,7 @@ namespace Remembrance.Settings.ViewModel
 
         private void Save()
         {
-            _logger.Debug("Saving settings...");
+            _logger.Trace("Saving settings...");
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
             var settings = _settingsRepository.Get();
             var prevFreq = settings.CardShowFrequency;
@@ -97,7 +103,7 @@ namespace Remembrance.Settings.ViewModel
             if (prevFreq != freq)
                 _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
             RequestClose?.Invoke(null, null);
-            _logger.Debug("Settings has been saved");
+            _logger.Trace("Settings has been saved");
         }
 
         private static void OpenSharedFolder()
@@ -129,14 +135,7 @@ namespace Remembrance.Settings.ViewModel
 
         #region DependencyProperties
 
-        private double _cardShowFrequency;
-
-        public double CardShowFrequency
-        {
-            get { return _cardShowFrequency; }
-            [UsedImplicitly]
-            set { Set(() => CardShowFrequency, ref _cardShowFrequency, value); }
-        }
+        public double CardShowFrequency { get; set; }
 
         private Language _uiLanguage;
 
@@ -146,46 +145,18 @@ namespace Remembrance.Settings.ViewModel
             [UsedImplicitly]
             set
             {
-                Set(() => UiLanguage, ref _uiLanguage, value);
+                _uiLanguage = value;
                 _messenger.Send(_uiLanguage.Code, MessengerTokens.UiLanguageToken);
             }
         }
 
-        private Speaker _ttsSpeaker;
+        public Speaker TtsSpeaker { get; set; }
 
-        public Speaker TtsSpeaker
-        {
-            get { return _ttsSpeaker; }
-            [UsedImplicitly]
-            set { Set(() => TtsSpeaker, ref _ttsSpeaker, value); }
-        }
+        public VoiceEmotion TtsVoiceEmotion { get; set; }
 
-        private VoiceEmotion _ttsVoiceEmotion;
+        public bool ReverseTranslation { get; set; }
 
-        public VoiceEmotion TtsVoiceEmotion
-        {
-            get { return _ttsVoiceEmotion; }
-            [UsedImplicitly]
-            set { Set(() => TtsVoiceEmotion, ref _ttsVoiceEmotion, value); }
-        }
-
-        private bool _reverseTranslation;
-
-        public bool ReverseTranslation
-        {
-            get { return _reverseTranslation; }
-            [UsedImplicitly]
-            set { Set(() => ReverseTranslation, ref _reverseTranslation, value); }
-        }
-
-        private bool _randomTranslation;
-
-        public bool RandomTranslation
-        {
-            get { return _randomTranslation; }
-            [UsedImplicitly]
-            set { Set(() => RandomTranslation, ref _randomTranslation, value); }
-        }
+        public bool RandomTranslation { get; set; }
 
         #endregion
     }

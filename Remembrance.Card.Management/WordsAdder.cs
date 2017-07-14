@@ -62,7 +62,7 @@ namespace Remembrance.Card.Management
 
         public TranslationInfo AddWordWithChecks(string text, string sourceLanguage, string targetLanguage, bool allowExisting, int id)
         {
-            _logger.Debug($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
+            _logger.Trace($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
             if (string.IsNullOrWhiteSpace(text))
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
 
@@ -99,16 +99,16 @@ namespace Remembrance.Card.Management
                 Id = id
             };
 
-            _logger.Debug($"Saving translation entry for {text} ({sourceLanguage} - {targetLanguage})...");
+            _logger.Trace($"Saving translation entry for {text} ({sourceLanguage} - {targetLanguage})...");
             id = _translationEntryRepository.Save(translationEntry);
             var translationDetails = new TranslationDetails(translationResult)
             {
                 Id = id
             };
-            _logger.Debug($"Saving translation details for {text} ({sourceLanguage} - {targetLanguage})...");
+            _logger.Trace($"Saving translation details for {text} ({sourceLanguage} - {targetLanguage})...");
             _translationDetailsRepository.Save(translationDetails);
 
-            _logger.Debug($"Translation for {text} ({sourceLanguage} - {targetLanguage}) has been successfully added");
+            _logger.Trace($"Translation for {text} ({sourceLanguage} - {targetLanguage}) has been successfully added");
 
             return new TranslationInfo(translationEntry, translationDetails);
         }

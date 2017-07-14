@@ -43,7 +43,7 @@ namespace Remembrance.Translate.Yandex
             if (lang == null)
                 throw new ArgumentNullException(nameof(lang));
 
-            _logger.Debug($"Starting speaking {text}...");
+            _logger.Trace($"Starting speaking {text}...");
             return await Task.Run(
                 () =>
                 {
@@ -72,7 +72,7 @@ namespace Remembrance.Translate.Yandex
                         //Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
                         reset.WaitOne(TimeSpan.FromSeconds(5));
                     }
-                    _logger.Debug($"Finished speaking {text}");
+                    _logger.Trace($"Finished speaking {text}");
                     return true;
                 });
         }

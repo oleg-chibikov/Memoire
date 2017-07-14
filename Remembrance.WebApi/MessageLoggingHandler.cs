@@ -23,13 +23,13 @@ namespace Remembrance.WebApi
         protected override async Task IncomingMessageAsync(HttpRequestMessage request, string requestInfo, string message)
         {
             var logger = (ILog) request.GetDependencyScope().GetService(typeof(ILog));
-            await Task.Run(() => logger.Debug($"Request: {GetMessage(requestInfo, message)}"));
+            await Task.Run(() => logger.Trace($"Request: {GetMessage(requestInfo, message)}"));
         }
 
         protected override async Task OutgoingMessageAsync(HttpRequestMessage request, string requestInfo, string message)
         {
             var logger = (ILog) request.GetDependencyScope().GetService(typeof(ILog));
-            await Task.Run(() => logger.Debug($"Response: {GetMessage(requestInfo, message)}"));
+            await Task.Run(() => logger.Trace($"Response: {GetMessage(requestInfo, message)}"));
         }
     }
 }

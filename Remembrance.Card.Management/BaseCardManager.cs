@@ -39,7 +39,7 @@ namespace Remembrance.Card.Management
                     var window = TryCreateWindow(translationInfo);
                     if (window == null)
                     {
-                        Logger.Debug($"No window to show for {translationInfo}");
+                        Logger.Trace($"No window to show for {translationInfo}");
                         return;
                     }
 

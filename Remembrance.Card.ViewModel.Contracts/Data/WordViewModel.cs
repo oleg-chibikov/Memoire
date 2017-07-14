@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.Translate.Contracts.Interfaces;
@@ -9,6 +10,7 @@ using Scar.Common.WPF.Commands;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
+    [AddINotifyPropertyChangedInterface]
     public class WordViewModel : TextEntryViewModel
     {
         [NotNull]
@@ -30,11 +32,20 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public ICommand PlayTtsCommand { get; }
         public ICommand LearnWordCommand { get; }
         public bool CanEdit => CanLearnWord || CanTogglePriority;
+
+        [DoNotNotify]
         public bool CanLearnWord { get; set; } = true;
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public virtual bool CanTogglePriority { get; } = false;
 
+        /// <summary>
+        /// A hack to raise NotifyPropertyChanged for other properties
+        /// </summary>
+        [AlsoNotifyFor(nameof(PartOfSpeech))]
+        private bool ReRenderSwitch { get; set; }
+
+        [DoNotNotify]
         public PartOfSpeech PartOfSpeech
         {
             get;
@@ -43,6 +54,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [CanBeNull]
+        [DoNotNotify]
         public string VerbType
         {
             get;
@@ -51,6 +63,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [CanBeNull]
+        [DoNotNotify]
         public string NounAnimacy
         {
             get;
@@ -59,6 +72,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [CanBeNull]
+        [DoNotNotify]
         public string NounGender
         {
             get;
@@ -84,6 +98,11 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         private void PlayTts()
         {
             _textToSpeechPlayer.PlayTtsAsync(Text, Language);
+        }
+
+        public void ReRender()
+        {
+            ReRenderSwitch = !ReRenderSwitch;
         }
 
         public override string ToString()

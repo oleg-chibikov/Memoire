@@ -94,7 +94,7 @@ namespace Remembrance.Card.Management
                         var settings = _settingsRepository.Get();
                         if (!settings.IsActive)
                         {
-                            Logger.Debug("Skipped showing card due to inactivity");
+                            Logger.Trace("Skipped showing card due to inactivity");
                             return;
                         }
 
@@ -102,20 +102,20 @@ namespace Remembrance.Card.Management
                         var translationEntry = _translationEntryRepository.GetCurrent();
                         if (translationEntry == null)
                         {
-                            Logger.Debug("Skipped showing card due to absence of suitable cards");
+                            Logger.Trace("Skipped showing card due to absence of suitable cards");
                             return;
                         }
 
                         var translationDetails = _translationDetailsRepository.GetById(translationEntry.Id);
                         var translationInfo = new TranslationInfo(translationEntry, translationDetails);
-                        Logger.Debug($"Trying to show {translationInfo}...");
+                        Logger.Trace($"Trying to show {translationInfo}...");
                         ShowCard(translationInfo);
                     });
         }
 
         private void OnCardShowFrequencyChanged(TimeSpan freq)
         {
-            Logger.Debug($"Recreating interval for {freq}...");
+            Logger.Trace($"Recreating interval for {freq}...");
             _interval.Dispose();
             _interval = CreateInterval(freq);
         }
@@ -124,11 +124,11 @@ namespace Remembrance.Card.Management
         {
             if (_hasOpenWindows)
             {
-                Logger.Debug("There is another window opened. Skipping creation...");
+                Logger.Trace("There is another window opened. Skipping creation...");
                 return null;
             }
 
-            Logger.Debug($"Creating window for {translationInfo}...");
+            Logger.Trace($"Creating window for {translationInfo}...");
             translationInfo.TranslationEntry.ShowCount++; //single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
             _translationEntryRepository.Save(translationInfo.TranslationEntry);

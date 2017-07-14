@@ -44,9 +44,6 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Networking, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Networking.1.0.2\lib\net462\Scar.Common.Networking.dll</HintPath>
-    </Reference>
     <Reference Include="Scar.Common.WPF.Controls.Buttons, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.Buttons.1.0.6\lib\net462\Scar.Common.WPF.Controls.Buttons.dll</HintPath>
     </Reference>
@@ -133,7 +130,9 @@
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Errors.ru-RU.resx" />
+    <EmbeddedResource Include="Errors.ru-RU.resx">
+      <DependentUpon>Errors.resx</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Texts.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Texts.Designer.cs</LastGenOutput>

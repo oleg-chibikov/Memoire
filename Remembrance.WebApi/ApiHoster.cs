@@ -27,7 +27,7 @@ namespace Remembrance.WebApi
                 throw new ArgumentNullException(nameof(lifetimeScope));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.Debug("Starting WebApi...");
+            logger.Trace("Starting WebApi...");
             _innerScope = lifetimeScope.BeginLifetimeScope(innerBuilder => innerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly()).InstancePerDependency());
             _apiHost = WebApp.Start(
                 new StartOptions(BaseAddress),
@@ -53,14 +53,14 @@ namespace Remembrance.WebApi
                     app.DisposeScopeOnAppDisposing(_innerScope);
                     app.UseWebApi(config);
                 });
-            logger.Debug("WebApi is started");
+            logger.Trace("WebApi is started");
         }
 
         public void Dispose()
         {
             _apiHost.Dispose();
             _innerScope.Dispose();
-            _logger.Debug("WebApi has been stopped...");
+            _logger.Trace("WebApi has been stopped...");
         }
     }
 }

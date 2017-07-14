@@ -29,16 +29,16 @@ namespace Remembrance.Card.Management
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
         {
-            Logger.Debug($"Creating window for {translationInfo}...");
+            Logger.Trace($"Creating window for {translationInfo}...");
             var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
 
-            Logger.Debug($"Closing window in {CloseTimeout}...");
+            Logger.Trace($"Closing window in {CloseTimeout}...");
             ActionExtensions.DoAfterAsync(
                 () =>
                 {
                     _syncContext.Post(x => translationDetailsWindow.Close(), null);
-                    Logger.Debug("Window is closed");
+                    Logger.Trace("Window is closed");
                 },
                 CloseTimeout);
             return translationDetailsWindow;

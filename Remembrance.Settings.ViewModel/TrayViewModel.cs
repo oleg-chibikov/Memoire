@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using Autofac;
 using Common.Logging;
-using GalaSoft.MvvmLight;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.DAL.Contracts;
 using Remembrance.Settings.View.Contracts;
 using Remembrance.Settings.ViewModel.Contracts;
@@ -14,7 +14,8 @@ using Scar.Common.WPF.View;
 namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
-    public sealed class TrayViewModel : ViewModelBase, ITrayViewModel
+    [AddINotifyPropertyChangedInterface]
+    public sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
         private readonly ILifetimeScope _lifetimeScope;
@@ -37,11 +38,20 @@ namespace Remembrance.Settings.ViewModel
             IsActive = settingsRepository.Get().IsActive;
         }
 
+        #region Dependency Properties
+
+        public bool IsActive { get; set; }
+
+        #endregion
+
         #region Commands
 
         public ICommand ShowDictionaryCommand { get; }
+
         public ICommand ShowSettingsCommand { get; }
+
         public ICommand ToggleActiveCommand { get; }
+
         public ICommand ExitCommand { get; }
 
         #endregion
@@ -91,19 +101,6 @@ namespace Remembrance.Settings.ViewModel
         {
             _logger.Info("Exitting application...");
             Application.Current.Shutdown();
-        }
-
-        #endregion
-
-        #region Dependency Properties
-
-        private bool _isActive;
-
-        public bool IsActive
-        {
-            get { return _isActive; }
-            [UsedImplicitly]
-            set { Set(() => IsActive, ref _isActive, value); }
         }
 
         #endregion

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Remembrance.Card.Management.Data
 {
     [UsedImplicitly]
-    internal class EachWordExchangeEntry : IExchangeEntry
+    internal sealed class EachWordExchangeEntry : IExchangeEntry
     {
         public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string translation)
         {

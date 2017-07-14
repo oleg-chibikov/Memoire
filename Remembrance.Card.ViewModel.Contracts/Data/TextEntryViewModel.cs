@@ -1,9 +1,8 @@
-﻿using GalaSoft.MvvmLight;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
-    public class TextEntryViewModel : ViewModelBase
+    public class TextEntryViewModel
     {
         [NotNull]
         public virtual string Text { get; set; }

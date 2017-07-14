@@ -1,18 +1,19 @@
 ﻿using System;
-using GalaSoft.MvvmLight;
+using System.Linq;
 using JetBrains.Annotations;
+using PropertyChanged;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
-    public sealed class TranslationDetailsViewModel : ViewModelBase
+    [AddINotifyPropertyChangedInterface]
+    public sealed class TranslationDetailsViewModel
     {
-        private TranslationResultViewModel _translationResult;
-
         public TranslationDetailsViewModel([NotNull] TranslationResultViewModel translationResult)
         {
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 
+        [DoNotNotify]
         public int Id
         {
             get;
@@ -21,17 +22,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [NotNull]
-        public TranslationResultViewModel TranslationResult
-        {
-            get => _translationResult;
-            set { Set(() => TranslationResult, ref _translationResult, value); }
-        }
+        public TranslationResultViewModel TranslationResult { get; set; }
 
         [CanBeNull]
         public PriorityWordViewModel GetWordInTranslationVariants(Guid correlationId)
         {
-            foreach (var partOfSpeechTranslation in TranslationResult.PartOfSpeechTranslations)
-            foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+            foreach (var translationVariant in TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (translationVariant.CorrelationId == correlationId)
                     return translationVariant;
@@ -39,9 +35,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 if (translationVariant.Synonyms == null)
                     continue;
 
-                foreach (var synonym in translationVariant.Synonyms)
-                    if (synonym.CorrelationId == correlationId)
-                        return synonym;
+                foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.CorrelationId == correlationId))
+                    return synonym;
             }
 
             return null;

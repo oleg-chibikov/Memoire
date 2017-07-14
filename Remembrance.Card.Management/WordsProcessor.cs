@@ -66,7 +66,7 @@ namespace Remembrance.Card.Management
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             if (showCard)
                 _cardManager.ShowCard(translationInfo);
-            _logger.Debug($"Word {word} has been processed");
+            _logger.Trace($"Word {word} has been processed");
             return true;
         }
 
@@ -98,7 +98,7 @@ namespace Remembrance.Card.Management
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             if (showCard)
                 _cardManager.ShowCard(translationInfo);
-            _logger.Debug($"Text has been changed for word {id}");
+            _logger.Trace($"Text has been changed for word {id}");
             return true;
         }
     }

@@ -54,19 +54,8 @@ namespace Remembrance
             _messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
             _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Information));
             _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Warning));
-            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-            var mutexSecurity = new MutexSecurity();
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
-            bool createdNew;
-            _mutex = new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
-
-            if (!_mutex.WaitOne(0, false))
-            {
-                _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
+            if (!VerifyNotLaunched())
                 return;
-            }
 
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
@@ -99,6 +88,21 @@ namespace Remembrance
             builder.RegisterModule<LoggingModule>();
 
             _container = builder.Build();
+        }
+
+        private bool VerifyNotLaunched()
+        {
+            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+            var mutexSecurity = new MutexSecurity();
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
+            _mutex = new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out bool _, mutexSecurity);
+
+            if (_mutex.WaitOne(0, false))
+                return true;
+            _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
+            return false;
         }
     }
 }

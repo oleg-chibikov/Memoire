@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Threading;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Translate.Contracts.Interfaces;
@@ -10,23 +11,10 @@ using Scar.Common.Notification;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
+    [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
     {
-        private string _language;
-
-        private DateTime _lastCardShowTime;
-
-        private DateTime _nextCardShowTime;
-
-        private RepeatType _repeatType;
-
-        private int _showCount;
-
-        private string _targetLanguage;
-
         private string _text;
-
-        private ObservableCollection<PriorityWordViewModel> _translations;
 
         [UsedImplicitly]
         public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
@@ -55,61 +43,33 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 }
                 else
                 {
-                    Set(() => Text, ref _text, newValue);
+                    _text = newValue;
                 }
             }
         }
 
         [NotNull]
-        public ObservableCollection<PriorityWordViewModel> Translations
-        {
-            get => _translations;
-            set { Set(() => Translations, ref _translations, value); }
-        }
+        public ObservableCollection<PriorityWordViewModel> Translations { get; set; }
 
         [UsedImplicitly]
-        public int ShowCount
-        {
-            get => _showCount;
-            set { Set(() => ShowCount, ref _showCount, value); }
-        }
+        public int ShowCount { get; set; }
 
         [NotNull]
         [UsedImplicitly]
-        public override string Language
-        {
-            get => _language ?? string.Empty;
-            set { Set(() => Language, ref _language, value); }
-        }
+        public override string Language { get; set; }
 
         [NotNull]
         [UsedImplicitly]
-        public string TargetLanguage
-        {
-            get => _targetLanguage ?? string.Empty;
-            set { Set(() => TargetLanguage, ref _targetLanguage, value); }
-        }
+        public string TargetLanguage { get; set; }
 
         [UsedImplicitly]
-        public RepeatType RepeatType
-        {
-            get => _repeatType;
-            set { Set(() => RepeatType, ref _repeatType, value); }
-        }
+        public RepeatType RepeatType { get; set; }
 
         [UsedImplicitly]
-        public DateTime LastCardShowTime
-        {
-            get => _lastCardShowTime;
-            set { Set(() => LastCardShowTime, ref _lastCardShowTime, value); }
-        }
+        public DateTime LastCardShowTime { get; set; }
 
         [UsedImplicitly]
-        public DateTime NextCardShowTime
-        {
-            get => _nextCardShowTime;
-            set { Set(() => NextCardShowTime, ref _nextCardShowTime, value); }
-        }
+        public DateTime NextCardShowTime { get; set; }
 
         public bool NotificationIsSupressed { get; set; }
 

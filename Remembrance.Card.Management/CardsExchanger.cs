@@ -79,9 +79,8 @@ namespace Remembrance.Card.Management
             foreach (var importer in _importers)
             {
                 _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType().Name}...");
-                string[] errors;
-                int count;
-                if (importer.Import(_openFileService.FileName, out errors, out count))
+
+                if (importer.Import(_openFileService.FileName, out string[] errors, out int count))
                 {
                     _logger.Info($"Import from {_openFileService.FileName} has been performed");
                     var mainMessage = string.Format(Texts.ImportSucceeded, count);

@@ -78,7 +78,7 @@
                 CellVerticalContentAlignment="Center"
                 ReadOnly="False"
                 FieldName="Text"
-                Title="{lex:Loc Word}">
+                Title="{lex:Loc Remembrance.Resources:Texts:Word}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <cardView:WordControl
@@ -95,7 +95,7 @@
                 FieldName="Translations"
                 AllowGroup="False"
                 AllowSort="false"
-                Title="{lex:Loc Translation}">
+                Title="{lex:Loc Remembrance.Resources:Texts:Translation}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <DockPanel
@@ -127,28 +127,28 @@
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="Language"
-                Title="{lex:Loc FromCap}" />
+                Title="{lex:Loc Remembrance.Resources:Texts:FromCap}" />
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="TargetLanguage"
-                Title="{lex:Loc ToCap}" />
+                Title="{lex:Loc Remembrance.Resources:Texts:ToCap}" />
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="RepeatType"
-                Title="{lex:Loc Repeat}" />
+                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}" />
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LastCardShowTime"
-                Title="{lex:Loc LastCardShowTime}"
+                Title="{lex:Loc Remembrance.Resources:Texts:LastCardShowTime}"
                 AllowGroup="False" />
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="NextCardShowTime"
-                Title="{lex:Loc NextCardShowTime}"
+                Title="{lex:Loc Remembrance.Resources:Texts:NextCardShowTime}"
                 AllowGroup="False">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
@@ -163,7 +163,7 @@
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="ShowCount"
-                Title="{lex:Loc ShowCount}"
+                Title="{lex:Loc Remembrance.Resources:Texts:ShowCount}"
                 AllowGroup="True" />
             <xcdg:UnboundColumn
                 CellVerticalContentAlignment="Center"
