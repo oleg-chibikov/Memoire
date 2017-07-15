@@ -70,6 +70,24 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add translation.
+        /// </summary>
+        public static string AddTranslation {
+            get {
+                return ResourceManager.GetString("AddTranslation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provide an answer.
+        /// </summary>
+        public static string Answer {
+            get {
+                return ResourceManager.GetString("Answer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card show frequency.
         /// </summary>
         public static string CardShowFrequency {
@@ -291,15 +309,6 @@ namespace Remembrance.Resources {
         public static string NextCardShowTime {
             get {
                 return ResourceManager.GetString("NextCardShowTime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to OK.
-        /// </summary>
-        public static string Ok {
-            get {
-                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
         

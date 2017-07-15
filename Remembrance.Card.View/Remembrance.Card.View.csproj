@@ -43,6 +43,12 @@
     <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -51,17 +57,14 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Buttons, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.Buttons.1.0.6\lib\net462\Scar.Common.WPF.Controls.Buttons.dll</HintPath>
-    </Reference>
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.5\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.1.0.14\lib\net462\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.AnimatedWindow.1.0.4\lib\net462\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.AnimatedWindow.1.0.7\lib\net462\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>

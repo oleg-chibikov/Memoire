@@ -2,7 +2,7 @@
 
 namespace Remembrance.Card.View
 {
-    public partial class WordControl
+    public sealed partial class WordControl
     {
         public static readonly DependencyProperty SpeakerAlignmentProperty = DependencyProperty.Register(nameof(SpeakerAlignment), typeof(HorizontalAlignment), typeof(WordControl), new PropertyMetadata(null));
 

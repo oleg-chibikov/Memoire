@@ -9,7 +9,7 @@
     xmlns:data="clr-namespace:Remembrance.Card.ViewModel.Contracts.Data;assembly=Remembrance.Card.ViewModel.Contracts"
     x:Name="Word"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -23,6 +23,8 @@
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -112,10 +114,24 @@
             Text="{Binding WordInfo}"
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />
-        <buttons:ImageButton
+        <Button
             ToolTip="{lex:Loc Speak}"
-            Source="pack://application:,,/Remembrance.Resources;component/Images/32/speaker-32.png"
             HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
-            Command="{Binding PlayTtsCommand}" />
+            Command="{Binding PlayTtsCommand}" >
+            <materialDesign:PackIcon
+                Kind="Speaker" />
+            <Button.Style>
+                <Style
+                    TargetType="Button"
+                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+                    <Setter
+                        Property="Width"
+                        Value="{StaticResource CommonButtonSize}" />
+                    <Setter
+                        Property="Height"
+                        Value="{StaticResource CommonButtonSize}" />
+                </Style>
+            </Button.Style>
+        </Button>
     </DockPanel>
 </UserControl>

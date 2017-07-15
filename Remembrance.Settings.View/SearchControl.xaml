@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -30,11 +30,13 @@
                     CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             </TextBox.InputBindings>
         </TextBox>
-        <buttons:ImageButton
+        <Button
             ToolTip="{lex:Loc Search}"
-            Source="pack://application:,,/Remembrance.Resources;component/Images/32/google_web_search_copyrighted-32.png"
             Margin="{StaticResource CommonLeftMargin}"
             Command="{Binding SearchCommand}"
-            CommandParameter="{Binding Text, ElementName=SearchTextBox}" />
+            CommandParameter="{Binding Text, ElementName=SearchTextBox}" >
+            <materialDesign:PackIcon
+                Kind="FileFind" />
+        </Button>
     </StackPanel>
 </UserControl>

@@ -4,8 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     mc:Ignorable="d"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Thickness
         x:Key="WindowGridMargin">
         5
@@ -26,6 +25,15 @@
         x:Key="CommonBottomMargin">
         0 0 0 5
     </Thickness>
+    <system:Double
+        x:Key="CommonMargin">
+        5
+    </system:Double>
+
+    <system:Double
+        x:Key="CommonButtonSize">
+        25
+    </system:Double>
 
     <system:Double
         x:Key="HugeFontSize">
@@ -53,72 +61,11 @@
         x:Key="AdditionalInfoFormat">
         ({0})
     </system:String>
-
     <Style
-        TargetType="Image">
+        TargetType="TextBlock"
+        BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter
             Property="VerticalAlignment"
             Value="Center" />
-    </Style>
-    <Style
-        TargetType="CheckBox">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="VerticalContentAlignment"
-            Value="Center" />
-    </Style>
-    <Style
-        TargetType="TextBlock">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="LineStackingStrategy"
-            Value="BlockLineHeight" />
-        <Setter
-            Property="LineHeight"
-            Value="{Binding FontSize, RelativeSource={RelativeSource Self}}" />
-    </Style>
-    <Style
-        TargetType="ComboBox">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="Padding"
-            Value="10 1" />
-    </Style>
-    <Style
-        TargetType="TextBox">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="Padding"
-            Value="0" />
-    </Style>
-    <Style
-        TargetType="Button">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="Cursor"
-            Value="Hand" />
-        <Setter
-            Property="Padding"
-            Value="10 0" />
-    </Style>
-    <Style
-        TargetType="buttons:ImageButton"
-        BasedOn="{StaticResource {x:Type Button}}">
-        <Setter
-            Property="Width"
-            Value="25" />
-        <Setter
-            Property="Height"
-            Value="25" />
     </Style>
 </ResourceDictionary>

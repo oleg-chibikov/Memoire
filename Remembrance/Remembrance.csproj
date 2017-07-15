@@ -72,6 +72,12 @@
     <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Microsoft.Owin.Host.HttpListener.3.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
@@ -83,6 +89,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.2\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
@@ -91,9 +100,6 @@
     </Reference>
     <Reference Include="Scar.Common.Logging, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Logging.1.0.23\lib\net462\Scar.Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Buttons, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.Buttons.1.0.6\lib\net462\Scar.Common.WPF.Controls.Buttons.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.5\lib\net462\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
@@ -287,15 +293,15 @@ foreach (var item in filesToCleanup)
   <Target Name="CleanReferenceCopyLocalPaths" AfterTargets="AfterBuild;NonWinFodyTarget">
     <CosturaCleanup Config="FodyWeavers.xml" Files="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
   </Target>
-  <Import Project="..\..\..\..\..\ThirdParty\Fody.2.1.0\build\netstandard1.0\Fody.targets" Condition="Exists('..\..\..\..\..\ThirdParty\Fody.2.1.0\build\netstandard1.0\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\..\ThirdParty\Fody.2.1.0\build\netstandard1.0\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\ThirdParty\Fody.2.1.0\build\netstandard1.0\Fody.targets'))" />
     <Error Condition="!Exists('..\..\..\..\..\ThirdParty\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\ThirdParty\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('..\..\..\..\..\ThirdParty\Fody.2.1.1\build\netstandard1.0\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\ThirdParty\Fody.2.1.1\build\netstandard1.0\Fody.targets'))" />
   </Target>
   <Import Project="..\..\..\..\..\ThirdParty\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets" Condition="Exists('..\..\..\..\..\ThirdParty\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" />
+  <Import Project="..\..\..\..\..\ThirdParty\Fody.2.1.1\build\netstandard1.0\Fody.targets" Condition="Exists('..\..\..\..\..\ThirdParty\Fody.2.1.1\build\netstandard1.0\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

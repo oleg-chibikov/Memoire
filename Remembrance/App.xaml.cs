@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Autofac;
+using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management;
@@ -21,6 +24,7 @@ using Remembrance.Settings.ViewModel;
 using Remembrance.Translate.Yandex;
 using Remembrance.TypeAdapter;
 using Remembrance.WebApi;
+using Scar.Common;
 using Scar.Common.IO;
 using Scar.Common.Logging;
 using Scar.Common.WPF.Localization;
@@ -30,23 +34,20 @@ namespace Remembrance
 {
     public sealed partial class App
     {
+        //TODO: Move to library
         private static readonly string AppGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
-        private ILifetimeScope _container;
-        private IMessenger _messenger;
-        private Mutex _mutex;
+        [NotNull]
+        private readonly ILifetimeScope _container;
+        [NotNull]
+        private readonly IMessenger _messenger;
+        [NotNull]
+        private readonly Mutex _mutex;
+        [NotNull]
+        private readonly ILog _logger;
 
-        protected override void OnExit(ExitEventArgs e)
+        public App()
         {
-            _container.Dispose();
-            _mutex.Dispose();
-        }
-
-        protected override void OnStartup([NotNull] StartupEventArgs e)
-        {
-            if (e == null)
-                throw new ArgumentNullException(nameof(e));
-
-            RegisterDependencies();
+            _container = RegisterDependencies();
 
             CultureUtilities.ChangeCulture(_container.Resolve<ISettingsRepository>().Get().UiLanguage);
 
@@ -54,15 +55,53 @@ namespace Remembrance
             _messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
             _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Information));
             _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Warning));
-            if (!VerifyNotLaunched())
+            _messenger.Register<string>(this, MessengerTokens.UserErrorToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Error));
+
+            _logger = _container.Resolve<ILog>();
+            _mutex = CreateMutex();
+
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _container.Dispose();
+            _mutex.Dispose();
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            if (!_mutex.WaitOne(0, false))
+            {
+                _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
                 return;
+            }
 
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
             _container.Resolve<ApiHoster>();
         }
 
-        private void RegisterDependencies()
+        private void App_DispatcherUnhandledException(object sender, [NotNull] DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Process unhandled exception
+            _logger.Fatal("Unhandled exception", e.Exception);
+            NotifyError(e.Exception);
+            // Prevent default unhandled exception processing
+            e.Handled = true;
+        }
+
+        private void TaskScheduler_UnobservedTaskException(object sender, [NotNull] UnobservedTaskExceptionEventArgs e)
+        {
+            _logger.Fatal("Unhandled exception", e.Exception);
+            NotifyError(e.Exception);
+            e.SetObserved();
+            e.Exception.Handle(ex => true);
+        }
+
+        [NotNull]
+        private static ILifetimeScope RegisterDependencies()
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
 
@@ -87,22 +126,24 @@ namespace Remembrance
 
             builder.RegisterModule<LoggingModule>();
 
-            _container = builder.Build();
+            return builder.Build();
         }
 
-        private bool VerifyNotLaunched()
+        [NotNull]
+        private Mutex CreateMutex()
         {
             var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
             var mutexSecurity = new MutexSecurity();
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
-            _mutex = new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out bool _, mutexSecurity);
+            bool createdNew;
+            return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
+        }
 
-            if (_mutex.WaitOne(0, false))
-                return true;
-            _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
-            return false;
+        private void NotifyError(Exception e)
+        {
+            _messenger.Send($"{Errors.DefaultError}: {e.GetMostInnerException()}", MessengerTokens.UserErrorToken);
         }
     }
 }

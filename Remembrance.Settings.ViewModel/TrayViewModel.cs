@@ -10,6 +10,7 @@ using Remembrance.Settings.View.Contracts;
 using Remembrance.Settings.ViewModel.Contracts;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.View;
+using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Settings.ViewModel
 {
@@ -18,17 +19,27 @@ namespace Remembrance.Settings.ViewModel
     public sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
-        private readonly ILifetimeScope _lifetimeScope;
-
-        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TrayViewModel([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
+        [NotNull]
+        private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+        [NotNull]
+        private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;
+        [NotNull]
+        private readonly WindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+
+        public TrayViewModel([NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILog logger,
+            [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            [NotNull] WindowFactory<ISettingsWindow> settingsWindowFactory,
+            [NotNull] WindowFactory<ISplashScreenWindow> splashScreenWindowFactory)
         {
-            _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
+            _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
+            _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
+            _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             ShowSettingsCommand = new CorrelationCommand(ShowSettings);
@@ -61,30 +72,33 @@ namespace Remembrance.Settings.ViewModel
         private void ShowSettings()
         {
             _logger.Info("Showing settings...");
-            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
+            var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            _lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().GetOrCreateWindow(dictionaryWindowParameter).Restore();
+            _settingsWindowFactory.GetOrCreateWindow(dictionaryWindowParameter).Restore();
         }
 
         private void ShowDictionary()
         {
             _logger.Info("Showing dictionary...");
-            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowIfExists();
-            if (dictionaryWindow == null)
+            var dictionaryWindow = _dictionaryWindowFactory.GetOrCreateWindow();
+
+            ShowWithSplash(dictionaryWindow);
+        }
+
+        private void ShowWithSplash([NotNull] IWindow window)
+        {
+            var splashScreenWindow = _splashScreenWindowFactory.GetOrCreateWindow();
+
+            splashScreenWindow.Show();
+
+            void LoadedHandler(object s, RoutedEventArgs e)
             {
-                var splashWindow = _lifetimeScope.Resolve<ISplashScreenWindow>();
-                splashWindow.Show();
-                dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetOrCreateWindow();
-
-                void LoadedHandler(object s, RoutedEventArgs e)
-                {
-                    dictionaryWindow.Loaded -= LoadedHandler;
-                    splashWindow.Close();
-                }
-
-                dictionaryWindow.Loaded += LoadedHandler;
+                window.Loaded -= LoadedHandler;
+                splashScreenWindow.Close();
             }
-            dictionaryWindow.Restore();
+
+            window.Loaded += LoadedHandler;
+            window.Restore();
         }
 
         private void ToggleActive()

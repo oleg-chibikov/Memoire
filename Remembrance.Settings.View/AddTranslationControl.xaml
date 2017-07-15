@@ -7,6 +7,7 @@
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -56,8 +57,11 @@
             SelectedItem="{Binding SelectedTargetLanguage}" />
         <Button
             Margin="{StaticResource CommonLeftMargin}"
-            Content="{lex:Loc Ok}"
+            ToolTip="{lex:Loc AddTranslation}"
             Command="{Binding SaveCommand}"
-            CommandParameter="{Binding Text, ElementName=WordTextBox}" />
+            CommandParameter="{Binding Text, ElementName=WordTextBox}">
+            <materialDesign:PackIcon
+                Kind="NotePlus" />
+        </Button>
     </StackPanel>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Remembrance.Settings.View.Contracts;
 using Remembrance.Settings.ViewModel.Contracts;
 
@@ -9,7 +10,7 @@ namespace Remembrance.Settings.View
     {
         public DictionaryWindow([NotNull] IDictionaryViewModel viewModel)
         {
-            DataContext = viewModel;
+            DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             InitializeComponent();
             AddTranslationControl.WordTextBox.Focus();
         }

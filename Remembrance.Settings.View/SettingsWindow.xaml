@@ -8,7 +8,8 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -24,10 +25,24 @@
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Slider.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </view:AnimatedWindow.Resources>
     <Grid>
+        <Grid.Resources>
+            <Style
+                TargetType="Button"
+                BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
+                <Setter
+                    Property="Width"
+                    Value="{StaticResource CommonButtonSize}" />
+                <Setter
+                    Property="Height"
+                    Value="{StaticResource CommonButtonSize}" />
+            </Style>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -60,21 +75,27 @@
             Grid.Column="1">
             <CheckBox
                 IsChecked="{Binding ReverseTranslation}" />
-            <StackPanel
+            <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right">
-                <buttons:ImageButton
+                <Button
                     ToolTip="{lex:Loc ViewLogs}"
-                    Command="{Binding ViewLogsCommand}"
-                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/document-32.png" />
-                <buttons:ImageButton
+                    Command="{Binding ViewLogsCommand}">
+                    <materialDesign:PackIcon
+                        Kind="FileDocument" />
+                </Button>
+                <Button
                     ToolTip="{lex:Loc OpenSharedFolder}"
-                    Command="{Binding OpenSharedFolderCommand}"
-                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/dropbox_copyrighted-32.png" />
-                <buttons:ImageButton
+                    Command="{Binding OpenSharedFolderCommand}">
+                    <materialDesign:PackIcon
+                        Kind="Dropbox" />
+                </Button>
+                <Button
                     ToolTip="{lex:Loc OpenSettingsFolder}"
-                    Command="{Binding OpenSettingsFolderCommand}"
-                    Source="pack://application:,,/Remembrance.Resources;component/Images/32/settings-32.png" />
+                    Command="{Binding OpenSettingsFolderCommand}">
+                    <materialDesign:PackIcon
+                        Kind="Folder" />
+                </Button>
             </StackPanel>
         </DockPanel>
 
@@ -89,11 +110,13 @@
             Grid.Column="1">
             <CheckBox
                 IsChecked="{Binding RandomTranslation}" />
-            <buttons:ImageButton
+            <Button
                 ToolTip="{lex:Loc Export}"
                 Command="{Binding ExportCommand}"
-                Source="pack://application:,,/Remembrance.Resources;component/Images/32/export-32.png"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right" >
+                <materialDesign:PackIcon
+                    Kind="Export" />
+            </Button>
         </DockPanel>
 
         <TextBlock
@@ -111,11 +134,13 @@
                 SelectedItem="{Binding UiLanguage}"
                 SelectedValuePath="Code"
                 DisplayMemberPath="DisplayName" />
-            <buttons:ImageButton
+            <Button
                 ToolTip="{lex:Loc Import}"
                 Command="{Binding ImportCommand}"
-                Source="pack://application:,,/Remembrance.Resources;component/Images/32/import-32.png"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right" >
+                <materialDesign:PackIcon
+                    Kind="Import" />
+            </Button>
         </DockPanel>
 
         <TextBlock
@@ -168,8 +193,17 @@
             Margin="{StaticResource WindowGridMargin}"
             Grid.Row="5"
             Grid.Column="1"
-            Padding="10 2"
             Content="{lex:Loc Save}"
-            Command="{Binding SaveCommand}" />
+            Width="120"
+            HorizontalAlignment="Right"
+            ToolTip="{lex:Loc Save}"
+            Command="{Binding SaveCommand}">
+            <Button.Style>
+                <Style
+                    TargetType="Button"
+                    BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </view:AnimatedWindow>

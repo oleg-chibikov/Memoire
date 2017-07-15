@@ -129,8 +129,11 @@
   <data name="To" xml:space="preserve">
     <value>на</value>
   </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Поехали!</value>
+  <data name="AddTranslation" xml:space="preserve">
+    <value>Добавить перевод</value>
+  </data>
+  <data name="Answer" xml:space="preserve">
+    <value>Ответить</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>

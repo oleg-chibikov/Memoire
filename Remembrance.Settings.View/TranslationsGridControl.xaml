@@ -12,7 +12,7 @@
     xmlns:dalContracts="clr-namespace:Remembrance.DAL.Contracts.Model;assembly=Remembrance.DAL.Contracts"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -27,6 +27,8 @@
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style
                 TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
@@ -113,12 +115,14 @@
                                 ItemsSource="{Binding}"
                                 FontSize="{StaticResource SmallFontSize}"
                                 MaxWidth="Infinity" />
-                            <buttons:ImageButton
-                                Source="pack://application:,,/Remembrance.Resources;component/Images/32/document-32.png"
+                            <Button
                                 ToolTip="{lex:Loc OpenDetails}"
                                 HorizontalAlignment="Right"
                                 CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" />
+                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" >
+                                <materialDesign:PackIcon
+                                    Kind="FileDocument" />
+                            </Button>
                         </DockPanel>
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
@@ -171,11 +175,25 @@
                 FieldName="Id">
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
-                        <buttons:ImageButton
+                        <Button
                             ToolTip="{lex:Loc DeleteTranslation}"
-                            Source="pack://application:,,/Remembrance.Resources;component/Images/32/trash-32.png"
                             CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" />
+                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" >
+                            <materialDesign:PackIcon
+                                Kind="Delete" />
+                            <Button.Style>
+                                <Style
+                                    TargetType="Button"
+                                    BasedOn="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                                    <Setter
+                                        Property="Width"
+                                        Value="{StaticResource CommonButtonSize}" />
+                                    <Setter
+                                        Property="Height"
+                                        Value="{StaticResource CommonButtonSize}" />
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </DataTemplate>
                 </xcdg:UnboundColumn.CellContentTemplate>
             </xcdg:UnboundColumn>

@@ -44,9 +44,6 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Buttons, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Controls.Buttons.1.0.6\lib\net462\Scar.Common.WPF.Controls.Buttons.dll</HintPath>
-    </Reference>
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.5\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
@@ -165,15 +162,6 @@
     <Resource Include="Images\32\settings-32.png" />
     <Resource Include="Images\32\speaker-32.png" />
     <Resource Include="Images\32\trash-32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\16\book-16.png" />
-    <Resource Include="Images\16\exit-16.png" />
-    <Resource Include="Images\16\settings-16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\16\lock-16.png" />
-    <Resource Include="Images\16\unlock-16.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\IconInactive.ico" />

@@ -11,7 +11,7 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-    xmlns:buttons="clr-namespace:Scar.Common.WPF.Controls.Buttons;assembly=Scar.Common.WPF.Controls.Buttons"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     MinWidth="800"
     MinHeight="300"
     Width="1200"
@@ -25,8 +25,12 @@
     d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}"
     Icon="IconAlt.ico">
     <view1:AnimatedWindow.Resources>
-        <ResourceDictionary
-            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </view1:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>
@@ -63,11 +67,13 @@
                 Width="200"
                 DockPanel.Dock="Left"
                 Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
-            <buttons:ImageButton
+            <Button
                 ToolTip="{lex:Loc EditSettings}"
-                Source="pack://application:,,/Remembrance.Resources;component/Images/32/settings-32.png"
                 Margin="{StaticResource CommonLeftMargin}"
-                Command="{Binding OpenSettingsCommand}" />
+                Command="{Binding OpenSettingsCommand}" >
+                <materialDesign:PackIcon
+                    Kind="Settings" />
+            </Button>
             <view:AddTranslationControl
                 x:Name="AddTranslationControl"
                 DockPanel.Dock="Right"

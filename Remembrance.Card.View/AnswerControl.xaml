@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Card.ViewModel.Contracts;assembly=Remembrance.Card.ViewModel.Contracts"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -38,8 +39,11 @@
         </TextBox>
         <Button
             Margin="{StaticResource CommonLeftMargin}"
-            Content="{lex:Loc Ok}"
+            ToolTip="{lex:Loc Answer}"
             Command="{Binding ProvideAnswerCommand}"
-            CommandParameter="{Binding Text, ElementName=AnswerTextBox}" />
+            CommandParameter="{Binding Text, ElementName=AnswerTextBox}">
+            <materialDesign:PackIcon
+                Kind="CheckboxMarkedCircleOutline" />
+        </Button>
     </StackPanel>
 </UserControl>
