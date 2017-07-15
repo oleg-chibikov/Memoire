@@ -21,7 +21,6 @@
                 x:Name="WordControl"
                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
                 FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
-                Margin="{StaticResource CommonLeftMargin}"
                 DataContext="{Binding}" />
             <DataTemplate.Triggers>
                 <DataTrigger

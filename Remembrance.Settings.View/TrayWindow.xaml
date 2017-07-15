@@ -1,4 +1,4 @@
-﻿<view:BaseWindow
+﻿<window:BaseWindow
     x:Class="Remembrance.Settings.View.TrayWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,7 +8,7 @@
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     WindowState="Minimized"
@@ -124,4 +124,4 @@
             </tb:TaskbarIcon.Style>
         </tb:TaskbarIcon>
     </Grid>
-</view:BaseWindow>
+</window:BaseWindow>

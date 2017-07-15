@@ -1,4 +1,4 @@
-﻿<view1:AnimatedWindow
+﻿<window:AnimatedWindow
     x:Class="Remembrance.Card.View.TranslationResultCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,12 +9,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Remembrance.Card.View"
     xmlns:contracts="clr-namespace:Remembrance.Card.ViewModel.Contracts;assembly=Remembrance.Card.ViewModel.Contracts"
-    xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=contracts:ITranslationResultCardViewModel}"
     SizeToContent="WidthAndHeight"
     Icon="IconAlt.ico">
-    <view1:AnimatedWindow.Resources>
+    <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
@@ -23,9 +24,8 @@
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </view1:AnimatedWindow.Resources>
-    <Grid
-        Margin="{StaticResource WindowGridMargin}">
+    </window:AnimatedWindow.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -42,7 +42,6 @@
             VerticalScrollBarVisibility="Auto"
             Grid.Row="1">
             <ItemsControl
-                Margin="{StaticResource CommonTopMargin}"
                 Grid.IsSharedSizeScope="True"
                 ItemsSource="{Binding TranslationDetails.TranslationResult.PartOfSpeechTranslations}">
                 <ItemsControl.ItemTemplate>
@@ -52,21 +51,20 @@
                                 TargetType="TextBlock"
                                 BasedOn="{StaticResource {x:Type TextBlock}}" />
                         </DataTemplate.Resources>
-                        <StackPanel>
+                        <StackPanel
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <StackPanel
-                                Margin="{StaticResource CommonTopMargin}"
+                                commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                                 Orientation="Horizontal">
                                 <view:WordControl
                                     FontWeight="Bold"
                                     FontSize="{StaticResource BigFontSize}"
                                     DataContext="{Binding}" />
                                 <TextBlock
-                                    Margin="{StaticResource CommonLeftMargin}"
                                     Text="{Binding Transcription, StringFormat={StaticResource AdditionalInfoFormat}}"
                                     Visibility="{Binding Transcription, Converter={StaticResource StringToVisibilityConverter}}" />
                             </StackPanel>
                             <ItemsControl
-                                Margin="{StaticResource CommonTopMargin}"
                                 AlternationCount="100"
                                 ItemsSource="{Binding TranslationVariants}">
                                 <ItemsControl.ItemTemplate>
@@ -77,26 +75,23 @@
                                                 BasedOn="{StaticResource {x:Type TextBlock}}" />
                                         </DataTemplate.Resources>
                                         <Border
-                                            Padding="{StaticResource WindowGridMargin}"
-                                            Margin="{StaticResource CommonTopMargin}"
                                             BorderBrush="DimGray"
                                             BorderThickness="1"
                                             CornerRadius="5"
                                             Background="WhiteSmoke">
                                             <StackPanel>
                                                 <StackPanel
-                                                    Orientation="Horizontal">
+                                                    Orientation="Horizontal"
+                                                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                                                     <TextBlock
                                                         FontSize="{StaticResource BigFontSize}"
                                                         Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
                                                     <view:WordControl
-                                                        Margin="{StaticResource CommonLeftMargin}"
                                                         FontSize="{StaticResource MediumFontSize}"
                                                         DataContext="{Binding}" />
                                                     <view:WordsControl
                                                         ItemsSource="{Binding Synonyms}"
                                                         FontSize="{StaticResource MediumFontSize}"
-                                                        Margin="{StaticResource CommonLeftMargin}"
                                                         MaxWidth="{StaticResource WordsWidth}" />
                                                 </StackPanel>
                                                 <view:WordsControl
@@ -106,7 +101,6 @@
                                                     ItemsSource="{Binding Meanings}"
                                                     MaxWidth="{StaticResource WordsWidth}" />
                                                 <ItemsControl
-                                                    Margin="{StaticResource WindowGridMargin}"
                                                     ItemsSource="{Binding Examples}"
                                                     Visibility="{Binding Examples, Converter={StaticResource ArrayToVisibilityConverter}}">
                                                     <ItemsControl.ItemTemplate>
@@ -132,4 +126,4 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
-</view1:AnimatedWindow>
+</window:AnimatedWindow>

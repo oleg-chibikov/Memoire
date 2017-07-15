@@ -19,19 +19,22 @@ namespace Remembrance.Settings.ViewModel
     public sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
+        private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
-        private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
-        [NotNull]
         private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;
+
         [NotNull]
         private readonly WindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
 
-        public TrayViewModel([NotNull] ISettingsRepository settingsRepository,
+        public TrayViewModel(
+            [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] WindowFactory<ISettingsWindow> settingsWindowFactory,
@@ -98,7 +101,7 @@ namespace Remembrance.Settings.ViewModel
             }
 
             window.Loaded += LoadedHandler;
-            window.Restore();
+            window.ShowDialog();
         }
 
         private void ToggleActive()

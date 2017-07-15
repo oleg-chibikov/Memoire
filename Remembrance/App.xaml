@@ -21,7 +21,6 @@
                     <Style
                         TargetType="Button"
                         BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                       
                         <Setter
                             Property="Width"
                             Value="{StaticResource CommonButtonSize}" />

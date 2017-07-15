@@ -1,4 +1,4 @@
-﻿<view:AnimatedWindow
+﻿<window:AnimatedWindow
     x:Class="Remembrance.Settings.View.SettingsWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -18,7 +18,7 @@
     d:DataContext="{d:DesignInstance d:Type=contracts:ISettingsViewModel}"
     SizeToContent="WidthAndHeight"
     Icon="IconAlt.ico">
-    <view:AnimatedWindow.Resources>
+    <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
@@ -29,8 +29,10 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </view:AnimatedWindow.Resources>
-    <Grid>
+    </window:AnimatedWindow.Resources>
+    <Grid
+        commonView:MarginSetter.Orientation="Vertical"
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
         <Grid.Resources>
             <Style
                 TargetType="Button"
@@ -65,17 +67,16 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="0"
             Grid.Column="0"
             Text="{lex:Loc ReverseTranslation}" />
         <DockPanel
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="0"
             Grid.Column="1">
             <CheckBox
                 IsChecked="{Binding ReverseTranslation}" />
-            <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+            <StackPanel
+                commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right">
                 <Button
@@ -100,12 +101,10 @@
         </DockPanel>
 
         <TextBlock
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="1"
             Grid.Column="0"
             Text="{lex:Loc RandomTranslation}" />
         <DockPanel
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="1"
             Grid.Column="1">
             <CheckBox
@@ -113,19 +112,17 @@
             <Button
                 ToolTip="{lex:Loc Export}"
                 Command="{Binding ExportCommand}"
-                HorizontalAlignment="Right" >
+                HorizontalAlignment="Right">
                 <materialDesign:PackIcon
                     Kind="Export" />
             </Button>
         </DockPanel>
 
         <TextBlock
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="2"
             Grid.Column="0"
             Text="{lex:Loc UiLanguage}" />
         <DockPanel
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="2"
             Grid.Column="1">
             <ComboBox
@@ -137,19 +134,19 @@
             <Button
                 ToolTip="{lex:Loc Import}"
                 Command="{Binding ImportCommand}"
-                HorizontalAlignment="Right" >
+                HorizontalAlignment="Right">
                 <materialDesign:PackIcon
                     Kind="Import" />
             </Button>
         </DockPanel>
 
         <TextBlock
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="3"
             Grid.Column="0"
             Text="{lex:Loc TtsSpeaker}" />
         <DockPanel
-            Margin="{StaticResource WindowGridMargin}"
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+            commonView:MarginSetter.Orientation="Horizontal"
             Grid.Row="3"
             Grid.Column="1">
             <ComboBox
@@ -161,7 +158,6 @@
             <ComboBox
                 HorizontalAlignment="Left"
                 IsSynchronizedWithCurrentItem="True"
-                Margin="{StaticResource CommonLeftMargin}"
                 ItemsSource="{Binding AvailableVoiceEmotions}"
                 SelectedValue="{Binding TtsVoiceEmotion}"
                 SelectedValuePath="Key"
@@ -169,12 +165,10 @@
         </DockPanel>
 
         <TextBlock
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="4"
             Grid.Column="0"
             Text="{lex:Loc CardShowFrequency}" />
         <StackPanel
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="4"
             Grid.Column="1"
             Orientation="Horizontal">
@@ -190,7 +184,6 @@
         </StackPanel>
 
         <Button
-            Margin="{StaticResource WindowGridMargin}"
             Grid.Row="5"
             Grid.Column="1"
             Content="{lex:Loc Save}"
@@ -201,9 +194,8 @@
             <Button.Style>
                 <Style
                     TargetType="Button"
-                    BasedOn="{StaticResource MaterialDesignRaisedButton}">
-                </Style>
+                    BasedOn="{StaticResource MaterialDesignRaisedButton}" />
             </Button.Style>
         </Button>
     </Grid>
-</view:AnimatedWindow>
+</window:AnimatedWindow>

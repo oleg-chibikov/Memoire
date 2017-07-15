@@ -1,4 +1,4 @@
-﻿<view1:AnimatedWindow
+﻿<window:AnimatedWindow
     x:Class="Remembrance.Settings.View.DictionaryWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,8 +10,9 @@
     Title="{lex:Loc Title}"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
-    xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     MinWidth="800"
     MinHeight="300"
     Width="1200"
@@ -24,14 +25,14 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}"
     Icon="IconAlt.ico">
-    <view1:AnimatedWindow.Resources>
+    <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </view1:AnimatedWindow.Resources>
+    </window:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -39,9 +40,10 @@
             ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
     <Grid
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        commonView:MarginSetter.Orientation="Vertical"
         HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-        Margin="{StaticResource WindowGridMargin}">
+        VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -57,11 +59,10 @@
                 VerticalContentAlignment="Center" />
         </DockPanel>
         <view:TranslationsGridControl
-            Margin="{StaticResource CommonTopMargin}"
             Width="Auto"
             Grid.Row="1" />
         <DockPanel
-            Margin="{StaticResource CommonTopMargin}"
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             Grid.Row="2">
             <Image
                 Width="200"
@@ -69,8 +70,7 @@
                 Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
             <Button
                 ToolTip="{lex:Loc EditSettings}"
-                Margin="{StaticResource CommonLeftMargin}"
-                Command="{Binding OpenSettingsCommand}" >
+                Command="{Binding OpenSettingsCommand}">
                 <materialDesign:PackIcon
                     Kind="Settings" />
             </Button>
@@ -82,4 +82,4 @@
                 VerticalContentAlignment="Center" />
         </DockPanel>
     </Grid>
-</view1:AnimatedWindow>
+</window:AnimatedWindow>

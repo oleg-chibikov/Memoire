@@ -36,14 +36,18 @@ namespace Remembrance
     {
         //TODO: Move to library
         private static readonly string AppGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+
         [NotNull]
         private readonly ILifetimeScope _container;
-        [NotNull]
-        private readonly IMessenger _messenger;
-        [NotNull]
-        private readonly Mutex _mutex;
+
         [NotNull]
         private readonly ILog _logger;
+
+        [NotNull]
+        private readonly IMessenger _messenger;
+
+        [NotNull]
+        private readonly Mutex _mutex;
 
         public App()
         {
@@ -64,6 +68,32 @@ namespace Remembrance
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
+        private void App_DispatcherUnhandledException(object sender, [NotNull] DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Process unhandled exception
+            _logger.Fatal("Unhandled exception", e.Exception);
+            NotifyError(e.Exception);
+            // Prevent default unhandled exception processing
+            e.Handled = true;
+        }
+
+        [NotNull]
+        private Mutex CreateMutex()
+        {
+            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+            var mutexSecurity = new MutexSecurity();
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
+            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
+            bool createdNew;
+            return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
+        }
+
+        private void NotifyError(Exception e)
+        {
+            _messenger.Send($"{Errors.DefaultError}: {e.GetMostInnerException()}", MessengerTokens.UserErrorToken);
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
             _container.Dispose();
@@ -81,23 +111,6 @@ namespace Remembrance
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
             _container.Resolve<ApiHoster>();
-        }
-
-        private void App_DispatcherUnhandledException(object sender, [NotNull] DispatcherUnhandledExceptionEventArgs e)
-        {
-            // Process unhandled exception
-            _logger.Fatal("Unhandled exception", e.Exception);
-            NotifyError(e.Exception);
-            // Prevent default unhandled exception processing
-            e.Handled = true;
-        }
-
-        private void TaskScheduler_UnobservedTaskException(object sender, [NotNull] UnobservedTaskExceptionEventArgs e)
-        {
-            _logger.Fatal("Unhandled exception", e.Exception);
-            NotifyError(e.Exception);
-            e.SetObserved();
-            e.Exception.Handle(ex => true);
         }
 
         [NotNull]
@@ -129,21 +142,12 @@ namespace Remembrance
             return builder.Build();
         }
 
-        [NotNull]
-        private Mutex CreateMutex()
+        private void TaskScheduler_UnobservedTaskException(object sender, [NotNull] UnobservedTaskExceptionEventArgs e)
         {
-            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-            var mutexSecurity = new MutexSecurity();
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
-            mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
-            bool createdNew;
-            return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
-        }
-
-        private void NotifyError(Exception e)
-        {
-            _messenger.Send($"{Errors.DefaultError}: {e.GetMostInnerException()}", MessengerTokens.UserErrorToken);
+            _logger.Fatal("Unhandled exception", e.Exception);
+            NotifyError(e.Exception);
+            e.SetObserved();
+            e.Exception.Handle(ex => true);
         }
     }
 }

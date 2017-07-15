@@ -119,7 +119,7 @@
                                 ToolTip="{lex:Loc OpenDetails}"
                                 HorizontalAlignment="Right"
                                 CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" >
+                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="FileDocument" />
                             </Button>
@@ -176,23 +176,12 @@
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
                         <Button
+                            Background="OrangeRed"
                             ToolTip="{lex:Loc DeleteTranslation}"
                             CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}" >
+                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                             <materialDesign:PackIcon
                                 Kind="Delete" />
-                            <Button.Style>
-                                <Style
-                                    TargetType="Button"
-                                    BasedOn="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
-                                    <Setter
-                                        Property="Width"
-                                        Value="{StaticResource CommonButtonSize}" />
-                                    <Setter
-                                        Property="Height"
-                                        Value="{StaticResource CommonButtonSize}" />
-                                </Style>
-                            </Button.Style>
                         </Button>
                     </DataTemplate>
                 </xcdg:UnboundColumn.CellContentTemplate>

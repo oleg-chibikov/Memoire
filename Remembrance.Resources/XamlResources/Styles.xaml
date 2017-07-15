@@ -5,36 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     mc:Ignorable="d"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
-    <Thickness
-        x:Key="WindowGridMargin">
-        5
-    </Thickness>
-    <Thickness
-        x:Key="CommonLeftMargin">
-        5 0 0 0
-    </Thickness>
-    <Thickness
-        x:Key="CommonRightMargin">
-        0 0 5 0
-    </Thickness>
-    <Thickness
-        x:Key="CommonTopMargin">
-        0 5 0 0
-    </Thickness>
-    <Thickness
-        x:Key="CommonBottomMargin">
-        0 0 0 5
-    </Thickness>
     <system:Double
         x:Key="CommonMargin">
         5
     </system:Double>
-
     <system:Double
         x:Key="CommonButtonSize">
         25
     </system:Double>
-
     <system:Double
         x:Key="HugeFontSize">
         24

@@ -1,4 +1,4 @@
-﻿<view1:AnimatedWindow
+﻿<window:AnimatedWindow
     x:Class="Remembrance.Card.View.AssessmentCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,7 +10,8 @@
     xmlns:view="clr-namespace:Remembrance.Card.View"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:contracts="clr-namespace:Remembrance.Card.ViewModel.Contracts;assembly=Remembrance.Card.ViewModel.Contracts"
-    xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -19,7 +20,7 @@
     d:DataContext="{d:DesignInstance contracts:IAssessmentCardViewModel}"
     SizeToContent="WidthAndHeight"
     Icon="IconAlt.ico">
-    <view1:AnimatedWindow.Resources>
+    <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
@@ -28,9 +29,10 @@
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </view1:AnimatedWindow.Resources>
+    </window:AnimatedWindow.Resources>
     <Grid
-        Margin="{StaticResource WindowGridMargin}">
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        commonView:MarginSetter.Orientation="Vertical">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -39,6 +41,7 @@
         </Grid.RowDefinitions>
         <StackPanel
             Orientation="Horizontal"
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             Grid.Row="0">
             <view:WordControl
                 FontSize="{StaticResource HugeFontSize}"
@@ -46,16 +49,13 @@
                 DataContext="{Binding Word}" />
             <TextBlock
                 FontSize="{StaticResource MediumFontSize}"
-                Margin="{StaticResource CommonLeftMargin}"
                 Text="{Binding LanguagePair, StringFormat='({0})'}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"
-                Margin="{StaticResource CommonLeftMargin}"
                 Text="-"
                 Visibility="{Binding Accepted, Converter={StaticResource NotNullToVisibilityConverter}}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"
-                Margin="{StaticResource CommonLeftMargin}"
                 Text="{Binding Path=CorrectAnswer}"
                 Visibility="{Binding Accepted, Converter={StaticResource NotNullToVisibilityConverter}}">
                 <TextBlock.Style>
@@ -83,7 +83,6 @@
         </StackPanel>
         <DockPanel
             Visibility="{Binding Accepted, Converter={StaticResource NullToVisibilityConverter}}"
-            Margin="{StaticResource CommonTopMargin}"
             Grid.Row="1">
             <view:AnswerControl
                 x:Name="AnswerControl"
@@ -94,7 +93,6 @@
         <StackPanel
             TextBlock.FontSize="{StaticResource MediumFontSize}"
             Visibility="{Binding Accepted, Converter={StaticResource NotNullToVisibilityConverter}}"
-            Margin="{StaticResource CommonTopMargin}"
             Grid.Row="1">
             <TextBlock
                 Foreground="Red"
@@ -106,4 +104,4 @@
                 Visibility="{Binding Accepted, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
-</view1:AnimatedWindow>
+</window:AnimatedWindow>

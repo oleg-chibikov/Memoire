@@ -7,6 +7,7 @@
     xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -18,7 +19,8 @@
             Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
     </UserControl.Resources>
     <StackPanel
-        Orientation="Horizontal">
+        Orientation="Horizontal"
+        view:MarginSetter.Margin="{StaticResource CommonMargin}">
         <TextBox
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -32,9 +34,8 @@
         </TextBox>
         <Button
             ToolTip="{lex:Loc Search}"
-            Margin="{StaticResource CommonLeftMargin}"
             Command="{Binding SearchCommand}"
-            CommandParameter="{Binding Text, ElementName=SearchTextBox}" >
+            CommandParameter="{Binding Text, ElementName=SearchTextBox}">
             <materialDesign:PackIcon
                 Kind="FileFind" />
         </Button>
