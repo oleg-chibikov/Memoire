@@ -83,25 +83,31 @@ namespace Remembrance.Settings.ViewModel
         private void ShowDictionary()
         {
             _logger.Info("Showing dictionary...");
-            var dictionaryWindow = _dictionaryWindowFactory.GetOrCreateWindow();
+            var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
 
-            ShowWithSplash(dictionaryWindow);
+            ShowWithSplash(dictionaryWindow, _dictionaryWindowFactory);
         }
 
-        private void ShowWithSplash([NotNull] IWindow window)
+        private void ShowWithSplash<TWindow>([CanBeNull] TWindow window, [NotNull] WindowFactory<TWindow> windowFactory)
+            where TWindow : class, IWindow
         {
-            var splashScreenWindow = _splashScreenWindowFactory.GetOrCreateWindow();
-
-            splashScreenWindow.Show();
-
-            void LoadedHandler(object s, RoutedEventArgs e)
+            if (window == null)
             {
-                window.Loaded -= LoadedHandler;
-                splashScreenWindow.Close();
-            }
+                window = windowFactory.GetOrCreateWindow();
+                var splashScreenWindow = _splashScreenWindowFactory.GetOrCreateWindow();
 
-            window.Loaded += LoadedHandler;
-            window.ShowDialog();
+                splashScreenWindow.Show();
+
+                void LoadedHandler(object s, RoutedEventArgs e)
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    window.Loaded -= LoadedHandler;
+                    splashScreenWindow.Close();
+                }
+
+                window.Loaded += LoadedHandler;
+            }
+            window.Restore();
         }
 
         private void ToggleActive()

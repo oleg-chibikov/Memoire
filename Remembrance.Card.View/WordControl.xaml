@@ -26,11 +26,20 @@
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary>
+                    <Style
+                        TargetType="TextBlock"
+                        BasedOn="{StaticResource {x:Type TextBlock}}" />
+                    <Style
+                        TargetType="Button"
+                        BasedOn="{StaticResource {x:Type Button}}" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel
-        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+        view:MarginSetter.Margin="{StaticResource CommonMargin}"
+        view:MarginSetter.Orientation="Horizontal">
         <TextBlock
             Visibility="{Binding PartOfSpeech, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
             Text="{Binding PartOfSpeech, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
@@ -124,7 +133,9 @@
             <Button.Style>
                 <Style
                     TargetType="Button"
-                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}" />
+                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}" >
+                    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                </Style>
             </Button.Style>
         </Button>
     </DockPanel>

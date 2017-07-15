@@ -29,16 +29,21 @@
         x:Key="SmallFontSize">
         12
     </system:Double>
-
     <system:Double
         x:Key="WordsWidth">
         400
     </system:Double>
-
     <system:String
         x:Key="AdditionalInfoFormat">
         ({0})
     </system:String>
+    <Style
+        TargetType="Button"
+        BasedOn="{StaticResource {x:Type Button}}">
+        <Setter
+            Property="VerticalAlignment"
+            Value="Center" />
+    </Style>
     <Style
         TargetType="TextBlock"
         BasedOn="{StaticResource {x:Type TextBlock}}">

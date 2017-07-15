@@ -15,12 +15,30 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}">
     <UserControl.Resources>
-        <ResourceDictionary
-            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"
         view:MarginSetter.Margin="{StaticResource CommonMargin}">
+        <StackPanel.Resources>
+            <Style
+                TargetType="Button"
+                BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
+                <Setter
+                    Property="Width"
+                    Value="{StaticResource CommonButtonSize}" />
+                <Setter
+                    Property="Height"
+                    Value="{StaticResource CommonButtonSize}" />
+            </Style>
+        </StackPanel.Resources>
         <TextBox
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"

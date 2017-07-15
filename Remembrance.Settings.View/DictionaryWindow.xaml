@@ -17,7 +17,7 @@
     MinHeight="300"
     Width="1200"
     Height="600"
-    SizeToContent="Manual"
+    SizeToContent="Width"
     ResizeMode="CanResize"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
@@ -63,6 +63,7 @@
             Grid.Row="1" />
         <DockPanel
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+            commonView:MarginSetter.Orientation="Horizontal"
             Grid.Row="2">
             <Image
                 Width="200"
