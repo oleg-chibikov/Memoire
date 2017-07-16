@@ -118,7 +118,7 @@
             </TextBlock>
         </Border>
         <TextBlock
-            Visibility="{Binding WordInfo, Converter={StaticResource StringToVisibilityConverter}}"
+            Visibility="{Binding WordInfo, Converter={StaticResource NotNullToVisibilityConverter}}"
             Text="{Binding WordInfo}"
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />

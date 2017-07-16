@@ -18,6 +18,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance contracts:IAssessmentCardViewModel}"
+    WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
     Icon="IconAlt.ico">
     <window:AnimatedWindow.Resources>

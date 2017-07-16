@@ -86,9 +86,9 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             set;
         }
 
-        [NotNull]
+        [CanBeNull]
         public string WordInfo => VerbType == null && NounAnimacy == null && NounGender == null
-            ? "-"
+            ? null
             : string.Join(
                 ", ",
                 new[]
