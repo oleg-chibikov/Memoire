@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Remembrance.Card.View"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     mc:Ignorable="d"
     x:Name="Control">
     <ItemsControl.Resources>
@@ -22,7 +23,7 @@
                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
                 FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
                 DataContext="{Binding}" />
-            <DataTemplate.Triggers>
+            <!--<DataTemplate.Triggers>
                 <DataTrigger
                     Binding="{Binding RelativeSource={RelativeSource PreviousData}}"
                     Value="{x:Null}">
@@ -31,7 +32,7 @@
                         Property="Margin"
                         Value="0" />
                 </DataTrigger>
-            </DataTemplate.Triggers>
+            </DataTemplate.Triggers>-->
         </DataTemplate>
     </ItemsControl.ItemTemplate>
     <ItemsControl.Style>
@@ -41,7 +42,8 @@
                 Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <WrapPanel
+                        <WrapPanel  commonView:MarginSetter.Orientation="Horizontal"
+                                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Orientation="Horizontal"
@@ -57,7 +59,8 @@
                         Property="ItemsPanel">
                         <Setter.Value>
                             <ItemsPanelTemplate>
-                                <DockPanel
+                                <StackPanel Orientation="Horizontal"
+                                           commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center" />
                             </ItemsPanelTemplate>

@@ -67,8 +67,6 @@
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <Separator />
-
                     <MenuItem
                         Command="{Binding ToggleActiveCommand}"
                         Header="{lex:Loc Remembrance.Resources:Texts:Deactivate}"

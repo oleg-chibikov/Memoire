@@ -29,8 +29,14 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public virtual string Language { get; set; }
 
+        #region Commands
+
         public ICommand PlayTtsCommand { get; }
+
         public ICommand LearnWordCommand { get; }
+
+        #endregion
+
         public bool CanEdit => CanLearnWord || CanTogglePriority;
 
         [DoNotNotify]
@@ -81,14 +87,16 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [NotNull]
-        public string WordInfo => string.Join(
-            ", ",
-            new[]
-            {
-                VerbType,
-                NounAnimacy,
-                NounGender
-            }.Where(x => x != null));
+        public string WordInfo => VerbType == null && NounAnimacy == null && NounGender == null
+            ? "-"
+            : string.Join(
+                ", ",
+                new[]
+                {
+                    VerbType,
+                    NounAnimacy,
+                    NounGender
+                }.Where(x => x != null));
 
         private void LearnWord()
         {
