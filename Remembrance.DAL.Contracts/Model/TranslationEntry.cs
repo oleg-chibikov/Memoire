@@ -23,10 +23,10 @@ namespace Remembrance.DAL.Contracts.Model
 
         public TranslationEntry([NotNull] TranslationEntryKey key, [NotNull] IList<PriorityWord> translations)
         {
-            LastCardShowTime = DateTime.Now;
-            RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Translations = translations ?? throw new ArgumentNullException(nameof(translations));
+            LastCardShowTime = DateTime.Now;
+            RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             _current = RepeatTypeSettings.RepeatTypes.First;
         }
 

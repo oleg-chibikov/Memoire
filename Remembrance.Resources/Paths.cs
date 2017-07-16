@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 
@@ -8,21 +9,36 @@ namespace Remembrance.Resources
 {
     public static class Paths
     {
+        //TODO: Library
+        [NotNull]
+        private static readonly Regex IllegalCharactersRegex = new Regex($"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars()))}]", RegexOptions.Compiled);
+
+        [NotNull]
+        private static string SanitizePath([NotNull] this string path)
+        {
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            return IllegalCharactersRegex.Replace(path, "");
+        }
+
         [NotNull]
         private static readonly string ProgramName =
             $"{((AssemblyCompanyAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
-
-        [NotNull]
-        public static readonly string SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
 
         [CanBeNull]
         private static readonly string BaseSharedDataPath = GetDropboxPath() ?? GetOneDrivePath();
 
         [CanBeNull]
-        public static readonly string SharedDataPath = BaseSharedDataPath == null
+        private static readonly string SharedDataPath = BaseSharedDataPath == null
             ? null
-            : Path.Combine(BaseSharedDataPath, ProgramName);
+            : Path.Combine(BaseSharedDataPath, ProgramName, SanitizePath(Environment.MachineName));
 
+        [NotNull]
+        public static readonly string SettingsPath = SharedDataPath ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+
+        //TODO: Move to IO Library
+        //TODO: Settings and Installer - add to choose which program to use
         [CanBeNull]
         private static string GetDropboxPath()
         {

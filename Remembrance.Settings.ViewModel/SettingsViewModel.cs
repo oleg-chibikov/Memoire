@@ -48,7 +48,6 @@ namespace Remembrance.Settings.ViewModel
             ReverseTranslation = settings.ReverseTranslation;
             RandomTranslation = settings.RandomTranslation;
             CardShowFrequency = settings.CardShowFrequency.TotalMinutes;
-            OpenSharedFolderCommand = new CorrelationCommand(OpenSharedFolder);
             OpenSettingsFolderCommand = new CorrelationCommand(OpenSettingsFolder);
             SaveCommand = new CorrelationCommand(Save);
             SaveCommand = new CorrelationCommand(Save);
@@ -74,8 +73,6 @@ namespace Remembrance.Settings.ViewModel
         public ICommand SaveCommand { get; }
 
         public ICommand ViewLogsCommand { get; }
-
-        public ICommand OpenSharedFolderCommand { get; }
 
         public ICommand OpenSettingsFolderCommand { get; }
 
@@ -104,11 +101,6 @@ namespace Remembrance.Settings.ViewModel
                 _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
             RequestClose?.Invoke(null, null);
             _logger.Trace("Settings has been saved");
-        }
-
-        private static void OpenSharedFolder()
-        {
-            Process.Start($@"{Paths.SharedDataPath}");
         }
 
         private static void OpenSettingsFolder()

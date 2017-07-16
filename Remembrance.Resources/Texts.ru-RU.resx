@@ -267,7 +267,4 @@
   <data name="OpenSettingsFolder" xml:space="preserve">
     <value>Открыть папку настроек</value>
   </data>
-  <data name="OpenSharedFolder" xml:space="preserve">
-    <value>Открыть общую папку</value>
-  </data>
 </root>

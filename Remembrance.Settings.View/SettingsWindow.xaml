@@ -86,12 +86,6 @@
                         Kind="FileDocument" />
                 </Button>
                 <Button
-                    ToolTip="{lex:Loc OpenSharedFolder}"
-                    Command="{Binding OpenSharedFolderCommand}">
-                    <materialDesign:PackIcon
-                        Kind="Dropbox" />
-                </Button>
-                <Button
                     ToolTip="{lex:Loc OpenSettingsFolder}"
                     Command="{Binding OpenSettingsFolderCommand}">
                     <materialDesign:PackIcon

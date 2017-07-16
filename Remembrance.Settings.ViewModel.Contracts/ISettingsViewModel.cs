@@ -20,6 +20,7 @@ namespace Remembrance.Settings.ViewModel.Contracts
         double CardShowFrequency { get; }
 
         bool ReverseTranslation { get; }
+
         bool RandomTranslation { get; }
 
         [NotNull]
@@ -27,9 +28,6 @@ namespace Remembrance.Settings.ViewModel.Contracts
 
         [NotNull]
         ICommand ViewLogsCommand { get; }
-
-        [NotNull]
-        ICommand OpenSharedFolderCommand { get; }
 
         [NotNull]
         ICommand OpenSettingsFolderCommand { get; }
