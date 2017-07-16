@@ -110,6 +110,8 @@ namespace Remembrance
 
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
+            //Need to create first instance of this class in the UI thread (for proper SyncContext)
+            _container.Resolve<ITranslationResultCardManager>();
             _container.Resolve<ApiHoster>();
         }
 
