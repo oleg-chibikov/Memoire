@@ -37,7 +37,9 @@
                 <Setter
                     Property="Height"
                     Value="{StaticResource CommonButtonSize}" />
-                <Setter Property="Padding" Value="0"></Setter>
+                <Setter
+                    Property="Padding"
+                    Value="0" />
             </Style>
         </StackPanel.Resources>
         <TextBox

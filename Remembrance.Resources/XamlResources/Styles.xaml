@@ -43,7 +43,9 @@
         <Setter
             Property="VerticalAlignment"
             Value="Center" />
-        <Setter Property="Padding" Value="0"></Setter>
+        <Setter
+            Property="Padding"
+            Value="0" />
     </Style>
     <Style
         TargetType="TextBlock"

@@ -409,6 +409,7 @@ namespace Remembrance.Settings.ViewModel
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
+            //TODO: prompt
             _logger.Trace($"Deleting {translationEntryViewModel} from the list...");
             if (translationEntryViewModel == null)
                 throw new ArgumentNullException(nameof(translationEntryViewModel));

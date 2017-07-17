@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using LiteDB;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
 
@@ -32,7 +31,6 @@ namespace Remembrance.DAL.Contracts.Model
 
         [NotNull]
         [UsedImplicitly]
-        [BsonIndex(true)]
         public TranslationEntryKey Key { get; set; }
 
         [NotNull]
@@ -66,7 +64,6 @@ namespace Remembrance.DAL.Contracts.Model
         }
 
         [UsedImplicitly]
-        [BsonIndex(false)]
         public DateTime NextCardShowTime { get; set; }
 
         public void DecreaseRepeatType()

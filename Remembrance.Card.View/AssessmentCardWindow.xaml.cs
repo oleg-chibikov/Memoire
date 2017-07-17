@@ -6,7 +6,7 @@ using Remembrance.Card.ViewModel.Contracts;
 namespace Remembrance.Card.View
 {
     [UsedImplicitly]
-    internal partial class AssessmentCardWindow : IAssessmentCardWindow
+    internal sealed partial class AssessmentCardWindow : IAssessmentCardWindow
     {
         public AssessmentCardWindow([NotNull] IAssessmentCardViewModel viewModel, [CanBeNull] Window ownerWindow = null)
         {

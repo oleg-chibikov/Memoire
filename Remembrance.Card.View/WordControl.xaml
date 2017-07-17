@@ -131,9 +131,13 @@
             <Button.Style>
                 <Style
                     TargetType="Button"
-                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}" >
-                    <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                    <Setter Property="Padding" Value="0"></Setter>
+                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+                    <Setter
+                        Property="VerticalAlignment"
+                        Value="Center" />
+                    <Setter
+                        Property="Padding"
+                        Value="0" />
                 </Style>
             </Button.Style>
         </Button>

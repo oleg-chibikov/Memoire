@@ -15,6 +15,8 @@ namespace Remembrance.DAL
         public TranslationEntryRepository([NotNull] ILog logger)
             : base(logger)
         {
+            Collection.EnsureIndex(x => x.Key, true);
+            Collection.EnsureIndex(x => x.NextCardShowTime);
         }
 
         [NotNull]

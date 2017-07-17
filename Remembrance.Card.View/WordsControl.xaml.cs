@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Card.View
 {
-    public partial class WordsControl
+    public sealed partial class WordsControl
     {
         public WordsControl()
         {

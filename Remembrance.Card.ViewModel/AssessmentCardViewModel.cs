@@ -31,7 +31,10 @@ namespace Remembrance.Card.ViewModel
         private static readonly Random Random = new Random();
 
         //TODO: config timeout
-        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(2);
+        private static readonly TimeSpan SuccessCloseTimeout = TimeSpan.FromSeconds(2);
+
+        //TODO: config timeout
+        private static readonly TimeSpan ErrorCloseTimeout = TimeSpan.FromSeconds(5);
 
         [NotNull]
         private readonly HashSet<string> _acceptedAnswers;
@@ -301,6 +304,8 @@ namespace Remembrance.Card.ViewModel
                     Accepted = true;
                 }
 
+            TimeSpan closeTimeout;
+
             if (Accepted == true)
             {
                 _logger.Info($"Answer is correct. Most suitable accepted word was {mostSuitable} with distance {currentMinDistance}. Increasing repeat type for {_translationInfo}...");
@@ -308,23 +313,25 @@ namespace Remembrance.Card.ViewModel
                 //The inputed answer can differ from the first one
                 // ReSharper disable once AssignNullToNotNullAttribute - mostSuitable should be always set
                 CorrectAnswer = mostSuitable;
+                closeTimeout = SuccessCloseTimeout;
             }
             else
             {
                 _logger.Info($"Answer is not correct. Decreasing repeat type for {_translationInfo}...");
                 Accepted = false;
                 _translationInfo.TranslationEntry.DecreaseRepeatType();
+                closeTimeout = ErrorCloseTimeout;
             }
             _translationEntryRepository.Save(_translationInfo.TranslationEntry);
             _messenger.Send(_translationInfo, MessengerTokens.TranslationInfoToken);
-            _logger.Trace($"Closing window in {CloseTimeout}...");
+            _logger.Trace($"Closing window in {closeTimeout}...");
             ActionExtensions.DoAfterAsync(
                 () =>
                 {
                     _syncContext.Post(x => RequestClose?.Invoke(null, null), null);
                     _logger.Trace("Window is closed");
                 },
-                CloseTimeout);
+                closeTimeout);
         }
 
         /// <summary>

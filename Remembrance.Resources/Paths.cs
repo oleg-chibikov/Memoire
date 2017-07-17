@@ -14,15 +14,6 @@ namespace Remembrance.Resources
         private static readonly Regex IllegalCharactersRegex = new Regex($"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars()))}]", RegexOptions.Compiled);
 
         [NotNull]
-        private static string SanitizePath([NotNull] this string path)
-        {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            return IllegalCharactersRegex.Replace(path, "");
-        }
-
-        [NotNull]
         private static readonly string ProgramName =
             $"{((AssemblyCompanyAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
 
@@ -60,6 +51,15 @@ namespace Remembrance.Resources
             return path == notDetected || string.IsNullOrWhiteSpace(path)
                 ? null
                 : path;
+        }
+
+        [NotNull]
+        private static string SanitizePath([NotNull] this string path)
+        {
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            return IllegalCharactersRegex.Replace(path, "");
         }
     }
 }

@@ -12,6 +12,8 @@ using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
 
+//TODO: Set all bindings mode manually
+
 namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
@@ -54,7 +56,7 @@ namespace Remembrance.Settings.ViewModel
 
         #region Dependency Properties
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; private set; }
 
         #endregion
 

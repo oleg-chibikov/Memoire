@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Card.View
 {
-    public partial class AnswerControl
+    public sealed partial class AnswerControl
     {
         public AnswerControl()
         {

@@ -5,8 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     Topmost="True"
-    WindowStyle="None" Background="Transparent" AllowsTransparency="True"
-    ShowInTaskbar="False" SizeToContent="WidthAndHeight"
+    WindowStyle="None"
+    Background="Transparent"
+    AllowsTransparency="True"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen">
     <Image
         Width="300"

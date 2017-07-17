@@ -29,14 +29,6 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         public virtual string Language { get; set; }
 
-        #region Commands
-
-        public ICommand PlayTtsCommand { get; }
-
-        public ICommand LearnWordCommand { get; }
-
-        #endregion
-
         public bool CanEdit => CanLearnWord || CanTogglePriority;
 
         [DoNotNotify]
@@ -117,5 +109,13 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         {
             return $"{Text} [{Language}]";
         }
+
+        #region Commands
+
+        public ICommand PlayTtsCommand { get; }
+
+        public ICommand LearnWordCommand { get; }
+
+        #endregion
     }
 }

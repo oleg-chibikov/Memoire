@@ -43,7 +43,9 @@
                 <Setter
                     Property="Height"
                     Value="{StaticResource CommonButtonSize}" />
-                <Setter Property="Padding" Value="0"></Setter>
+                <Setter
+                    Property="Padding"
+                    Value="0" />
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -117,7 +119,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Text="{lex:Loc UiLanguage}" />
-        
+
         <DockPanel
             Grid.Row="2"
             Grid.Column="1">
@@ -140,7 +142,7 @@
             Grid.Row="3"
             Grid.Column="0"
             Text="{lex:Loc TtsSpeaker}" />
-        
+
         <DockPanel
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             commonView:MarginSetter.Orientation="Horizontal"
@@ -165,7 +167,7 @@
             Grid.Row="4"
             Grid.Column="0"
             Text="{lex:Loc CardShowFrequency}" />
-        
+
         <StackPanel
             Grid.Row="4"
             Grid.Column="1"
