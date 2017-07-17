@@ -15,20 +15,6 @@
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Red.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary>
-                    <Style
-                        TargetType="Button"
-                        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                        <Setter
-                            Property="Width"
-                            Value="{StaticResource CommonButtonSize}" />
-                        <Setter
-                            Property="Height"
-                            Value="{StaticResource CommonButtonSize}" />
-                    </Style>
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

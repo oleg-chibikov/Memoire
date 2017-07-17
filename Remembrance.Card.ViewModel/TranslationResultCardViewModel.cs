@@ -30,10 +30,11 @@ namespace Remembrance.Card.ViewModel
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             Word = translationInfo.Key.Text;
+
+            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
+            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
         }
 
         public TranslationDetailsViewModel TranslationDetails { get; }

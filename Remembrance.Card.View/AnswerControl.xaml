@@ -39,6 +39,7 @@
             </TextBox.InputBindings>
         </TextBox>
         <Button
+            Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Answer}"
             Command="{Binding ProvideAnswerCommand}"
             CommandParameter="{Binding Text, ElementName=AnswerTextBox}">

@@ -23,6 +23,7 @@ namespace Remembrance.Card.Management.Data
         [JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
 
+        [JsonIgnore]
         public string Text => TranslationEntry.Key.Text;
     }
 }

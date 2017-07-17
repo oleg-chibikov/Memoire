@@ -71,6 +71,7 @@
                 DockPanel.Dock="Left"
                 Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
             <Button
+                Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc EditSettings}"
                 Command="{Binding OpenSettingsCommand}">
                 <materialDesign:PackIcon

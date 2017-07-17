@@ -38,4 +38,6 @@
         x:Key="PartOfSpeechLocalizedConverter" />
     <converters:PartOfSpeechToVisibilityConverter
         x:Key="PartOfSpeechToVisibilityConverter" />
+    <commonConverters:PercentageIntToDoubleConverter
+        x:Key="PercentageIntToDoubleConverter" />
 </ResourceDictionary>

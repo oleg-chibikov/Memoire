@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
+using System.Windows.Shell;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
@@ -13,6 +15,7 @@ using Remembrance.Resources;
 using Remembrance.Settings.ViewModel.Contracts;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
+using Scar.Common.Events;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.ViewModel;
 
@@ -20,8 +23,11 @@ namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class SettingsViewModel : ISettingsViewModel, IRequestCloseViewModel
+    public sealed class SettingsViewModel : ISettingsViewModel, IRequestCloseViewModel, IDisposable
     {
+        [NotNull]
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         [NotNull]
         private readonly ICardsExchanger _cardsExchanger;
 
@@ -33,6 +39,9 @@ namespace Remembrance.Settings.ViewModel
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
+
+        [NotNull]
+        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
         public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessenger messenger, [NotNull] ICardsExchanger cardsExchanger)
         {
@@ -54,6 +63,13 @@ namespace Remembrance.Settings.ViewModel
             ViewLogsCommand = new CorrelationCommand(ViewLogs);
             ExportCommand = new CorrelationCommand(Export);
             ImportCommand = new CorrelationCommand(Import);
+            WindowClosingCommand = new CorrelationCommand(WindowClosing);
+            _cardsExchanger.Progress += CardsExchanger_Progress;
+        }
+
+        public void Dispose()
+        {
+            _cardsExchanger.Progress -= CardsExchanger_Progress;
         }
 
         public event EventHandler RequestClose;
@@ -80,6 +96,8 @@ namespace Remembrance.Settings.ViewModel
 
         public ICommand ImportCommand { get; }
 
+        public ICommand WindowClosingCommand { get; }
+
         #endregion
 
         #region Command Handlers
@@ -103,6 +121,33 @@ namespace Remembrance.Settings.ViewModel
             _logger.Trace("Settings has been saved");
         }
 
+        private void BeginProgress()
+        {
+            ProgressState = TaskbarItemProgressState.Normal;
+            ProgressDescription = "Caclulating...";
+            Progress = 0;
+        }
+
+        private void EndProgress()
+        {
+            ProgressState = TaskbarItemProgressState.None;
+        }
+
+        private void CardsExchanger_Progress([NotNull] object sender, [NotNull] ProgressEventArgs e)
+        {
+            _syncContext.Send(
+                x =>
+                {
+                    Progress = e.Percentage;
+                    ProgressDescription = $"{e.Current} of {e.Total} ({e.Percentage} %)";
+                    if (e.Current == 0)
+                        BeginProgress();
+                    else if (e.Current == e.Total)
+                        EndProgress();
+                },
+                null);
+        }
+
         private static void OpenSettingsFolder()
         {
             Process.Start($@"{Paths.SettingsPath}");
@@ -115,19 +160,28 @@ namespace Remembrance.Settings.ViewModel
 
         private void Export()
         {
-            _cardsExchanger.Export();
+            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private void Import()
         {
-            _cardsExchanger.Import();
+            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        private void WindowClosing()
+        {
+            _cancellationTokenSource.Cancel();
         }
 
         #endregion
 
         #region DependencyProperties
 
-        public double CardShowFrequency { get; set; }
+        public int Progress { get; private set; }
+
+        public string ProgressDescription { get; private set; }
+
+        public TaskbarItemProgressState ProgressState { get; private set; }
 
         private Language _uiLanguage;
 
@@ -142,13 +196,40 @@ namespace Remembrance.Settings.ViewModel
             }
         }
 
-        public Speaker TtsSpeaker { get; set; }
+        public double CardShowFrequency
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
-        public VoiceEmotion TtsVoiceEmotion { get; set; }
+        public Speaker TtsSpeaker
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
-        public bool ReverseTranslation { get; set; }
+        public VoiceEmotion TtsVoiceEmotion
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
-        public bool RandomTranslation { get; set; }
+        public bool ReverseTranslation
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public bool RandomTranslation
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
         #endregion
     }

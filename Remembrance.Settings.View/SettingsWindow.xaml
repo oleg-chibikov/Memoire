@@ -10,6 +10,8 @@
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:command="http://www.galasoft.ch/mvvmlight"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -18,36 +20,34 @@
     d:DataContext="{d:DesignInstance d:Type=contracts:ISettingsViewModel}"
     SizeToContent="WidthAndHeight"
     Icon="IconAlt.ico">
+    <i:Interaction.Triggers>
+        <i:EventTrigger
+            EventName="Closing">
+            <command:EventToCommand
+                Command="{Binding WindowClosingCommand, Mode=OneTime}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Slider.xaml" />
+                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
                 <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                    Source="/Remembrance.Resources;component/XamlResources/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </window:AnimatedWindow.Resources>
+    <window:AnimatedWindow.TaskbarItemInfo>
+        <TaskbarItemInfo
+            ProgressState="{Binding ProgressState, Mode=OneWay}"
+            Description="{Binding ProgressDescription, Mode=OneWay}"
+            ProgressValue="{Binding Progress, Mode=OneWay, Converter={StaticResource PercentageIntToDoubleConverter}}" />
+    </window:AnimatedWindow.TaskbarItemInfo>
     <Grid
         commonView:MarginSetter.Orientation="Vertical"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Grid.Resources>
-            <Style
-                TargetType="Button"
-                BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                <Setter
-                    Property="Width"
-                    Value="{StaticResource CommonButtonSize}" />
-                <Setter
-                    Property="Height"
-                    Value="{StaticResource CommonButtonSize}" />
-                <Setter
-                    Property="Padding"
-                    Value="0" />
-            </Style>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -77,20 +77,22 @@
             Grid.Row="0"
             Grid.Column="1">
             <CheckBox
-                IsChecked="{Binding ReverseTranslation}" />
+                IsChecked="{Binding ReverseTranslation, Mode=TwoWay}" />
             <StackPanel
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right">
                 <Button
+                    Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc ViewLogs}"
-                    Command="{Binding ViewLogsCommand}">
+                    Command="{Binding ViewLogsCommand, Mode=OneTime}">
                     <materialDesign:PackIcon
                         Kind="FileDocument" />
                 </Button>
                 <Button
+                    Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc OpenSettingsFolder}"
-                    Command="{Binding OpenSettingsFolderCommand}">
+                    Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
                     <materialDesign:PackIcon
                         Kind="Folder" />
                 </Button>
@@ -105,10 +107,11 @@
             Grid.Row="1"
             Grid.Column="1">
             <CheckBox
-                IsChecked="{Binding RandomTranslation}" />
+                IsChecked="{Binding RandomTranslation, Mode=TwoWay}" />
             <Button
+                Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc Export}"
-                Command="{Binding ExportCommand}"
+                Command="{Binding ExportCommand, Mode=OneTime}"
                 HorizontalAlignment="Right">
                 <materialDesign:PackIcon
                     Kind="Export" />
@@ -125,13 +128,14 @@
             Grid.Column="1">
             <ComboBox
                 IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableUiLanguages}"
-                SelectedItem="{Binding UiLanguage}"
+                ItemsSource="{Binding AvailableUiLanguages, Mode=OneTime}"
+                SelectedItem="{Binding UiLanguage, Mode=TwoWay}"
                 SelectedValuePath="Code"
                 DisplayMemberPath="DisplayName" />
             <Button
+                Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc Import}"
-                Command="{Binding ImportCommand}"
+                Command="{Binding ImportCommand, Mode=OneTime}"
                 HorizontalAlignment="Right">
                 <materialDesign:PackIcon
                     Kind="Import" />
@@ -150,15 +154,15 @@
             Grid.Column="1">
             <ComboBox
                 IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableTtsSpeakers}"
-                SelectedValue="{Binding TtsSpeaker}"
+                ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
+                SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
                 SelectedValuePath="Key"
                 DisplayMemberPath="Value" />
             <ComboBox
                 HorizontalAlignment="Left"
                 IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableVoiceEmotions}"
-                SelectedValue="{Binding TtsVoiceEmotion}"
+                ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
+                SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
                 SelectedValuePath="Key"
                 DisplayMemberPath="Value" />
         </DockPanel>
@@ -179,7 +183,7 @@
                 IsSnapToTickEnabled="True"
                 AutoToolTipPlacement="BottomRight"
                 Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
-                Value="{Binding CardShowFrequency}"
+                Value="{Binding CardShowFrequency, Mode=TwoWay}"
                 Width="300" />
         </StackPanel>
 
@@ -190,12 +194,62 @@
             Width="120"
             HorizontalAlignment="Right"
             ToolTip="{lex:Loc Save}"
-            Command="{Binding SaveCommand}">
-            <Button.Style>
+            Command="{Binding SaveCommand, Mode=OneTime}" />
+
+        <Border
+            CornerRadius="6"
+            Opacity="0"
+            Grid.Row="0"
+            Grid.RowSpan="6"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Background="#55000000"
+            BorderThickness="0">
+            <Border.Style>
                 <Style
-                    TargetType="Button"
-                    BasedOn="{StaticResource MaterialDesignRaisedButton}" />
-            </Button.Style>
-        </Button>
+                    TargetType="Border">
+                    <Setter
+                        Property="Visibility"
+                        Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding ProgressState, Mode=OneWay}"
+                            Value="Normal">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard
+                                        Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard
+                                        Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation
+                                            Duration="0:0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                            <Setter
+                                Property="Visibility"
+                                Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <!-- Progress Bar -->
+            <ProgressBar
+                Minimum="0"
+                Maximum="100"
+                HorizontalAlignment="Stretch"
+                Height="20"
+                Value="{Binding Progress, Mode=OneWay}"
+                ToolTip="{Binding ProgressDescription, Mode=OneWay}" />
+        </Border>
     </Grid>
 </window:AnimatedWindow>

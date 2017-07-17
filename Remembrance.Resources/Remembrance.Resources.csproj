@@ -38,6 +38,12 @@
     <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -151,24 +157,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\32\close_window-32.png" />
-    <Resource Include="Images\32\document-32.png" />
-    <Resource Include="Images\32\export-32.png" />
-    <Resource Include="Images\32\google_web_search_copyrighted-32.png" />
-    <Resource Include="Images\32\import-32.png" />
-    <Resource Include="Images\32\maximize_window-32.png" />
-    <Resource Include="Images\32\minimize_window-32.png" />
-    <Resource Include="Images\32\restore_window-32.png" />
-    <Resource Include="Images\32\settings-32.png" />
-    <Resource Include="Images\32\speaker-32.png" />
-    <Resource Include="Images\32\trash-32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\IconInactive.ico" />
     <Resource Include="Images\IconInactive.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\32\dropbox_copyrighted-32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

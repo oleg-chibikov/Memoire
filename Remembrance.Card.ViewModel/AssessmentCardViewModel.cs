@@ -60,8 +60,6 @@ namespace Remembrance.Card.ViewModel
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
-
             ProvideAnswerCommand = new CorrelationCommand<string>(ProvideAnswer);
 
             LanguagePair = $"{_translationInfo.Key.TargetLanguage} - {_translationInfo.Key.SourceLanguage}";
@@ -82,6 +80,8 @@ namespace Remembrance.Card.ViewModel
             assessmentInfo.Word.CanLearnWord = false;
             Word = assessmentInfo.Word;
             CorrectAnswer = assessmentInfo.CorrectAnswer;
+
+            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
             logger.Trace("Card is initialized");
         }
 

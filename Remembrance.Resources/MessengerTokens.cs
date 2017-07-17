@@ -7,6 +7,7 @@
         public static readonly object UserWarningToken = new object();
         public static readonly object UserErrorToken = new object();
         public static readonly object TranslationInfoToken = new object();
+        public static readonly object TranslationInfoBatchToken = new object();
         public static readonly object CardShowFrequencyToken = new object();
         public static readonly object PriorityChangeToken = new object();
         public static readonly object PriorityAddToken = new object();

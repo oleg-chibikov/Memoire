@@ -27,8 +27,6 @@
                     Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
                 <ResourceDictionary
                     Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style
                 TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
@@ -116,6 +114,7 @@
                                 FontSize="{StaticResource SmallFontSize}"
                                 MaxWidth="Infinity" />
                             <Button
+                                Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc OpenDetails}"
                                 HorizontalAlignment="Right"
                                 CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
@@ -176,6 +175,7 @@
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
                         <Button
+                            Style="{StaticResource ImageButton}"
                             Background="OrangeRed"
                             ToolTip="{lex:Loc DeleteTranslation}"
                             CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"

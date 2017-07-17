@@ -73,12 +73,6 @@ namespace Remembrance.Settings.ViewModel
 
             logger.Info("Starting...");
 
-            messenger.Register<TranslationInfo>(this, MessengerTokens.TranslationInfoToken, OnWordReceived);
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityAddToken, OnPriorityAdded);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityRemoveToken, OnPriorityRemoved);
-
             var settings = settingsRepository.Get();
 
             logger.Trace("Loading languages...");
@@ -123,8 +117,9 @@ namespace Remembrance.Settings.ViewModel
             foreach (var translationEntryViewModel in translationEntryViewModels)
                 translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
 
+            //Need to create this list before subscribing the events
             _translationList = new ObservableCollection<TranslationEntryViewModel>(translationEntryViewModels);
-            logger.Trace("Translations has been received");
+            logger.Trace("Translations have been received");
 
             _translationList.CollectionChanged += TranslationList_CollectionChanged;
 
@@ -139,6 +134,15 @@ namespace Remembrance.Settings.ViewModel
             };
             _timer.Start();
             _timer.Tick += Timer_Tick;
+
+            logger.Trace("Subscribing to the events...");
+
+            messenger.Register<TranslationInfo>(this, MessengerTokens.TranslationInfoToken, OnWordReceived);
+            messenger.Register<TranslationInfo[]>(this, MessengerTokens.TranslationInfoBatchToken, OnWordsBatchReceived);
+            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
+            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
+            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityAddToken, OnPriorityAdded);
+            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityRemoveToken, OnPriorityRemoved);
 
             logger.Info("Started");
         }
@@ -187,6 +191,16 @@ namespace Remembrance.Settings.ViewModel
         #endregion
 
         #region EventHandlers
+
+        private void OnWordsBatchReceived([NotNull] TranslationInfo[] translationInfos)
+        {
+            _logger.Trace($"Received a batch of translations ({translationInfos.Length} items) from external source...");
+            lock (_translationListLock)
+            {
+                foreach (var translationInfo in translationInfos)
+                    OnWordReceived(translationInfo);
+            }
+        }
 
         private void OnWordReceived([NotNull] TranslationInfo translationInfo)
         {

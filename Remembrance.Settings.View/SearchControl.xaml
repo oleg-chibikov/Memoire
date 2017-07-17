@@ -15,33 +15,12 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary
+            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"
         view:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <StackPanel.Resources>
-            <Style
-                TargetType="Button"
-                BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                <Setter
-                    Property="Width"
-                    Value="{StaticResource CommonButtonSize}" />
-                <Setter
-                    Property="Height"
-                    Value="{StaticResource CommonButtonSize}" />
-                <Setter
-                    Property="Padding"
-                    Value="0" />
-            </Style>
-        </StackPanel.Resources>
         <TextBox
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -54,6 +33,7 @@
             </TextBox.InputBindings>
         </TextBox>
         <Button
+            Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Search}"
             Command="{Binding SearchCommand}"
             CommandParameter="{Binding Text, ElementName=SearchTextBox}">

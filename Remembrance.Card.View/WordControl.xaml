@@ -30,9 +30,6 @@
                     <Style
                         TargetType="TextBlock"
                         BasedOn="{StaticResource {x:Type TextBlock}}" />
-                    <Style
-                        TargetType="Button"
-                        BasedOn="{StaticResource {x:Type Button}}" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -123,23 +120,12 @@
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />
         <Button
+            Style="{StaticResource NoCircleImageButton}"
             ToolTip="{lex:Loc Speak}"
             HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
             Command="{Binding PlayTtsCommand}">
             <materialDesign:PackIcon
                 Kind="Speaker" />
-            <Button.Style>
-                <Style
-                    TargetType="Button"
-                    BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
-                    <Setter
-                        Property="VerticalAlignment"
-                        Value="Center" />
-                    <Setter
-                        Property="Padding"
-                        Value="0" />
-                </Style>
-            </Button.Style>
         </Button>
     </DockPanel>
 </UserControl>

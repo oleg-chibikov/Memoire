@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     mc:Ignorable="d"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
     <system:Double
         x:Key="CommonMargin">
         5
@@ -33,10 +34,12 @@
         x:Key="WordsWidth">
         400
     </system:Double>
+
     <system:String
         x:Key="AdditionalInfoFormat">
         ({0})
     </system:String>
+
     <Style
         TargetType="Button"
         BasedOn="{StaticResource {x:Type Button}}">
@@ -47,6 +50,43 @@
             Property="Padding"
             Value="0" />
     </Style>
+
+    <Style
+        TargetType="Button"
+        x:Key="ImageButton"
+        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}">
+        <Setter
+            Property="VerticalAlignment"
+            Value="Center" />
+        <Setter
+            Property="Padding"
+            Value="0" />
+        <Setter
+            Property="Width"
+            Value="{StaticResource CommonButtonSize}" />
+        <Setter
+            Property="Height"
+            Value="{StaticResource CommonButtonSize}" />
+    </Style>
+
+    <Style
+        TargetType="Button"
+        x:Key="NoCircleImageButton"
+        BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+        <Setter
+            Property="VerticalAlignment"
+            Value="Center" />
+        <Setter
+            Property="Padding"
+            Value="0" />
+        <Setter
+            Property="Width"
+            Value="{StaticResource CommonButtonSize}" />
+        <Setter
+            Property="Height"
+            Value="{StaticResource CommonButtonSize}" />
+    </Style>
+
     <Style
         TargetType="TextBlock"
         BasedOn="{StaticResource {x:Type TextBlock}}">

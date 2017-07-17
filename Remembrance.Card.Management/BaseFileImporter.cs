@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Card.Management.Contracts;
+using Remembrance.Card.Management.Contracts.Data;
 using Remembrance.Card.Management.Data;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Scar.Common;
+using Scar.Common.Events;
 using Scar.Common.Exceptions;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -22,6 +27,8 @@ namespace Remembrance.Card.Management
     internal abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
+        private const int MaxBlockSize = 25;
+
         [NotNull]
         protected readonly ILog Logger;
 
@@ -51,80 +58,102 @@ namespace Remembrance.Card.Management
             TranslationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
         }
 
-        public bool Import(string fileName, out string[] errors, out int count)
+        public event EventHandler<ProgressEventArgs> Progress;
+
+        public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken token)
         {
-            //TODO: spinner
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            errors = null;
+            string[] errors = null;
             var e = new List<string>();
-            count = 0;
+            var count = 0;
             T[] deserialized;
-            try
-            {
-                var file = File.ReadAllText(fileName);
-                deserialized = JsonConvert.DeserializeObject<T[]>(file);
-            }
-            catch (IOException ex)
-            {
-                Logger.Warn("Cannot load file from disk", ex);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Cannot deserialize object", ex);
-                return false;
-            }
 
-            var existing = TranslationEntryRepository.GetAll();
-            var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
-
-            //TODO: in chunks
-            foreach (var exchangeEntry in deserialized)
-            {
-                Logger.Info($"Importing from {exchangeEntry.Text}...");
-                TranslationInfo translationInfo;
-                try
+            return await Task.Run(
+                () =>
                 {
-                    var key = GetKey(exchangeEntry);
-                    if (existingKeys.Contains(key))
-                        continue;
-
-                    translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
-                }
-                catch (LocalizableException ex)
-                {
-                    Logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
-                    e.Add(exchangeEntry.Text);
-                    continue;
-                }
-
-                var priorityTranslations = GetPriorityTranslations(exchangeEntry);
-                if (priorityTranslations != null)
-                {
-                    foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                    OnProgress(0, 1);
+                    try
                     {
-                        AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
-                        if (translationVariant.Synonyms == null)
-                            continue;
-
-                        foreach (var synonym in translationVariant.Synonyms)
-                            AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
+                        var file = File.ReadAllText(fileName);
+                        deserialized = JsonConvert.DeserializeObject<T[]>(file);
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.Warn("Cannot load file from disk", ex);
+                        return new ExchangeResult(false, null, count);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn("Cannot deserialize object", ex);
+                        return new ExchangeResult(false, null, count);
                     }
 
-                    if (!translationInfo.TranslationEntry.Translations.Any())
-                        translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
-                    TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
-                }
+                    var existing = TranslationEntryRepository.GetAll();
+                    var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
-                Messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
-                count++;
-            }
+                    deserialized.RunByBlocks(
+                        MaxBlockSize,
+                        (block, index, blocksCount) =>
+                        {
+                            token.ThrowIfCancellationRequested();
+                            Logger.Trace($"Processing block {index} ({block.Length} files)...");
+                            var blockResult = new List<TranslationInfo>(block.Length);
+                            foreach (var exchangeEntry in block)
+                            {
+                                token.ThrowIfCancellationRequested();
+                                Logger.Info($"Importing from {exchangeEntry.Text}...");
+                                TranslationInfo translationInfo;
+                                try
+                                {
+                                    var key = GetKey(exchangeEntry);
+                                    if (existingKeys.Contains(key))
+                                        continue;
 
-            if (e.Any())
-                errors = e.ToArray();
-            return true;
+                                    translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                }
+                                catch (LocalizableException ex)
+                                {
+                                    Logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
+                                    e.Add(exchangeEntry.Text);
+                                    continue;
+                                }
+
+                                var priorityTranslations = GetPriorityTranslations(exchangeEntry);
+                                if (priorityTranslations != null)
+                                {
+                                    foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
+                                        partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                                    {
+                                        AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
+                                        if (translationVariant.Synonyms == null)
+                                            continue;
+
+                                        foreach (var synonym in translationVariant.Synonyms)
+                                            AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
+                                    }
+
+                                    if (!translationInfo.TranslationEntry.Translations.Any())
+                                        translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
+                                    TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
+                                    blockResult.Add(translationInfo);
+                                }
+
+                                count++;
+                            }
+
+                            OnProgress(index + 1, blocksCount);
+                            if (blockResult.Any())
+                                Messenger.Send(blockResult.ToArray(), MessengerTokens.TranslationInfoBatchToken);
+                            return true;
+                        });
+
+                    if (e.Any())
+                        errors = e.ToArray();
+                    return new ExchangeResult(true, errors, count);
+                },
+                token);
         }
 
         private static void AddOrRemoveTranslation([NotNull] ICollection<string> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
@@ -148,5 +177,10 @@ namespace Remembrance.Card.Management
 
         [CanBeNull]
         protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exchangeEntry);
+
+        private void OnProgress(int current, int total)
+        {
+            Progress?.Invoke(this, new ProgressEventArgs(current, total));
+        }
     }
 }

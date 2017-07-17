@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using System.Windows.Shell;
 using JetBrains.Annotations;
 using Remembrance.Settings.ViewModel.Contracts.Data;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
@@ -38,10 +39,19 @@ namespace Remembrance.Settings.ViewModel.Contracts
         [NotNull]
         ICommand ImportCommand { get; }
 
+        [NotNull]
+        ICommand WindowClosingCommand { get; }
+
         Speaker TtsSpeaker { get; }
         VoiceEmotion TtsVoiceEmotion { get; }
 
         [NotNull]
         Language UiLanguage { get; }
+
+        int Progress { get; }
+
+        string ProgressDescription { get; }
+
+        TaskbarItemProgressState ProgressState { get; }
     }
 }

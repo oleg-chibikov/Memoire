@@ -55,15 +55,16 @@ namespace Remembrance.Card.Management
                 throw new ArgumentNullException(nameof(logger));
             if (lifetimeScope == null)
                 throw new ArgumentNullException(nameof(lifetimeScope));
+
             logger.Info("Starting showing cards...");
 
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            messenger.Register<TimeSpan>(this, MessengerTokens.CardShowFrequencyToken, OnCardShowFrequencyChanged);
             var repeatTime = settingsRepository.Get().CardShowFrequency;
             _interval = CreateInterval(repeatTime);
+            messenger.Register<TimeSpan>(this, MessengerTokens.CardShowFrequencyToken, OnCardShowFrequencyChanged);
         }
 
         public void Dispose()
