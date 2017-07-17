@@ -267,4 +267,7 @@
   <data name="OpenSettingsFolder" xml:space="preserve">
     <value>Открыть папку настроек</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Всего</value>
+  </data>
 </root>

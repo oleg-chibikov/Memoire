@@ -119,6 +119,7 @@ namespace Remembrance.Settings.ViewModel
 
             //Need to create this list before subscribing the events
             _translationList = new ObservableCollection<TranslationEntryViewModel>(translationEntryViewModels);
+            Count = translationEntryViewModels.Length;
             logger.Trace("Translations have been received");
 
             _translationList.CollectionChanged += TranslationList_CollectionChanged;
@@ -341,6 +342,7 @@ namespace Remembrance.Settings.ViewModel
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
         {
+            Count = View.Cast<object>().Count();
             if (e.Action != NotifyCollectionChangedAction.Remove)
                 return;
 
@@ -384,6 +386,8 @@ namespace Remembrance.Settings.ViewModel
                 _settingsRepository.Save(settings);
             }
         }
+
+        public int Count { get; private set; }
 
         public string NewItemSource { get; set; }
 
@@ -469,6 +473,7 @@ namespace Remembrance.Settings.ViewModel
         {
             _logger.Trace($"Searching for {text}...");
             View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel) o).Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
+            Count = View.Cast<object>().Count();
         }
 
         #endregion

@@ -42,5 +42,7 @@ namespace Remembrance.Settings.ViewModel.Contracts
 
         [NotNull]
         ICollectionView View { get; }
+
+        int Count { get; }
     }
 }

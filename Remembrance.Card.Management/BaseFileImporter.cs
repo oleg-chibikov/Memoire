@@ -112,6 +112,7 @@ namespace Remembrance.Card.Management
                                         continue;
 
                                     translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                    blockResult.Add(translationInfo);
                                 }
                                 catch (LocalizableException ex)
                                 {
@@ -137,7 +138,6 @@ namespace Remembrance.Card.Management
                                     if (!translationInfo.TranslationEntry.Translations.Any())
                                         translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
                                     TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
-                                    blockResult.Add(translationInfo);
                                 }
 
                                 count++;
