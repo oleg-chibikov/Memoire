@@ -61,7 +61,9 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         #endregion
 
-        public override bool CanTogglePriority { get; } = true;
+        public override bool CanEdit { get; } = true;
+
+        public bool CanTogglePriority { get; } = true;
 
         public bool IsPriority { get; set; }
 

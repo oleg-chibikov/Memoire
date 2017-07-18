@@ -20,6 +20,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public TranslationEntryViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
             : base(textToSpeechPlayer, wordsProcessor)
         {
+            CanLearnWord = false;
         }
 
         [UsedImplicitly]

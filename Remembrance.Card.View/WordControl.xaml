@@ -120,7 +120,8 @@
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />
         <Button
-            Style="{StaticResource NoCircleImageButton}"
+            Background="Transparent"
+            BorderThickness="0"
             ToolTip="{lex:Loc Speak}"
             HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
             Command="{Binding PlayTtsCommand}">

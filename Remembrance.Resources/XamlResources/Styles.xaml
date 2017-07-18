@@ -70,24 +70,6 @@
     </Style>
 
     <Style
-        TargetType="Button"
-        x:Key="NoCircleImageButton"
-        BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
-        <Setter
-            Property="VerticalAlignment"
-            Value="Center" />
-        <Setter
-            Property="Padding"
-            Value="0" />
-        <Setter
-            Property="Width"
-            Value="{StaticResource CommonButtonSize}" />
-        <Setter
-            Property="Height"
-            Value="{StaticResource CommonButtonSize}" />
-    </Style>
-
-    <Style
         TargetType="TextBlock"
         BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter

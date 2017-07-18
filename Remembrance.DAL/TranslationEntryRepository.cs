@@ -29,6 +29,7 @@ namespace Remembrance.DAL
         {
             return Collection.Find(x => x.NextCardShowTime < DateTime.Now) //get entries which are ready to show
                 .OrderBy(x => x.ShowCount) //the lower the value, the greater the priority
+                .ThenBy(x => Guid.NewGuid()) //similar values are ordered randomly
                 .FirstOrDefault();
         }
 

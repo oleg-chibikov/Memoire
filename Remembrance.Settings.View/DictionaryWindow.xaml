@@ -77,8 +77,10 @@
                 <materialDesign:PackIcon
                     Kind="Settings" />
             </Button>
-            <TextBlock Text="{lex:Loc Total}"></TextBlock>
-            <TextBlock Text="{Binding Count}"></TextBlock>
+            <TextBlock
+                Text="{lex:Loc Total}" />
+            <TextBlock
+                Text="{Binding Count}" />
             <view:AddTranslationControl
                 x:Name="AddTranslationControl"
                 DockPanel.Dock="Right"

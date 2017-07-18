@@ -27,15 +27,13 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
         }
 
+        [DoNotNotify]
         public virtual string Language { get; set; }
-
-        public bool CanEdit => CanLearnWord || CanTogglePriority;
 
         [DoNotNotify]
         public bool CanLearnWord { get; set; } = true;
 
-        // ReSharper disable once RedundantDefaultMemberInitializer
-        public virtual bool CanTogglePriority { get; } = false;
+        public virtual bool CanEdit => CanLearnWord;
 
         /// <summary>
         /// A hack to raise NotifyPropertyChanged for other properties

@@ -73,7 +73,6 @@ namespace Remembrance.Card.Management
             return await Task.Run(
                 () =>
                 {
-                    OnProgress(0, 1);
                     try
                     {
                         var file = File.ReadAllText(fileName);

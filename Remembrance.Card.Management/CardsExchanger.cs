@@ -6,6 +6,7 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
+using Remembrance.Card.Management.Contracts.Data;
 using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
 using Scar.Common.Events;
@@ -67,11 +68,20 @@ namespace Remembrance.Card.Management
                 return;
 
             _logger.Info($"Performing export to {_saveFileService.FileName}...");
-            var exchangeResult = await _exporter.ExportAsync(_saveFileService.FileName, token).ConfigureAwait(false);
+            ExchangeResult exchangeResult;
+            OnProgress(0, 1);
+            try
+            {
+                exchangeResult = await _exporter.ExportAsync(_saveFileService.FileName, token).ConfigureAwait(false);
+            }
+            finally
+            {
+                OnProgress(1, 1);
+            }
             if (exchangeResult.Success)
             {
                 _logger.Info($"Export to {_saveFileService.FileName} has been performed");
-                //_messenger.Send(Texts.ExportSucceeded, MessengerTokens.UserMessageToken);
+                _messenger.Send(Texts.ExportSucceeded, MessengerTokens.UserMessageToken);
                 Process.Start(_saveFileService.FileName);
             }
             else
@@ -86,27 +96,37 @@ namespace Remembrance.Card.Management
             if (!_openFileService.OpenFileDialog($"{Texts.Title}: {Texts.Import}", JsonFilesFilter))
                 return;
 
-            foreach (var importer in _importers)
+            OnProgress(0, 1);
+            try
             {
-                _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType().Name}...");
-
-                var exchangeResult = await importer.ImportAsync(_openFileService.FileName, token).ConfigureAwait(false);
-                if (exchangeResult.Success)
+                foreach (var importer in _importers)
                 {
-                    _logger.Info($"ImportAsync from {_openFileService.FileName} has been performed");
-                    var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
-                    if (exchangeResult.Errors != null)
-                        _messenger.Send(
-                            $"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}",
-                            MessengerTokens.UserWarningToken);
-                    else
-                        _messenger.Send($"[{importer.GetType().Name}] {mainMessage}", MessengerTokens.UserMessageToken);
-                    return;
-                }
-            }
+                    _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType().Name}...");
+                    var exchangeResult = await importer.ImportAsync(_openFileService.FileName, token).ConfigureAwait(false);
 
-            _logger.Warn($"ImportAsync from {_openFileService.FileName} failed");
-            _messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
+                    if (exchangeResult.Success)
+                    {
+                        _logger.Info($"ImportAsync from {_openFileService.FileName} has been performed");
+                        var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
+                        if (exchangeResult.Errors != null)
+                            _messenger.Send(
+                                $"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}",
+                                MessengerTokens.UserWarningToken);
+                        else
+                            _messenger.Send($"[{importer.GetType().Name}] {mainMessage}", MessengerTokens.UserMessageToken);
+                        return;
+                    }
+                    else
+                    {
+                        _logger.Warn($"ImportAsync from {_openFileService.FileName} failed");
+                    }
+                }
+                _messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
+            }
+            finally
+            {
+                OnProgress(1, 1);
+            }
         }
 
         public void Dispose()
@@ -118,6 +138,11 @@ namespace Remembrance.Card.Management
         private void Importer_Progress(object sender, ProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
+        }
+
+        private void OnProgress(int current, int total)
+        {
+            Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
     }
 }
