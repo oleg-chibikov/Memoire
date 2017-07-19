@@ -45,172 +45,193 @@
             Description="{Binding ProgressDescription, Mode=OneWay}"
             ProgressValue="{Binding Progress, Mode=OneWay, Converter={StaticResource PercentageIntToDoubleConverter}}" />
     </window:AnimatedWindow.TaskbarItemInfo>
-    <Grid
-        commonView:MarginSetter.Orientation="Vertical"
-        commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
             <RowDefinition
                 Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition
-                Width="180" />
-            <ColumnDefinition
-                Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Row="0"
+            commonView:MarginSetter.Orientation="Vertical"
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="180" />
+                <ColumnDefinition
+                    Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            Text="{lex:Loc ReverseTranslation}" />
-        <DockPanel
-            Grid.Row="0"
-            Grid.Column="1">
-            <CheckBox
-                IsChecked="{Binding ReverseTranslation, Mode=TwoWay}" />
-            <StackPanel
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="{lex:Loc ReverseTranslation}" />
+            <DockPanel
+                Grid.Row="0"
+                Grid.Column="1">
+                <CheckBox
+                    IsChecked="{Binding ReverseTranslation, Mode=TwoWay}" />
+                <StackPanel
+                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <Button
+                        Style="{StaticResource ImageButton}"
+                        ToolTip="{lex:Loc ViewLogs}"
+                        Command="{Binding ViewLogsCommand, Mode=OneTime}">
+                        <materialDesign:PackIcon
+                            Kind="FileDocument" />
+                    </Button>
+                    <Button
+                        Style="{StaticResource ImageButton}"
+                        ToolTip="{lex:Loc OpenSharedFolder}"
+                        Command="{Binding OpenSharedFolderCommand}">
+                        <materialDesign:PackIcon
+                            Kind="Dropbox" />
+                    </Button>
+                    <Button
+                        Style="{StaticResource ImageButton}"
+                        ToolTip="{lex:Loc OpenSettingsFolder}"
+                        Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
+                        <materialDesign:PackIcon
+                            Kind="Folder" />
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Text="{lex:Loc RandomTranslation}" />
+            <DockPanel
+                Grid.Row="1"
+                Grid.Column="1">
+                <CheckBox
+                    IsChecked="{Binding RandomTranslation, Mode=TwoWay}" />
+                <Button
+                    Style="{StaticResource ImageButton}"
+                    ToolTip="{lex:Loc Export}"
+                    Command="{Binding ExportCommand, Mode=OneTime}"
+                    HorizontalAlignment="Right">
+                    <materialDesign:PackIcon
+                        Kind="Export" />
+                </Button>
+            </DockPanel>
+
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Text="{lex:Loc UiLanguage}" />
+
+            <DockPanel
+                Grid.Row="2"
+                Grid.Column="1">
+                <ComboBox
+                    IsSynchronizedWithCurrentItem="True"
+                    ItemsSource="{Binding AvailableUiLanguages, Mode=OneTime}"
+                    SelectedItem="{Binding UiLanguage, Mode=TwoWay}"
+                    SelectedValuePath="Code"
+                    DisplayMemberPath="DisplayName" />
+                <Button
+                    Style="{StaticResource ImageButton}"
+                    ToolTip="{lex:Loc Import}"
+                    Command="{Binding ImportCommand, Mode=OneTime}"
+                    HorizontalAlignment="Right">
+                    <materialDesign:PackIcon
+                        Kind="Import" />
+                </Button>
+            </DockPanel>
+
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Text="{lex:Loc TtsSpeaker}" />
+
+            <DockPanel
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right">
-                <Button
-                    Style="{StaticResource ImageButton}"
-                    ToolTip="{lex:Loc ViewLogs}"
-                    Command="{Binding ViewLogsCommand, Mode=OneTime}">
-                    <materialDesign:PackIcon
-                        Kind="FileDocument" />
-                </Button>
-                <Button
-                    Style="{StaticResource ImageButton}"
-                    ToolTip="{lex:Loc OpenSharedFolder}"
-                    Command="{Binding OpenSharedFolderCommand}">
-                    <materialDesign:PackIcon
-                        Kind="Dropbox" />
-                </Button>
-                <Button
-                    Style="{StaticResource ImageButton}"
-                    ToolTip="{lex:Loc OpenSettingsFolder}"
-                    Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
-                    <materialDesign:PackIcon
-                        Kind="Folder" />
-                </Button>
+                commonView:MarginSetter.Orientation="Horizontal"
+                Grid.Row="3"
+                Grid.Column="1">
+                <ComboBox
+                    IsSynchronizedWithCurrentItem="True"
+                    ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
+                    SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
+                    SelectedValuePath="Key"
+                    DisplayMemberPath="Value" />
+                <ComboBox
+                    HorizontalAlignment="Left"
+                    IsSynchronizedWithCurrentItem="True"
+                    ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
+                    SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
+                    SelectedValuePath="Key"
+                    DisplayMemberPath="Value" />
+            </DockPanel>
+
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Text="{lex:Loc CardShowFrequency}" />
+
+            <StackPanel
+                Grid.Row="4"
+                Grid.Column="1"
+                Orientation="Horizontal">
+                <Slider
+                    Minimum="0.08333"
+                    Maximum="120"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    AutoToolTipPlacement="BottomRight"
+                    Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
+                    Value="{Binding CardShowFrequency, Mode=TwoWay}"
+                    Width="300" />
             </StackPanel>
-        </DockPanel>
 
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Text="{lex:Loc RandomTranslation}" />
-        <DockPanel
-            Grid.Row="1"
-            Grid.Column="1">
-            <CheckBox
-                IsChecked="{Binding RandomTranslation, Mode=TwoWay}" />
             <Button
-                Style="{StaticResource ImageButton}"
-                ToolTip="{lex:Loc Export}"
-                Command="{Binding ExportCommand, Mode=OneTime}"
-                HorizontalAlignment="Right">
-                <materialDesign:PackIcon
-                    Kind="Export" />
-            </Button>
-        </DockPanel>
+                Grid.Row="5"
+                Grid.Column="1"
+                Content="{lex:Loc Save}"
+                Width="120"
+                HorizontalAlignment="Right"
+                ToolTip="{lex:Loc Save}"
+                Command="{Binding SaveCommand, Mode=OneTime}" />
 
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Text="{lex:Loc UiLanguage}" />
-
-        <DockPanel
-            Grid.Row="2"
-            Grid.Column="1">
-            <ComboBox
-                IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableUiLanguages, Mode=OneTime}"
-                SelectedItem="{Binding UiLanguage, Mode=TwoWay}"
-                SelectedValuePath="Code"
-                DisplayMemberPath="DisplayName" />
-            <Button
-                Style="{StaticResource ImageButton}"
-                ToolTip="{lex:Loc Import}"
-                Command="{Binding ImportCommand, Mode=OneTime}"
-                HorizontalAlignment="Right">
-                <materialDesign:PackIcon
-                    Kind="Import" />
-            </Button>
-        </DockPanel>
-
-        <TextBlock
-            Grid.Row="3"
-            Grid.Column="0"
-            Text="{lex:Loc TtsSpeaker}" />
-
-        <DockPanel
-            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-            commonView:MarginSetter.Orientation="Horizontal"
-            Grid.Row="3"
-            Grid.Column="1">
-            <ComboBox
-                IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
-                SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
-                SelectedValuePath="Key"
-                DisplayMemberPath="Value" />
-            <ComboBox
-                HorizontalAlignment="Left"
-                IsSynchronizedWithCurrentItem="True"
-                ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
-                SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
-                SelectedValuePath="Key"
-                DisplayMemberPath="Value" />
-        </DockPanel>
-
-        <TextBlock
-            Grid.Row="4"
-            Grid.Column="0"
-            Text="{lex:Loc CardShowFrequency}" />
-
-        <StackPanel
-            Grid.Row="4"
-            Grid.Column="1"
-            Orientation="Horizontal">
-            <Slider
-                Minimum="0.08333"
-                Maximum="120"
-                TickPlacement="BottomRight"
-                IsSnapToTickEnabled="True"
-                AutoToolTipPlacement="BottomRight"
-                Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
-                Value="{Binding CardShowFrequency, Mode=TwoWay}"
-                Width="300" />
-        </StackPanel>
-
-        <Button
-            Grid.Row="5"
-            Grid.Column="1"
-            Content="{lex:Loc Save}"
-            Width="120"
-            HorizontalAlignment="Right"
-            ToolTip="{lex:Loc Save}"
-            Command="{Binding SaveCommand, Mode=OneTime}" />
-
+            <Grid.Style>
+                <Style
+                    TargetType="Grid">
+                    <Setter
+                        Property="IsEnabled"
+                        Value="True" />
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding ProgressState, Mode=OneWay}"
+                            Value="Normal">
+                            <Setter
+                                Property="IsEnabled"
+                                Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
         <Border
-            CornerRadius="6"
-            Opacity="0"
-            Grid.Row="0"
-            Grid.RowSpan="6"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Background="#55000000"
+            Grid.Row="1"
+            Margin="0 5 0 0"
             BorderThickness="0">
             <Border.Style>
                 <Style
@@ -218,6 +239,9 @@
                     <Setter
                         Property="Visibility"
                         Value="Collapsed" />
+                    <Setter
+                        Property="Opacity"
+                        Value="0" />
                     <Style.Triggers>
                         <DataTrigger
                             Binding="{Binding ProgressState, Mode=OneWay}"
