@@ -20,10 +20,10 @@ namespace Remembrance.DAL
         }
 
         [NotNull]
-        protected override string DbName => TranslationDetailsRepository.DictionaryDbName;
+        protected override string DbName => "Dictionary";
 
         [NotNull]
-        protected override string DbPath => Paths.SettingsPath;
+        protected override string DbPath => Paths.SharedDataPath;
 
         public TranslationEntry GetCurrent()
         {

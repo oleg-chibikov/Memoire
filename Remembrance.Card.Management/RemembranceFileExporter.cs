@@ -27,15 +27,16 @@ namespace Remembrance.Card.Management
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository _translationDetailsRepository;
+        private readonly IWordsProcessor _wordsProcessor;
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        public RemembranceFileExporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger)
+        public RemembranceFileExporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger,
+            [NotNull] IWordsProcessor wordsProcessor)
         {
+            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -52,9 +53,9 @@ namespace Remembrance.Card.Management
                     foreach (var translationEntry in translationEntries)
                     {
                         translationEntry.Translations = new PriorityWord[0];
-                        var details = _translationDetailsRepository.GetById(translationEntry.Id);
+                        var translationInfo = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
                         var priorityWordsIds = new HashSet<string>();
-                        foreach (var translationVariant in details.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                        foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                         {
                             if (translationVariant.IsPriority)
                                 priorityWordsIds.Add(translationVariant.Text);
@@ -89,7 +90,8 @@ namespace Remembrance.Card.Management
                     }
 
                     return new ExchangeResult(false, null, 0);
-                });
+                },
+                token);
         }
     }
 }

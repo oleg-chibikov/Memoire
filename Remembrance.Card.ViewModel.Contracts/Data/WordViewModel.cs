@@ -17,12 +17,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
+        protected readonly IWordsProcessor WordsProcessor;
 
         public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
         {
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             PlayTtsCommand = new CorrelationCommand(PlayTts);
             LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
         }
@@ -90,7 +90,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         private void LearnWord()
         {
-            _wordsProcessor.ProcessNewWord(Text, Language);
+            WordsProcessor.ProcessNewWord(Text, Language);
         }
 
         private void PlayTts()

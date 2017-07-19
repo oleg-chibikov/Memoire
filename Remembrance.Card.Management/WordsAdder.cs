@@ -46,17 +46,17 @@ namespace Remembrance.Card.Management
 
         public WordsAdder(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IWordsTranslator wordsTranslator,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILog logger)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
-            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

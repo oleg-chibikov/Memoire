@@ -31,6 +31,9 @@ namespace Remembrance.Settings.ViewModel.Contracts
         ICommand ViewLogsCommand { get; }
 
         [NotNull]
+        ICommand OpenSharedFolderCommand { get; }
+
+        [NotNull]
         ICommand OpenSettingsFolderCommand { get; }
 
         [NotNull]

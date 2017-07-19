@@ -19,7 +19,7 @@ namespace Remembrance.DAL
         protected override string DbName => nameof(Settings);
 
         [NotNull]
-        protected override string DbPath => Paths.SettingsPath;
+        protected override string DbPath => Paths.SharedDataPath;
 
         public Settings Get()
         {

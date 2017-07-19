@@ -270,4 +270,7 @@
   <data name="Total" xml:space="preserve">
     <value>Total</value>
   </data>
+  <data name="OpenSharedFolder" xml:space="preserve">
+    <value>Open shared folder</value>
+  </data>
 </root>

@@ -117,6 +117,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             {
                 _logger.Trace($"Changing priority for {this} in TranslationDetails...");
                 var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetails);
+                //TODO: Check - why this code is needed
                 _translationDetailsRepository.Save(translationDetails);
 
                 //TODO: check already deleted
@@ -141,19 +142,18 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             else if (ParentTranslationEntry != null)
             {
                 _logger.Trace($"Changing priority for {this} in TranslationEntry...");
-                var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry);
-                var translationDetails = _translationDetailsRepository.GetById(ParentTranslationEntry.Id);
+                var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry));
 
                 if (!IsPriority)
                 {
-                    var priorityWord = translationEntry.Translations.Single(x => x.CorrelationId == CorrelationId);
-                    Remove(priorityWord, translationEntry, translationDetails);
+                    var priorityWord = translationInfo.TranslationEntry.Translations.Single(x => x.CorrelationId == CorrelationId);
+                    Remove(priorityWord, translationInfo.TranslationEntry, translationInfo.TranslationDetails);
                 }
 
-                _translationEntryRepository.Save(translationEntry);
+                _translationEntryRepository.Save(translationInfo.TranslationEntry);
                 _logger.Trace($"Updating TranslationDetails for {this}...");
 
-                var wordInTranslationDetails = translationDetails.GetWordInTranslationVariants(CorrelationId);
+                var wordInTranslationDetails = translationInfo.TranslationDetails.GetWordInTranslationVariants(CorrelationId);
                 if (wordInTranslationDetails == null)
                 {
                     _logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
@@ -161,7 +161,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 }
 
                 UpdateCorrelatedPriority(wordInTranslationDetails);
-                _translationDetailsRepository.Save(translationDetails);
+                _translationDetailsRepository.Save(translationInfo.TranslationDetails);
                 _logger.Trace($"TranslationDetails for {this} have been updated");
             }
         }

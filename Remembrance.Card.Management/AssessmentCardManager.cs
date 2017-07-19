@@ -12,7 +12,6 @@ using Remembrance.Card.ViewModel.Contracts;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Interfaces;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.Management
@@ -27,7 +26,7 @@ namespace Remembrance.Card.Management
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository _translationDetailsRepository;
+        private readonly IWordsProcessor _wordsProcessor;
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
@@ -40,27 +39,19 @@ namespace Remembrance.Card.Management
         private DateTime? _lastCardShowTime;
 
         public AssessmentCardManager(
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+            [NotNull] IWordsProcessor wordsProcessor)
             : base(lifetimeScope, settingsRepository, logger)
         {
-            if (textToSpeechPlayer == null)
-                throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (lifetimeScope == null)
-                throw new ArgumentNullException(nameof(lifetimeScope));
-
             logger.Info("Starting showing cards...");
 
+            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             var repeatTime = settingsRepository.Get().CardShowFrequency;
             _interval = CreateInterval(repeatTime);
@@ -107,8 +98,7 @@ namespace Remembrance.Card.Management
                             return;
                         }
 
-                        var translationDetails = _translationDetailsRepository.GetById(translationEntry.Id);
-                        var translationInfo = new TranslationInfo(translationEntry, translationDetails);
+                        var translationInfo = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
                         Logger.Trace($"Trying to show {translationInfo}...");
                         ShowCard(translationInfo);
                     });

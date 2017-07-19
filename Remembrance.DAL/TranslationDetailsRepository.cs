@@ -10,16 +10,17 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, int>, ITranslationDetailsRepository
     {
-        internal const string DictionaryDbName = "Dictionary";
-
         public TranslationDetailsRepository([NotNull] ILog logger)
             : base(logger)
         {
         }
 
         [NotNull]
-        protected override string DbName => DictionaryDbName;
+        protected override string DbName => "TranslationDetails";
 
+        /// <remarks>
+        /// Not shared folder - if details are missing - they are re-downloaded
+        /// </remarks>
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
     }

@@ -91,6 +91,13 @@
                 </Button>
                 <Button
                     Style="{StaticResource ImageButton}"
+                    ToolTip="{lex:Loc OpenSharedFolder}"
+                    Command="{Binding OpenSharedFolderCommand}">
+                    <materialDesign:PackIcon
+                        Kind="Dropbox" />
+                </Button>
+                <Button
+                    Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc OpenSettingsFolder}"
                     Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
                     <materialDesign:PackIcon

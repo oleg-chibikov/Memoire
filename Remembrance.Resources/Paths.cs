@@ -17,16 +17,16 @@ namespace Remembrance.Resources
         private static readonly string ProgramName =
             $"{((AssemblyCompanyAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCompanyAttribute), false)).Company}\\{nameof(Remembrance)}";
 
+        [NotNull]
+        public static readonly string SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+
         [CanBeNull]
         private static readonly string BaseSharedDataPath = GetDropboxPath() ?? GetOneDrivePath();
 
-        [CanBeNull]
-        private static readonly string SharedDataPath = BaseSharedDataPath == null
-            ? null
-            : Path.Combine(BaseSharedDataPath, ProgramName, SanitizePath(Environment.MachineName));
-
         [NotNull]
-        public static readonly string SettingsPath = SharedDataPath ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+        public static readonly string SharedDataPath = BaseSharedDataPath == null
+            ? SettingsPath
+            : Path.Combine(BaseSharedDataPath, ProgramName, SanitizePath(Environment.MachineName));
 
         //TODO: Move to IO Library
         //TODO: Settings and Installer - add to choose which program to use

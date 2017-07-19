@@ -3,6 +3,7 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
+using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Interfaces;
@@ -15,6 +16,9 @@ namespace Remembrance.Card.Management
     {
         [NotNull]
         private readonly ITranslationResultCardManager _cardManager;
+
+        [NotNull]
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
         private readonly ILog _logger;
@@ -33,13 +37,26 @@ namespace Remembrance.Card.Management
             [NotNull] IWordsAdder wordsAdder,
             [NotNull] ILog logger,
             [NotNull] ITranslationResultCardManager cardManager,
-            [NotNull] IMessenger messenger)
+            [NotNull] IMessenger messenger,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
         {
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             _wordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        }
+
+        public TranslationInfo ReloadTranslationDetailsIfNeeded(TranslationEntry translationEntry)
+        {
+            if (_translationDetailsRepository.Check(translationEntry.Id))
+            {
+                var translationDetails = _translationDetailsRepository.GetById(translationEntry.Id);
+                return new TranslationInfo(translationEntry, translationDetails);
+            }
+
+            return _wordsAdder.AddWordWithChecks(translationEntry.Key.Text, translationEntry.Key.SourceLanguage, translationEntry.Key.TargetLanguage, true, translationEntry.Id);
         }
 
         public bool ProcessNewWord(string word, string sourceLanguage, string targetLanguage, bool showCard)

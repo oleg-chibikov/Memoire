@@ -270,4 +270,7 @@
   <data name="Total" xml:space="preserve">
     <value>Всего</value>
   </data>
+  <data name="OpenSharedFolder" xml:space="preserve">
+    <value>Открыть общую папку</value>
+  </data>
 </root>

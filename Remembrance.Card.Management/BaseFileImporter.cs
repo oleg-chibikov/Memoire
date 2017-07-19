@@ -97,7 +97,7 @@ namespace Remembrance.Card.Management
                         (block, index, blocksCount) =>
                         {
                             token.ThrowIfCancellationRequested();
-                            Logger.Trace($"Processing block {index} ({block.Length} files)...");
+                            Logger.Trace($"Processing block {index} out of {blocksCount} ({block.Length} files)...");
                             var blockResult = new List<TranslationInfo>(block.Length);
                             foreach (var exchangeEntry in block)
                             {
