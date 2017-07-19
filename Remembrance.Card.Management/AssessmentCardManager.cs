@@ -26,10 +26,10 @@ namespace Remembrance.Card.Management
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        private readonly IWordsProcessor _wordsProcessor;
 
         private bool _hasOpenWindows;
 

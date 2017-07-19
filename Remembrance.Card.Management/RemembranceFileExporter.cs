@@ -27,12 +27,15 @@ namespace Remembrance.Card.Management
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
-
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        public RemembranceFileExporter([NotNull] ITranslationEntryRepository translationEntryRepository, [NotNull] ITranslationDetailsRepository translationDetailsRepository, [NotNull] ILog logger,
+        [NotNull]
+        private readonly IWordsProcessor _wordsProcessor;
+
+        public RemembranceFileExporter(
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor)
         {
             _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));

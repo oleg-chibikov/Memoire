@@ -18,9 +18,6 @@ namespace Remembrance.Card.Management
         private readonly ITranslationResultCardManager _cardManager;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository _translationDetailsRepository;
-
-        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
@@ -28,6 +25,9 @@ namespace Remembrance.Card.Management
 
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
+
+        [NotNull]
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
         private readonly IWordsAdder _wordsAdder;
