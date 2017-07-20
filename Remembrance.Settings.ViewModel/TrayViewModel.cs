@@ -21,6 +21,9 @@ namespace Remembrance.Settings.ViewModel
     public sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
+        private readonly object _windowLocker = new object();
+
+        [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
         [NotNull]
@@ -77,17 +80,22 @@ namespace Remembrance.Settings.ViewModel
         private void ShowSettings()
         {
             _logger.Info("Showing settings...");
-            var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
-            var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            _settingsWindowFactory.GetOrCreateWindow(dictionaryWindowParameter).Restore();
+            lock (_windowLocker)
+            {
+                var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
+                var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
+                _settingsWindowFactory.GetOrCreateWindow(dictionaryWindowParameter).Restore();
+            }
         }
 
         private void ShowDictionary()
         {
             _logger.Info("Showing dictionary...");
-            var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
-
-            ShowWithSplash(dictionaryWindow, _dictionaryWindowFactory);
+            lock (_windowLocker)
+            {
+                var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
+                ShowWithSplash(dictionaryWindow, _dictionaryWindowFactory);
+            }
         }
 
         private void ShowWithSplash<TWindow>([CanBeNull] TWindow window, [NotNull] WindowFactory<TWindow> windowFactory)

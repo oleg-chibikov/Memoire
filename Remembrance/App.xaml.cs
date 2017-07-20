@@ -105,6 +105,7 @@ namespace Remembrance
             if (!_mutex.WaitOne(0, false))
             {
                 _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
+                Current.Shutdown();
                 return;
             }
 
