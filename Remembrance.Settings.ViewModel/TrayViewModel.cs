@@ -21,9 +21,6 @@ namespace Remembrance.Settings.ViewModel
     public sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
-        private readonly object _windowLocker = new object();
-
-        [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
         [NotNull]
@@ -37,6 +34,9 @@ namespace Remembrance.Settings.ViewModel
 
         [NotNull]
         private readonly WindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+
+        [NotNull]
+        private readonly object _windowLocker = new object();
 
         public TrayViewModel(
             [NotNull] ISettingsRepository settingsRepository,

@@ -60,14 +60,15 @@ namespace Remembrance.Translate.Yandex
                     using (var reader = new Mp3FileReader(soundStream))
                     {
                         waveOut.Init(reader);
+
                         //Thread should be alive while playback is not stopped
-                        EventHandler<StoppedEventArgs> playbackStoppedHandler = null;
-                        playbackStoppedHandler = (s, e) =>
+                        void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                         {
-                            ((WaveOut) s).PlaybackStopped -= playbackStoppedHandler;
+                            ((WaveOut) s).PlaybackStopped -= PlaybackStoppedHandler;
                             reset.Set();
-                        };
-                        waveOut.PlaybackStopped += playbackStoppedHandler;
+                        }
+
+                        waveOut.PlaybackStopped += PlaybackStoppedHandler;
                         waveOut.Play();
                         //Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
                         reset.WaitOne(TimeSpan.FromSeconds(5));

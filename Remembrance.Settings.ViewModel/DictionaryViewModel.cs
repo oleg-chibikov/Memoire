@@ -28,7 +28,7 @@ using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View;
 
-// ReSharper disable InconsistentlySynchronizedField - logger and viewModelAdapter could be used inside or outside of lock
+//TODO: Feature: Custom translation
 
 namespace Remembrance.Settings.ViewModel
 {

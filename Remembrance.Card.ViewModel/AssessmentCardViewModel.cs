@@ -20,6 +20,7 @@ using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.ViewModel;
 
 //TODO: regions
+//TODO: Feature: if the word level is low, replace textbox with dropdown
 
 namespace Remembrance.Card.ViewModel
 {

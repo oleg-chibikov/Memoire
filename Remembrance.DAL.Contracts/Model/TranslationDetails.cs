@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
@@ -19,13 +20,17 @@ namespace Remembrance.DAL.Contracts.Model
         }
 
         [NotNull]
-        public TranslationResult TranslationResult { get; set; }
+        public TranslationResult TranslationResult
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
         [CanBeNull]
         public PriorityWord GetWordInTranslationVariants(Guid correlationId)
         {
-            foreach (var partOfSpeechTranslation in TranslationResult.PartOfSpeechTranslations)
-            foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+            foreach (var translationVariant in TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (translationVariant.CorrelationId == correlationId)
                     return translationVariant;
@@ -33,9 +38,8 @@ namespace Remembrance.DAL.Contracts.Model
                 if (translationVariant.Synonyms == null)
                     continue;
 
-                foreach (var synonym in translationVariant.Synonyms)
-                    if (synonym.CorrelationId == correlationId)
-                        return synonym;
+                foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.CorrelationId == correlationId))
+                    return synonym;
             }
 
             return null;
