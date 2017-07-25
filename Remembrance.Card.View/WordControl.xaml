@@ -16,7 +16,9 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=data:WordViewModel}">
+    d:DataContext="{d:DesignInstance d:Type=data:PriorityWordViewModel}">
+
+    <!--TODO: Separate view for priority word-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

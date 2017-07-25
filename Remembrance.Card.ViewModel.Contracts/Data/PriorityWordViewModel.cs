@@ -69,11 +69,11 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
 
         [CanBeNull]
         [DoNotNotify]
-        public TranslationEntryViewModel ParentTranslationEntry { get; set; }
+        public TranslationEntryViewModel ParentTranslationEntryViewModel { get; set; }
 
         [CanBeNull]
         [DoNotNotify]
-        public TranslationDetailsViewModel ParentTranslationDetails { get; set; }
+        public TranslationDetailsViewModel ParentTranslationDetailsViewModel { get; set; }
 
         private void Add([NotNull] TranslationEntry translationEntry)
         {
@@ -113,15 +113,15 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             _logger.Info($"Changing priority for {this} to {!IsPriority}");
 
             IsPriority = !IsPriority;
-            if (ParentTranslationDetails != null)
+            if (ParentTranslationDetailsViewModel != null)
             {
                 _logger.Trace($"Changing priority for {this} in TranslationDetails...");
-                var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetails);
-                //TODO: Check - why this code is needed
+                var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetailsViewModel);
+                //Save parent details because it contains the current word
                 _translationDetailsRepository.Save(translationDetails);
 
                 //TODO: check already deleted
-                var translationEntry = _translationEntryRepository.GetById(ParentTranslationDetails.Id);
+                var translationEntry = _translationEntryRepository.GetById(ParentTranslationDetailsViewModel.TranslationEntryId);
                 var wordInTranslationEntry = translationEntry.Translations.SingleOrDefault(x => x.CorrelationId == CorrelationId);
                 if (wordInTranslationEntry == null)
                 {
@@ -139,10 +139,10 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
                 _logger.Trace($"TranslationEntry for {this} has been updated");
             }
 
-            else if (ParentTranslationEntry != null)
+            else if (ParentTranslationEntryViewModel != null)
             {
                 _logger.Trace($"Changing priority for {this} in TranslationEntry...");
-                var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntry));
+                var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntryViewModel));
 
                 if (!IsPriority)
                 {

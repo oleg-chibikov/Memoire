@@ -4,7 +4,7 @@ using Scar.Common.DAL;
 
 namespace Remembrance.DAL.Contracts
 {
-    public interface ITranslationEntryRepository : IRepository<TranslationEntry, int>
+    public interface ITranslationEntryRepository : IRepository<TranslationEntry>
     {
         [CanBeNull]
         TranslationEntry GetCurrent();

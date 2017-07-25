@@ -46,8 +46,8 @@ namespace Remembrance.Card.ViewModel
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationEntry?.Id ?? priorityWordViewModel.ParentTranslationDetails?.Id;
-            if (parentId != TranslationDetails.Id)
+            var parentId = priorityWordViewModel.ParentTranslationEntryViewModel?.Id ?? priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId;
+            if (parentId != TranslationDetails.TranslationEntryId)
                 return;
 
             _logger.Trace($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");

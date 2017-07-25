@@ -29,11 +29,11 @@ namespace Remembrance.Card.Management
         public EachWordFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILanguageDetector languageDetector)
-            : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
@@ -41,7 +41,7 @@ namespace Remembrance.Card.Management
         protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry)
         {
             var sourceLanguage = _languageDetector.DetectLanguageAsync(exchangeEntry.Text).Result.Language ?? Constants.EnLanguage;
-            var targetLanguage = WordsAdder.GetDefaultTargetLanguage(sourceLanguage);
+            var targetLanguage = WordsProcessor.GetDefaultTargetLanguage(sourceLanguage);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 

@@ -14,9 +14,18 @@ namespace Remembrance.DAL.Contracts.Model
         {
         }
 
-        public TranslationDetails([NotNull] TranslationResult translationResult)
+        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
         {
+            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
+        }
+
+        [NotNull]
+        public object TranslationEntryId
+        {
+            get;
+            [UsedImplicitly]
+            set;
         }
 
         [NotNull]

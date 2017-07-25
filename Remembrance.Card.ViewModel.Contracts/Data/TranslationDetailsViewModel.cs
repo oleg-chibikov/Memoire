@@ -13,8 +13,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 
+        [UsedImplicitly]
         [DoNotNotify]
-        public int Id
+        public object Id { get; set; }
+
+        [DoNotNotify]
+        public object TranslationEntryId
         {
             get;
             [UsedImplicitly]

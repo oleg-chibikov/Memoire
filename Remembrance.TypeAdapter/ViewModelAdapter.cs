@@ -44,13 +44,14 @@ namespace Remembrance.TypeAdapter
                         foreach (var translation in dest.Translations)
                         {
                             translation.Language = dest.TargetLanguage;
-                            translation.ParentTranslationEntry = dest;
+                            translation.ParentTranslationEntryViewModel = dest;
                         }
                     });
             TypeAdapterConfig<TranslationInfo, TranslationDetailsViewModel>.NewConfig()
-                .ConstructUsing(src => new TranslationDetailsViewModel(new TranslationResultViewModel()))
+                .ConstructUsing(src => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(dest => dest.TranslationResult, src => src.TranslationDetails.TranslationResult)
                 .Map(dest => dest.Id, src => src.TranslationDetails.Id)
+                .Map(dest => dest.TranslationEntryId, src => src.TranslationDetails.TranslationEntryId)
                 .AfterMapping(
                     (src, dest) =>
                     {
@@ -60,12 +61,12 @@ namespace Remembrance.TypeAdapter
                             foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                             {
                                 translationVariant.Language = src.Key.TargetLanguage;
-                                translationVariant.ParentTranslationDetails = dest;
+                                translationVariant.ParentTranslationDetailsViewModel = dest;
                                 if (translationVariant.Synonyms != null)
                                     foreach (var synonym in translationVariant.Synonyms)
                                     {
                                         synonym.Language = src.Key.TargetLanguage;
-                                        synonym.ParentTranslationDetails = dest;
+                                        synonym.ParentTranslationDetailsViewModel = dest;
                                     }
                                 if (translationVariant.Meanings != null)
                                     foreach (var meaning in translationVariant.Meanings)

@@ -24,7 +24,8 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [UsedImplicitly]
-        public int Id { get; set; }
+        [DoNotNotify]
+        public object Id { get; set; }
 
         [UsedImplicitly]
         public override string Text

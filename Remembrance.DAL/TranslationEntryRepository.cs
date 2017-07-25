@@ -10,7 +10,7 @@ using Scar.Common.DAL.LiteDB;
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry, int>, ITranslationEntryRepository
+    internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry>, ITranslationEntryRepository
     {
         public TranslationEntryRepository([NotNull] ILog logger)
             : base(logger)

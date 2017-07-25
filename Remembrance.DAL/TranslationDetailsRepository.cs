@@ -1,5 +1,7 @@
-﻿using Common.Logging;
+﻿using System;
+using Common.Logging;
 using JetBrains.Annotations;
+using LiteDB;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
@@ -13,6 +15,7 @@ namespace Remembrance.DAL
         public TranslationDetailsRepository([NotNull] ILog logger)
             : base(logger)
         {
+            Collection.EnsureIndex(x => x.TranslationEntryId, true);
         }
 
         [NotNull]
@@ -23,5 +26,29 @@ namespace Remembrance.DAL
         /// </remarks>
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
+
+        public bool CheckByTranslationEntryId(object translationEntryId)
+        {
+            if (translationEntryId == null)
+                throw new ArgumentNullException(nameof(translationEntryId));
+
+            return Collection.Exists(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
+        }
+
+        public TranslationDetails GetByTranslationEntryId(object translationEntryId)
+        {
+            if (translationEntryId == null)
+                throw new ArgumentNullException(nameof(translationEntryId));
+
+            return Collection.FindOne(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
+        }
+
+        public void DeleteByTranslationEntryId(object translationEntryId)
+        {
+            if (translationEntryId == null)
+                throw new ArgumentNullException(nameof(translationEntryId));
+
+            Collection.Delete(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
+        }
     }
 }

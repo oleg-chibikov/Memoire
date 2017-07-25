@@ -42,18 +42,18 @@ namespace Remembrance.Card.Management
         protected readonly ITranslationEntryRepository TranslationEntryRepository;
 
         [NotNull]
-        protected readonly IWordsAdder WordsAdder;
+        protected readonly IWordsProcessor WordsProcessor;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository)
         {
             TranslationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            WordsAdder = wordsAdder ?? throw new ArgumentNullException(nameof(wordsAdder));
+            WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             TranslationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
         }
@@ -110,7 +110,7 @@ namespace Remembrance.Card.Management
                                     if (existingKeys.Contains(key))
                                         continue;
 
-                                    translationInfo = WordsAdder.AddWordWithChecks(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                    translationInfo = WordsProcessor.AddWord(key.Text, key.SourceLanguage, key.TargetLanguage);
                                     blockResult.Add(translationInfo);
                                 }
                                 catch (LocalizableException ex)

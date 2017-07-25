@@ -5,7 +5,14 @@ namespace Remembrance.Card.Management.Contracts
 {
     public interface IWordsProcessor
     {
-        bool ChangeText(int id, [NotNull] string newWord, [NotNull] string sourceLanguage, [NotNull] string targetLanguage, bool showCard = true);
+        [NotNull]
+        TranslationInfo AddWord([CanBeNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null);
+
+        bool ChangeWord([NotNull] object id, [NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage, bool showCard = true);
+
+        [NotNull]
+        string GetDefaultTargetLanguage([NotNull] string sourceLanguage);
+
         bool ProcessNewWord([NotNull] string word, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null, bool showCard = true);
 
         [NotNull]

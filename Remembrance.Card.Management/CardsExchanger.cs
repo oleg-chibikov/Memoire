@@ -42,14 +42,10 @@ namespace Remembrance.Card.Management
             [NotNull] IOpenFileService openFileService,
             [NotNull] ISaveFileService saveFileService,
             [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder,
             [NotNull] IFileExporter exporter,
             [NotNull] IFileImporter[] importers,
             [NotNull] IMessenger messenger)
         {
-            if (wordsAdder == null)
-                throw new ArgumentNullException(nameof(wordsAdder));
-
             _openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
             _saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

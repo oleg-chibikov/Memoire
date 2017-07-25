@@ -15,10 +15,10 @@ namespace Remembrance.Card.Management
         public RemembranceFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsAdder wordsAdder,
+            [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository)
-            : base(translationEntryRepository, logger, wordsAdder, messenger, translationDetailsRepository)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository)
         {
         }
 

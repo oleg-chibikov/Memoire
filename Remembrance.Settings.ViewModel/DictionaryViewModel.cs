@@ -206,7 +206,7 @@ namespace Remembrance.Settings.ViewModel
             _logger.Trace($"Received {translationInfo} from external source...");
             var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationInfo.TranslationEntry);
 
-            var existing = _translationList.SingleOrDefault(x => x.Id == translationInfo.TranslationEntry.Id);
+            var existing = _translationList.SingleOrDefault(x => Equals(x.Id, translationInfo.TranslationEntry.Id));
             if (existing != null)
             {
                 _logger.Trace($"Updating {existing} in the list...");
@@ -234,13 +234,13 @@ namespace Remembrance.Settings.ViewModel
 
         private void OnPriorityChanged([NotNull] PriorityWordViewModel priorityWordViewModel)
         {
-            _logger.Trace($"Changing priority for {priorityWordViewModel} int the list...");
+            _logger.Trace($"Changing priority for {priorityWordViewModel} in the list...");
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationEntry?.Id ?? priorityWordViewModel.ParentTranslationDetails?.Id;
+            var parentId = priorityWordViewModel.ParentTranslationEntryViewModel?.Id ?? priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId;
             var changed = false;
-            var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id == parentId);
+            var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
             var translation = translationEntryViewModel?.Translations.SingleOrDefault(x => x.CorrelationId == priorityWordViewModel.CorrelationId);
             if (translation != null)
             {
@@ -259,12 +259,12 @@ namespace Remembrance.Settings.ViewModel
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationDetails?.Id ?? priorityWordViewModel.ParentTranslationEntry?.Id;
-            var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id == parentId);
+            var parentId = priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId ?? priorityWordViewModel.ParentTranslationEntryViewModel?.Id;
+            var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
             if (translationEntryViewModel != null)
             {
-                priorityWordViewModel.ParentTranslationDetails = null;
-                priorityWordViewModel.ParentTranslationEntry = translationEntryViewModel;
+                priorityWordViewModel.ParentTranslationDetailsViewModel = null;
+                priorityWordViewModel.ParentTranslationEntryViewModel = translationEntryViewModel;
                 translationEntryViewModel.Translations.Add(priorityWordViewModel);
             }
             if (translationEntryViewModel != null)
@@ -279,9 +279,9 @@ namespace Remembrance.Settings.ViewModel
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationDetails?.Id ?? priorityWordViewModel.ParentTranslationEntry?.Id;
+            var parentId = priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId ?? priorityWordViewModel.ParentTranslationEntryViewModel?.Id;
             var removed = false;
-            var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id == parentId);
+            var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
             var correlated = translationEntryViewModel?.Translations.SingleOrDefault(x => x.CorrelationId == priorityWordViewModel.CorrelationId);
             if (correlated != null)
                 removed = translationEntryViewModel.Translations.Remove(correlated);
@@ -319,7 +319,7 @@ namespace Remembrance.Settings.ViewModel
 
             var sourceLanguage = translationEntryViewModel.Language;
             var targetLanguage = translationEntryViewModel.TargetLanguage;
-            return e.NewValue != null && _wordsProcessor.ChangeText(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage);
+            return e.NewValue != null && _wordsProcessor.ChangeWord(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage);
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
@@ -330,7 +330,7 @@ namespace Remembrance.Settings.ViewModel
 
             foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
             {
-                _translationDetailsRepository.Delete(translationEntryViewModel.Id);
+                _translationDetailsRepository.DeleteByTranslationEntryId(translationEntryViewModel.Id);
                 _translationEntryRepository.Delete(translationEntryViewModel.Id);
             }
         }
