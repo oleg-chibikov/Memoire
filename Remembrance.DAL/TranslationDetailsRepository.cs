@@ -27,15 +27,7 @@ namespace Remembrance.DAL
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
 
-        public bool CheckByTranslationEntryId(object translationEntryId)
-        {
-            if (translationEntryId == null)
-                throw new ArgumentNullException(nameof(translationEntryId));
-
-            return Collection.Exists(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
-        }
-
-        public TranslationDetails GetByTranslationEntryId(object translationEntryId)
+        public TranslationDetails TryGetByTranslationEntryId(object translationEntryId)
         {
             if (translationEntryId == null)
                 throw new ArgumentNullException(nameof(translationEntryId));

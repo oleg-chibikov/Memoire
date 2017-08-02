@@ -17,6 +17,7 @@ using Scar.Common.WPF.Commands;
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
     [AddINotifyPropertyChangedInterface]
+    [UsedImplicitly]
     public class PriorityWordViewModel : WordViewModel
     {
         [NotNull]
@@ -53,7 +54,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [DoNotNotify]
-        public Guid CorrelationId { get; set; }
+        public Guid CorrelationId { get; [UsedImplicitly] set; }
 
         #region Commands
 

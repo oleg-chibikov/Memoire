@@ -79,11 +79,13 @@ namespace Remembrance.Card.Management
 
         public TranslationInfo ReloadTranslationDetailsIfNeeded(TranslationEntry translationEntry)
         {
-            if (_translationDetailsRepository.CheckByTranslationEntryId(translationEntry.Id))
-                return new TranslationInfo(translationEntry, _translationDetailsRepository.GetByTranslationEntryId(translationEntry.Id));
+            var translationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(translationEntry.Id);
+            if (translationDetails != null)
+                return new TranslationInfo(translationEntry, translationDetails);
 
             var translationResult = Translate(translationEntry.Key);
-            var translationDetails = new TranslationDetails(translationResult, translationEntry.Id);
+            //There are no translation details for this word
+            translationDetails = new TranslationDetails(translationResult, translationEntry.Id);
             _logger.Trace($"Saving translation details for {translationEntry.Key}...");
             _translationDetailsRepository.Save(translationDetails);
 
@@ -99,7 +101,7 @@ namespace Remembrance.Card.Management
             TranslationInfo translationInfo;
             try
             {
-                translationInfo = AddWord(word, sourceLanguage, targetLanguage);
+                translationInfo = AddWord(word, sourceLanguage, targetLanguage, null);
             }
             catch (LocalizableException ex)
             {
@@ -133,21 +135,7 @@ namespace Remembrance.Card.Management
             TranslationInfo translationInfo;
             try
             {
-                var key = GetTranslationKey(text, sourceLanguage, targetLanguage);
-                var translationResult = Translate(key);
-                //replace the original text with the corrected one
-                key.Text = translationResult.PartOfSpeechTranslations.First().Text;
-                if (_translationEntryRepository.TryGetByKey(key) != null)
-                    throw new LocalizableException($"An item with the same key {key} already exists", Errors.WordIsPresent);
-
-                var translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords())
-                {
-                    Id = id
-                };
-                _translationEntryRepository.Save(translationEntry);
-                var translationDetails = new TranslationDetails(translationResult, translationEntry.Id);
-                _translationDetailsRepository.Save(translationDetails);
-                translationInfo = new TranslationInfo(translationEntry, translationDetails);
+                translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
             }
             catch (LocalizableException ex)
             {
@@ -166,17 +154,40 @@ namespace Remembrance.Card.Management
             return true;
         }
 
-        public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage)
+        public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)
         {
+            //This method replaces translation with the actual one
             _logger.Trace($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
 
             var key = GetTranslationKey(text, sourceLanguage, targetLanguage);
             var translationResult = Translate(key);
             //replace the original text with the corrected one
             key.Text = translationResult.PartOfSpeechTranslations.First().Text;
-            var translationEntry = _translationEntryRepository.TryGetByKey(key) ?? new TranslationEntry(key, translationResult.GetDefaultWords());
-            var id = _translationEntryRepository.Save(translationEntry);
+            var existingByKey = _translationEntryRepository.TryGetByKey(key);
+            if (id != null)
+            {
+                if (!existingByKey?.Id.Equals(id) == true)
+                    throw new LocalizableException($"An item with the same key {key} already exists", Errors.WordIsPresent);
+            }
+            else
+            {
+                if (existingByKey != null)
+                    id = existingByKey.Id;
+            }
+
+            var translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords())
+            {
+                Id = id
+            };
+
+            id = _translationEntryRepository.Save(translationEntry);
+
+            var existingTranslationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(id);
+
             var translationDetails = new TranslationDetails(translationResult, id);
+            if (existingTranslationDetails != null)
+                translationDetails.Id = existingTranslationDetails.Id;
+
             _translationDetailsRepository.Save(translationDetails);
             _logger.Trace($"Translation for {key} has been successfully added");
 

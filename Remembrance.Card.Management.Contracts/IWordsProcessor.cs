@@ -6,7 +6,7 @@ namespace Remembrance.Card.Management.Contracts
     public interface IWordsProcessor
     {
         [NotNull]
-        TranslationInfo AddWord([CanBeNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null);
+        TranslationInfo AddWord([CanBeNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null, [CanBeNull] object id = null);
 
         bool ChangeWord([NotNull] object id, [NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage, bool showCard = true);
 
