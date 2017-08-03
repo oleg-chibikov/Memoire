@@ -80,6 +80,29 @@ namespace Remembrance.Settings.ViewModel
 
         public Language[] AvailableSourceLanguages { get; }
 
+        #region Commands
+
+        public ICommand SaveCommand { get; }
+
+        #endregion
+
+        #region Command handlers
+
+        private void Save([NotNull] string text)
+        {
+            Logger.Info($"Adding translation for {text}...");
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            NewItemSource = null;
+
+            var sourceLanguage = SelectedSourceLanguage.Code;
+            var targetLanguage = SelectedTargetLanguage.Code;
+
+            WordsProcessor.ProcessNewWord(text, sourceLanguage, targetLanguage, Window);
+        }
+
+        #endregion
 
         #region Dependencies
 
@@ -133,30 +156,6 @@ namespace Remembrance.Settings.ViewModel
             get;
             [UsedImplicitly]
             set;
-        }
-
-        #endregion
-
-        #region Commands
-
-        public ICommand SaveCommand { get; }
-
-        #endregion
-
-        #region Command handlers
-
-        private void Save([NotNull] string text)
-        {
-            Logger.Info($"Adding translation for {text}...");
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-
-            NewItemSource = null;
-
-            var sourceLanguage = SelectedSourceLanguage.Code;
-            var targetLanguage = SelectedTargetLanguage.Code;
-
-            WordsProcessor.ProcessNewWord(text, sourceLanguage, targetLanguage, Window);
         }
 
         #endregion

@@ -32,7 +32,9 @@ namespace Remembrance.Card.Management
         {
             Logger.Trace($"Creating window for {translationInfo}...");
             var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel), new TypedParameter(typeof(Window), ownerWindow));
+            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(
+                new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel),
+                new TypedParameter(typeof(Window), ownerWindow));
 
             Logger.Trace($"Closing window in {CloseTimeout}...");
             ActionExtensions.DoAfterAsync(

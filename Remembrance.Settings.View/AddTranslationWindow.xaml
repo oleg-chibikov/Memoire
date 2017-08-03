@@ -21,8 +21,8 @@
     Icon="IconAlt.ico">
     <view:AddTranslationControl
         x:Name="AddTranslationControl"
-                DockPanel.Dock="Right"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center" />
+        DockPanel.Dock="Right"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Center"
+        VerticalContentAlignment="Center" />
 </window:AnimatedWindow>

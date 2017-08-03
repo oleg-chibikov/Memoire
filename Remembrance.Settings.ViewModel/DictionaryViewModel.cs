@@ -48,7 +48,7 @@ namespace Remembrance.Settings.ViewModel
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessenger messenger,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory)
-            :base(settingsRepository,languageDetector,wordsProcessor, logger)
+            : base(settingsRepository, languageDetector, wordsProcessor, logger)
         {
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));

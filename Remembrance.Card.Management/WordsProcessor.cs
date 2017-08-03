@@ -118,33 +118,6 @@ namespace Remembrance.Card.Management
             return ProcessWordInternal(id, text, sourceLanguage, targetLanguage, ownerWindow);
         }
 
-        private bool ProcessWordInternal(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
-        {
-            TranslationInfo translationInfo;
-            try
-            {
-                translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
-            }
-            catch (LocalizableException ex)
-            {
-                _logger.Warn(ex.Message);
-                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                _logger.Warn($"Processing failed for word {text}");
-                return false;
-            }
-
-            PostProcessWord(ownerWindow, translationInfo);
-            _logger.Trace($"Processing finished for word {text}");
-            return true;
-        }
-
-        private void PostProcessWord(IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
-        {
-            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
-            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
-            _cardManager.ShowCard(translationInfo, ownerWindow);
-        }
-
         public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)
         {
             //This method replaces translation with the actual one
@@ -207,6 +180,7 @@ namespace Remembrance.Card.Management
         {
             if (string.IsNullOrWhiteSpace(text))
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
+
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
                 //if not specified or autodetect - try to detect
                 sourceLanguage = _languageDetector.DetectLanguageAsync(text).Result.Language;
@@ -220,6 +194,33 @@ namespace Remembrance.Card.Management
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
+        private void PostProcessWord(IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
+        {
+            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _cardManager.ShowCard(translationInfo, ownerWindow);
+        }
+
+        private bool ProcessWordInternal(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        {
+            TranslationInfo translationInfo;
+            try
+            {
+                translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
+            }
+            catch (LocalizableException ex)
+            {
+                _logger.Warn(ex.Message);
+                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
+                _logger.Warn($"Processing failed for word {text}");
+                return false;
+            }
+
+            PostProcessWord(ownerWindow, translationInfo);
+            _logger.Trace($"Processing finished for word {text}");
+            return true;
+        }
+
         [NotNull]
         private TranslationResult Translate([NotNull] TranslationEntryKey key)
         {
@@ -227,6 +228,7 @@ namespace Remembrance.Card.Management
             var translationResult = _wordsTranslator.GetTranslationAsync(key.SourceLanguage, key.TargetLanguage, key.Text, Constants.EnLanguage).Result;
             if (!translationResult.PartOfSpeechTranslations.Any())
                 throw new LocalizableException($"No translations found for {key}", Errors.CannotTranslate);
+
             return translationResult;
         }
     }

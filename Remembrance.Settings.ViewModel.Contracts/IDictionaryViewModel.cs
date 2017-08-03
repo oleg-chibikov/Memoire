@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Settings.ViewModel.Contracts
 {
-    public interface IDictionaryViewModel: IWithAddTranslationControl
+    public interface IDictionaryViewModel : IWithAddTranslationControl
     {
         [CanBeNull]
         string NewItemSource { get; }

@@ -20,6 +20,9 @@ namespace Remembrance.Settings.ViewModel
     internal sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
+        private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
+
+        [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
         [NotNull]
@@ -27,9 +30,6 @@ namespace Remembrance.Settings.ViewModel
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
-
-        [NotNull]
-        private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         [NotNull]
         private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;

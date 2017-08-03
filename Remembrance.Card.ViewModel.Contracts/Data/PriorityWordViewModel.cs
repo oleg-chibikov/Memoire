@@ -54,7 +54,12 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         }
 
         [DoNotNotify]
-        public Guid CorrelationId { get; [UsedImplicitly] set; }
+        public Guid CorrelationId
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
         #region Commands
 

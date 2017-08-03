@@ -6,6 +6,7 @@ namespace Remembrance.Translate.Contracts.Data.WordsTranslator
     {
         [CanBeNull]
         [UsedImplicitly]
+        //TODO: Why is it priority???
         public PriorityWord[] Synonyms { get; set; }
 
         [CanBeNull]
