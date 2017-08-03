@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using JetBrains.Annotations;
-using Remembrance.ViewModel.Settings;
 using Remembrance.Settings.View.Contracts;
+using Remembrance.ViewModel.Settings;
 
 namespace Remembrance.Settings.View
 {

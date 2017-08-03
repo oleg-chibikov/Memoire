@@ -20,7 +20,7 @@ using Remembrance.Settings.View;
 using Remembrance.Settings.View.Contracts;
 using Remembrance.Translate.Yandex;
 using Remembrance.TypeAdapter;
-using Remembrance.ViewModel;
+using Remembrance.ViewModel.Card;
 using Remembrance.WebApi;
 using Scar.Common;
 using Scar.Common.IO;

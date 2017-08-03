@@ -14,7 +14,7 @@ using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
 using Scar.Common.WPF.Commands;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Translation
 {
     //TODO: Simplify Model
     [AddINotifyPropertyChangedInterface]

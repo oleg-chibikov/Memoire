@@ -12,12 +12,13 @@
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:converters="clr-namespace:Remembrance.Card.View.Converters"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:translation="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:PriorityWordViewModel}">
+    d:DataContext="{d:DesignInstance d:Type=translation:PriorityWordViewModel}">
 
     <!--TODO: Separate view for priority word-->
     <UserControl.Resources>
@@ -59,7 +60,7 @@
                     <Style.Triggers>
                         <DataTrigger
                             Binding="{Binding Mode=OneWay, Converter={StaticResource PriorityWordViewModelToBooleanConverter}}"
-                            Value="True" >
+                            Value="True">
                             <Setter
                                 Property="Cursor"
                                 Value="Hand" />

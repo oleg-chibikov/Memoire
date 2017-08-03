@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Translation
 {
     public sealed class ExampleViewModel : TextEntryViewModel
     {

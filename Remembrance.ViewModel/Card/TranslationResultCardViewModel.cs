@@ -6,9 +6,10 @@ using PropertyChanged;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.TypeAdapter.Contracts;
+using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Localization;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]

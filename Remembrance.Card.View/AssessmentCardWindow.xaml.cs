@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using JetBrains.Annotations;
 using Remembrance.Card.View.Contracts;
-using Remembrance.ViewModel;
+using Remembrance.ViewModel.Card;
 
 namespace Remembrance.Card.View
 {

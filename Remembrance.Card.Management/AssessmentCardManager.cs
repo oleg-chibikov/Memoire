@@ -8,10 +8,10 @@ using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View.Contracts;
-using Remembrance.ViewModel;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
+using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.Management

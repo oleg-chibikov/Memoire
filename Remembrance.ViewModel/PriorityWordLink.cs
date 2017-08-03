@@ -10,10 +10,9 @@ namespace Remembrance.ViewModel
             CorrelationId = correlationId;
             IsPriority = isPriority;
             TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
-
         }
 
-        public Guid CorrelationId { get;}
+        public Guid CorrelationId { get; }
         public object TranslationEntryId { get; }
         public bool IsPriority { get; }
     }

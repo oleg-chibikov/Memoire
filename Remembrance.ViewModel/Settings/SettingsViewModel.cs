@@ -10,10 +10,10 @@ using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
-using Remembrance.ViewModel.Settings.Data;
 using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
+using Remembrance.ViewModel.Settings.Data;
 using Scar.Common.Events;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.ViewModel;
@@ -22,7 +22,7 @@ namespace Remembrance.ViewModel.Settings
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class SettingsViewModel: IRequestCloseViewModel, IDisposable
+    public sealed class SettingsViewModel : IRequestCloseViewModel, IDisposable
     {
         [NotNull]
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -67,13 +67,6 @@ namespace Remembrance.ViewModel.Settings
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
-        public void Dispose()
-        {
-            _cardsExchanger.Progress -= CardsExchanger_Progress;
-        }
-
-        public event EventHandler RequestClose;
-
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
@@ -83,6 +76,13 @@ namespace Remembrance.ViewModel.Settings
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")
         };
+
+        public void Dispose()
+        {
+            _cardsExchanger.Progress -= CardsExchanger_Progress;
+        }
+
+        public event EventHandler RequestClose;
 
         #region Commands
 

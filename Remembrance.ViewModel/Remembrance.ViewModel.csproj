@@ -106,11 +106,11 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssessmentCardViewModel.cs" />
-    <Compile Include="ExampleViewModel.cs" />
-    <Compile Include="PartOfSpeechTranslationViewModel.cs" />
+    <Compile Include="Card\AssessmentCardViewModel.cs" />
+    <Compile Include="Translation\ExampleViewModel.cs" />
+    <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
     <Compile Include="PriorityWordLink.cs" />
-    <Compile Include="PriorityWordViewModel.cs" />
+    <Compile Include="Translation\PriorityWordViewModel.cs" />
     <Compile Include="Settings\AddTranslationViewModel.cs" />
     <Compile Include="Settings\BaseViewModelWithAddTranslationControl.cs" />
     <Compile Include="Settings\Data\Language.cs" />
@@ -118,14 +118,14 @@
     <Compile Include="Settings\SettingsViewModel.cs" />
     <Compile Include="Settings\TrayViewModel.cs" />
     <Compile Include="TextChangedEventArgs.cs" />
-    <Compile Include="TextEntryViewModel.cs" />
-    <Compile Include="TranslationDetailsViewModel.cs" />
-    <Compile Include="TranslationEntryViewModel.cs" />
-    <Compile Include="TranslationResultViewModel.cs" />
-    <Compile Include="TranslationVariantViewModel.cs" />
-    <Compile Include="WordViewModel.cs" />
+    <Compile Include="Translation\TextEntryViewModel.cs" />
+    <Compile Include="Translation\TranslationDetailsViewModel.cs" />
+    <Compile Include="Translation\TranslationEntryViewModel.cs" />
+    <Compile Include="Translation\TranslationResultViewModel.cs" />
+    <Compile Include="Translation\TranslationVariantViewModel.cs" />
+    <Compile Include="Translation\WordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationResultCardViewModel.cs" />
+    <Compile Include="Card\TranslationResultCardViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">

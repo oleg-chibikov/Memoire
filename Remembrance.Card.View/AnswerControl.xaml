@@ -8,12 +8,13 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance viewModel:AssessmentCardViewModel}">
+    d:DataContext="{d:DesignInstance card:AssessmentCardViewModel}">
     <UserControl.Resources>
         <ResourceDictionary
             Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />

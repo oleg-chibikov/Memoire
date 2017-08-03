@@ -12,6 +12,7 @@ using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.TypeAdapter.Contracts;
+using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
@@ -20,7 +21,7 @@ using Scar.Common.WPF.ViewModel;
 //TODO: regions
 //TODO: Feature: if the word level is low, replace textbox with dropdown
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]

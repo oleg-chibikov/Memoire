@@ -20,6 +20,8 @@ using Remembrance.Resources;
 using Remembrance.Settings.View.Contracts;
 using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
+using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View;

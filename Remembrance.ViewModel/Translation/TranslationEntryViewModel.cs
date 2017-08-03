@@ -9,7 +9,7 @@ using Remembrance.Translate.Contracts.Interfaces;
 using Scar.Common;
 using Scar.Common.Notification;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable

@@ -2,7 +2,7 @@
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Translate.Contracts.Interfaces;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Translation
 {
     public sealed class PartOfSpeechTranslationViewModel : WordViewModel
     {

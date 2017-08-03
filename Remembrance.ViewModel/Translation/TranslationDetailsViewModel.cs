@@ -3,7 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using PropertyChanged;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsViewModel
