@@ -95,6 +95,7 @@
     <Compile Include="AssessmentCardWindow.xaml.cs">
       <DependentUpon>AssessmentCardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranslationResultCardWindow.xaml.cs">
       <DependentUpon>TranslationResultCardWindow.xaml</DependentUpon>

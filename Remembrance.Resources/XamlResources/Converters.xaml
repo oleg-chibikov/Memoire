@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="clr-namespace:Remembrance.Resources.Converters"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters">
+    <!--//TODO: Eliminate this - move converters where they are suitable-->
     <converters:WordConcatConverter
         x:Key="WordConcatConverter" />
     <commonConverters:ArrayToVisibilityConverter

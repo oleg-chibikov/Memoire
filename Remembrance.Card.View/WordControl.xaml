@@ -11,6 +11,7 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:converters="clr-namespace:Remembrance.Card.View.Converters"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -32,6 +33,10 @@
                     <Style
                         TargetType="TextBlock"
                         BasedOn="{StaticResource {x:Type TextBlock}}" />
+                    <converters:PriorityWordViewModelToVisibilityConverter
+                        x:Key="PriorityWordViewModelToVisibilityConverter" />
+                    <converters:PriorityWordViewModelToBooleanConverter
+                        x:Key="PriorityWordViewModelToBooleanConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -40,8 +45,8 @@
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
         view:MarginSetter.Orientation="Horizontal">
         <TextBlock
-            Visibility="{Binding PartOfSpeech, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
-            Text="{Binding PartOfSpeech, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
+            Visibility="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
+            Text="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
             Foreground="DarkGreen"
             FontSize="{StaticResource SmallFontSize}"
             Cursor="Arrow" />
@@ -53,8 +58,8 @@
                     TargetType="Border">
                     <Style.Triggers>
                         <DataTrigger
-                            Binding="{Binding CanTogglePriority}"
-                            Value="True">
+                            Binding="{Binding Mode=OneWay, Converter={StaticResource PriorityWordViewModelToBooleanConverter}}"
+                            Value="True" >
                             <Setter
                                 Property="Cursor"
                                 Value="Hand" />
@@ -62,10 +67,7 @@
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition
-                                    Binding="{Binding IsPriority}"
-                                    Value="True" />
-                                <Condition
-                                    Binding="{Binding CanTogglePriority}"
+                                    Binding="{Binding IsPriority, Mode=OneWay}"
                                     Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.EnterActions>
@@ -93,40 +95,40 @@
                 </Style>
             </Border.Style>
             <TextBlock
-                Text="{Binding Text}"
-                FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                Text="{Binding Text, Mode=OneTime}"
+                FontSize="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                FontWeight="{Binding FontWeight, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <TextBlock.InputBindings>
                     <MouseBinding
-                        Command="{Binding TogglePriorityCommand}"
+                        Command="{Binding TogglePriorityCommand, Mode=OneTime}"
                         MouseAction="LeftClick" />
                 </TextBlock.InputBindings>
                 <TextBlock.ContextMenu>
                     <ContextMenu
-                        Visibility="{Binding CanEdit, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{Binding CanEdit, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem
-                            Visibility="{Binding CanTogglePriority, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Visibility="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToVisibilityConverter}}"
                             Header="{lex:Loc TogglePriority}"
-                            Command="{Binding TogglePriorityCommand}" />
+                            Command="{Binding TogglePriorityCommand, Mode=OneTime}" />
                         <MenuItem
-                            Visibility="{Binding CanLearnWord, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Visibility="{Binding CanLearnWord, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}"
                             Header="{lex:Loc LearnWord}"
-                            Command="{Binding LearnWordCommand}" />
+                            Command="{Binding LearnWordCommand, Mode=OneTime}" />
                     </ContextMenu>
                 </TextBlock.ContextMenu>
             </TextBlock>
         </Border>
         <TextBlock
-            Visibility="{Binding WordInfo, Converter={StaticResource NotNullToVisibilityConverter}}"
-            Text="{Binding WordInfo}"
+            Visibility="{Binding WordInfo, Mode=OneTime, Converter={StaticResource NotNullToVisibilityConverter}}"
+            Text="{Binding WordInfo, Mode=OneTime}"
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />
         <Button
             Background="Transparent"
             BorderThickness="0"
             ToolTip="{lex:Loc Speak}"
-            HorizontalAlignment="{Binding SpeakerAlignment, ElementName = Word}"
-            Command="{Binding PlayTtsCommand}">
+            HorizontalAlignment="{Binding SpeakerAlignment, Mode=OneTime, ElementName = Word}"
+            Command="{Binding PlayTtsCommand, Mode=OneTime}">
             <materialDesign:PackIcon
                 Kind="Speaker" />
         </Button>

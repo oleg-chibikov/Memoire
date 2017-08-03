@@ -10,6 +10,7 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         public PartOfSpeechTranslationViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
             : base(textToSpeechPlayer, wordsProcessor)
         {
+            CanLearnWord = false;
         }
 
         public string Transcription

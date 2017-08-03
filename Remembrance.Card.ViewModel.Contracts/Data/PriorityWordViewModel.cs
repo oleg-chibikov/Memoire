@@ -16,6 +16,8 @@ using Scar.Common.WPF.Commands;
 
 namespace Remembrance.Card.ViewModel.Contracts.Data
 {
+    //TODO: Simplify Model
+    //TODO: Move to ViewModel instead of contracts
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
     public class PriorityWordViewModel : WordViewModel
@@ -68,8 +70,6 @@ namespace Remembrance.Card.ViewModel.Contracts.Data
         #endregion
 
         public override bool CanEdit { get; } = true;
-
-        public bool CanTogglePriority { get; } = true;
 
         public bool IsPriority { get; set; }
 
