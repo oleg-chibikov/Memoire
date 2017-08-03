@@ -10,7 +10,6 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Resources;
 using Scar.Common.WPF.Commands;
 
@@ -34,13 +33,13 @@ namespace Remembrance.ViewModel.Translation
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
+        private readonly ViewModelAdapter _viewModelAdapter;
 
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger)

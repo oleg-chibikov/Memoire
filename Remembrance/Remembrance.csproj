@@ -183,13 +183,13 @@
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.Management\Remembrance.Card.Management.csproj">
-      <Project>{A10C7E6D-D616-4B99-8BB2-A43035346099}</Project>
-      <Name>Remembrance.Card.Management</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
       <Name>Remembrance.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Core\Remembrance.Core.csproj">
+      <Project>{A10C7E6D-D616-4B99-8BB2-A43035346099}</Project>
+      <Name>Remembrance.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL\Remembrance.DAL.csproj">
       <Project>{AEA2E53B-FA60-40EB-BEC2-E48990D09BA0}</Project>
@@ -198,14 +198,6 @@
     <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Translate.Yandex\Remembrance.Translate.Yandex.csproj">
-      <Project>{1FA9CAC8-4037-4781-AD36-3A515470AA8C}</Project>
-      <Name>Remembrance.Translate.Yandex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.TypeAdapter\Remembrance.TypeAdapter.csproj">
-      <Project>{57152DA4-C73F-4697-8CB7-62CE3CE24797}</Project>
-      <Name>Remembrance.TypeAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
       <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>

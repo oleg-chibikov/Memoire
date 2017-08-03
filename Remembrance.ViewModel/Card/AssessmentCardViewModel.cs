@@ -10,7 +10,6 @@ using PropertyChanged;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
@@ -46,7 +45,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] TranslationInfo translationInfo,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] ILog logger)
         {

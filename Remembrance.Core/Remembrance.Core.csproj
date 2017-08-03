@@ -4,16 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</ProjectGuid>
+    <ProjectGuid>{A10C7E6D-D616-4B99-8BB2-A43035346099}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Remembrance.ViewModel</RootNamespace>
-    <AssemblyName>Remembrance.ViewModel</AssemblyName>
+    <RootNamespace>Remembrance.Card.Management</RootNamespace>
+    <AssemblyName>Remembrance.Card.Management</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,9 +34,6 @@
     <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="CCSWE.Core, Version=2.0.348.3791, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\CCSWE.Core.2.0.348.3791\lib\net45\CCSWE.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
@@ -54,84 +49,88 @@
     <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Mapster, Version=3.1.1.0, Culture=neutral, PublicKeyToken=2f39883af23c29a8, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Mapster.3.1.1\lib\net45\Mapster.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\NAudio.1.8.1\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PropertyChanged, Version=2.1.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\PropertyChanged.Fody.2.1.3\lib\netstandard1.0\PropertyChanged.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.5\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Notification, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Notification.1.0.4\lib\net462\Scar.Common.Notification.dll</HintPath>
+    <Reference Include="Scar.Common.IO, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.IO.1.0.23\lib\net462\Scar.Common.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Commands.1.0.1\lib\net462\Scar.Common.WPF.Commands.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.WindowFactory.1.0.3\lib\net462\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.ViewModel.1.0.1\lib\net462\Scar.Common.WPF.ViewModel.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WPFLocalizeExtension, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Card\AssessmentCardViewModel.cs" />
-    <Compile Include="Translation\ExampleViewModel.cs" />
-    <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
-    <Compile Include="PriorityWordLink.cs" />
-    <Compile Include="Translation\PriorityWordViewModel.cs" />
-    <Compile Include="Settings\AddTranslationViewModel.cs" />
-    <Compile Include="Settings\BaseViewModelWithAddTranslationControl.cs" />
-    <Compile Include="Settings\Data\Language.cs" />
-    <Compile Include="Settings\DictionaryViewModel.cs" />
-    <Compile Include="Settings\SettingsViewModel.cs" />
-    <Compile Include="Settings\TrayViewModel.cs" />
-    <Compile Include="TextChangedEventArgs.cs" />
-    <Compile Include="Translation\TextEntryViewModel.cs" />
-    <Compile Include="Translation\TranslationDetailsViewModel.cs" />
-    <Compile Include="Translation\TranslationEntryViewModel.cs" />
-    <Compile Include="Translation\TranslationResultViewModel.cs" />
-    <Compile Include="Translation\TranslationVariantViewModel.cs" />
-    <Compile Include="Translation\WordViewModel.cs" />
+    <Compile Include="CardManagement\AssessmentCardManager.cs" />
+    <Compile Include="CardManagement\BaseCardManager.cs" />
+    <Compile Include="Exchange\CardsExchanger.cs" />
+    <Compile Include="CardManagement\Data\IExchangeEntry.cs" />
+    <Compile Include="CardManagement\Data\EachWordExchangeEntry.cs" />
+    <Compile Include="CardManagement\Data\RemembranceExchangeEntry.cs" />
+    <Compile Include="Exchange\BaseFileImporter.cs" />
+    <Compile Include="Exchange\RemembranceFileExporter.cs" />
+    <Compile Include="Exchange\EachWordFileImporter.cs" />
+    <Compile Include="Exchange\RemembranceFileImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Card\TranslationResultCardViewModel.cs" />
-    <Compile Include="ViewModelAdapter.cs" />
+    <Compile Include="CardManagement\TranslationEntryContractResolver.cs" />
+    <Compile Include="CardManagement\TranslationResultCardManager.cs" />
+    <Compile Include="CardManagement\WordsProcessor.cs" />
+    <Compile Include="Translation\Yandex\ContractResolvers\CustomContractResolver.cs" />
+    <Compile Include="Translation\Yandex\ContractResolvers\DetectionResultContractResolver.cs" />
+    <Compile Include="Translation\Yandex\ContractResolvers\ListResultContractResolver.cs" />
+    <Compile Include="Translation\Yandex\ContractResolvers\TranslationResultContractResolver.cs" />
+    <Compile Include="Translation\Yandex\JsonConverters\PartOfSpeechConverter.cs" />
+    <Compile Include="Translation\Yandex\LanguageDetector.cs" />
+    <Compile Include="Translation\Yandex\TextToSpeechPlayer.cs" />
+    <Compile Include="Translation\Yandex\WordsTranslator.cs" />
+    <Compile Include="Translation\Yandex\YandexConstants.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj">
+      <Project>{8082a9e1-e32d-4650-a551-b43e7d1b2c1d}</Project>
+      <Name>Scar.Common.WPF.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Scar.Common\Scar.Common.csproj">
+      <Project>{D6C314D5-F126-4FEC-BD4D-4E6725786FA9}</Project>
+      <Name>Scar.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
       <Name>Remembrance.Contracts</Name>
@@ -140,21 +139,15 @@
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
+      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
+      <Name>Remembrance.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\..\..\ThirdParty\Fody.2.1.2\build\netstandard1.0\Fody.targets" Condition="Exists('..\..\..\..\..\ThirdParty\Fody.2.1.2\build\netstandard1.0\Fody.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\..\ThirdParty\Fody.2.1.2\build\netstandard1.0\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\ThirdParty\Fody.2.1.2\build\netstandard1.0\Fody.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

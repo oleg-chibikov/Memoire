@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.TypeAdapter;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -14,7 +13,7 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger)

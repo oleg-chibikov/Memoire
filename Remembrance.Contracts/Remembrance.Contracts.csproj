@@ -92,7 +92,6 @@
     <Compile Include="Translate\ILanguageDetector.cs" />
     <Compile Include="Translate\ITextToSpeechPlayer.cs" />
     <Compile Include="Translate\IWordsTranslator.cs" />
-    <Compile Include="TypeAdapter\IViewModelAdapter.cs" />
     <Compile Include="View\Card\ITranslationResultCardWindow.cs" />
     <Compile Include="View\Card\IAssessmentCardWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

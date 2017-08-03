@@ -20,8 +20,8 @@
             <card:WordControl
                 x:Name="WordControl"
                 Margin="5 0 0 0"
-                FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
-                FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:WordsControl}}"
+                FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=card:WordsControl}}"
+                FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=card:WordsControl}}"
                 DataContext="{Binding}" />
             <DataTemplate.Triggers>
                 <DataTrigger

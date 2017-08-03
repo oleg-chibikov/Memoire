@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -16,7 +17,6 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
@@ -34,6 +34,9 @@ namespace Remembrance.ViewModel.Settings
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl, IDisposable
     {
         [NotNull]
+        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+
+        [NotNull]
         private readonly SynchronizedObservableCollection<TranslationEntryViewModel> _translationList;
 
         public DictionaryViewModel(
@@ -43,7 +46,7 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessenger messenger,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory)
@@ -129,7 +132,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
+        private readonly ViewModelAdapter _viewModelAdapter;
 
         [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
@@ -163,18 +166,19 @@ namespace Remembrance.ViewModel.Settings
                     _viewModelAdapter.Adapt(translationInfo.TranslationEntry, existing);
                 }
                 //TODO: Sync context instead of dispather
-                Application.Current.Dispatcher.InvokeAsync(() => View.MoveCurrentTo(existing));
+                _syncContext.Post(x => View.MoveCurrentTo(existing), null);
                 Logger.Trace($"{existing} has been updated in the list");
             }
             else
             {
                 Logger.Trace($"Adding {translationEntryViewModel} to the list...");
-                Application.Current.Dispatcher.InvokeAsync(
-                    () =>
+                _syncContext.Post(
+                    x =>
                     {
                         _translationList.Add(translationEntryViewModel);
                         View.MoveCurrentToLast();
-                    });
+                    },
+                    null);
                 translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
                 Logger.Trace($"{translationEntryViewModel} has been added to the list...");
             }

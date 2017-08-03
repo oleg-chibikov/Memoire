@@ -9,11 +9,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
-    xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
-    xmlns:card1="clr-namespace:Remembrance.View.Card"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    xmlns:view="clr-namespace:Remembrance.View.Card"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=card:TranslationResultCardViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationResultCardViewModel}"
     SizeToContent="WidthAndHeight"
     ShowActivated="false"
     ShowInTaskbar="false"
@@ -60,7 +59,7 @@
                             <StackPanel
                                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                                 Orientation="Horizontal">
-                                <card1:WordControl
+                                <view:WordControl
                                     FontWeight="Bold"
                                     FontSize="{StaticResource BigFontSize}"
                                     DataContext="{Binding}" />
@@ -91,15 +90,15 @@
                                                     <TextBlock
                                                         FontSize="{StaticResource BigFontSize}"
                                                         Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
-                                                    <card1:WordControl
+                                                    <view:WordControl
                                                         FontSize="{StaticResource MediumFontSize}"
                                                         DataContext="{Binding}" />
-                                                    <card1:WordsControl
+                                                    <view:WordsControl
                                                         ItemsSource="{Binding Synonyms}"
                                                         FontSize="{StaticResource MediumFontSize}"
                                                         MaxWidth="{StaticResource WordsWidth}" />
                                                 </StackPanel>
-                                                <card1:WordsControl
+                                                <view:WordsControl
                                                     Foreground="IndianRed"
                                                     HorizontalAlignment="Left"
                                                     FontSize="{StaticResource SmallFontSize}"

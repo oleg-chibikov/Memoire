@@ -197,7 +197,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
-      <Name>Remembrance.View.Contracts</Name>
+      <Name>Remembrance.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
@@ -212,6 +212,7 @@
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
