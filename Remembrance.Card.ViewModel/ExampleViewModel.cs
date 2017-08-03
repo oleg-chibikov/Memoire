@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Remembrance.Card.ViewModel.Contracts.Data
+namespace Remembrance.Card.ViewModel
 {
     public sealed class ExampleViewModel : TextEntryViewModel
     {

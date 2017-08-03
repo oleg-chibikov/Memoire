@@ -14,8 +14,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View.Contracts;
-using Remembrance.Card.ViewModel.Contracts;
-using Remembrance.Card.ViewModel.Contracts.Data;
+using Remembrance.Card.ViewModel;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
@@ -330,11 +329,11 @@ namespace Remembrance.Settings.ViewModel
 
             var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(translationEntryViewModel);
             var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
-            var translationResultCardViewModel = _lifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            var translationResultCardViewModel = _lifetimeScope.Resolve<TranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
             var detailsWindow = _lifetimeScope.Resolve<ITranslationResultCardWindow>(
                 new TypedParameter(typeof(Window), dictionaryWindow),
-                new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
+                new TypedParameter(typeof(TranslationResultCardViewModel), translationResultCardViewModel));
             detailsWindow.Show();
         }
 

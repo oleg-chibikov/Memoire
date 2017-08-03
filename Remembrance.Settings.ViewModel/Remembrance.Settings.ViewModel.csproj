@@ -124,9 +124,9 @@
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
       <Name>Remembrance.Card.View.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Card.ViewModel.Contracts\Remembrance.Card.ViewModel.Contracts.csproj">
-      <Project>{9270FB5C-129F-447C-A4EA-A7E24F2B9D4C}</Project>
-      <Name>Remembrance.Card.ViewModel.Contracts</Name>
+    <ProjectReference Include="..\Remembrance.Card.ViewModel\Remembrance.Card.ViewModel.csproj">
+      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
+      <Name>Remembrance.Card.ViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
       <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>

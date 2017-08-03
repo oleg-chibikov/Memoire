@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Remembrance.Card.ViewModel.Contracts.Data
+namespace Remembrance.Card.ViewModel
 {
     public delegate bool TextChangedEventHandler(object sender, TextChangedEventArgs e);
 

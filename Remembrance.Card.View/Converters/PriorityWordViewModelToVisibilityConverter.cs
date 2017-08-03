@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using JetBrains.Annotations;
-using Remembrance.Card.ViewModel.Contracts.Data;
+using Remembrance.Card.ViewModel;
 using Scar.Common.WPF.Converters;
 
 namespace Remembrance.Card.View.Converters

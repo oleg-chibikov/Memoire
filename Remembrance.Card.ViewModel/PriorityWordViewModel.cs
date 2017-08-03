@@ -14,10 +14,9 @@ using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
 using Scar.Common.WPF.Commands;
 
-namespace Remembrance.Card.ViewModel.Contracts.Data
+namespace Remembrance.Card.ViewModel
 {
     //TODO: Simplify Model
-    //TODO: Move to ViewModel instead of contracts
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
     public class PriorityWordViewModel : WordViewModel

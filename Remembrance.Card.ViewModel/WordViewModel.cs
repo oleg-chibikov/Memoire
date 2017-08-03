@@ -8,7 +8,7 @@ using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.Translate.Contracts.Interfaces;
 using Scar.Common.WPF.Commands;
 
-namespace Remembrance.Card.ViewModel.Contracts.Data
+namespace Remembrance.Card.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class WordViewModel : TextEntryViewModel

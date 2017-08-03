@@ -14,7 +14,6 @@ using Remembrance.Card.Management;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View;
 using Remembrance.Card.ViewModel;
-using Remembrance.Card.ViewModel.Contracts.Data;
 using Remembrance.DAL;
 using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
@@ -134,11 +133,10 @@ namespace Remembrance
             builder.RegisterType<OpenFileService>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<SaveFileService>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardViewModel).Assembly).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardViewModel).Assembly).AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(SettingsViewModel).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(SettingsWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(WordViewModel).Assembly).AsSelf().InstancePerDependency();
 
             builder.RegisterModule<LoggingModule>();
 

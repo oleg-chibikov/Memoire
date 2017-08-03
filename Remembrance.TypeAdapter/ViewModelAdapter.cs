@@ -2,7 +2,7 @@
 using Autofac;
 using JetBrains.Annotations;
 using Mapster;
-using Remembrance.Card.ViewModel.Contracts.Data;
+using Remembrance.Card.ViewModel;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.TypeAdapter.Contracts;

@@ -61,12 +61,16 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.5\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.Notification, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.Notification.1.0.4\lib\net462\Scar.Common.Notification.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.Commands, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Commands.1.0.1\lib\net462\Scar.Common.WPF.Commands.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.ViewModel.1.0.1\lib\net462\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
@@ -88,13 +92,24 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssessmentCardViewModel.cs" />
+    <Compile Include="ExampleViewModel.cs" />
+    <Compile Include="PartOfSpeechTranslationViewModel.cs" />
+    <Compile Include="PriorityWordLink.cs" />
+    <Compile Include="PriorityWordViewModel.cs" />
+    <Compile Include="TextChangedEventArgs.cs" />
+    <Compile Include="TextEntryViewModel.cs" />
+    <Compile Include="TranslationDetailsViewModel.cs" />
+    <Compile Include="TranslationEntryViewModel.cs" />
+    <Compile Include="TranslationResultViewModel.cs" />
+    <Compile Include="TranslationVariantViewModel.cs" />
+    <Compile Include="WordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranslationResultCardViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.ViewModel.Contracts\Remembrance.Card.ViewModel.Contracts.csproj">
-      <Project>{9270FB5C-129F-447C-A4EA-A7E24F2B9D4C}</Project>
-      <Name>Remembrance.Card.ViewModel.Contracts</Name>
+    <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">
+      <Project>{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}</Project>
+      <Name>Remembrance.Card.Management.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
       <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>

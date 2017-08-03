@@ -6,7 +6,7 @@ using Remembrance.DAL.Contracts;
 using Remembrance.Translate.Contracts.Interfaces;
 using Remembrance.TypeAdapter.Contracts;
 
-namespace Remembrance.Card.ViewModel.Contracts.Data
+namespace Remembrance.Card.ViewModel
 {
     public sealed class TranslationVariantViewModel : PriorityWordViewModel
     {

@@ -3,8 +3,6 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.ViewModel.Contracts;
-using Remembrance.Card.ViewModel.Contracts.Data;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
 using Remembrance.TypeAdapter.Contracts;
@@ -14,7 +12,7 @@ namespace Remembrance.Card.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationResultCardViewModel : ITranslationResultCardViewModel
+    public sealed class TranslationResultCardViewModel
     {
         [NotNull]
         private readonly ILog _logger;

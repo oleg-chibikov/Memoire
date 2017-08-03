@@ -6,18 +6,18 @@
     MaxHeight="800"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="clr-namespace:Remembrance.Card.ViewModel.Contracts.Data;assembly=Remembrance.Card.ViewModel.Contracts"
     x:Name="Word"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:converters="clr-namespace:Remembrance.Card.View.Converters"
+    xmlns:viewModel="clr-namespace:Remembrance.Card.ViewModel;assembly=Remembrance.Card.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=data:PriorityWordViewModel}">
+    d:DataContext="{d:DesignInstance d:Type=viewModel:PriorityWordViewModel}">
 
     <!--TODO: Separate view for priority word-->
     <UserControl.Resources>

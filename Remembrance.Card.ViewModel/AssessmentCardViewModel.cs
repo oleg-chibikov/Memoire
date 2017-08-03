@@ -7,8 +7,6 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.ViewModel.Contracts;
-using Remembrance.Card.ViewModel.Contracts.Data;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Remembrance.Resources;
@@ -26,7 +24,7 @@ namespace Remembrance.Card.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class AssessmentCardViewModel : IRequestCloseViewModel, IAssessmentCardViewModel
+    public sealed class AssessmentCardViewModel : IRequestCloseViewModel
     {
         [NotNull]
         private static readonly Random Random = new Random();

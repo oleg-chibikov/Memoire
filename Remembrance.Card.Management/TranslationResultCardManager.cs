@@ -6,7 +6,7 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View.Contracts;
-using Remembrance.Card.ViewModel.Contracts;
+using Remembrance.Card.ViewModel;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Scar.Common;
@@ -31,9 +31,9 @@ namespace Remembrance.Card.Management
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             Logger.Trace($"Creating window for {translationInfo}...");
-            var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            var translationResultCardViewModel = LifetimeScope.Resolve<TranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(
-                new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel),
+                new TypedParameter(typeof(TranslationResultCardViewModel), translationResultCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
 
             Logger.Trace($"Closing window in {CloseTimeout}...");
