@@ -5,13 +5,12 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.Translate.Contracts.Interfaces;
-using Remembrance.TypeAdapter.Contracts;
 using Scar.Common.WPF.Commands;
 
 namespace Remembrance.ViewModel.Translation
@@ -34,13 +33,13 @@ namespace Remembrance.ViewModel.Translation
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
+        private readonly ViewModelAdapter _viewModelAdapter;
 
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger)

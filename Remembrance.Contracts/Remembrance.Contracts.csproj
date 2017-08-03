@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remembrance.Contracts</RootNamespace>
+    <AssemblyName>Remembrance.Contracts</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.DAL, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.5\lib\net462\Scar.Common.DAL.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="WPFLocalizeExtension, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="CardManagement\Data\ExchangeResult.cs" />
+    <Compile Include="CardManagement\IAssessmentCardManager.cs" />
+    <Compile Include="CardManagement\ICardsExchanger.cs" />
+    <Compile Include="CardManagement\IFileExporter.cs" />
+    <Compile Include="CardManagement\IFileImporter.cs" />
+    <Compile Include="CardManagement\ITranslationResultCardManager.cs" />
+    <Compile Include="CardManagement\IWordsProcessor.cs" />
+    <Compile Include="DAL\ISettingsRepository.cs" />
+    <Compile Include="DAL\ITranslationDetailsRepository.cs" />
+    <Compile Include="DAL\ITranslationEntryRepository.cs" />
+    <Compile Include="DAL\Model\RepeatType.cs" />
+    <Compile Include="DAL\Model\RepeatTypeSettings.cs" />
+    <Compile Include="DAL\Model\Settings.cs" />
+    <Compile Include="DAL\Model\TranslationDetails.cs" />
+    <Compile Include="DAL\Model\TranslationEntry.cs" />
+    <Compile Include="DAL\Model\TranslationEntryKey.cs" />
+    <Compile Include="DAL\Model\TranslationInfo.cs" />
+    <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
+    <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
+    <Compile Include="Translate\Data\TextToSpeechPlayer\Format.cs" />
+    <Compile Include="Translate\Data\TextToSpeechPlayer\Speaker.cs" />
+    <Compile Include="Translate\Data\TextToSpeechPlayer\VoiceEmotion.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\Example.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\PartOfSpeech.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\PartOfSpeechTranslation.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\PriorityWord.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\TextEntry.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\TranslationResult.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\TranslationVariant.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\Word.cs" />
+    <Compile Include="Translate\ILanguageDetector.cs" />
+    <Compile Include="Translate\ITextToSpeechPlayer.cs" />
+    <Compile Include="Translate\IWordsTranslator.cs" />
+    <Compile Include="View\Card\ITranslationResultCardWindow.cs" />
+    <Compile Include="View\Card\IAssessmentCardWindow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Settings\IAddTranslationWindow.cs" />
+    <Compile Include="View\Settings\IDictionaryWindow.cs" />
+    <Compile Include="View\Settings\ISettingsWindow.cs" />
+    <Compile Include="View\Settings\ISplashScreenWindow.cs" />
+    <Compile Include="View\Settings\ITrayWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

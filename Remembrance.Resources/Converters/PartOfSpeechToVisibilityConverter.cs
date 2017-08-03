@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Data;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Converters;
 
 namespace Remembrance.Resources.Converters

@@ -54,6 +54,9 @@
     <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Mapster, Version=3.1.1.0, Culture=neutral, PublicKeyToken=2f39883af23c29a8, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Mapster.3.1.1\lib\net45\Mapster.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -126,35 +129,16 @@
     <Compile Include="Translation\WordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Card\TranslationResultCardViewModel.cs" />
+    <Compile Include="ViewModelAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">
-      <Project>{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}</Project>
-      <Name>Remembrance.Card.Management.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Card.View.Contracts\Remembrance.Card.View.Contracts.csproj">
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
-      <Name>Remembrance.Card.View.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
-      <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
-      <Name>Remembrance.DAL.Contracts</Name>
+      <Name>Remembrance.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Settings.View.Contracts\Remembrance.Settings.View.Contracts.csproj">
-      <Project>{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}</Project>
-      <Name>Remembrance.Settings.View.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
-      <Project>{49CAA383-F68F-4105-ABAE-869D71F0D783}</Project>
-      <Name>Remembrance.Translate.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.TypeAdapter.Contracts\Remembrance.TypeAdapter.Contracts.csproj">
-      <Project>{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}</Project>
-      <Name>Remembrance.TypeAdapter.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

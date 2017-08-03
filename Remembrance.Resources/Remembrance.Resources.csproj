@@ -118,16 +118,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
-      <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
-      <Name>Remembrance.DAL.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
-      <Project>{49CAA383-F68F-4105-ABAE-869D71F0D783}</Project>
-      <Name>Remembrance.Translate.Contracts</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
@@ -159,6 +149,12 @@
   <ItemGroup>
     <Resource Include="Images\IconInactive.ico" />
     <Resource Include="Images\IconInactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
+      <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
+      <Name>Remembrance.Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

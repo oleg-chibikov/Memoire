@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using JetBrains.Annotations;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL.Model;
 using Scar.Common;
 
 namespace Remembrance.Resources.Converters

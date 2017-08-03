@@ -3,9 +3,8 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
-using Remembrance.TypeAdapter.Contracts;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Localization;
 
@@ -18,7 +17,7 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private readonly ILog _logger;
 
-        public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] IViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger)
+        public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] ViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));

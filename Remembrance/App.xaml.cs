@@ -10,16 +10,13 @@ using Autofac;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.Card.View;
+using Remembrance.Card.Management.CardManagement;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.View.Settings;
 using Remembrance.DAL;
-using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
-using Remembrance.Settings.View;
-using Remembrance.Settings.View.Contracts;
-using Remembrance.Translate.Yandex;
-using Remembrance.TypeAdapter;
+using Remembrance.View.Card;
 using Remembrance.ViewModel.Card;
 using Remembrance.WebApi;
 using Scar.Common;
@@ -124,17 +121,14 @@ namespace Remembrance
             //TODO: Use Autofac Factory
             builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
             builder.RegisterType<Messenger>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(ViewModelAdapter).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(WordsTranslator).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
             builder.RegisterType<OpenFileService>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<SaveFileService>().AsImplementedInterfaces().SingleInstance();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardViewModel).Assembly).AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(SettingsWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
 
             builder.RegisterModule<LoggingModule>();
 

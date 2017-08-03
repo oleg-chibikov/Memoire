@@ -1,10 +1,9 @@
 ﻿using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.DAL.Contracts;
-using Remembrance.Translate.Contracts.Interfaces;
-using Remembrance.TypeAdapter.Contracts;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.Translate;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -14,7 +13,7 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger)

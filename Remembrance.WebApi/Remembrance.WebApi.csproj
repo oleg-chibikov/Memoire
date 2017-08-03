@@ -119,21 +119,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">
-      <Project>{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}</Project>
-      <Name>Remembrance.Card.Management.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
-      <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
-      <Name>Remembrance.DAL.Contracts</Name>
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
+      <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
+      <Name>Remembrance.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
-      <Project>{49CAA383-F68F-4105-ABAE-869D71F0D783}</Project>
-      <Name>Remembrance.Translate.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
