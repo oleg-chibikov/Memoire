@@ -8,6 +8,9 @@ namespace Remembrance.Settings.ViewModel.Contracts
         bool IsActive { get; }
 
         [NotNull]
+        ICommand AddTranslationCommand { get; }
+
+        [NotNull]
         ICommand ShowDictionaryCommand { get; }
 
         [NotNull]

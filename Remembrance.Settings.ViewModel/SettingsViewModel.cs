@@ -23,7 +23,7 @@ namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class SettingsViewModel : ISettingsViewModel, IRequestCloseViewModel, IDisposable
+    internal sealed class SettingsViewModel : ISettingsViewModel, IRequestCloseViewModel, IDisposable
     {
         [NotNull]
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();

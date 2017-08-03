@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows;
 using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
@@ -27,11 +28,11 @@ namespace Remembrance.Card.Management
         {
         }
 
-        protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
+        protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             Logger.Trace($"Creating window for {translationInfo}...");
             var translationResultCardViewModel = LifetimeScope.Resolve<ITranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel));
+            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(new TypedParameter(typeof(ITranslationResultCardViewModel), translationResultCardViewModel), new TypedParameter(typeof(Window), ownerWindow));
 
             Logger.Trace($"Closing window in {CloseTimeout}...");
             ActionExtensions.DoAfterAsync(

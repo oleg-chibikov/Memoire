@@ -14,6 +14,9 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=contracts:ITranslationResultCardViewModel}"
     SizeToContent="WidthAndHeight"
+    ShowActivated="false"
+    ShowInTaskbar="false"
+    Focusable="False"
     Icon="IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>

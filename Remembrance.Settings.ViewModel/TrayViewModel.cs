@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
@@ -18,7 +17,7 @@ namespace Remembrance.Settings.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TrayViewModel : ITrayViewModel
+    internal sealed class TrayViewModel : ITrayViewModel
     {
         [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
@@ -28,6 +27,9 @@ namespace Remembrance.Settings.ViewModel
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
+
+        [NotNull]
+        private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         [NotNull]
         private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;
@@ -41,15 +43,18 @@ namespace Remembrance.Settings.ViewModel
         public TrayViewModel(
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
+            [NotNull] WindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] WindowFactory<ISettingsWindow> settingsWindowFactory,
             [NotNull] WindowFactory<ISplashScreenWindow> splashScreenWindowFactory)
         {
             _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
+            _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            AddTranslationCommand = new CorrelationCommand(AddTranslation);
             ShowSettingsCommand = new CorrelationCommand(ShowSettings);
             ShowDictionaryCommand = new CorrelationCommand(ShowDictionary);
             ToggleActiveCommand = new CorrelationCommand(ToggleActive);
@@ -65,6 +70,8 @@ namespace Remembrance.Settings.ViewModel
 
         #region Commands
 
+        public ICommand AddTranslationCommand { get; }
+
         public ICommand ShowDictionaryCommand { get; }
 
         public ICommand ShowSettingsCommand { get; }
@@ -77,14 +84,21 @@ namespace Remembrance.Settings.ViewModel
 
         #region Command handlers
 
+        private void AddTranslation()
+        {
+            _logger.Info("Showing Add Translation window...");
+            lock (_windowLocker)
+            {
+                _addTranslationWindowFactory.GetOrCreateWindow().Restore();
+            }
+        }
+
         private void ShowSettings()
         {
             _logger.Info("Showing settings...");
             lock (_windowLocker)
             {
-                var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
-                var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-                _settingsWindowFactory.GetOrCreateWindow(dictionaryWindowParameter).Restore();
+                _settingsWindowFactory.GetOrCreateWindow().Restore();
             }
         }
 

@@ -12,9 +12,11 @@ using Remembrance.Translate.Contracts.Data.WordsTranslator;
 using Remembrance.Translate.Contracts.Interfaces;
 using Scar.Common.Exceptions;
 using Scar.Common.WPF.Localization;
+using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Card.Management
 {
+    //TODO: Think about class interface - it is not clear now
     [UsedImplicitly]
     internal sealed class WordsProcessor : IWordsProcessor
     {
@@ -92,35 +94,16 @@ namespace Remembrance.Card.Management
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
-        public bool ProcessNewWord(string word, string sourceLanguage, string targetLanguage, bool showCard)
+        public bool ProcessNewWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
         {
-            _logger.Info($"Processing word {word}...");
-            if (word == null)
-                throw new ArgumentNullException(nameof(word));
+            _logger.Info($"Processing word {text}...");
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
 
-            TranslationInfo translationInfo;
-            try
-            {
-                translationInfo = AddWord(word, sourceLanguage, targetLanguage, null);
-            }
-            catch (LocalizableException ex)
-            {
-                _logger.Warn(ex.Message);
-                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                _logger.Warn($"Word {word} has not been processed");
-                return false;
-            }
-
-            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
-
-            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
-            if (showCard)
-                _cardManager.ShowCard(translationInfo);
-            _logger.Trace($"Word {word} has been processed");
-            return true;
+            return ProcessWordInternal(null, text, sourceLanguage, targetLanguage, ownerWindow);
         }
 
-        public bool ChangeWord(object id, string text, string sourceLanguage, string targetLanguage, bool showCard)
+        public bool ChangeWord(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
         {
             _logger.Info($"Changing text for {text} for word {id}...");
             if (id == null)
@@ -132,6 +115,11 @@ namespace Remembrance.Card.Management
             if (targetLanguage == null)
                 throw new ArgumentNullException(nameof(targetLanguage));
 
+            return ProcessWordInternal(id, text, sourceLanguage, targetLanguage, ownerWindow);
+        }
+
+        private bool ProcessWordInternal(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        {
             TranslationInfo translationInfo;
             try
             {
@@ -141,17 +129,20 @@ namespace Remembrance.Card.Management
             {
                 _logger.Warn(ex.Message);
                 _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                _logger.Warn($"Text was not changed for word {id}");
+                _logger.Warn($"Processing failed for word {text}");
                 return false;
             }
 
-            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
-
-            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
-            if (showCard)
-                _cardManager.ShowCard(translationInfo);
-            _logger.Trace($"Text has been changed for word {id}");
+            PostProcessWord(ownerWindow, translationInfo);
+            _logger.Trace($"Processing finished for word {text}");
             return true;
+        }
+
+        private void PostProcessWord(IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
+        {
+            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _cardManager.ShowCard(translationInfo, ownerWindow);
         }
 
         public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)

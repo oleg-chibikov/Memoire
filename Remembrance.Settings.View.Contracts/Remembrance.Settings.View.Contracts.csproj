@@ -34,6 +34,7 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IAddTranslationWindow.cs" />
     <Compile Include="ISplashScreenWindow.cs" />
     <Compile Include="ITrayWindow.cs" />
     <Compile Include="ISettingsWindow.cs" />

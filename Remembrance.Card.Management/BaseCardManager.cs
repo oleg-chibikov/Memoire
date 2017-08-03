@@ -31,12 +31,12 @@ namespace Remembrance.Card.Management
             SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
-        public void ShowCard(TranslationInfo translationInfo)
+        public void ShowCard(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             Application.Current.Dispatcher.Invoke(
                 () =>
                 {
-                    var window = TryCreateWindow(translationInfo);
+                    var window = TryCreateWindow(translationInfo, ownerWindow);
                     if (window == null)
                     {
                         Logger.Trace($"No window to show for {translationInfo}");
@@ -48,13 +48,14 @@ namespace Remembrance.Card.Management
                     CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
                     window.SizeChanged += Window_SizeChanged;
                     window.Closed += Window_Closed;
-                    window.Topmost = true;
+                    window.WindowStartupLocation = WindowStartupLocation.Manual;
+                    //window.Topmost = true;
                     window.Show();
                 });
         }
 
         [CanBeNull]
-        protected abstract IWindow TryCreateWindow([NotNull] TranslationInfo translationInfo);
+        protected abstract IWindow TryCreateWindow([NotNull] TranslationInfo translationInfo, IWindow ownerWindow);
 
         private static void Window_Closed(object sender, EventArgs e)
         {

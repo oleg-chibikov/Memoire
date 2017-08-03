@@ -44,9 +44,11 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Data\Language.cs" />
+    <Compile Include="IAddTranslationViewModel.cs" />
     <Compile Include="IDictionaryViewModel.cs" />
     <Compile Include="ISettingsViewModel.cs" />
     <Compile Include="ITrayViewModel.cs" />
+    <Compile Include="IWithAddTranslationControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

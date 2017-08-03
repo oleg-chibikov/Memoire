@@ -100,7 +100,7 @@ namespace Remembrance.Card.Management
 
                         var translationInfo = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
                         Logger.Trace($"Trying to show {translationInfo}...");
-                        ShowCard(translationInfo);
+                        ShowCard(translationInfo, null);
                     });
         }
 
@@ -111,7 +111,7 @@ namespace Remembrance.Card.Management
             _interval = CreateInterval(freq);
         }
 
-        protected override IWindow TryCreateWindow(TranslationInfo translationInfo)
+        protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             if (_hasOpenWindows)
             {
@@ -125,7 +125,7 @@ namespace Remembrance.Card.Management
             _translationEntryRepository.Save(translationInfo.TranslationEntry);
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             var assessmentViewModel = LifetimeScope.Resolve<IAssessmentCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var window = LifetimeScope.Resolve<IAssessmentCardWindow>(new TypedParameter(typeof(IAssessmentCardViewModel), assessmentViewModel));
+            var window = LifetimeScope.Resolve<IAssessmentCardWindow>(new TypedParameter(typeof(IAssessmentCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
             window.Closed += Window_Closed;
             _hasOpenWindows = true;
             return window;

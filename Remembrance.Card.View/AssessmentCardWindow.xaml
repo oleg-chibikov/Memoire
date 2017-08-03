@@ -20,6 +20,7 @@
     d:DataContext="{d:DesignInstance contracts:IAssessmentCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
+    ShowInTaskbar="false"
     Icon="IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
