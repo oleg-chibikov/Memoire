@@ -10,7 +10,7 @@
     xmlns:view="clr-namespace:Remembrance.Card.View"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.Card.ViewModel;assembly=Remembrance.Card.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationResultCardViewModel}"
     SizeToContent="WidthAndHeight"

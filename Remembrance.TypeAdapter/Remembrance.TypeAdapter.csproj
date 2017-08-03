@@ -75,10 +75,6 @@
     <Compile Include="ViewModelAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.ViewModel\Remembrance.Card.ViewModel.csproj">
-      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
-      <Name>Remembrance.Card.ViewModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
       <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
       <Name>Remembrance.DAL.Contracts</Name>
@@ -90,6 +86,10 @@
     <ProjectReference Include="..\Remembrance.TypeAdapter.Contracts\Remembrance.TypeAdapter.Contracts.csproj">
       <Project>{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}</Project>
       <Name>Remembrance.TypeAdapter.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
+      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
+      <Name>Remembrance.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

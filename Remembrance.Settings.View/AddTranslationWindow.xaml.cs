@@ -1,14 +1,14 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Remembrance.ViewModel.Settings;
 using Remembrance.Settings.View.Contracts;
-using Remembrance.Settings.ViewModel.Contracts;
 
 namespace Remembrance.Settings.View
 {
     [UsedImplicitly]
     internal sealed partial class AddTranslationWindow : IAddTranslationWindow
     {
-        public AddTranslationWindow([NotNull] IAddTranslationViewModel viewModel)
+        public AddTranslationWindow([NotNull] AddTranslationViewModel viewModel)
         {
             DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             InitializeComponent();

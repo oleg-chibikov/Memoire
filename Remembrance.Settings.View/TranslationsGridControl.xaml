@@ -10,14 +10,14 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:cardView="clr-namespace:Remembrance.Card.View;assembly=Remembrance.Card.View"
     xmlns:dalContracts="clr-namespace:Remembrance.DAL.Contracts.Model;assembly=Remembrance.DAL.Contracts"
-    xmlns:contracts="clr-namespace:Remembrance.Settings.ViewModel.Contracts;assembly=Remembrance.Settings.ViewModel.Contracts"
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=contracts:IDictionaryViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000">
     <UserControl.Resources>

@@ -13,15 +13,14 @@ using JetBrains.Annotations;
 using Remembrance.Card.Management;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View;
-using Remembrance.Card.ViewModel;
 using Remembrance.DAL;
 using Remembrance.DAL.Contracts;
 using Remembrance.Resources;
 using Remembrance.Settings.View;
 using Remembrance.Settings.View.Contracts;
-using Remembrance.Settings.ViewModel;
 using Remembrance.Translate.Yandex;
 using Remembrance.TypeAdapter;
+using Remembrance.ViewModel;
 using Remembrance.WebApi;
 using Scar.Common;
 using Scar.Common.IO;
@@ -135,7 +134,6 @@ namespace Remembrance
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardViewModel).Assembly).AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(SettingsViewModel).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(SettingsWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
 
             builder.RegisterModule<LoggingModule>();

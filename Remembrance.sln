@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.TypeAdapter", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.TypeAdapter.Contracts", "Remembrance.TypeAdapter.Contracts\Remembrance.TypeAdapter.Contracts.csproj", "{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.ViewModel", "Remembrance.Settings.ViewModel\Remembrance.Settings.ViewModel.csproj", "{DF08286C-C5AD-4448-B300-FD9604CB82AA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.View.Contracts", "Remembrance.Settings.View.Contracts\Remembrance.Settings.View.Contracts.csproj", "{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer", "Remembrance.Installer\Remembrance.Installer.csproj", "{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}"
@@ -25,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer", "Re
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.View", "Remembrance.Settings.View\Remembrance.Settings.View.csproj", "{932314DA-0883-4B24-86F9-5888B3214BF5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Card.ViewModel", "Remembrance.Card.ViewModel\Remembrance.Card.ViewModel.csproj", "{75074E3A-94AF-42CA-B90A-B1F194D7D812}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Card.View", "Remembrance.Card.View\Remembrance.Card.View.csproj", "{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}"
 EndProject
@@ -38,8 +34,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.WebApi", "Remem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.DAL.Contracts", "Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj", "{D6F29365-32E8-4EBA-B202-A1F96013F76F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Settings.ViewModel.Contracts", "Remembrance.Settings.ViewModel.Contracts\Remembrance.Settings.ViewModel.Contracts.csproj", "{7E9D21F9-B748-479E-83A2-E8665C1A37E6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Card.Management.Contracts", "Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj", "{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance", "Remembrance\Remembrance.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
@@ -48,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Installer.UI", 
 	ProjectSection(ProjectDependencies) = postProject
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26} = {A2E7DAAE-8DF9-42AE-A433-8810248A0E26}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.ViewModel", "Remembrance.ViewModel\Remembrance.ViewModel.csproj", "{75074E3A-94AF-42CA-B90A-B1F194D7D812}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +75,6 @@ Global
 		{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF7D2FDC-779F-42C5-B5AB-B5617EAB3DAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF08286C-C5AD-4448-B300-FD9604CB82AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF08286C-C5AD-4448-B300-FD9604CB82AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF08286C-C5AD-4448-B300-FD9604CB82AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF08286C-C5AD-4448-B300-FD9604CB82AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -95,10 +87,6 @@ Global
 		{932314DA-0883-4B24-86F9-5888B3214BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{932314DA-0883-4B24-86F9-5888B3214BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{932314DA-0883-4B24-86F9-5888B3214BF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -119,10 +107,6 @@ Global
 		{D6F29365-32E8-4EBA-B202-A1F96013F76F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F29365-32E8-4EBA-B202-A1F96013F76F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F29365-32E8-4EBA-B202-A1F96013F76F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E9D21F9-B748-479E-83A2-E8665C1A37E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -135,6 +119,10 @@ Global
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

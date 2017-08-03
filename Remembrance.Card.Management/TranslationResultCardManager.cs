@@ -6,7 +6,7 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.View.Contracts;
-using Remembrance.Card.ViewModel;
+using Remembrance.ViewModel;
 using Remembrance.DAL.Contracts;
 using Remembrance.DAL.Contracts.Model;
 using Scar.Common;
