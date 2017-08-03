@@ -183,25 +183,13 @@
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Card.Management.Contracts\Remembrance.Card.Management.Contracts.csproj">
-      <Project>{4757AF83-9C03-4CEC-AEEC-A7C0AB08BA1A}</Project>
-      <Name>Remembrance.Card.Management.Contracts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.Card.Management\Remembrance.Card.Management.csproj">
       <Project>{A10C7E6D-D616-4B99-8BB2-A43035346099}</Project>
       <Name>Remembrance.Card.Management</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Card.View.Contracts\Remembrance.Card.View.Contracts.csproj">
-      <Project>{a4dad214-a08f-4a0e-8e26-f7fbcda801fe}</Project>
-      <Name>Remembrance.Card.View.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Card.View\Remembrance.Card.View.csproj">
-      <Project>{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}</Project>
-      <Name>Remembrance.Card.View</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.DAL.Contracts\Remembrance.DAL.Contracts.csproj">
-      <Project>{D6F29365-32E8-4EBA-B202-A1F96013F76F}</Project>
-      <Name>Remembrance.DAL.Contracts</Name>
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
+      <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
+      <Name>Remembrance.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.DAL\Remembrance.DAL.csproj">
       <Project>{AEA2E53B-FA60-40EB-BEC2-E48990D09BA0}</Project>
@@ -211,25 +199,9 @@
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Settings.View.Contracts\Remembrance.Settings.View.Contracts.csproj">
-      <Project>{D6A06ED6-A8AE-4018-A9DA-CDAC13A42912}</Project>
-      <Name>Remembrance.Settings.View.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Settings.View\Remembrance.Settings.View.csproj">
-      <Project>{932314DA-0883-4B24-86F9-5888B3214BF5}</Project>
-      <Name>Remembrance.Settings.View</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.Translate.Contracts\Remembrance.Translate.Contracts.csproj">
-      <Project>{49caa383-f68f-4105-abae-869d71f0d783}</Project>
-      <Name>Remembrance.Translate.Contracts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remembrance.Translate.Yandex\Remembrance.Translate.Yandex.csproj">
       <Project>{1FA9CAC8-4037-4781-AD36-3A515470AA8C}</Project>
       <Name>Remembrance.Translate.Yandex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.TypeAdapter.Contracts\Remembrance.TypeAdapter.Contracts.csproj">
-      <Project>{bf7d2fdc-779f-42c5-b5ab-b5617eab3dac}</Project>
-      <Name>Remembrance.TypeAdapter.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.TypeAdapter\Remembrance.TypeAdapter.csproj">
       <Project>{57152DA4-C73F-4697-8CB7-62CE3CE24797}</Project>
@@ -238,6 +210,10 @@
     <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
       <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
       <Name>Remembrance.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.View\Remembrance.View.csproj">
+      <Project>{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}</Project>
+      <Name>Remembrance.View</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remembrance.WebApi\Remembrance.WebApi.csproj">
       <Project>{14958824-6559-4EDE-9954-42E5A22B2144}</Project>

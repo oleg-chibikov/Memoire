@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="Remembrance.View.Settings.AddTranslationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary
+            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+    </UserControl.Resources>
+    <StackPanel
+        Orientation="Horizontal"
+        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+        <TextBlock
+            Text="{lex:Loc Translate}" />
+        <TextBox
+            Width="200"
+            Text="{Binding NewItemSource, UpdateSourceTrigger=PropertyChanged}"
+            Name="WordTextBox">
+            <TextBox.InputBindings>
+                <KeyBinding
+                    Command="{Binding SaveCommand}"
+                    Key="Enter"
+                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+            </TextBox.InputBindings>
+        </TextBox>
+
+        <TextBlock
+            Text="{lex:Loc From}" />
+        <ComboBox
+            IsSynchronizedWithCurrentItem="True"
+            DisplayMemberPath="DisplayName"
+            SelectedValuePath="Code"
+            ItemsSource="{Binding AvailableSourceLanguages}"
+            SelectedItem="{Binding SelectedSourceLanguage}" />
+
+        <TextBlock
+            Text="{lex:Loc To}" />
+        <ComboBox
+            IsSynchronizedWithCurrentItem="True"
+            DisplayMemberPath="DisplayName"
+            SelectedValuePath="Code"
+            ItemsSource="{Binding AvailableTargetLanguages}"
+            SelectedItem="{Binding SelectedTargetLanguage}" />
+        <Button
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc AddTranslation}"
+            Command="{Binding SaveCommand}"
+            CommandParameter="{Binding Text, ElementName=WordTextBox}">
+            <materialDesign:PackIcon
+                Kind="NotePlus" />
+        </Button>
+    </StackPanel>
+</UserControl>

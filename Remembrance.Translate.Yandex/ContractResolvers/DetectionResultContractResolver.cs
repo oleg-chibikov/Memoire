@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Remembrance.Translate.Contracts.Data.LanguageDetector;
+using Remembrance.Contracts.Translate.Data.LanguageDetector;
 
 namespace Remembrance.Translate.Yandex.ContractResolvers
 {

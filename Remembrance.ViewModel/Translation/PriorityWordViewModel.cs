@@ -5,13 +5,13 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.Translate.Contracts.Interfaces;
-using Remembrance.TypeAdapter.Contracts;
 using Scar.Common.WPF.Commands;
 
 namespace Remembrance.ViewModel.Translation

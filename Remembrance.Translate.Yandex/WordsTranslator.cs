@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.Translate.Contracts.Interfaces;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Translate.Yandex.ContractResolvers;
 
 namespace Remembrance.Translate.Yandex

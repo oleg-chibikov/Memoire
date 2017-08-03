@@ -3,9 +3,9 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Resources;
-using Remembrance.TypeAdapter.Contracts;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Localization;
 

@@ -2,9 +2,9 @@
 using Autofac;
 using JetBrains.Annotations;
 using Mapster;
-using Remembrance.DAL.Contracts.Model;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.TypeAdapter.Contracts;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Contracts.TypeAdapter;
 using Remembrance.ViewModel.Translation;
 
 namespace Remembrance.TypeAdapter

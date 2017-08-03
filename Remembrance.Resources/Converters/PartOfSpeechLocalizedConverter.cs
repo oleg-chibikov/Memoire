@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using JetBrains.Annotations;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Resources.Converters

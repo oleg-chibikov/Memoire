@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Translate.Yandex.JsonConverters;
 
 namespace Remembrance.Translate.Yandex.ContractResolvers

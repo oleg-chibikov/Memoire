@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.Translate.Contracts.Interfaces;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.Translate;
 
 namespace Remembrance.ViewModel.Translation
 {

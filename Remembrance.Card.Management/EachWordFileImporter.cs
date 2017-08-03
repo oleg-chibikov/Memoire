@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.Management.Data;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Interfaces;
 
 namespace Remembrance.Card.Management
 {

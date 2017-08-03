@@ -2,10 +2,10 @@
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
 using Remembrance.Card.Management.Data;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Card.Management
 {

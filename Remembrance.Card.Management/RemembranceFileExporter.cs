@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Common.Logging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.Card.Management.Contracts.Data;
 using Remembrance.Card.Management.Data;
-using Remembrance.DAL.Contracts;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.CardManagement.Data;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Card.Management
 {

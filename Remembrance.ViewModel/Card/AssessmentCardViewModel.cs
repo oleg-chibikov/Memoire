@@ -7,11 +7,11 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Contracts.TypeAdapter;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.TypeAdapter.Contracts;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -264,7 +264,7 @@ namespace Remembrance.ViewModel.Card
         /// <summary>
         /// Decide whether reverse translation is needed
         /// </summary>
-        private static bool IsReverse([NotNull] DAL.Contracts.Model.Settings settings)
+        private static bool IsReverse([NotNull] Contracts.DAL.Model.Settings settings)
         {
             var isReverse = false;
             if (settings.ReverseTranslation)
@@ -338,7 +338,7 @@ namespace Remembrance.ViewModel.Card
         /// Choose the single part of speech group
         /// </summary>
         [NotNull]
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> SelectSinglePartOfSpeechGroup([NotNull] DAL.Contracts.Model.Settings settings, [NotNull] TranslationResultViewModel translationResult)
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> SelectSinglePartOfSpeechGroup([NotNull] Contracts.DAL.Model.Settings settings, [NotNull] TranslationResultViewModel translationResult)
         {
             _logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();

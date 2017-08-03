@@ -1,10 +1,10 @@
 ﻿using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.DAL.Contracts;
-using Remembrance.Translate.Contracts.Interfaces;
-using Remembrance.TypeAdapter.Contracts;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.TypeAdapter;
 
 namespace Remembrance.ViewModel.Translation
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Translate.Yandex.JsonConverters
 {

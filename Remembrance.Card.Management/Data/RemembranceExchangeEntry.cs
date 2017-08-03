@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Card.Management.Data
 {

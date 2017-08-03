@@ -2,8 +2,8 @@
 using System.Linq;
 using Common.Logging;
 using JetBrains.Annotations;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 

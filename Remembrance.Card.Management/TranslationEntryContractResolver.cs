@@ -4,7 +4,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Card.Management
 {

@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.DAL.Contracts.Model;
-using Remembrance.Translate.Contracts.Interfaces;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate;
 using Scar.Common;
 using Scar.Common.Notification;
 

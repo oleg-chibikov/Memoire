@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows.Input;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Card.Management.Contracts;
-using Remembrance.Translate.Contracts.Data.WordsTranslator;
-using Remembrance.Translate.Contracts.Interfaces;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Commands;
 
 namespace Remembrance.ViewModel.Translation

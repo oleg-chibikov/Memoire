@@ -3,8 +3,8 @@ using System.Windows;
 using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
-using Remembrance.DAL.Contracts;
-using Remembrance.DAL.Contracts.Model;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 

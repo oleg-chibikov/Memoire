@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Common.Logging;
 using JetBrains.Annotations;
 using NAudio.Wave;
-using Remembrance.DAL.Contracts;
+using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
-using Remembrance.Translate.Contracts.Data.TextToSpeechPlayer;
-using Remembrance.Translate.Contracts.Interfaces;
 
 namespace Remembrance.Translate.Yandex
 {

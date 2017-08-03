@@ -1,7 +1,7 @@
 using System;
 using System.Web.Http;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.Contracts;
+using Remembrance.Contracts.CardManagement;
 
 namespace Remembrance.WebApi.Controllers
 {
