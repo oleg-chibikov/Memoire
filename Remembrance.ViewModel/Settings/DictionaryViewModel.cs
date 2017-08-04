@@ -347,7 +347,7 @@ namespace Remembrance.ViewModel.Settings
             Logger.Trace("Opening settings...");
             var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            _lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().GetOrCreateWindow(dictionaryWindowParameter).Restore();
+            _lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>().ShowWindow(dictionaryWindowParameter);
         }
 
         private void Search([CanBeNull] string text)

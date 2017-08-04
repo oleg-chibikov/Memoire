@@ -110,8 +110,8 @@
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.WindowFactory.1.0.3\lib\net462\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.WindowFactory.1.0.11\lib\net462\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

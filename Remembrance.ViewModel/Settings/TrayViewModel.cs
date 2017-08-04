@@ -8,7 +8,6 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.View.Settings;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.View;
-using Scar.Common.WPF.View.Contracts;
 
 //TODO: Set all bindings mode manually
 
@@ -35,9 +34,6 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         private readonly WindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
-
-        [NotNull]
-        private readonly object _windowLocker = new object();
 
         public TrayViewModel(
             [NotNull] ISettingsRepository settingsRepository,
@@ -86,51 +82,19 @@ namespace Remembrance.ViewModel.Settings
         private void AddTranslation()
         {
             _logger.Info("Showing Add Translation window...");
-            lock (_windowLocker)
-            {
-                _addTranslationWindowFactory.GetOrCreateWindow().Restore();
-            }
+            _addTranslationWindowFactory.ShowWindow();
         }
 
         private void ShowSettings()
         {
             _logger.Info("Showing settings...");
-            lock (_windowLocker)
-            {
-                _settingsWindowFactory.GetOrCreateWindow().Restore();
-            }
+            _settingsWindowFactory.ShowWindow();
         }
 
         private void ShowDictionary()
         {
             _logger.Info("Showing dictionary...");
-            lock (_windowLocker)
-            {
-                var dictionaryWindow = _dictionaryWindowFactory.GetWindowIfExists();
-                ShowWithSplash(dictionaryWindow, _dictionaryWindowFactory);
-            }
-        }
-
-        private void ShowWithSplash<TWindow>([CanBeNull] TWindow window, [NotNull] WindowFactory<TWindow> windowFactory)
-            where TWindow : class, IWindow
-        {
-            if (window == null)
-            {
-                window = windowFactory.GetOrCreateWindow();
-                var splashScreenWindow = _splashScreenWindowFactory.GetOrCreateWindow();
-
-                splashScreenWindow.Show();
-
-                void LoadedHandler(object s, RoutedEventArgs e)
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    window.Loaded -= LoadedHandler;
-                    splashScreenWindow.Close();
-                }
-
-                window.Loaded += LoadedHandler;
-            }
-            window.Restore();
+            _dictionaryWindowFactory.ShowWindow(_splashScreenWindowFactory);
         }
 
         private void ToggleActive()
