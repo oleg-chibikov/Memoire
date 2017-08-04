@@ -4,7 +4,7 @@
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
-    public class Word : TextEntry
+    public class Word : TextEntry, IWord
     {
         [UsedImplicitly]
         public PartOfSpeech PartOfSpeech { get; set; }

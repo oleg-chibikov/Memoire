@@ -9,7 +9,7 @@ namespace Remembrance.Card.Management.CardManagement.Data
     [UsedImplicitly]
     internal sealed class RemembranceExchangeEntry : IExchangeEntry
     {
-        public RemembranceExchangeEntry([CanBeNull] HashSet<string> priorityTranslations, [NotNull] TranslationEntry translationEntry)
+        public RemembranceExchangeEntry([CanBeNull] HashSet<ExchangeWord> priorityTranslations, [NotNull] TranslationEntry translationEntry)
         {
             PriorityTranslations = priorityTranslations;
             TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
@@ -17,7 +17,7 @@ namespace Remembrance.Card.Management.CardManagement.Data
 
         [CanBeNull]
         [JsonProperty("PriorityTranslations", Required = Required.AllowNull)]
-        public HashSet<string> PriorityTranslations { get; }
+        public HashSet<ExchangeWord> PriorityTranslations { get; }
 
         [NotNull]
         [JsonProperty("TranslationEntry", Required = Required.Always)]

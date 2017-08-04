@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -11,7 +12,7 @@ using Scar.Common.WPF.Commands;
 namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel : TextEntryViewModel
+    public class WordViewModel : TextEntryViewModel, IWord
     {
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;

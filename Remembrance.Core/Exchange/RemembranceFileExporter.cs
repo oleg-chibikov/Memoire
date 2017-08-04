@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Card.Management.CardManagement;
 using Remembrance.Card.Management.CardManagement.Data;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
@@ -33,12 +34,17 @@ namespace Remembrance.Card.Management.Exchange
         [NotNull]
         private readonly IWordsProcessor _wordsProcessor;
 
+        [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsProcessor wordsProcessor)
+            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
         {
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -58,22 +64,22 @@ namespace Remembrance.Card.Management.Exchange
                     {
                         translationEntry.Translations = new PriorityWord[0];
                         var translationInfo = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
-                        var priorityWordsIds = new HashSet<string>();
+                        var priorityWords = new HashSet<ExchangeWord>(_wordsEqualityComparer);
                         foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                         {
                             if (translationVariant.IsPriority)
-                                priorityWordsIds.Add(translationVariant.Text);
+                                priorityWords.Add(new ExchangeWord(translationVariant));
                             if (translationVariant.Synonyms == null)
                                 continue;
 
                             foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.IsPriority))
-                                priorityWordsIds.Add(synonym.Text);
+                                priorityWords.Add(new ExchangeWord(synonym));
                         }
 
                         exportEntries.Add(
                             new RemembranceExchangeEntry(
-                                priorityWordsIds.Any()
-                                    ? priorityWordsIds
+                                priorityWords.Any()
+                                    ? priorityWords
                                     : null,
                                 translationEntry));
                     }

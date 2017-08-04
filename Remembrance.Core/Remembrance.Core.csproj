@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="CardManagement\AssessmentCardManager.cs" />
     <Compile Include="CardManagement\BaseCardManager.cs" />
+    <Compile Include="CardManagement\Data\ExchangeWord.cs" />
     <Compile Include="Exchange\CardsExchanger.cs" />
     <Compile Include="CardManagement\Data\IExchangeEntry.cs" />
     <Compile Include="CardManagement\Data\EachWordExchangeEntry.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Translation\Yandex\TextToSpeechPlayer.cs" />
     <Compile Include="Translation\Yandex\WordsTranslator.cs" />
     <Compile Include="Translation\Yandex\YandexConstants.cs" />
+    <Compile Include="WordsEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Scar.Common.WPF.Localization\Scar.Common.WPF.Localization.csproj">

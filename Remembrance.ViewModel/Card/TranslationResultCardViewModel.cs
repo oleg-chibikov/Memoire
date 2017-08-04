@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
@@ -17,7 +20,10 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private readonly ILog _logger;
 
-        public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] ViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger)
+        [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
+        public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] ViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger, [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
@@ -25,6 +31,7 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(viewModelAdapter));
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -39,17 +46,35 @@ namespace Remembrance.ViewModel.Card
 
         public string Word { get; }
 
+        [CanBeNull]
+        public PriorityWordViewModel GetWordInTranslationDetails(IWord word)
+        {
+            foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+            {
+                if (_wordsEqualityComparer.Equals(translationVariant,word))
+                    return translationVariant;
+
+                if (translationVariant.Synonyms == null)
+                    continue;
+
+                foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, word)))
+                    return synonym;
+            }
+
+            return null;
+        }
+
         private void OnPriorityChanged([NotNull] PriorityWordViewModel priorityWordViewModel)
         {
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationEntryViewModel?.Id ?? priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId;
+            var parentId = priorityWordViewModel.TranslationEntryId;
             if (parentId != TranslationDetails.TranslationEntryId)
                 return;
 
             _logger.Trace($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
-            var translation = TranslationDetails.GetWordInTranslationVariants(priorityWordViewModel.CorrelationId);
+            var translation = GetWordInTranslationDetails(priorityWordViewModel);
             if (translation != null)
             {
                 _logger.Trace($"Priority for {translation} is updated");

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -35,6 +37,9 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private readonly ViewModelAdapter _viewModelAdapter;
 
+        [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -42,23 +47,17 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
-            [NotNull] ILog logger)
+            [NotNull] ILog logger,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
             : base(textToSpeechPlayer, wordsProcessor)
         {
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
-        }
-
-        [DoNotNotify]
-        public Guid CorrelationId
-        {
-            get;
-            [UsedImplicitly]
-            set;
         }
 
         #region Commands
@@ -71,13 +70,7 @@ namespace Remembrance.ViewModel.Translation
 
         public bool IsPriority { get; set; }
 
-        [CanBeNull]
-        [DoNotNotify]
-        public TranslationEntryViewModel ParentTranslationEntryViewModel { get; set; }
-
-        [CanBeNull]
-        [DoNotNotify]
-        public TranslationDetailsViewModel ParentTranslationDetailsViewModel { get; set; }
+        public object TranslationEntryId { get; set; }
 
         private void Add([NotNull] TranslationEntry translationEntry)
         {
@@ -93,11 +86,11 @@ namespace Remembrance.ViewModel.Translation
         private PriorityWordViewModel GetCurrentCopy([NotNull] TranslationEntry translationEntry)
         {
             var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
-            var word = translationEntryViewModel.Translations.Single(x => x.CorrelationId == CorrelationId);
+            var word = translationEntryViewModel.Translations.Single(x => _wordsEqualityComparer.Equals(x, this));
             return word;
         }
 
-        private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
+        private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationResult translationResult)
         {
             _logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
             translationEntry.Translations.Remove(wordInTranslationEntry);
@@ -105,7 +98,7 @@ namespace Remembrance.ViewModel.Translation
             if (!translationEntry.Translations.Any())
             {
                 _logger.Info("Restoring default translations...");
-                translationEntry.Translations = translationDetails.TranslationResult.GetDefaultWords();
+                translationEntry.Translations = translationResult.GetDefaultWords();
                 var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationEntry);
                 foreach (var word in translationEntryViewModel.Translations)
                     _messenger.Send(word, MessengerTokens.PriorityAddToken);
@@ -116,58 +109,73 @@ namespace Remembrance.ViewModel.Translation
         {
             _logger.Info($"Changing priority for {this} to {!IsPriority}");
 
+            //TODO: Store priority in separate table - remove correlation ID thus it could be changed when reloading word - use Text just like in json
+            //TODO: on Details or TrEntry reload - check this new table and apply priority - propagate it to every view via Events
             IsPriority = !IsPriority;
-            if (ParentTranslationDetailsViewModel != null)
-            {
-                _logger.Trace($"Changing priority for {this} in TranslationDetails...");
-                var translationDetails = _viewModelAdapter.Adapt<TranslationDetails>(ParentTranslationDetailsViewModel);
-                //Save parent details because it contains the current word
-                _translationDetailsRepository.Save(translationDetails);
+            var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_translationEntryRepository.GetById(TranslationEntryId));
+            UpdateTranslationEntry(translationInfo);
+            UpdateTranslationDetails(translationInfo);
+        }
 
-                //TODO: check already deleted
-                var translationEntry = _translationEntryRepository.GetById(ParentTranslationDetailsViewModel.TranslationEntryId);
-                var wordInTranslationEntry = translationEntry.Translations.SingleOrDefault(x => x.CorrelationId == CorrelationId);
-                if (wordInTranslationEntry == null)
-                {
-                    if (IsPriority)
-                        Add(translationEntry);
-                }
-                else
-                {
-                    if (!IsPriority)
-                        Remove(wordInTranslationEntry, translationEntry, translationDetails);
-                    else
-                        UpdateCorrelatedPriority(wordInTranslationEntry);
-                }
-                _translationEntryRepository.Save(translationEntry);
-                _logger.Trace($"TranslationEntry for {this} has been updated");
+        private void UpdateTranslationDetails([NotNull] TranslationInfo translationInfo)
+        {
+            _logger.Trace($"Changing priority for {this} in TranslationDetails...");
+
+            var wordInTranslationDetails = GetWordInTranslationDetails(translationInfo.TranslationDetails);
+            if (wordInTranslationDetails == null)
+            {
+                _logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
+                return;
             }
 
-            else if (ParentTranslationEntryViewModel != null)
-            {
-                _logger.Trace($"Changing priority for {this} in TranslationEntry...");
-                var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_viewModelAdapter.Adapt<TranslationEntry>(ParentTranslationEntryViewModel));
+            UpdateCorrelatedPriority(wordInTranslationDetails);
+            _translationDetailsRepository.Save(translationInfo.TranslationDetails);
+            _logger.Trace($"TranslationDetails for {this} have been updated");
+        }
 
+        private void UpdateTranslationEntry([NotNull] TranslationInfo translationInfo)
+        {
+            _logger.Trace($"Changing priority for {this} in TranslationEntry...");
+            //TODO: check already deleted / use transactions
+            var wordInTranslationEntry = GetWordInTranslationEntry(translationInfo.TranslationEntry);
+            if (wordInTranslationEntry == null)
+            {
+                if (IsPriority)
+                    Add(translationInfo.TranslationEntry);
+            }
+            else
+            {
                 if (!IsPriority)
-                {
-                    var priorityWord = translationInfo.TranslationEntry.Translations.Single(x => x.CorrelationId == CorrelationId);
-                    Remove(priorityWord, translationInfo.TranslationEntry, translationInfo.TranslationDetails);
-                }
-
-                _translationEntryRepository.Save(translationInfo.TranslationEntry);
-                _logger.Trace($"Updating TranslationDetails for {this}...");
-
-                var wordInTranslationDetails = translationInfo.TranslationDetails.GetWordInTranslationVariants(CorrelationId);
-                if (wordInTranslationDetails == null)
-                {
-                    _logger.Warn($"No correlated word was found in TranslationDetails for {this}...");
-                    return;
-                }
-
-                UpdateCorrelatedPriority(wordInTranslationDetails);
-                _translationDetailsRepository.Save(translationInfo.TranslationDetails);
-                _logger.Trace($"TranslationDetails for {this} have been updated");
+                    Remove(wordInTranslationEntry, translationInfo.TranslationEntry, translationInfo.TranslationDetails.TranslationResult);
+                else
+                    UpdateCorrelatedPriority(wordInTranslationEntry);
             }
+            _translationEntryRepository.Save(translationInfo.TranslationEntry);
+            _logger.Trace($"TranslationEntry for {this} has been updated");
+        }
+
+        [CanBeNull]
+        private PriorityWord GetWordInTranslationEntry([NotNull] TranslationEntry translationEntry)
+        {
+            return translationEntry.Translations.SingleOrDefault(x => _wordsEqualityComparer.Equals(x, this));
+        }
+
+        [CanBeNull]
+        private PriorityWord GetWordInTranslationDetails([NotNull] TranslationDetails translationDetails)
+        {
+            foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+            {
+                if (_wordsEqualityComparer.Equals(translationVariant, this))
+                    return translationVariant;
+
+                if (translationVariant.Synonyms == null)
+                    continue;
+
+                foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, this)))
+                    return synonym;
+            }
+
+            return null;
         }
 
         private void UpdateCorrelatedPriority([NotNull] PriorityWord correlatedWord)

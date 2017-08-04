@@ -3,6 +3,7 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.CardManagement.Data;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -17,8 +18,9 @@ namespace Remembrance.Card.Management.Exchange
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository)
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository, wordsEqualityComparer)
         {
         }
 
@@ -27,7 +29,7 @@ namespace Remembrance.Card.Management.Exchange
             return exchangeEntry.TranslationEntry.Key;
         }
 
-        protected override ICollection<string> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override ICollection<ExchangeWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.PriorityTranslations;
         }

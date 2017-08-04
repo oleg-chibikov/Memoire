@@ -76,6 +76,7 @@
     <Compile Include="DAL\Model\TranslationEntry.cs" />
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
     <Compile Include="DAL\Model\TranslationInfo.cs" />
+    <Compile Include="IWord.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\Format.cs" />

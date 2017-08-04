@@ -88,6 +88,7 @@ namespace Remembrance.Card.Management.CardManagement
             var translationResult = Translate(translationEntry.Key);
             //There are no translation details for this word
             translationDetails = new TranslationDetails(translationResult, translationEntry.Id);
+            //TODO: Get priority words out of Tran Entry?
             _logger.Trace($"Saving translation details for {translationEntry.Key}...");
             _translationDetailsRepository.Save(translationDetails);
 

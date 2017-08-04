@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +14,7 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -49,13 +51,15 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessenger messenger,
-            [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory)
+            [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
             : base(settingsRepository, languageDetector, wordsProcessor, logger)
         {
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
 
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
@@ -69,6 +73,7 @@ namespace Remembrance.ViewModel.Settings
             Logger.Info("Starting...");
 
             Logger.Trace("Receiving translations...");
+            //TODO: Load asynchronously
             var translationEntryViewModels = viewModelAdapter.Adapt<TranslationEntryViewModel[]>(translationEntryRepository.GetAll());
             foreach (var translationEntryViewModel in translationEntryViewModels)
                 translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
@@ -137,6 +142,9 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
+        [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
         #endregion
 
         #region EventHandlers
@@ -190,10 +198,10 @@ namespace Remembrance.ViewModel.Settings
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationEntryViewModel?.Id ?? priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId;
+            var parentId = priorityWordViewModel.TranslationEntryId;
             var changed = false;
             var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
-            var translation = translationEntryViewModel?.Translations.SingleOrDefault(x => x.CorrelationId == priorityWordViewModel.CorrelationId);
+            var translation = translationEntryViewModel?.Translations.SingleOrDefault(x => _wordsEqualityComparer.Equals(x, priorityWordViewModel));
             if (translation != null)
             {
                 translation.IsPriority = priorityWordViewModel.IsPriority;
@@ -211,14 +219,9 @@ namespace Remembrance.ViewModel.Settings
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId ?? priorityWordViewModel.ParentTranslationEntryViewModel?.Id;
+            var parentId = priorityWordViewModel.TranslationEntryId;
             var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
-            if (translationEntryViewModel != null)
-            {
-                priorityWordViewModel.ParentTranslationDetailsViewModel = null;
-                priorityWordViewModel.ParentTranslationEntryViewModel = translationEntryViewModel;
-                translationEntryViewModel.Translations.Add(priorityWordViewModel);
-            }
+            translationEntryViewModel?.Translations.Add(priorityWordViewModel);
             if (translationEntryViewModel != null)
                 Logger.Trace($"Added {priorityWordViewModel} to {translationEntryViewModel}");
             else
@@ -231,10 +234,10 @@ namespace Remembrance.ViewModel.Settings
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.ParentTranslationDetailsViewModel?.TranslationEntryId ?? priorityWordViewModel.ParentTranslationEntryViewModel?.Id;
+            var parentId = priorityWordViewModel.TranslationEntryId;
             var removed = false;
             var translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
-            var correlated = translationEntryViewModel?.Translations.SingleOrDefault(x => x.CorrelationId == priorityWordViewModel.CorrelationId);
+            var correlated = translationEntryViewModel?.Translations.SingleOrDefault(x => _wordsEqualityComparer.Equals(x, priorityWordViewModel));
             if (correlated != null)
                 removed = translationEntryViewModel.Translations.Remove(correlated);
             if (removed)

@@ -10,7 +10,9 @@ using Autofac;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
+using Remembrance.Card.Management;
 using Remembrance.Card.Management.CardManagement;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.View.Settings;
@@ -121,6 +123,7 @@ namespace Remembrance
             //TODO: Use Autofac Factory
             builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
             builder.RegisterType<Messenger>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<WordsEqualityComparer>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();

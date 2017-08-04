@@ -43,7 +43,7 @@ namespace Remembrance.ViewModel
                         foreach (var translation in dest.Translations)
                         {
                             translation.Language = dest.TargetLanguage;
-                            translation.ParentTranslationEntryViewModel = dest;
+                            translation.TranslationEntryId = dest.Id;
                         }
                     });
             TypeAdapterConfig<TranslationInfo, TranslationDetailsViewModel>.NewConfig()
@@ -60,12 +60,12 @@ namespace Remembrance.ViewModel
                             foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                             {
                                 translationVariant.Language = src.Key.TargetLanguage;
-                                translationVariant.ParentTranslationDetailsViewModel = dest;
+                                translationVariant.TranslationEntryId = dest.TranslationEntryId;
                                 if (translationVariant.Synonyms != null)
                                     foreach (var synonym in translationVariant.Synonyms)
                                     {
                                         synonym.Language = src.Key.TargetLanguage;
-                                        synonym.ParentTranslationDetailsViewModel = dest;
+                                        synonym.TranslationEntryId = dest.TranslationEntryId;
                                     }
                                 if (translationVariant.Meanings != null)
                                     foreach (var meaning in translationVariant.Meanings)

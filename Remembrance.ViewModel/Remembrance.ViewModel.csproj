@@ -112,7 +112,6 @@
     <Compile Include="Card\AssessmentCardViewModel.cs" />
     <Compile Include="Translation\ExampleViewModel.cs" />
     <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
-    <Compile Include="PriorityWordLink.cs" />
     <Compile Include="Translation\PriorityWordViewModel.cs" />
     <Compile Include="Settings\AddTranslationViewModel.cs" />
     <Compile Include="Settings\BaseViewModelWithAddTranslationControl.cs" />

@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Card.Management.CardManagement.Data;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
@@ -44,13 +45,18 @@ namespace Remembrance.Card.Management.Exchange
         [NotNull]
         protected readonly IWordsProcessor WordsProcessor;
 
+        [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository)
+            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
         {
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             TranslationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
@@ -155,9 +161,9 @@ namespace Remembrance.Card.Management.Exchange
                 token);
         }
 
-        private static void AddOrRemoveTranslation([NotNull] ICollection<string> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
+        private void AddOrRemoveTranslation([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
         {
-            if (priorityTranslations.Contains(word.Text, StringComparer.InvariantCultureIgnoreCase))
+            if (priorityTranslations.Contains(word, _wordsEqualityComparer))
             {
                 word.IsPriority = true;
                 if (translations.All(x => x.Text != word.Text))
@@ -165,7 +171,7 @@ namespace Remembrance.Card.Management.Exchange
             }
             else
             {
-                var matchingToRemove = translations.Where(x => x.Text == word.Text).ToList();
+                var matchingToRemove = translations.Where(x => _wordsEqualityComparer.Equals(x, word)).ToList();
                 foreach (var toRemove in matchingToRemove)
                     translations.Remove(toRemove);
             }
@@ -175,7 +181,7 @@ namespace Remembrance.Card.Management.Exchange
         protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry);
 
         [CanBeNull]
-        protected abstract ICollection<string> GetPriorityTranslations([NotNull] T exchangeEntry);
+        protected abstract ICollection<ExchangeWord> GetPriorityTranslations([NotNull] T exchangeEntry);
 
         private void OnProgress(int current, int total)
         {

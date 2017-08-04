@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Remembrance.Card.Management.CardManagement.Data;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -32,8 +34,9 @@ namespace Remembrance.Card.Management.Exchange
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] ILanguageDetector languageDetector)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository)
+            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository, wordsEqualityComparer)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
@@ -45,9 +48,15 @@ namespace Remembrance.Card.Management.Exchange
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
-        protected override ICollection<string> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
+        protected override ICollection<ExchangeWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
         {
-            return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+            return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(
+                    x => new ExchangeWord
+                    {
+                        Text = x
+                    })
+                .ToArray();
         }
     }
 }
