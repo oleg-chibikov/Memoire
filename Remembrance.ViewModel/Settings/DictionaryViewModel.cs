@@ -74,6 +74,7 @@ namespace Remembrance.ViewModel.Settings
 
             Logger.Trace("Receiving translations...");
             //TODO: Load asynchronously
+            //TODO: Load by pages (scroll down asks new page)
             var translationEntryViewModels = viewModelAdapter.Adapt<TranslationEntryViewModel[]>(translationEntryRepository.GetAll());
             foreach (var translationEntryViewModel in translationEntryViewModels)
                 translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
