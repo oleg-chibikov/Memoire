@@ -11,8 +11,8 @@
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:settings1="clr-namespace:Remembrance.View.Settings"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:view="clr-namespace:Remembrance.View.Settings"
     MinWidth="800"
     MinHeight="300"
     Width="1200"
@@ -24,7 +24,7 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
@@ -55,11 +55,11 @@
         </Grid.RowDefinitions>
         <DockPanel
             Grid.Row="0">
-            <settings1:SearchControl
+            <view:SearchControl
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center" />
         </DockPanel>
-        <settings1:TranslationsGridControl
+        <view:TranslationsGridControl
             Width="Auto"
             Grid.Row="1" />
         <DockPanel
@@ -81,8 +81,9 @@
                 Text="{lex:Loc Total}" />
             <TextBlock
                 Text="{Binding Count}" />
-            <settings1:AddTranslationControl
+            <view:AddTranslationControl
                 x:Name="AddTranslationControl"
+                Width="500"
                 DockPanel.Dock="Right"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"

@@ -23,7 +23,12 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
-        public TranslationResultCardViewModel([NotNull] TranslationInfo translationInfo, [NotNull] ViewModelAdapter viewModelAdapter, [NotNull] IMessenger messenger, [NotNull] ILog logger, [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+        public TranslationResultCardViewModel(
+            [NotNull] TranslationInfo translationInfo,
+            [NotNull] ViewModelAdapter viewModelAdapter,
+            [NotNull] IMessenger messenger,
+            [NotNull] ILog logger,
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
@@ -51,7 +56,7 @@ namespace Remembrance.ViewModel.Card
         {
             foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
-                if (_wordsEqualityComparer.Equals(translationVariant,word))
+                if (_wordsEqualityComparer.Equals(translationVariant, word))
                     return translationVariant;
 
                 if (translationVariant.Synonyms == null)

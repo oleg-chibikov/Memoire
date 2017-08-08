@@ -42,14 +42,6 @@ namespace Remembrance.ViewModel.Translation
         [AlsoNotifyFor(nameof(PartOfSpeech))]
         private bool ReRenderSwitch { get; set; }
 
-        [DoNotNotify]
-        public PartOfSpeech PartOfSpeech
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
-
         [CanBeNull]
         [DoNotNotify]
         public string VerbType
@@ -88,6 +80,14 @@ namespace Remembrance.ViewModel.Translation
                     NounAnimacy,
                     NounGender
                 }.Where(x => x != null));
+
+        [DoNotNotify]
+        public PartOfSpeech PartOfSpeech
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
 
         private void LearnWord()
         {

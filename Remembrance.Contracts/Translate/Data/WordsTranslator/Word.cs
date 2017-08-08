@@ -6,9 +6,6 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
     public class Word : TextEntry, IWord
     {
-        [UsedImplicitly]
-        public PartOfSpeech PartOfSpeech { get; set; }
-
         [CanBeNull]
         [UsedImplicitly]
         public string VerbType { get; set; }
@@ -20,5 +17,8 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         [CanBeNull]
         [UsedImplicitly]
         public string NounGender { get; set; }
+
+        [UsedImplicitly]
+        public PartOfSpeech PartOfSpeech { get; set; }
     }
 }

@@ -90,6 +90,30 @@ namespace Remembrance.ViewModel.Translation
             return word;
         }
 
+        [CanBeNull]
+        private PriorityWord GetWordInTranslationDetails([NotNull] TranslationDetails translationDetails)
+        {
+            foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+            {
+                if (_wordsEqualityComparer.Equals(translationVariant, this))
+                    return translationVariant;
+
+                if (translationVariant.Synonyms == null)
+                    continue;
+
+                foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, this)))
+                    return synonym;
+            }
+
+            return null;
+        }
+
+        [CanBeNull]
+        private PriorityWord GetWordInTranslationEntry([NotNull] TranslationEntry translationEntry)
+        {
+            return translationEntry.Translations.SingleOrDefault(x => _wordsEqualityComparer.Equals(x, this));
+        }
+
         private void Remove([NotNull] PriorityWord wordInTranslationEntry, [NotNull] TranslationEntry translationEntry, [NotNull] TranslationResult translationResult)
         {
             _logger.Info($"Removing {wordInTranslationEntry} from {translationEntry}...");
@@ -115,6 +139,13 @@ namespace Remembrance.ViewModel.Translation
             var translationInfo = WordsProcessor.ReloadTranslationDetailsIfNeeded(_translationEntryRepository.GetById(TranslationEntryId));
             UpdateTranslationEntry(translationInfo);
             UpdateTranslationDetails(translationInfo);
+        }
+
+        private void UpdateCorrelatedPriority([NotNull] PriorityWord correlatedWord)
+        {
+            _logger.Info($"Updating priority in correlated word {correlatedWord}...");
+            correlatedWord.IsPriority = IsPriority;
+            _messenger.Send(this, MessengerTokens.PriorityChangeToken);
         }
 
         private void UpdateTranslationDetails([NotNull] TranslationInfo translationInfo)
@@ -152,37 +183,6 @@ namespace Remembrance.ViewModel.Translation
             }
             _translationEntryRepository.Save(translationInfo.TranslationEntry);
             _logger.Trace($"TranslationEntry for {this} has been updated");
-        }
-
-        [CanBeNull]
-        private PriorityWord GetWordInTranslationEntry([NotNull] TranslationEntry translationEntry)
-        {
-            return translationEntry.Translations.SingleOrDefault(x => _wordsEqualityComparer.Equals(x, this));
-        }
-
-        [CanBeNull]
-        private PriorityWord GetWordInTranslationDetails([NotNull] TranslationDetails translationDetails)
-        {
-            foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
-            {
-                if (_wordsEqualityComparer.Equals(translationVariant, this))
-                    return translationVariant;
-
-                if (translationVariant.Synonyms == null)
-                    continue;
-
-                foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, this)))
-                    return synonym;
-            }
-
-            return null;
-        }
-
-        private void UpdateCorrelatedPriority([NotNull] PriorityWord correlatedWord)
-        {
-            _logger.Info($"Updating priority in correlated word {correlatedWord}...");
-            correlatedWord.IsPriority = IsPriority;
-            _messenger.Send(this, MessengerTokens.PriorityChangeToken);
         }
     }
 }

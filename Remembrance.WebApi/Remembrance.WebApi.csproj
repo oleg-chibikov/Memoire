@@ -82,8 +82,8 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.4\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -32,10 +32,10 @@ namespace Remembrance.Card.Management.Exchange
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
         [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+        private readonly IWordsProcessor _wordsProcessor;
 
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,

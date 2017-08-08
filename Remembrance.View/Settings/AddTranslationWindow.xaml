@@ -9,20 +9,21 @@
     Title="{lex:Loc Title}"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:settings1="clr-namespace:Remembrance.View.Settings"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:view="clr-namespace:Remembrance.View.Settings"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=settings:AddTranslationViewModel}"
-    SizeToContent="WidthAndHeight"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}"
+    SizeToContent="Height"
+    AdvancedWindowStartupLocation="BottomRight"
+    WindowStartupLocation="Manual"
     ShowInTaskbar="false"
+    Width="500"
     Icon="../IconAlt.ico">
-    <settings1:AddTranslationControl
+    <view:AddTranslationControl
         x:Name="AddTranslationControl"
-        DockPanel.Dock="Right"
-        HorizontalAlignment="Right"
         VerticalAlignment="Center"
         VerticalContentAlignment="Center" />
 </window:AnimatedWindow>

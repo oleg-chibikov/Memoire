@@ -93,11 +93,11 @@
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.5\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View, Version=1.0.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.1.0.15\lib\net462\Scar.Common.WPF.View.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.1.0.23\lib\net462\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.1\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.4\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.ViewModel.1.0.1\lib\net462\Scar.Common.WPF.ViewModel.dll</HintPath>

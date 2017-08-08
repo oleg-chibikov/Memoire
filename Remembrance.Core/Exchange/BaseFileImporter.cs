@@ -31,6 +31,9 @@ namespace Remembrance.Card.Management.Exchange
         private const int MaxBlockSize = 25;
 
         [NotNull]
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+
+        [NotNull]
         protected readonly ILog Logger;
 
         [NotNull]
@@ -44,9 +47,6 @@ namespace Remembrance.Card.Management.Exchange
 
         [NotNull]
         protected readonly IWordsProcessor WordsProcessor;
-
-        [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,

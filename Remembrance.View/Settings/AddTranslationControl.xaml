@@ -13,18 +13,30 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
     <UserControl.Resources>
         <ResourceDictionary
             Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
     </UserControl.Resources>
-    <StackPanel
-        Orientation="Horizontal"
-        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+    <Grid
+        view:MarginSetter.Margin="{StaticResource CommonMargin}"
+        view:MarginSetter.Orientation="Horizontal">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="Auto" />
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="Auto" />
+        </Grid.ColumnDefinitions>
+
         <TextBlock
+            Grid.Column="0"
             Text="{lex:Loc Translate}" />
         <TextBox
-            Width="200"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
             Text="{Binding NewItemSource, UpdateSourceTrigger=PropertyChanged}"
             Name="WordTextBox">
             <TextBox.InputBindings>
@@ -35,30 +47,35 @@
             </TextBox.InputBindings>
         </TextBox>
 
-        <TextBlock
-            Text="{lex:Loc From}" />
-        <ComboBox
-            IsSynchronizedWithCurrentItem="True"
-            DisplayMemberPath="DisplayName"
-            SelectedValuePath="Code"
-            ItemsSource="{Binding AvailableSourceLanguages}"
-            SelectedItem="{Binding SelectedSourceLanguage}" />
+        <StackPanel
+            Grid.Column="2"
+            Orientation="Horizontal"
+            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <TextBlock
+                Text="{lex:Loc From}" />
+            <ComboBox
+                IsSynchronizedWithCurrentItem="True"
+                DisplayMemberPath="DisplayName"
+                SelectedValuePath="Code"
+                ItemsSource="{Binding AvailableSourceLanguages}"
+                SelectedItem="{Binding SelectedSourceLanguage}" />
 
-        <TextBlock
-            Text="{lex:Loc To}" />
-        <ComboBox
-            IsSynchronizedWithCurrentItem="True"
-            DisplayMemberPath="DisplayName"
-            SelectedValuePath="Code"
-            ItemsSource="{Binding AvailableTargetLanguages}"
-            SelectedItem="{Binding SelectedTargetLanguage}" />
-        <Button
-            Style="{StaticResource ImageButton}"
-            ToolTip="{lex:Loc AddTranslation}"
-            Command="{Binding SaveCommand}"
-            CommandParameter="{Binding Text, ElementName=WordTextBox}">
-            <materialDesign:PackIcon
-                Kind="NotePlus" />
-        </Button>
-    </StackPanel>
+            <TextBlock
+                Text="{lex:Loc To}" />
+            <ComboBox
+                IsSynchronizedWithCurrentItem="True"
+                DisplayMemberPath="DisplayName"
+                SelectedValuePath="Code"
+                ItemsSource="{Binding AvailableTargetLanguages}"
+                SelectedItem="{Binding SelectedTargetLanguage}" />
+            <Button
+                Style="{StaticResource ImageButton}"
+                ToolTip="{lex:Loc AddTranslation}"
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding Text, ElementName=WordTextBox}">
+                <materialDesign:PackIcon
+                    Kind="NotePlus" />
+            </Button>
+        </StackPanel>
+    </Grid>
 </UserControl>

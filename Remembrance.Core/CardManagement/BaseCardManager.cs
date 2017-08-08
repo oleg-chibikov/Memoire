@@ -43,12 +43,12 @@ namespace Remembrance.Card.Management.CardManagement
                         return;
                     }
 
-                    window.CanDrag = false;
+                    window.Draggable = false;
                     Logger.Info($"Showing {translationInfo}");
                     CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
-                    window.SizeChanged += Window_SizeChanged;
-                    window.Closed += Window_Closed;
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
+                    if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
+                        window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
                     window.Topmost = true;
                     window.Show();
                     window.Topmost = false;
@@ -57,20 +57,5 @@ namespace Remembrance.Card.Management.CardManagement
 
         [CanBeNull]
         protected abstract IWindow TryCreateWindow([NotNull] TranslationInfo translationInfo, IWindow ownerWindow);
-
-        private static void Window_Closed(object sender, EventArgs e)
-        {
-            var window = (Window) sender;
-            window.Closed -= Window_Closed;
-            window.SizeChanged -= Window_SizeChanged;
-        }
-
-        private static void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var window = (Window) sender;
-            var r = SystemParameters.WorkArea;
-            window.Left = r.Right - window.ActualWidth;
-            window.Top = r.Bottom - window.ActualHeight;
-        }
     }
 }

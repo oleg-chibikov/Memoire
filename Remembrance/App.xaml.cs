@@ -10,7 +10,6 @@ using Autofac;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management;
 using Remembrance.Card.Management.CardManagement;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;

@@ -28,23 +28,25 @@ namespace Remembrance.Card.Management.CardManagement
         {
         }
 
+        [NotNull]
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             Logger.Trace($"Creating window for {translationInfo}...");
             var translationResultCardViewModel = LifetimeScope.Resolve<TranslationResultCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var translationDetailsWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(
+            var translationResultCardWindow = LifetimeScope.Resolve<ITranslationResultCardWindow>(
                 new TypedParameter(typeof(TranslationResultCardViewModel), translationResultCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
+            translationResultCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
 
             Logger.Trace($"Closing window in {CloseTimeout}...");
             ActionExtensions.DoAfterAsync(
                 () =>
                 {
-                    _syncContext.Post(x => translationDetailsWindow.Close(), null);
+                    _syncContext.Post(x => translationResultCardWindow.Close(), null);
                     Logger.Trace("Window is closed");
                 },
                 CloseTimeout);
-            return translationDetailsWindow;
+            return translationResultCardWindow;
         }
     }
 }
