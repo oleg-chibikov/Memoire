@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Scar.Common;
 
-// ReSharper disable NotNullMemberIsNotInitialized
-
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
     public class TextEntry

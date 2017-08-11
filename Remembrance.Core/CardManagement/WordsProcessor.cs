@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
@@ -14,9 +15,9 @@ using Scar.Common.Exceptions;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Card.Management.CardManagement
+namespace Remembrance.Core.CardManagement
 {
-    //TODO: Think about class interface - it is not clear now
+    // TODO: Think about class interface - it is not clear now
     [UsedImplicitly]
     internal sealed class WordsProcessor : IWordsProcessor
     {
@@ -79,20 +80,22 @@ namespace Remembrance.Card.Management.CardManagement
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
-        public TranslationInfo ReloadTranslationDetailsIfNeeded(TranslationEntry translationEntry)
+        public TranslationDetails ReloadTranslationDetailsIfNeeded(object id, string text, string sourceLanguage, string targetLanguage)
         {
-            var translationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(translationEntry.Id);
+            var translationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(id);
             if (translationDetails != null)
-                return new TranslationInfo(translationEntry, translationDetails);
+                return translationDetails;
 
-            var translationResult = Translate(translationEntry.Key);
-            //There are no translation details for this word
-            translationDetails = new TranslationDetails(translationResult, translationEntry.Id);
-            //TODO: Get priority words out of Tran Entry?
-            _logger.Trace($"Saving translation details for {translationEntry.Key}...");
+            var translationResult = Translate(text, sourceLanguage, targetLanguage);
+
+            // There are no translation details for this word
+            translationDetails = new TranslationDetails(translationResult, id);
+
+            // TODO: Get priority words out of Tran Entry?
+            _logger.Trace($"Saving translation details for {id}...");
             _translationDetailsRepository.Save(translationDetails);
 
-            return new TranslationInfo(translationEntry, translationDetails);
+            return translationDetails;
         }
 
         public bool ProcessNewWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
@@ -121,12 +124,13 @@ namespace Remembrance.Card.Management.CardManagement
 
         public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)
         {
-            //This method replaces translation with the actual one
+            // This method replaces translation with the actual one
             _logger.Trace($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
 
             var key = GetTranslationKey(text, sourceLanguage, targetLanguage);
-            var translationResult = Translate(key);
-            //replace the original text with the corrected one
+            var translationResult = Translate(key.Text, key.SourceLanguage, key.TargetLanguage);
+
+            // replace the original text with the corrected one
             key.Text = translationResult.PartOfSpeechTranslations.First().Text;
             var existingByKey = _translationEntryRepository.TryGetByKey(key);
             if (id != null)
@@ -140,7 +144,7 @@ namespace Remembrance.Card.Management.CardManagement
                     id = existingByKey.Id;
             }
 
-            var translationEntry = new TranslationEntry(key, translationResult.GetDefaultWords())
+            var translationEntry = new TranslationEntry(key)
             {
                 Id = id
             };
@@ -168,7 +172,7 @@ namespace Remembrance.Card.Management.CardManagement
             var lastUsedTargetLanguage = settings.LastUsedTargetLanguage;
             var possibleTargetLanguages = new Stack<string>(DefaultTargetLanguages);
             if (lastUsedTargetLanguage != null && lastUsedTargetLanguage != Constants.AutoDetectLanguage)
-                possibleTargetLanguages.Push(lastUsedTargetLanguage); //top priority
+                possibleTargetLanguages.Push(lastUsedTargetLanguage); // top priority
             var targetLanguage = possibleTargetLanguages.Pop();
             while (targetLanguage == sourceLanguage)
                 targetLanguage = possibleTargetLanguages.Pop();
@@ -183,13 +187,15 @@ namespace Remembrance.Card.Management.CardManagement
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
 
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
-                //if not specified or autodetect - try to detect
-                sourceLanguage = _languageDetector.DetectLanguageAsync(text).Result.Language;
+
+                // if not specified or autodetect - try to detect
+                sourceLanguage = _languageDetector.DetectLanguageAsync(text, CancellationToken.None).Result.Language;
             if (sourceLanguage == null)
                 throw new LocalizableException($"Cannot detect language for '{text}'", Errors.CannotDetectLanguage);
 
             if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
-                //if not specified - try to find best matching target language
+
+                // if not specified - try to find best matching target language
                 targetLanguage = GetDefaultTargetLanguage(sourceLanguage);
 
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
@@ -223,12 +229,12 @@ namespace Remembrance.Card.Management.CardManagement
         }
 
         [NotNull]
-        private TranslationResult Translate([NotNull] TranslationEntryKey key)
+        private TranslationResult Translate(string text, string sourceLanguage, string targetLanguage)
         {
-            //Used En as ui language to simplify conversion of common words to the enums
-            var translationResult = _wordsTranslator.GetTranslationAsync(key.SourceLanguage, key.TargetLanguage, key.Text, Constants.EnLanguage).Result;
+            // Used En as ui language to simplify conversion of common words to the enums
+            var translationResult = _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage).Result;
             if (!translationResult.PartOfSpeechTranslations.Any())
-                throw new LocalizableException($"No translations found for {key}", Errors.CannotTranslate);
+                throw new LocalizableException($"No translations found for {text}", Errors.CannotTranslate);
 
             return translationResult;
         }

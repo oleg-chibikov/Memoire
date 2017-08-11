@@ -2,11 +2,11 @@
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
-    public sealed class TranslationVariant : PriorityWord
+    public sealed class TranslationVariant : Word
     {
         [CanBeNull]
         [UsedImplicitly]
-        public PriorityWord[] Synonyms { get; set; }
+        public Word[] Synonyms { get; set; }
 
         [CanBeNull]
         [UsedImplicitly]

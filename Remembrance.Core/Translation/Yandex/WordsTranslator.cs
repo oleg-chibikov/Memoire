@@ -3,11 +3,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Card.Management.Translation.Yandex.ContractResolvers;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Core.Translation.Yandex.ContractResolvers;
 
-namespace Remembrance.Card.Management.Translation.Yandex
+namespace Remembrance.Core.Translation.Yandex
 {
     [UsedImplicitly]
     internal sealed class WordsTranslator : IWordsTranslator
@@ -19,7 +19,7 @@ namespace Remembrance.Card.Management.Translation.Yandex
         };
 
         /// <summary>
-        /// https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
+        /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
         /// </summary>
         [NotNull]
         private readonly HttpClient _dictionaryClient = new HttpClient
@@ -37,7 +37,8 @@ namespace Remembrance.Card.Management.Translation.Yandex
                 throw new ArgumentNullException(nameof(text));
             if (ui == null)
                 throw new ArgumentNullException(nameof(ui));
-            //falgs morpho(4) //|family(1)
+
+            // falgs morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
             var response = await _dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)

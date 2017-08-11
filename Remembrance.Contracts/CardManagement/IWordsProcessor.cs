@@ -17,6 +17,6 @@ namespace Remembrance.Contracts.CardManagement
         bool ProcessNewWord([NotNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null, IWindow ownerWindow = null);
 
         [NotNull]
-        TranslationInfo ReloadTranslationDetailsIfNeeded([NotNull] TranslationEntry translationEntry);
+        TranslationDetails ReloadTranslationDetailsIfNeeded([NotNull] object id, [NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage);
     }
 }

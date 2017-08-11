@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
-namespace Remembrance.Contracts
+namespace Remembrance.Core
 {
     [UsedImplicitly]
     public sealed class WordsEqualityComparer : IEqualityComparer<IWord>

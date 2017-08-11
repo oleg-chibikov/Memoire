@@ -2,14 +2,15 @@
 using Autofac;
 using JetBrains.Annotations;
 using Mapster;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Translation;
 
-namespace Remembrance.ViewModel
+namespace Remembrance.Core
 {
     [UsedImplicitly]
-    public sealed class ViewModelAdapter
+    public sealed class ViewModelAdapter : IViewModelAdapter
     {
         public ViewModelAdapter([NotNull] ILifetimeScope lifetimeScope)
         {
@@ -28,8 +29,8 @@ namespace Remembrance.ViewModel
                         }
                     })
                 .Compile();
-            TypeAdapterConfig<Word, WordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<WordViewModel>()).Compile();
-            TypeAdapterConfig<PriorityWord, PriorityWordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<PriorityWordViewModel>()).Compile();
+            TypeAdapterConfig<IWord, WordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<WordViewModel>()).Compile();
+            TypeAdapterConfig<IWord, PriorityWordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<PriorityWordViewModel>()).Compile();
             TypeAdapterConfig<TranslationVariant, TranslationVariantViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<TranslationVariantViewModel>()).Compile();
             TypeAdapterConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>()).Compile();
             TypeAdapterConfig<TranslationEntry, TranslationEntryViewModel>.NewConfig()
@@ -37,15 +38,7 @@ namespace Remembrance.ViewModel
                 .Map(dest => dest.Text, src => src.Key.Text)
                 .Map(dest => dest.Language, src => src.Key.SourceLanguage)
                 .Map(dest => dest.TargetLanguage, src => src.Key.TargetLanguage)
-                .AfterMapping(
-                    (src, dest) =>
-                    {
-                        foreach (var translation in dest.Translations)
-                        {
-                            translation.Language = dest.TargetLanguage;
-                            translation.TranslationEntryId = dest.Id;
-                        }
-                    });
+                .AfterMapping((src, dest) => dest.ReloadTranslations());
             TypeAdapterConfig<TranslationInfo, TranslationDetailsViewModel>.NewConfig()
                 .ConstructUsing(src => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(dest => dest.TranslationResult, src => src.TranslationDetails.TranslationResult)
@@ -59,14 +52,11 @@ namespace Remembrance.ViewModel
                             partOfSpeechTranslation.Language = src.Key.SourceLanguage;
                             foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                             {
-                                translationVariant.Language = src.Key.TargetLanguage;
-                                translationVariant.TranslationEntryId = dest.TranslationEntryId;
+                                SetPriorityWordProperties(translationVariant, src.Key.TargetLanguage, dest.TranslationEntryId);
                                 if (translationVariant.Synonyms != null)
                                     foreach (var synonym in translationVariant.Synonyms)
-                                    {
-                                        synonym.Language = src.Key.TargetLanguage;
-                                        synonym.TranslationEntryId = dest.TranslationEntryId;
-                                    }
+                                        SetPriorityWordProperties(synonym, src.Key.TargetLanguage, dest.TranslationEntryId);
+
                                 if (translationVariant.Meanings != null)
                                     foreach (var meaning in translationVariant.Meanings)
                                         meaning.Language = src.Key.SourceLanguage;
@@ -78,12 +68,23 @@ namespace Remembrance.ViewModel
 
         public TDestination Adapt<TDestination>(object source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
             return source.Adapt<TDestination>();
         }
 
         public TDestination Adapt<TSource, TDestination>(TSource source, TDestination destination)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
             return source.Adapt(destination, TypeAdapterConfig.GlobalSettings);
+        }
+
+        private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] string targetLanguage, [NotNull] object translationEntryId)
+        {
+            priorityWordViewModel.SetProperties(translationEntryId, targetLanguage);
         }
     }
 }

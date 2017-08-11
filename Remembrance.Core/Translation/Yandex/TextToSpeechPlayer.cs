@@ -10,7 +10,7 @@ using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
 
-namespace Remembrance.Card.Management.Translation.Yandex
+namespace Remembrance.Core.Translation.Yandex
 {
     [UsedImplicitly]
     internal sealed class TextToSpeechPlayer : ITextToSpeechPlayer
@@ -61,7 +61,7 @@ namespace Remembrance.Card.Management.Translation.Yandex
                     {
                         waveOut.Init(reader);
 
-                        //Thread should be alive while playback is not stopped
+                        // Thread should be alive while playback is not stopped
                         void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                         {
                             ((WaveOut) s).PlaybackStopped -= PlaybackStoppedHandler;
@@ -70,9 +70,11 @@ namespace Remembrance.Card.Management.Translation.Yandex
 
                         waveOut.PlaybackStopped += PlaybackStoppedHandler;
                         waveOut.Play();
-                        //Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
+
+                        // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
                         reset.WaitOne(TimeSpan.FromSeconds(5));
                     }
+
                     _logger.Trace($"Finished speaking {text}");
                     return true;
                 });

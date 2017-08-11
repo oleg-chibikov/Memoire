@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Remembrance.Card.Management.Translation.Yandex.JsonConverters;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Core.Translation.Yandex.JsonConverters;
 
-namespace Remembrance.Card.Management.Translation.Yandex.ContractResolvers
+namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal sealed class TranslationResultContractResolver : CustomContractResolver
     {

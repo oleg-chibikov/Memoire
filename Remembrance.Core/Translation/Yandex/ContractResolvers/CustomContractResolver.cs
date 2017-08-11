@@ -4,16 +4,18 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Remembrance.Card.Management.Translation.Yandex.ContractResolvers
+namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal abstract class CustomContractResolver : DefaultContractResolver
     {
         protected abstract Dictionary<string, string> PropertyMappings { get; }
+
         protected virtual Dictionary<Type, JsonConverter> PropertyConverters { get; } = null;
 
         protected override JsonContract CreateContract(Type objectType)
         {
             var contract = base.CreateContract(objectType);
+
             // this will only be called once and then cached
             if (PropertyConverters != null && PropertyConverters.TryGetValue(objectType, out JsonConverter jsonConverter))
                 contract.Converter = jsonConverter;

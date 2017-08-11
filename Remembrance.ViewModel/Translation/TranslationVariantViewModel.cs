@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Common.Logging;
+﻿using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
@@ -13,14 +11,11 @@ namespace Remembrance.ViewModel.Translation
     {
         public TranslationVariantViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] ViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
-            : base(textToSpeechPlayer, translationEntryRepository, translationDetailsRepository, viewModelAdapter, messenger, wordsProcessor, logger, wordsEqualityComparer)
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            : base(textToSpeechPlayer, messenger, wordsProcessor, logger, wordPriorityRepository)
         {
         }
 

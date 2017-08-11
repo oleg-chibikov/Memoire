@@ -5,17 +5,18 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationDetails : Entity<int>
+    public sealed class WordPriority : Entity<int>, IWord
     {
         [UsedImplicitly]
-        public TranslationDetails()
+        public WordPriority()
         {
         }
 
-        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
+        public WordPriority([NotNull] string text, PartOfSpeech partOfSpeech, [NotNull] object translationEntryId)
         {
             TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
-            TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
+            Text = text ?? throw new ArgumentNullException(nameof(text));
+            PartOfSpeech = partOfSpeech;
         }
 
         [NotNull]
@@ -27,7 +28,14 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        public TranslationResult TranslationResult
+        public string Text
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public PartOfSpeech PartOfSpeech
         {
             get;
             [UsedImplicitly]

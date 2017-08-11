@@ -25,7 +25,7 @@ namespace Remembrance.ViewModel.Card
 
         public TranslationResultCardViewModel(
             [NotNull] TranslationInfo translationInfo,
-            [NotNull] ViewModelAdapter viewModelAdapter,
+            [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] ILog logger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
@@ -36,6 +36,7 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(viewModelAdapter));
             if (messenger == null)
                 throw new ArgumentNullException(nameof(messenger));
+
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -47,12 +48,14 @@ namespace Remembrance.ViewModel.Card
             messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
         }
 
+        [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
 
+        [NotNull]
         public string Word { get; }
 
         [CanBeNull]
-        public PriorityWordViewModel GetWordInTranslationDetails(IWord word)
+        private PriorityWordViewModel GetWordInTranslationDetails(IWord word)
         {
             foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
@@ -74,8 +77,7 @@ namespace Remembrance.ViewModel.Card
             if (priorityWordViewModel == null)
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
 
-            var parentId = priorityWordViewModel.TranslationEntryId;
-            if (parentId != TranslationDetails.TranslationEntryId)
+            if (!priorityWordViewModel.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
                 return;
 
             _logger.Trace($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");

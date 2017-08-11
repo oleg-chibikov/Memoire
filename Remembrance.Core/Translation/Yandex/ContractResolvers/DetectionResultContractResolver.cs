@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Remembrance.Contracts.Translate.Data.LanguageDetector;
 
-namespace Remembrance.Card.Management.Translation.Yandex.ContractResolvers
+namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal sealed class DetectionResultContractResolver : CustomContractResolver
     {

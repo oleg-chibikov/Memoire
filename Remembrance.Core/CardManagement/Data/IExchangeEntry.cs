@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Remembrance.Card.Management.CardManagement.Data
+namespace Remembrance.Core.CardManagement.Data
 {
     internal interface IExchangeEntry
     {

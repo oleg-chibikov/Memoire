@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
-namespace Remembrance.Card.Management.Translation.Yandex.JsonConverters
+namespace Remembrance.Core.Translation.Yandex.JsonConverters
 {
     internal sealed class PartOfSpeechConverter : JsonConverter
     {

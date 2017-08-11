@@ -12,7 +12,7 @@ using Remembrance.Resources;
 using Scar.Common.Events;
 using Scar.Common.IO;
 
-namespace Remembrance.Card.Management.Exchange
+namespace Remembrance.Core.Exchange
 {
     [UsedImplicitly]
     internal sealed class CardsExchanger : ICardsExchanger, IDisposable
@@ -74,6 +74,7 @@ namespace Remembrance.Card.Management.Exchange
             {
                 OnProgress(1, 1);
             }
+
             if (exchangeResult.Success)
             {
                 _logger.Info($"Export to {_saveFileService.FileName} has been performed");
@@ -117,6 +118,7 @@ namespace Remembrance.Card.Management.Exchange
                         _logger.Warn($"ImportAsync from {_openFileService.FileName} failed");
                     }
                 }
+
                 _messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
             }
             finally

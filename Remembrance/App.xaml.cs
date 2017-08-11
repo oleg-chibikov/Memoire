@@ -10,11 +10,10 @@ using Autofac;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.CardManagement;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.View.Settings;
+using Remembrance.Core.CardManagement;
 using Remembrance.DAL;
 using Remembrance.Resources;
 using Remembrance.View.Card;
@@ -30,7 +29,7 @@ namespace Remembrance
 {
     public sealed partial class App
     {
-        //TODO: Move to library
+        // TODO: Move to library
         private static readonly string AppGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
 
         [NotNull]
@@ -69,6 +68,7 @@ namespace Remembrance
             // Process unhandled exception
             _logger.Fatal("Unhandled exception", e.Exception);
             NotifyError(e.Exception);
+
             // Prevent default unhandled exception processing
             e.Handled = true;
         }
@@ -107,7 +107,8 @@ namespace Remembrance
 
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
-            //Need to create first instance of this class in the UI thread (for proper SyncContext)
+
+            // Need to create first instance of this class in the UI thread (for proper SyncContext)
             _container.Resolve<ITranslationResultCardManager>();
             _container.Resolve<ApiHoster>();
         }
@@ -119,10 +120,9 @@ namespace Remembrance
 
             var builder = new ContainerBuilder();
 
-            //TODO: Use Autofac Factory
+            // TODO: Use Autofac Factory
             builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
             builder.RegisterType<Messenger>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<WordsEqualityComparer>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();

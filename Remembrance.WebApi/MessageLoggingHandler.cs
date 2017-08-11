@@ -6,8 +6,8 @@ using JetBrains.Annotations;
 
 namespace Remembrance.WebApi
 {
-    //TODO: WebApi Library;
-    //TODO: Use version from Albelli.Interview
+    // TODO: WebApi Library;
+    // TODO: Use version from Albelli.Interview
     [UsedImplicitly]
     internal sealed class MessageLoggingHandler : MessageHandler
     {

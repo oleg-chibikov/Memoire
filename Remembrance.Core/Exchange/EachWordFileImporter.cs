@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
-using Remembrance.Card.Management.CardManagement.Data;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
+using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
 
-namespace Remembrance.Card.Management.Exchange
+namespace Remembrance.Core.Exchange
 {
     [UsedImplicitly]
     internal sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
@@ -35,15 +36,16 @@ namespace Remembrance.Card.Management.Exchange
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILanguageDetector languageDetector,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository, wordsEqualityComparer)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository, wordsEqualityComparer, wordPriorityRepository)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
-        protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry)
+        protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry, CancellationToken token)
         {
-            var sourceLanguage = _languageDetector.DetectLanguageAsync(exchangeEntry.Text).Result.Language ?? Constants.EnLanguage;
+            var sourceLanguage = _languageDetector.DetectLanguageAsync(exchangeEntry.Text, token).Result.Language ?? Constants.EnLanguage;
             var targetLanguage = WordsProcessor.GetDefaultTargetLanguage(sourceLanguage);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
@@ -12,18 +11,17 @@ namespace Remembrance.Contracts.DAL.Model
         private LinkedListNode<RepeatType> _current;
 
         private DateTime _lastCardShowTime;
+
         private RepeatType _repeatType;
 
         [UsedImplicitly]
-        // ReSharper disable once NotNullMemberIsNotInitialized
         public TranslationEntry()
         {
         }
 
-        public TranslationEntry([NotNull] TranslationEntryKey key, [NotNull] IList<PriorityWord> translations)
+        public TranslationEntry([NotNull] TranslationEntryKey key)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
-            Translations = translations ?? throw new ArgumentNullException(nameof(translations));
             LastCardShowTime = DateTime.Now;
             RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             _current = RepeatTypeSettings.RepeatTypes.First;
@@ -32,10 +30,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         [UsedImplicitly]
         public TranslationEntryKey Key { get; set; }
-
-        [NotNull]
-        [UsedImplicitly]
-        public IList<PriorityWord> Translations { get; set; }
 
         [UsedImplicitly]
         public RepeatType RepeatType

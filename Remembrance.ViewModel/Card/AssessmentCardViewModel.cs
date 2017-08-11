@@ -1,4 +1,6 @@
-﻿using System;
+﻿// TODO: Feature: if the word level is low, replace textbox with dropdown
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +9,7 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -17,9 +20,6 @@ using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.ViewModel;
 
-//TODO: regions
-//TODO: Feature: if the word level is low, replace textbox with dropdown
-
 namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
@@ -29,23 +29,35 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private static readonly Random Random = new Random();
 
-        //TODO: config timeout
+        // TODO: config timeout
         private static readonly TimeSpan SuccessCloseTimeout = TimeSpan.FromSeconds(2);
 
-        //TODO: config timeout
+        // TODO: config timeout
         private static readonly TimeSpan ErrorCloseTimeout = TimeSpan.FromSeconds(5);
 
         [NotNull]
         private readonly HashSet<string> _acceptedAnswers;
 
         [NotNull]
+        private readonly ILog _logger;
+
+        [NotNull]
+        private readonly IMessenger _messenger;
+
+        [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+
+        [NotNull]
+        private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
+        private readonly TranslationInfo _translationInfo;
 
         public AssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ViewModelAdapter viewModelAdapter,
+            [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessenger messenger,
             [NotNull] ILog logger)
         {
@@ -84,15 +96,20 @@ namespace Remembrance.ViewModel.Card
             logger.Trace("Card is initialized");
         }
 
+        [NotNull]
         public WordViewModel Word { get; }
 
+        [NotNull]
         public string LanguagePair { get; }
 
-        #region Commands
-
+        [NotNull]
         public ICommand ProvideAnswerCommand { get; }
 
-        #endregion
+        [CanBeNull]
+        public bool? Accepted { get; private set; }
+
+        [NotNull]
+        public string CorrectAnswer { get; private set; }
 
         public event EventHandler RequestClose;
 
@@ -117,6 +134,7 @@ namespace Remembrance.ViewModel.Card
                 _logger.Trace($"There are {tmp.Count} groups that contain priority translations. Filtering was applied");
                 acceptedWordGroups = tmp.ToArray();
             }
+
             _logger.Trace("There are no groups that contain priority translations. Filtering was not applied");
         }
 
@@ -141,6 +159,7 @@ namespace Remembrance.ViewModel.Card
             {
                 _logger.Trace("There are no priority translations. Filtering was not applied");
             }
+
             return hasPriorityItems;
         }
 
@@ -289,7 +308,7 @@ namespace Remembrance.ViewModel.Card
             if (!string.IsNullOrWhiteSpace(answer))
                 foreach (var acceptedAnswer in _acceptedAnswers)
                 {
-                    //20% of the word could be errors
+                    // 20% of the word could be errors
                     var maxDistance = acceptedAnswer.Length / 5;
                     var distance = answer.LevenshteinDistance(acceptedAnswer);
                     if (distance < 0 || distance > maxDistance)
@@ -300,6 +319,7 @@ namespace Remembrance.ViewModel.Card
                         currentMinDistance = distance;
                         mostSuitable = acceptedAnswer;
                     }
+
                     Accepted = true;
                 }
 
@@ -309,8 +329,8 @@ namespace Remembrance.ViewModel.Card
             {
                 _logger.Info($"Answer is correct. Most suitable accepted word was {mostSuitable} with distance {currentMinDistance}. Increasing repeat type for {_translationInfo}...");
                 _translationInfo.TranslationEntry.IncreaseRepeatType();
-                //The inputed answer can differ from the first one
-                // ReSharper disable once AssignNullToNotNullAttribute - mostSuitable should be always set
+
+                // The inputed answer can differ from the first one
                 CorrectAnswer = mostSuitable;
                 closeTimeout = SuccessCloseTimeout;
             }
@@ -321,6 +341,7 @@ namespace Remembrance.ViewModel.Card
                 _translationInfo.TranslationEntry.DecreaseRepeatType();
                 closeTimeout = ErrorCloseTimeout;
             }
+
             _translationEntryRepository.Save(_translationInfo.TranslationEntry);
             _messenger.Send(_translationInfo, MessengerTokens.TranslationInfoToken);
             _logger.Trace($"Closing window in {closeTimeout}...");
@@ -352,41 +373,21 @@ namespace Remembrance.ViewModel.Card
 
         private sealed class AssessmentInfo
         {
-            public AssessmentInfo(HashSet<string> acceptedAnswers, WordViewModel word, string correctAnswer)
+            public AssessmentInfo([NotNull] HashSet<string> acceptedAnswers, [NotNull] WordViewModel word, [NotNull] string correctAnswer)
             {
                 AcceptedAnswers = acceptedAnswers;
                 Word = word;
                 CorrectAnswer = correctAnswer;
             }
 
+            [NotNull]
             public HashSet<string> AcceptedAnswers { get; }
+
+            [NotNull]
             public WordViewModel Word { get; }
 
+            [NotNull]
             public string CorrectAnswer { get; }
         }
-
-        #region Dependency Properties
-
-        public bool? Accepted { get; private set; }
-
-        public string CorrectAnswer { get; private set; }
-
-        #endregion
-
-        #region Dependencies
-
-        [NotNull]
-        private readonly ILog _logger;
-
-        [NotNull]
-        private readonly IMessenger _messenger;
-
-        [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
-
-        [NotNull]
-        private readonly TranslationInfo _translationInfo;
-
-        #endregion
     }
 }

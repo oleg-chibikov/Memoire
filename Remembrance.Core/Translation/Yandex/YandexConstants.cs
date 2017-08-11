@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Remembrance.Card.Management.Translation.Yandex
+namespace Remembrance.Core.Translation.Yandex
 {
     internal static class YandexConstants
     {

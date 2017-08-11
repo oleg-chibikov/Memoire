@@ -81,6 +81,10 @@ namespace Remembrance.ViewModel.Translation
                     NounGender
                 }.Where(x => x != null));
 
+        public ICommand PlayTtsCommand { get; }
+
+        public ICommand LearnWordCommand { get; }
+
         [DoNotNotify]
         public PartOfSpeech PartOfSpeech
         {
@@ -108,13 +112,5 @@ namespace Remembrance.ViewModel.Translation
         {
             return $"{Text} [{Language}]";
         }
-
-        #region Commands
-
-        public ICommand PlayTtsCommand { get; }
-
-        public ICommand LearnWordCommand { get; }
-
-        #endregion
     }
 }

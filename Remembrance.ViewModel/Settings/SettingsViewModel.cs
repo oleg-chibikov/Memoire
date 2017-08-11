@@ -42,6 +42,8 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
+        private Language _uiLanguage;
+
         public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessenger messenger, [NotNull] ICardsExchanger cardsExchanger)
         {
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
@@ -67,134 +69,51 @@ namespace Remembrance.ViewModel.Settings
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
+        [NotNull]
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
+        [NotNull]
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
+        [NotNull]
         public Language[] AvailableUiLanguages { get; } =
         {
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")
         };
 
-        public void Dispose()
-        {
-            _cardsExchanger.Progress -= CardsExchanger_Progress;
-        }
-
-        public event EventHandler RequestClose;
-
-        #region Commands
-
+        [NotNull]
         public ICommand SaveCommand { get; }
 
+        [NotNull]
         public ICommand ViewLogsCommand { get; }
 
+        [NotNull]
         public ICommand OpenSharedFolderCommand { get; }
 
+        [NotNull]
         public ICommand OpenSettingsFolderCommand { get; }
 
+        [NotNull]
         public ICommand ExportCommand { get; }
 
+        [NotNull]
         public ICommand ImportCommand { get; }
 
+        [NotNull]
         public ICommand WindowClosingCommand { get; }
-
-        #endregion
-
-        #region Command Handlers
-
-        private void Save()
-        {
-            _logger.Trace("Saving settings...");
-            var freq = TimeSpan.FromMinutes(CardShowFrequency);
-            var settings = _settingsRepository.Get();
-            var prevFreq = settings.CardShowFrequency;
-            settings.CardShowFrequency = freq;
-            settings.TtsSpeaker = TtsSpeaker;
-            settings.TtsVoiceEmotion = TtsVoiceEmotion;
-            settings.ReverseTranslation = ReverseTranslation;
-            settings.RandomTranslation = RandomTranslation;
-            settings.UiLanguage = UiLanguage.Code;
-            _settingsRepository.Save(settings);
-            if (prevFreq != freq)
-                _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
-            RequestClose?.Invoke(null, null);
-            _logger.Trace("Settings has been saved");
-        }
-
-        private void BeginProgress()
-        {
-            ProgressState = TaskbarItemProgressState.Normal;
-            ProgressDescription = "Caclulating...";
-            Progress = 0;
-        }
-
-        private void EndProgress()
-        {
-            ProgressState = TaskbarItemProgressState.None;
-        }
-
-        private void CardsExchanger_Progress([NotNull] object sender, [NotNull] ProgressEventArgs e)
-        {
-            _syncContext.Send(
-                x =>
-                {
-                    Progress = e.Percentage;
-                    ProgressDescription = $"{e.Current} of {e.Total} ({e.Percentage} %)";
-                    if (e.Current == 0)
-                        BeginProgress();
-                    else if (e.Current == e.Total)
-                        EndProgress();
-                },
-                null);
-        }
-
-        private static void OpenSharedFolder()
-        {
-            Process.Start($@"{Paths.SharedDataPath}");
-        }
-
-        private static void OpenSettingsFolder()
-        {
-            Process.Start($@"{Paths.SettingsPath}");
-        }
-
-        private static void ViewLogs()
-        {
-            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
-        }
-
-        private void Export()
-        {
-            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
-        }
-
-        private void Import()
-        {
-            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
-        }
-
-        private void WindowClosing()
-        {
-            _cancellationTokenSource.Cancel();
-        }
-
-        #endregion
-
-        #region DependencyProperties
 
         public int Progress { get; private set; }
 
+        [CanBeNull]
         public string ProgressDescription { get; private set; }
 
         public TaskbarItemProgressState ProgressState { get; private set; }
 
-        private Language _uiLanguage;
-
         public Language UiLanguage
         {
             get { return _uiLanguage; }
+
             [UsedImplicitly]
             set
             {
@@ -238,6 +157,87 @@ namespace Remembrance.ViewModel.Settings
             set;
         }
 
-        #endregion
+        public void Dispose()
+        {
+            _cardsExchanger.Progress -= CardsExchanger_Progress;
+        }
+
+        public event EventHandler RequestClose;
+
+        private void BeginProgress()
+        {
+            ProgressState = TaskbarItemProgressState.Normal;
+            ProgressDescription = "Caclulating...";
+            Progress = 0;
+        }
+
+        private void CardsExchanger_Progress([NotNull] object sender, [NotNull] ProgressEventArgs e)
+        {
+            _syncContext.Send(
+                x =>
+                {
+                    Progress = e.Percentage;
+                    ProgressDescription = $"{e.Current} of {e.Total} ({e.Percentage} %)";
+                    if (e.Current == 0)
+                        BeginProgress();
+                    else if (e.Current == e.Total)
+                        EndProgress();
+                },
+                null);
+        }
+
+        private void EndProgress()
+        {
+            ProgressState = TaskbarItemProgressState.None;
+        }
+
+        private void Export()
+        {
+            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        private void Import()
+        {
+            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        private static void OpenSettingsFolder()
+        {
+            Process.Start($@"{Paths.SettingsPath}");
+        }
+
+        private static void OpenSharedFolder()
+        {
+            Process.Start($@"{Paths.SharedDataPath}");
+        }
+
+        private void Save()
+        {
+            _logger.Trace("Saving settings...");
+            var freq = TimeSpan.FromMinutes(CardShowFrequency);
+            var settings = _settingsRepository.Get();
+            var prevFreq = settings.CardShowFrequency;
+            settings.CardShowFrequency = freq;
+            settings.TtsSpeaker = TtsSpeaker;
+            settings.TtsVoiceEmotion = TtsVoiceEmotion;
+            settings.ReverseTranslation = ReverseTranslation;
+            settings.RandomTranslation = RandomTranslation;
+            settings.UiLanguage = UiLanguage.Code;
+            _settingsRepository.Save(settings);
+            if (prevFreq != freq)
+                _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
+            RequestClose?.Invoke(null, null);
+            _logger.Trace("Settings has been saved");
+        }
+
+        private static void ViewLogs()
+        {
+            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
+        }
+
+        private void WindowClosing()
+        {
+            _cancellationTokenSource.Cancel();
+        }
     }
 }

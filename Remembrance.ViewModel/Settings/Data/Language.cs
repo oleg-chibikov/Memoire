@@ -10,7 +10,7 @@ namespace Remembrance.ViewModel.Settings.Data
             DisplayName = displayName;
         }
 
-        //TODO: Readonly?
+        // TODO: Readonly?
         [NotNull]
         [UsedImplicitly]
         public string Code { get; set; }

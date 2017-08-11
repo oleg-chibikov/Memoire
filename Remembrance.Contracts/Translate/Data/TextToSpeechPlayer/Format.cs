@@ -3,6 +3,7 @@
     public enum Format
     {
         Mp3,
+
         Wav
     }
 }

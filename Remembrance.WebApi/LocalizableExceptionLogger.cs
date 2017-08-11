@@ -8,7 +8,7 @@ using Scar.Common.Exceptions;
 
 namespace Remembrance.WebApi
 {
-    //TODO: WebApi Library
+    // TODO: WebApi Library
     public sealed class LocalizableExceptionLogger : IExceptionLogger
     {
         public Task LogAsync([NotNull] ExceptionLoggerContext context, CancellationToken cancellationToken)

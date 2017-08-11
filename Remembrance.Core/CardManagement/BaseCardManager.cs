@@ -8,9 +8,7 @@ using Remembrance.Contracts.DAL.Model;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
-// ReSharper disable MemberCanBePrivate.Global
-
-namespace Remembrance.Card.Management.CardManagement
+namespace Remembrance.Core.CardManagement
 {
     [UsedImplicitly]
     internal abstract class BaseCardManager

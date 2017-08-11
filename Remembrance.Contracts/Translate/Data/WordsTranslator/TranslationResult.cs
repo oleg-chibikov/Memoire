@@ -2,8 +2,6 @@
 using System.Linq;
 using JetBrains.Annotations;
 
-// ReSharper disable NotNullMemberIsNotInitialized
-
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
     public sealed class TranslationResult
@@ -13,9 +11,9 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         public PartOfSpeechTranslation[] PartOfSpeechTranslations { get; set; }
 
         [NotNull]
-        public IList<PriorityWord> GetDefaultWords()
+        public IList<Word> GetDefaultWords()
         {
-            return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First()).Cast<PriorityWord>().ToList();
+            return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First()).Cast<Word>().ToList();
         }
     }
 }

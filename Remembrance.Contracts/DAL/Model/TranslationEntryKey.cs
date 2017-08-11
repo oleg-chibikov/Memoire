@@ -6,7 +6,6 @@ namespace Remembrance.Contracts.DAL.Model
     public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
         [UsedImplicitly]
-        // ReSharper disable once NotNullMemberIsNotInitialized
         public TranslationEntryKey()
         {
         }
@@ -18,7 +17,7 @@ namespace Remembrance.Contracts.DAL.Model
             TargetLanguage = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
         }
 
-        //TODO: readonly?
+        // TODO: readonly?
         [NotNull]
         [UsedImplicitly]
         public string Text { get; set; }

@@ -7,10 +7,11 @@ using JetBrains.Annotations;
 
 namespace Remembrance.WebApi
 {
-    //TODO: WebApi Library
+    // TODO: WebApi Library
     internal abstract class MessageHandler : DelegatingHandler
     {
         protected abstract Task IncomingMessageAsync([NotNull] HttpRequestMessage request, [NotNull] string requestInfo, [CanBeNull] string message);
+
         protected abstract Task OutgoingMessageAsync([NotNull] HttpRequestMessage request, [NotNull] string requestInfo, [CanBeNull] string message);
 
         [ItemNotNull]

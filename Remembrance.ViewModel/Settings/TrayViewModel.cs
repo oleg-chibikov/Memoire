@@ -1,4 +1,6 @@
-﻿using System;
+﻿//TODO: Set all bindings mode manually
+
+using System;
 using System.Windows;
 using System.Windows.Input;
 using Common.Logging;
@@ -8,8 +10,6 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.View.Settings;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.View;
-
-//TODO: Set all bindings mode manually
 
 namespace Remembrance.ViewModel.Settings
 {
@@ -57,27 +57,22 @@ namespace Remembrance.ViewModel.Settings
             IsActive = settingsRepository.Get().IsActive;
         }
 
-        #region Dependency Properties
-
         public bool IsActive { get; private set; }
 
-        #endregion
-
-        #region Commands
-
+        [NotNull]
         public ICommand AddTranslationCommand { get; }
 
+        [NotNull]
         public ICommand ShowDictionaryCommand { get; }
 
+        [NotNull]
         public ICommand ShowSettingsCommand { get; }
 
+        [NotNull]
         public ICommand ToggleActiveCommand { get; }
 
+        [NotNull]
         public ICommand ExitCommand { get; }
-
-        #endregion
-
-        #region Command handlers
 
         private void AddTranslation()
         {
@@ -85,16 +80,22 @@ namespace Remembrance.ViewModel.Settings
             _addTranslationWindowFactory.ShowWindow();
         }
 
-        private void ShowSettings()
+        private void Exit()
         {
-            _logger.Info("Showing settings...");
-            _settingsWindowFactory.ShowWindow();
+            _logger.Info("Exitting application...");
+            Application.Current.Shutdown();
         }
 
         private void ShowDictionary()
         {
             _logger.Info("Showing dictionary...");
             _dictionaryWindowFactory.ShowWindow(_splashScreenWindowFactory);
+        }
+
+        private void ShowSettings()
+        {
+            _logger.Info("Showing settings...");
+            _settingsWindowFactory.ShowWindow();
         }
 
         private void ToggleActive()
@@ -106,13 +107,5 @@ namespace Remembrance.ViewModel.Settings
             _settingsRepository.Save(settings);
             _logger.Info($"New state is {IsActive}");
         }
-
-        private void Exit()
-        {
-            _logger.Info("Exitting application...");
-            Application.Current.Shutdown();
-        }
-
-        #endregion
     }
 }

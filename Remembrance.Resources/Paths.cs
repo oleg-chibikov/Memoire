@@ -9,7 +9,7 @@ namespace Remembrance.Resources
 {
     public static class Paths
     {
-        //TODO: Library
+        // TODO: Library
         [NotNull]
         private static readonly Regex IllegalCharactersRegex = new Regex($"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars()))}]", RegexOptions.Compiled);
 
@@ -28,8 +28,8 @@ namespace Remembrance.Resources
             ? SettingsPath
             : Path.Combine(BaseSharedDataPath, ProgramName, SanitizePath(Environment.MachineName));
 
-        //TODO: Move to IO Library
-        //TODO: Settings and Installer - add to choose which program to use
+        // TODO: Move to IO Library
+        // TODO: Settings and Installer - add to choose which program to use
         [CanBeNull]
         private static string GetDropboxPath()
         {
@@ -59,7 +59,7 @@ namespace Remembrance.Resources
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
 
-            return IllegalCharactersRegex.Replace(path, "");
+            return IllegalCharactersRegex.Replace(path, string.Empty);
         }
     }
 }

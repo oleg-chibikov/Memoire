@@ -14,7 +14,7 @@ using Remembrance.Resources;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Card.Management.CardManagement
+namespace Remembrance.Core.CardManagement
 {
     [UsedImplicitly]
     internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, IDisposable
@@ -78,6 +78,7 @@ namespace Remembrance.Card.Management.CardManagement
             {
                 initialDelay = TimeSpan.Zero;
             }
+
             return Observable.Timer(initialDelay, repeatTime)
                 .Subscribe(
                     x =>
@@ -98,7 +99,8 @@ namespace Remembrance.Card.Management.CardManagement
                             return;
                         }
 
-                        var translationInfo = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry);
+                        var translationDetails = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry.Id, translationEntry.Key.Text, translationEntry.Key.SourceLanguage, translationEntry.Key.TargetLanguage);
+                        var translationInfo = new TranslationInfo(translationEntry, translationDetails);
                         Logger.Trace($"Trying to show {translationInfo}...");
                         ShowCard(translationInfo, null);
                     });
@@ -120,7 +122,7 @@ namespace Remembrance.Card.Management.CardManagement
             }
 
             Logger.Trace($"Creating window for {translationInfo}...");
-            translationInfo.TranslationEntry.ShowCount++; //single place to update show count - no need to synchronize
+            translationInfo.TranslationEntry.ShowCount++; // single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
             _translationEntryRepository.Save(translationInfo.TranslationEntry);
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);

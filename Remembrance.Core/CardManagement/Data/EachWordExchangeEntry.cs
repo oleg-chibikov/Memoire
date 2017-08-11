@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace Remembrance.Card.Management.CardManagement.Data
+namespace Remembrance.Core.CardManagement.Data
 {
     [UsedImplicitly]
     internal sealed class EachWordExchangeEntry : IExchangeEntry

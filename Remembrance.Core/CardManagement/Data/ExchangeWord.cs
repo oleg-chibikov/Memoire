@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
-namespace Remembrance.Card.Management.CardManagement.Data
+namespace Remembrance.Core.CardManagement.Data
 {
     internal sealed class ExchangeWord : IWord
     {
@@ -12,6 +12,7 @@ namespace Remembrance.Card.Management.CardManagement.Data
         {
             if (word == null)
                 throw new ArgumentNullException(nameof(word));
+
             Text = word.Text;
             PartOfSpeech = word.PartOfSpeech;
         }

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Remembrance.Contracts.DAL.Model;
 
-namespace Remembrance.Card.Management.CardManagement
+namespace Remembrance.Core.CardManagement
 {
     internal sealed class TranslationEntryContractResolver : DefaultContractResolver
     {
@@ -16,7 +16,6 @@ namespace Remembrance.Card.Management.CardManagement
         [NotNull]
         private static readonly string[] ExcludedProperties =
         {
-            nameof(TranslationEntry.Translations),
             nameof(TranslationEntry.Id)
         };
 

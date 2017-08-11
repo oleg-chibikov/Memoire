@@ -15,7 +15,9 @@ namespace Remembrance.WebApi
     public sealed class ApiHoster : IDisposable
     {
         private const string BaseAddress = "http://localhost:2053/";
+
         private readonly IDisposable _apiHost;
+
         private readonly ILifetimeScope _innerScope;
 
         [NotNull]

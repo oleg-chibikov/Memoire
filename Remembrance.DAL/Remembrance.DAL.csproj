@@ -35,23 +35,24 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.4.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Common.Logging.3.4.0\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    <Reference Include="Common.Logging.Core, Version=3.4.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Common.Logging.Core.3.4.0\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\LiteDB.3.1.1\lib\net35\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\LiteDB.3.1.2\lib\net451\LiteDB.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.5\lib\net462\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Scar.Common.DAL, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.6\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.LiteDB.1.0.20\lib\net462\Scar.Common.DAL.LiteDB.dll</HintPath>
+    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.LiteDB.1.0.21\lib\net462\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -63,6 +64,7 @@
     <Compile Include="SettingsRepository.cs" />
     <Compile Include="TranslationDetailsRepository.cs" />
     <Compile Include="TranslationEntryRepository.cs" />
+    <Compile Include="WordPriorityRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">

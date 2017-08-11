@@ -10,7 +10,7 @@ using Scar.Common.Exceptions;
 
 namespace Remembrance.WebApi
 {
-    //TODO: WebApi Library
+    // TODO: WebApi Library
     internal sealed class LocalizableExceptionHandler : IExceptionHandler
     {
         public Task HandleAsync([NotNull] ExceptionHandlerContext context, CancellationToken cancellationToken)

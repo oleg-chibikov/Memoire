@@ -3,10 +3,15 @@
     public enum Speaker
     {
         Jane,
+
         Oksana,
+
         Alyss,
+
         Omazh,
+
         Zahar,
+
         Ermil
     }
 }

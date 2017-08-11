@@ -37,8 +37,8 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.5\lib\net462\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.6\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
@@ -69,6 +69,7 @@
     <Compile Include="DAL\ISettingsRepository.cs" />
     <Compile Include="DAL\ITranslationDetailsRepository.cs" />
     <Compile Include="DAL\ITranslationEntryRepository.cs" />
+    <Compile Include="DAL\IWordPriorityRepository.cs" />
     <Compile Include="DAL\Model\RepeatType.cs" />
     <Compile Include="DAL\Model\RepeatTypeSettings.cs" />
     <Compile Include="DAL\Model\Settings.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="DAL\Model\TranslationEntry.cs" />
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
     <Compile Include="DAL\Model\TranslationInfo.cs" />
+    <Compile Include="DAL\Model\WordPriority.cs" />
+    <Compile Include="IViewModelAdapter.cs" />
     <Compile Include="IWord.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
@@ -85,7 +88,6 @@
     <Compile Include="Translate\Data\WordsTranslator\Example.cs" />
     <Compile Include="Translate\Data\WordsTranslator\PartOfSpeech.cs" />
     <Compile Include="Translate\Data\WordsTranslator\PartOfSpeechTranslation.cs" />
-    <Compile Include="Translate\Data\WordsTranslator\PriorityWord.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TextEntry.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TranslationResult.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TranslationVariant.cs" />

@@ -8,21 +8,19 @@ using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Card.Management.CardManagement.Data;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.Events;
 using Scar.Common.Exceptions;
 
-// ReSharper disable MemberCanBePrivate.Global
-
-namespace Remembrance.Card.Management.Exchange
+namespace Remembrance.Core.Exchange
 {
     [UsedImplicitly]
     internal abstract class BaseFileImporter<T> : IFileImporter
@@ -31,19 +29,22 @@ namespace Remembrance.Card.Management.Exchange
         private const int MaxBlockSize = 25;
 
         [NotNull]
+        private readonly ILog _logger;
+
+        [NotNull]
+        private readonly IMessenger _messenger;
+
+        [NotNull]
+        private readonly ITranslationDetailsRepository _translationDetailsRepository;
+
+        [NotNull]
+        private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
+        private readonly IWordPriorityRepository _wordPriorityRepository;
+
+        [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
-
-        [NotNull]
-        protected readonly ILog Logger;
-
-        [NotNull]
-        protected readonly IMessenger Messenger;
-
-        [NotNull]
-        protected readonly ITranslationDetailsRepository TranslationDetailsRepository;
-
-        [NotNull]
-        protected readonly ITranslationEntryRepository TranslationEntryRepository;
 
         [NotNull]
         protected readonly IWordsProcessor WordsProcessor;
@@ -54,14 +55,16 @@ namespace Remembrance.Card.Management.Exchange
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
         {
+            _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
-            TranslationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
-            Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            TranslationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -86,16 +89,16 @@ namespace Remembrance.Card.Management.Exchange
                     }
                     catch (IOException ex)
                     {
-                        Logger.Warn("Cannot load file from disk", ex);
+                        _logger.Warn("Cannot load file from disk", ex);
                         return new ExchangeResult(false, null, count);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn("Cannot deserialize object", ex);
+                        _logger.Warn("Cannot deserialize object", ex);
                         return new ExchangeResult(false, null, count);
                     }
 
-                    var existing = TranslationEntryRepository.GetAll();
+                    var existing = _translationEntryRepository.GetAll();
                     var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
                     deserialized.RunByBlocks(
@@ -103,16 +106,16 @@ namespace Remembrance.Card.Management.Exchange
                         (block, index, blocksCount) =>
                         {
                             token.ThrowIfCancellationRequested();
-                            Logger.Trace($"Processing block {index} out of {blocksCount} ({block.Length} files)...");
+                            _logger.Trace($"Processing block {index} out of {blocksCount} ({block.Length} files)...");
                             var blockResult = new List<TranslationInfo>(block.Length);
                             foreach (var exchangeEntry in block)
                             {
                                 token.ThrowIfCancellationRequested();
-                                Logger.Info($"Importing from {exchangeEntry.Text}...");
+                                _logger.Info($"Importing from {exchangeEntry.Text}...");
                                 TranslationInfo translationInfo;
                                 try
                                 {
-                                    var key = GetKey(exchangeEntry);
+                                    var key = GetKey(exchangeEntry, token);
                                     if (existingKeys.Contains(key))
                                         continue;
 
@@ -121,7 +124,7 @@ namespace Remembrance.Card.Management.Exchange
                                 }
                                 catch (LocalizableException ex)
                                 {
-                                    Logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
+                                    _logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
                                     e.Add(exchangeEntry.Text);
                                     continue;
                                 }
@@ -132,17 +135,15 @@ namespace Remembrance.Card.Management.Exchange
                                     foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
                                         partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                                     {
-                                        AddOrRemoveTranslation(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Translations);
+                                        MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry);
                                         if (translationVariant.Synonyms == null)
                                             continue;
 
                                         foreach (var synonym in translationVariant.Synonyms)
-                                            AddOrRemoveTranslation(priorityTranslations, synonym, translationInfo.TranslationEntry.Translations);
+                                            MarkPriority(priorityTranslations, synonym, translationInfo.TranslationEntry);
                                     }
 
-                                    if (!translationInfo.TranslationEntry.Translations.Any())
-                                        translationInfo.TranslationEntry.Translations = translationInfo.TranslationDetails.TranslationResult.GetDefaultWords();
-                                    TranslationDetailsRepository.Save(translationInfo.TranslationDetails);
+                                    _translationDetailsRepository.Save(translationInfo.TranslationDetails);
                                 }
 
                                 count++;
@@ -150,7 +151,7 @@ namespace Remembrance.Card.Management.Exchange
 
                             OnProgress(index + 1, blocksCount);
                             if (blockResult.Any())
-                                Messenger.Send(blockResult.ToArray(), MessengerTokens.TranslationInfoBatchToken);
+                                _messenger.Send(blockResult.ToArray(), MessengerTokens.TranslationInfoBatchToken);
                             return true;
                         });
 
@@ -161,27 +162,17 @@ namespace Remembrance.Card.Management.Exchange
                 token);
         }
 
-        private void AddOrRemoveTranslation([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] PriorityWord word, [NotNull] ICollection<PriorityWord> translations)
-        {
-            if (priorityTranslations.Contains(word, _wordsEqualityComparer))
-            {
-                word.IsPriority = true;
-                if (translations.All(x => x.Text != word.Text))
-                    translations.Add(word);
-            }
-            else
-            {
-                var matchingToRemove = translations.Where(x => _wordsEqualityComparer.Equals(x, word)).ToList();
-                foreach (var toRemove in matchingToRemove)
-                    translations.Remove(toRemove);
-            }
-        }
-
         [NotNull]
-        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry);
+        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry, CancellationToken token);
 
         [CanBeNull]
         protected abstract ICollection<ExchangeWord> GetPriorityTranslations([NotNull] T exchangeEntry);
+
+        private void MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] TranslationEntry translationEntry)
+        {
+            if (priorityTranslations.Contains(word, _wordsEqualityComparer))
+                _wordPriorityRepository.MarkPriority(word, translationEntry.Id);
+        }
 
         private void OnProgress(int current, int total)
         {

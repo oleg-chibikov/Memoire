@@ -12,12 +12,12 @@ using Remembrance.ViewModel.Card;
 using Scar.Common;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Card.Management.CardManagement
+namespace Remembrance.Core.CardManagement
 {
     [UsedImplicitly]
     internal sealed class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
-        //TODO: config timeout
+        // TODO: config timeout
         private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(5);
 
         [NotNull]

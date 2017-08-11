@@ -1,5 +1,8 @@
+// TODO: Feature: Custom translation
+
 using System;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
 using JetBrains.Annotations;
@@ -13,13 +16,28 @@ using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
-//TODO: Feature: Custom translation
 namespace Remembrance.ViewModel.Settings
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public abstract class BaseViewModelWithAddTranslationControl
+    public abstract class BaseViewModelWithAddTranslationControl : IDisposable
     {
+        [NotNull]
+        private readonly ISettingsRepository _settingsRepository;
+
+        [NotNull]
+        protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+
+        [NotNull]
+        protected readonly ILog Logger;
+
+        [NotNull]
+        protected readonly IWordsProcessor WordsProcessor;
+
+        private Language _selectedSourceLanguage;
+
+        private Language _selectedTargetLanguage;
+
         protected BaseViewModelWithAddTranslationControl([NotNull] ISettingsRepository settingsRepository, [NotNull] ILanguageDetector languageDetector, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
         {
             if (languageDetector == null)
@@ -36,11 +54,10 @@ namespace Remembrance.ViewModel.Settings
             var settings = settingsRepository.Get();
 
             logger.Trace("Loading languages...");
-            var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName).Result;
+            var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationTokenSource.Token).Result;
 
-            //var acceptableLanguages = languages.Directions.Where(x => x.StartsWith(UiLanguage)).Select(x => x.Split('-')[1]).Concat(new []{UiLanguage}).ToArray();
-            //AvailableTargetLanguages = languages.Languages.Where(x => acceptableLanguages.Contains(x.Key)).Select(x => new Language(x.Key, x.Value)).ToArray();
-
+            // var acceptableLanguages = languages.Directions.Where(x => x.StartsWith(UiLanguage)).Select(x => x.Split('-')[1]).Concat(new []{UiLanguage}).ToArray();
+            // AvailableTargetLanguages = languages.Languages.Where(x => acceptableLanguages.Contains(x.Key)).Select(x => new Language(x.Key, x.Value)).ToArray();
             var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value)).OrderBy(x => x.DisplayName);
 
             var autoSourceLanguage = new Language(Constants.AutoDetectLanguage, "--AutoDetect--");
@@ -73,19 +90,65 @@ namespace Remembrance.ViewModel.Settings
             logger.Trace("Languages have been loaded");
         }
 
-        protected abstract IWindow Window { get; }
-
         public Language[] AvailableTargetLanguages { get; }
 
         public Language[] AvailableSourceLanguages { get; }
 
-        #region Commands
-
         public ICommand SaveCommand { get; }
 
-        #endregion
+        public Language SelectedTargetLanguage
+        {
+            get { return _selectedTargetLanguage; }
 
-        #region Command handlers
+            [UsedImplicitly]
+            set
+            {
+                // TODO: Transactions?
+                _selectedTargetLanguage = value;
+                var settings = _settingsRepository.Get();
+                settings.LastUsedTargetLanguage = value.Code;
+                _settingsRepository.Save(settings);
+            }
+        }
+
+        public Language SelectedSourceLanguage
+        {
+            get { return _selectedSourceLanguage; }
+
+            [UsedImplicitly]
+            set
+            {
+                // TODO: Transactions - https://github.com/mbdavid/LiteDB/wiki/Transactions-and-Concurrency? across all solution
+                _selectedSourceLanguage = value;
+                var settings = _settingsRepository.Get();
+                settings.LastUsedSourceLanguage = value.Code;
+                _settingsRepository.Save(settings);
+            }
+        }
+
+        [CanBeNull]
+        public string NewItemSource
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        [CanBeNull]
+        protected abstract IWindow Window { get; }
+
+        public void Dispose()
+        {
+            Logger.Trace("Disposing...");
+            CancellationTokenSource.Cancel();
+            CancellationTokenSource.Dispose();
+            Cleanup();
+            Logger.Trace("Disposed");
+        }
+
+        protected virtual void Cleanup()
+        {
+        }
 
         private void Save([NotNull] string text)
         {
@@ -100,63 +163,5 @@ namespace Remembrance.ViewModel.Settings
 
             WordsProcessor.ProcessNewWord(text, sourceLanguage, targetLanguage, Window);
         }
-
-        #endregion
-
-        #region Dependencies
-
-        [NotNull]
-        private readonly ISettingsRepository _settingsRepository;
-
-        [NotNull]
-        protected readonly ILog Logger;
-
-        [NotNull]
-        protected readonly IWordsProcessor WordsProcessor;
-
-        #endregion
-
-        #region Dependency properties
-
-        private Language _selectedTargetLanguage;
-
-        public Language SelectedTargetLanguage
-        {
-            get { return _selectedTargetLanguage; }
-            [UsedImplicitly]
-            set
-            {
-                //TODO: Transactions?
-                _selectedTargetLanguage = value;
-                var settings = _settingsRepository.Get();
-                settings.LastUsedTargetLanguage = value.Code;
-                _settingsRepository.Save(settings);
-            }
-        }
-
-        private Language _selectedSourceLanguage;
-
-        public Language SelectedSourceLanguage
-        {
-            get { return _selectedSourceLanguage; }
-            [UsedImplicitly]
-            set
-            {
-                //TODO: Transactions - https://github.com/mbdavid/LiteDB/wiki/Transactions-and-Concurrency? across all solution
-                _selectedSourceLanguage = value;
-                var settings = _settingsRepository.Get();
-                settings.LastUsedSourceLanguage = value.Code;
-                _settingsRepository.Save(settings);
-            }
-        }
-
-        public string NewItemSource
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
-
-        #endregion
     }
 }
