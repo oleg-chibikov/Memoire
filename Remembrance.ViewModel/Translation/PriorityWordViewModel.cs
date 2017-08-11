@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 using Common.Logging;
 using GalaSoft.MvvmLight.Messaging;
 using JetBrains.Annotations;
@@ -8,11 +7,9 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
-using Scar.Common.WPF.Commands;
 
 namespace Remembrance.ViewModel.Translation
 {
-    // TODO: Simplify Model
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
     public class PriorityWordViewModel : WordViewModel
@@ -37,15 +34,9 @@ namespace Remembrance.ViewModel.Translation
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
-        [NotNull]
-        public ICommand TogglePriorityCommand { get; }
-
         public override bool CanEdit { get; } = true;
-
-        public bool IsPriority { get; set; }
 
         [NotNull]
         public object TranslationEntryId { get; private set; }
@@ -57,7 +48,7 @@ namespace Remembrance.ViewModel.Translation
             IsPriority = isPriority ?? _wordPriorityRepository.IsPriority(this, TranslationEntryId);
         }
 
-        private void TogglePriority()
+        protected override void TogglePriority()
         {
             var isPriority = IsPriority;
             _logger.Info($"Changing priority for {this} to {!isPriority}");

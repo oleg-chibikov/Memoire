@@ -12,7 +12,6 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class WordPriorityRepository : LiteDbRepository<WordPriority, int>, IWordPriorityRepository
     {
-        //TODO: Make this in-memory cacheable
         public WordPriorityRepository([NotNull] ILog logger)
             : base(logger)
         {

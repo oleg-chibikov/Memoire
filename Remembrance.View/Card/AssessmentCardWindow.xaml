@@ -10,7 +10,6 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:card1="clr-namespace:Remembrance.View.Card"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -20,7 +19,8 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance card:AssessmentCardViewModel}"
     WindowStartupLocation="Manual"
-    SizeToContent="WidthAndHeight"
+    SizeToContent="Height"
+    Width="400"
     ShowInTaskbar="false"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>

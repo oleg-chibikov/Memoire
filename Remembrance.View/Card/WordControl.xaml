@@ -17,9 +17,8 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=translation:PriorityWordViewModel}">
+    d:DataContext="{d:DesignInstance d:Type=translation:WordViewModel}">
 
-    <!--TODO: Separate view for priority word-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -46,7 +45,7 @@
         view:MarginSetter.Orientation="Horizontal">
         <TextBlock
             Visibility="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
-            Text="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
+            Text="{Binding PartOfSpeech, Mode=OneWay, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
             Foreground="DarkGreen"
             FontSize="{StaticResource SmallFontSize}"
             Cursor="Arrow" />
@@ -108,11 +107,11 @@
                         Visibility="{Binding CanEdit, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem
                             Visibility="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToVisibilityConverter}}"
-                            Header="{lex:Loc TogglePriority}"
+                            Header="{lex:Loc Remembrance.Resources:Texts:TogglePriority}"
                             Command="{Binding TogglePriorityCommand, Mode=OneTime}" />
                         <MenuItem
                             Visibility="{Binding CanLearnWord, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Header="{lex:Loc LearnWord}"
+                            Header="{lex:Loc Remembrance.Resources:Texts:LearnWord}"
                             Command="{Binding LearnWordCommand, Mode=OneTime}" />
                     </ContextMenu>
                 </TextBlock.ContextMenu>
@@ -126,7 +125,7 @@
         <Button
             Background="Transparent"
             BorderThickness="0"
-            ToolTip="{lex:Loc Speak}"
+            ToolTip="{lex:Loc Remembrance.Resources:Texts:Speak}"
             HorizontalAlignment="{Binding SpeakerAlignment, Mode=OneTime, ElementName = Word}"
             Command="{Binding PlayTtsCommand, Mode=OneTime}">
             <materialDesign:PackIcon

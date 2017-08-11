@@ -17,9 +17,9 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}"
     SizeToContent="Height"
-    AdvancedWindowStartupLocation="BottomRight"
+    AdvancedWindowStartupLocation="BottomLeft"
     WindowStartupLocation="Manual"
-    ShowInTaskbar="false"
+    Draggable="False"
     Width="500"
     Icon="../IconAlt.ico">
     <view:AddTranslationControl

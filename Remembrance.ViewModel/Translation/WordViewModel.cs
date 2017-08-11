@@ -26,7 +26,14 @@ namespace Remembrance.ViewModel.Translation
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             PlayTtsCommand = new CorrelationCommand(PlayTts);
             LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
+            TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
+        protected virtual void TogglePriority() { }
+
+        [NotNull]
+        public ICommand TogglePriorityCommand { get; }
+
+        public bool IsPriority { get; set; }
 
         [DoNotNotify]
         public virtual string Language { get; set; }

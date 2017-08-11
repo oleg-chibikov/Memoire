@@ -47,8 +47,7 @@ namespace Remembrance.Core.Translation.Yandex.JsonConverters
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            // Left as an exercise to the reader :)
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
