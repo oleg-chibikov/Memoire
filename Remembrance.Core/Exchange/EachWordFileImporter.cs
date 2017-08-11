@@ -34,11 +34,11 @@ namespace Remembrance.Core.Exchange
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, translationDetailsRepository, wordsEqualityComparer, wordPriorityRepository)
+            [NotNull] IWordPriorityRepository wordPriorityRepository,
+            [NotNull] IViewModelAdapter viewModelAdapter)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository, viewModelAdapter)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }

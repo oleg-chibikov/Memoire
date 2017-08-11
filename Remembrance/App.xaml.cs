@@ -65,9 +65,7 @@ namespace Remembrance
 
         private void App_DispatcherUnhandledException(object sender, [NotNull] DispatcherUnhandledExceptionEventArgs e)
         {
-            // Process unhandled exception
-            _logger.Fatal("Unhandled exception", e.Exception);
-            NotifyError(e.Exception);
+            HandleException(e.Exception);
 
             // Prevent default unhandled exception processing
             e.Handled = true;
@@ -139,10 +137,23 @@ namespace Remembrance
 
         private void TaskScheduler_UnobservedTaskException(object sender, [NotNull] UnobservedTaskExceptionEventArgs e)
         {
-            _logger.Fatal("Unhandled exception", e.Exception);
-            NotifyError(e.Exception);
+            HandleException(e.Exception.InnerException);
             e.SetObserved();
             e.Exception.Handle(ex => true);
+        }
+
+        private void HandleException(Exception e)
+        {
+            //TODO: implement such handling in other projects
+            if (e is OperationCanceledException)
+            {
+                _logger.Trace("Operation cancelled", e);
+            }
+            else
+            {
+                _logger.Fatal("Unhandled exception", e);
+                NotifyError(e);
+            }
         }
     }
 }

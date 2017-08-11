@@ -16,6 +16,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
+using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.Events;
 using Scar.Common.Exceptions;
@@ -35,9 +36,6 @@ namespace Remembrance.Core.Exchange
         private readonly IMessenger _messenger;
 
         [NotNull]
-        private readonly ITranslationDetailsRepository _translationDetailsRepository;
-
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
@@ -49,22 +47,25 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         protected readonly IWordsProcessor WordsProcessor;
 
+        [NotNull]
+        private readonly IViewModelAdapter _viewModelAdapter;
+
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessenger messenger,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            [NotNull] IWordPriorityRepository wordPriorityRepository,
+            [NotNull] IViewModelAdapter viewModelAdapter)
         {
+            _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -98,6 +99,7 @@ namespace Remembrance.Core.Exchange
                         return new ExchangeResult(false, null, count);
                     }
 
+                    _logger.Trace($"Getting all translations...");
                     var existing = _translationEntryRepository.GetAll();
                     var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
@@ -112,14 +114,18 @@ namespace Remembrance.Core.Exchange
                             {
                                 token.ThrowIfCancellationRequested();
                                 _logger.Info($"Importing from {exchangeEntry.Text}...");
-                                TranslationInfo translationInfo;
+                                var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                                 try
                                 {
                                     var key = GetKey(exchangeEntry, token);
-                                    if (existingKeys.Contains(key))
+                                    if (priorityTranslations == null && existingKeys.Contains(key))
                                         continue;
 
-                                    translationInfo = WordsProcessor.AddWord(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                    var translationInfo = WordsProcessor.AddWord(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                    if (priorityTranslations != null)
+                                        if (ImportPriority(priorityTranslations, translationInfo.TranslationDetails) == 0)
+                                            continue; //No priority imported
+
                                     blockResult.Add(translationInfo);
                                 }
                                 catch (LocalizableException ex)
@@ -127,23 +133,6 @@ namespace Remembrance.Core.Exchange
                                     _logger.Warn($"Cannot translate {exchangeEntry.Text}. The word is skipped", ex);
                                     e.Add(exchangeEntry.Text);
                                     continue;
-                                }
-
-                                var priorityTranslations = GetPriorityTranslations(exchangeEntry);
-                                if (priorityTranslations != null)
-                                {
-                                    foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
-                                        partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
-                                    {
-                                        MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry);
-                                        if (translationVariant.Synonyms == null)
-                                            continue;
-
-                                        foreach (var synonym in translationVariant.Synonyms)
-                                            MarkPriority(priorityTranslations, synonym, translationInfo.TranslationEntry);
-                                    }
-
-                                    _translationDetailsRepository.Save(translationInfo.TranslationDetails);
                                 }
 
                                 count++;
@@ -162,16 +151,38 @@ namespace Remembrance.Core.Exchange
                 token);
         }
 
+        private int ImportPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] TranslationDetails translationDetails)
+        {
+            var result = 0;
+            foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+            {
+                if (MarkPriority(priorityTranslations, translationVariant, translationDetails.TranslationEntryId))
+                    result++;
+                if (translationVariant.Synonyms == null)
+                    continue;
+
+                foreach (var synonym in translationVariant.Synonyms)
+                    if (MarkPriority(priorityTranslations, synonym, translationDetails.TranslationEntryId))
+                        result++;
+            }
+
+            return result;
+        }
+
         [NotNull]
         protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry, CancellationToken token);
 
         [CanBeNull]
         protected abstract ICollection<ExchangeWord> GetPriorityTranslations([NotNull] T exchangeEntry);
 
-        private void MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] TranslationEntry translationEntry)
+        private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] object translationEntryId)
         {
-            if (priorityTranslations.Contains(word, _wordsEqualityComparer))
-                _wordPriorityRepository.MarkPriority(word, translationEntry.Id);
+            if (!priorityTranslations.Contains(word, _wordsEqualityComparer) || _wordPriorityRepository.IsPriority(word, translationEntryId))
+                return false;
+
+            _wordPriorityRepository.MarkPriority(word, translationEntryId);
+            _messenger.Send(_viewModelAdapter.Adapt<PriorityWordViewModel>(word), MessengerTokens.PriorityChangeToken);
+            return true;
         }
 
         private void OnProgress(int current, int total)

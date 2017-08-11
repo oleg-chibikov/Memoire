@@ -22,7 +22,8 @@ namespace Remembrance.Core.Exchange
     {
         private static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
         {
-            ContractResolver = new TranslationEntryContractResolver()
+            ContractResolver = new TranslationEntryContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         [NotNull]

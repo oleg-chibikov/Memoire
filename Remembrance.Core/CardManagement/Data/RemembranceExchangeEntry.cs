@@ -16,7 +16,7 @@ namespace Remembrance.Core.CardManagement.Data
         }
 
         [CanBeNull]
-        [JsonProperty("PriorityTranslations", Required = Required.AllowNull)]
+        [JsonProperty("PriorityTranslations", Required = Required.Default)]
         public HashSet<ExchangeWord> PriorityTranslations { get; }
 
         [NotNull]

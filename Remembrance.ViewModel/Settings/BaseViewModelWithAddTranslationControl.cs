@@ -141,7 +141,6 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace("Disposing...");
             CancellationTokenSource.Cancel();
-            CancellationTokenSource.Dispose();
             Cleanup();
             Logger.Trace("Disposed");
         }

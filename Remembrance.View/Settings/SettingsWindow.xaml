@@ -124,6 +124,7 @@
                 <CheckBox
                     IsChecked="{Binding RandomTranslation, Mode=TwoWay}" />
                 <Button
+                    Background="ForestGreen"
                     Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc Export}"
                     Command="{Binding ExportCommand, Mode=OneTime}"
@@ -148,6 +149,7 @@
                     SelectedValuePath="Code"
                     DisplayMemberPath="DisplayName" />
                 <Button
+                    Background="OrangeRed"
                     Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc Import}"
                     Command="{Binding ImportCommand, Mode=OneTime}"
