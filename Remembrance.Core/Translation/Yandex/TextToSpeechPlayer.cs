@@ -43,10 +43,10 @@ namespace Remembrance.Core.Translation.Yandex
             if (lang == null)
                 throw new ArgumentNullException(nameof(lang));
 
-            _logger.Trace($"Starting speaking {text}...");
             return await Task.Run(
                 () =>
                 {
+                    _logger.Trace($"Starting speaking {text}...");
                     var settings = _settingsRepository.Get();
                     var reset = new AutoResetEvent(false);
                     var uriPart =

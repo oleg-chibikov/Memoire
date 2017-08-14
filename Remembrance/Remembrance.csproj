@@ -93,8 +93,8 @@
     <Reference Include="Scar.Common, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.25\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.6\lib\net462\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.7\lib\net462\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.IO, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.IO.1.0.23\lib\net462\Scar.Common.IO.dll</HintPath>

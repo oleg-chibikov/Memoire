@@ -39,6 +39,9 @@ namespace Remembrance.Core.Exchange
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
+        private readonly IViewModelAdapter _viewModelAdapter;
+
+        [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
 
         [NotNull]
@@ -46,9 +49,6 @@ namespace Remembrance.Core.Exchange
 
         [NotNull]
         protected readonly IWordsProcessor WordsProcessor;
-
-        [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -151,6 +151,12 @@ namespace Remembrance.Core.Exchange
                 token);
         }
 
+        [NotNull]
+        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry, CancellationToken token);
+
+        [CanBeNull]
+        protected abstract ICollection<ExchangeWord> GetPriorityTranslations([NotNull] T exchangeEntry);
+
         private int ImportPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] TranslationDetails translationDetails)
         {
             var result = 0;
@@ -168,12 +174,6 @@ namespace Remembrance.Core.Exchange
 
             return result;
         }
-
-        [NotNull]
-        protected abstract TranslationEntryKey GetKey([NotNull] T exchangeEntry, CancellationToken token);
-
-        [CanBeNull]
-        protected abstract ICollection<ExchangeWord> GetPriorityTranslations([NotNull] T exchangeEntry);
 
         private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] object translationEntryId)
         {

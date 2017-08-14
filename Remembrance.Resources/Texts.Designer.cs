@@ -61,7 +61,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activate.
+        ///   Looks up a localized string similar to Start showing cards.
         /// </summary>
         public static string Activate {
             get {
@@ -115,7 +115,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deactivate.
+        ///   Looks up a localized string similar to Stop showing cards.
         /// </summary>
         public static string Deactivate {
             get {

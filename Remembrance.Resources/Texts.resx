@@ -244,10 +244,10 @@
     <value>Learn this word</value>
   </data>
   <data name="Activate" xml:space="preserve">
-    <value>Activate</value>
+    <value>Start showing cards</value>
   </data>
   <data name="Deactivate" xml:space="preserve">
-    <value>Deactivate</value>
+    <value>Stop showing cards</value>
   </data>
   <data name="ImportSucceeded" xml:space="preserve">
     <value>Import succeeded. {0} words imported</value>

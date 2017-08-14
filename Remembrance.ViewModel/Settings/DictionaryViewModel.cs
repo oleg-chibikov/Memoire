@@ -25,6 +25,7 @@ using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Translation;
+using Scar.Common.DAL;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View;
@@ -194,7 +195,7 @@ namespace Remembrance.ViewModel.Settings
                         if (CancellationTokenSource.IsCancellationRequested)
                             return false;
                         Logger.Trace($"Receiving translations page {pageNumber}...");
-                        var translationEntryViewModels = _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize));
+                        var translationEntryViewModels = _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize, null, SortOrder.Descending));
                         if (!translationEntryViewModels.Any())
                             return false;
 
@@ -395,17 +396,15 @@ namespace Remembrance.ViewModel.Settings
         {
             //TODO: just increment/decrement, but take view into an account
             Count = View.Cast<object>().Count();
-            if (e.Action != NotifyCollectionChangedAction.Remove)
-                return;
-
-            foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
-            {
-                _translationDetailsRepository.DeleteByTranslationEntryId(translationEntryViewModel.Id);
-                _translationEntryRepository.Delete(translationEntryViewModel.Id);
-            }
-
-            foreach (TranslationEntryViewModel translationEntryViewModel in e.NewItems)
-                translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+                foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
+                {
+                    _translationDetailsRepository.DeleteByTranslationEntryId(translationEntryViewModel.Id);
+                    _translationEntryRepository.Delete(translationEntryViewModel.Id);
+                }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+                foreach (TranslationEntryViewModel translationEntryViewModel in e.NewItems)
+                    translationEntryViewModel.TextChanged += TranslationEntryViewModel_TextChanged;
         }
     }
 }

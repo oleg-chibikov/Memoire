@@ -28,7 +28,6 @@ namespace Remembrance.ViewModel.Translation
             LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
-        protected virtual void TogglePriority() { }
 
         [NotNull]
         public ICommand TogglePriorityCommand { get; }
@@ -113,6 +112,10 @@ namespace Remembrance.ViewModel.Translation
         public void ReRender()
         {
             ReRenderSwitch = !ReRenderSwitch;
+        }
+
+        protected virtual void TogglePriority()
+        {
         }
 
         public override string ToString()

@@ -83,6 +83,20 @@ namespace Remembrance
             return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
         }
 
+        private void HandleException(Exception e)
+        {
+            //TODO: implement such handling in other projects
+            if (e is OperationCanceledException)
+            {
+                _logger.Trace("Operation cancelled", e);
+            }
+            else
+            {
+                _logger.Fatal("Unhandled exception", e);
+                NotifyError(e);
+            }
+        }
+
         private void NotifyError(Exception e)
         {
             _messenger.Send($"{Errors.DefaultError}: {e.GetMostInnerException()}", MessengerTokens.UserErrorToken);
@@ -140,20 +154,6 @@ namespace Remembrance
             HandleException(e.Exception.InnerException);
             e.SetObserved();
             e.Exception.Handle(ex => true);
-        }
-
-        private void HandleException(Exception e)
-        {
-            //TODO: implement such handling in other projects
-            if (e is OperationCanceledException)
-            {
-                _logger.Trace("Operation cancelled", e);
-            }
-            else
-            {
-                _logger.Fatal("Unhandled exception", e);
-                NotifyError(e);
-            }
         }
     }
 }

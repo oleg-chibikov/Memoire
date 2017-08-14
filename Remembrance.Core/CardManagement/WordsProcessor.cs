@@ -91,7 +91,6 @@ namespace Remembrance.Core.CardManagement
             // There are no translation details for this word
             translationDetails = new TranslationDetails(translationResult, id);
 
-            // TODO: Get priority words out of Tran Entry?
             _logger.Trace($"Saving translation details for {id}...");
             _translationDetailsRepository.Save(translationDetails);
 
@@ -181,7 +180,7 @@ namespace Remembrance.Core.CardManagement
         }
 
         [NotNull]
-        private TranslationEntryKey GetTranslationKey([CanBeNull] string text, string sourceLanguage, string targetLanguage)
+        private TranslationEntryKey GetTranslationKey([CanBeNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(text))
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
@@ -201,14 +200,14 @@ namespace Remembrance.Core.CardManagement
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
-        private void PostProcessWord(IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
+        private void PostProcessWord([CanBeNull] IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
         {
             _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             _cardManager.ShowCard(translationInfo, ownerWindow);
         }
 
-        private bool ProcessWordInternal(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        private bool ProcessWordInternal([CanBeNull] object id, [NotNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, [CanBeNull] IWindow ownerWindow)
         {
             TranslationInfo translationInfo;
             try
@@ -229,12 +228,13 @@ namespace Remembrance.Core.CardManagement
         }
 
         [NotNull]
-        private TranslationResult Translate(string text, string sourceLanguage, string targetLanguage)
+        private TranslationResult Translate([NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage)
         {
             // Used En as ui language to simplify conversion of common words to the enums
             var translationResult = _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage).Result;
             if (!translationResult.PartOfSpeechTranslations.Any())
                 throw new LocalizableException($"No translations found for {text}", Errors.CannotTranslate);
+            _logger.Trace("Received translation");
 
             return translationResult;
         }

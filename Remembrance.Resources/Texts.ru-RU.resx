@@ -244,10 +244,10 @@
     <value>Учить это слово</value>
   </data>
   <data name="Activate" xml:space="preserve">
-    <value>Активировать</value>
+    <value>Показывать карточки</value>
   </data>
   <data name="Deactivate" xml:space="preserve">
-    <value>Деактивировать</value>
+    <value>Не показывать карточки</value>
   </data>
   <data name="ImportSucceeded" xml:space="preserve">
     <value>Импорт завершился успешно. {0} слов импортировано</value>
