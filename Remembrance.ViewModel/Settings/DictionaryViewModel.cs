@@ -270,8 +270,8 @@ namespace Remembrance.ViewModel.Settings
                 _syncContext.Post(
                     x =>
                     {
-                        _translationList.Add(translationEntryViewModel);
-                        View.MoveCurrentToLast();
+                        _translationList.Insert(0, translationEntryViewModel);
+                        View.MoveCurrentTo(translationEntryViewModel);
                     },
                     null);
                 Logger.Trace($"{translationEntryViewModel} has been added to the list...");
