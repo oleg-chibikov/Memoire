@@ -47,6 +47,9 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILifetimeScope _lifetimeScope;
 
         [NotNull]
+        private readonly IMessenger _messenger;
+
+        [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
         [NotNull]
@@ -77,17 +80,18 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IMessenger messenger,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter)
+            [NotNull] IViewModelAdapter viewModelAdapter,
+            [NotNull] IMessenger messenger)
             : base(settingsRepository, languageDetector, wordsProcessor, logger)
         {
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
+            _messenger = messenger;
             if (viewModelAdapter == null)
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            if (messenger == null)
+                throw new ArgumentNullException(nameof(messenger));
 
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
@@ -159,6 +163,7 @@ namespace Remembrance.ViewModel.Settings
             _translationList.CollectionChanged -= TranslationList_CollectionChanged;
             _timer.Tick -= Timer_Tick;
             _timer.Stop();
+            _messenger.Unregister(this);
         }
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)

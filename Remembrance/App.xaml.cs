@@ -106,6 +106,7 @@ namespace Remembrance
         {
             _container.Dispose();
             _mutex.Dispose();
+            _messenger.Unregister(this);
         }
 
         protected override void OnStartup(StartupEventArgs e)

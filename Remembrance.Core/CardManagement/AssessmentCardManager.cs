@@ -61,6 +61,7 @@ namespace Remembrance.Core.CardManagement
         public void Dispose()
         {
             _interval.Dispose();
+            _messenger.Unregister(this);
             Logger.Info("Finished showing cards");
         }
 

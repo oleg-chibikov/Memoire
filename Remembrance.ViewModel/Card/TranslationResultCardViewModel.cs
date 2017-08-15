@@ -15,10 +15,13 @@ namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationResultCardViewModel
+    public sealed class TranslationResultCardViewModel : IDisposable
     {
         [NotNull]
         private readonly ILog _logger;
+
+        [NotNull]
+        private readonly IMessenger _messenger;
 
         [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
@@ -26,16 +29,15 @@ namespace Remembrance.ViewModel.Card
         public TranslationResultCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessenger messenger,
             [NotNull] ILog logger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] IMessenger messenger)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
             if (viewModelAdapter == null)
                 throw new ArgumentNullException(nameof(viewModelAdapter));
-            if (messenger == null)
-                throw new ArgumentNullException(nameof(messenger));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
@@ -53,6 +55,11 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         public string Word { get; }
+
+        public void Dispose()
+        {
+            _messenger.Unregister(this);
+        }
 
         [CanBeNull]
         private PriorityWordViewModel GetWordInTranslationDetails(IWord word)

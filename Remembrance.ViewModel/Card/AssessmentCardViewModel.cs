@@ -24,7 +24,7 @@ namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class AssessmentCardViewModel : IRequestCloseViewModel
+    public sealed class AssessmentCardViewModel : IRequestCloseViewModel, IDisposable
     {
         [NotNull]
         private static readonly Random Random = new Random();
@@ -110,6 +110,11 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         public string CorrectAnswer { get; private set; }
+
+        public void Dispose()
+        {
+            _messenger.Unregister(this);
+        }
 
         public event EventHandler RequestClose;
 

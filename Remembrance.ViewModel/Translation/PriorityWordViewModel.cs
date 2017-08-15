@@ -12,7 +12,7 @@ namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
-    public class PriorityWordViewModel : WordViewModel
+    public class PriorityWordViewModel : WordViewModel, IDisposable
     {
         [NotNull]
         private readonly ILog _logger;
@@ -40,6 +40,11 @@ namespace Remembrance.ViewModel.Translation
 
         [NotNull]
         public object TranslationEntryId { get; private set; }
+
+        public void Dispose()
+        {
+            _messenger.Unregister(this);
+        }
 
         public void SetProperties([NotNull] object translationEntryId, [NotNull] string targetLanguage, [CanBeNull] bool? isPriority = null)
         {

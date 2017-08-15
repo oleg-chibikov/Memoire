@@ -19,7 +19,7 @@ namespace Remembrance.Core.CardManagement
 {
     // TODO: Think about class interface - it is not clear now
     [UsedImplicitly]
-    internal sealed class WordsProcessor : IWordsProcessor
+    internal sealed class WordsProcessor : IWordsProcessor, IDisposable
     {
         private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
 
@@ -78,6 +78,11 @@ namespace Remembrance.Core.CardManagement
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        }
+
+        public void Dispose()
+        {
+            _messenger.Unregister(this);
         }
 
         public TranslationDetails ReloadTranslationDetailsIfNeeded(object id, string text, string sourceLanguage, string targetLanguage)

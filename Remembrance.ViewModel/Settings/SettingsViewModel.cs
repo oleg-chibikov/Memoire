@@ -160,6 +160,7 @@ namespace Remembrance.ViewModel.Settings
         public void Dispose()
         {
             _cardsExchanger.Progress -= CardsExchanger_Progress;
+            _messenger.Unregister(this);
         }
 
         public event EventHandler RequestClose;

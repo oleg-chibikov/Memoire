@@ -24,7 +24,7 @@ using Scar.Common.Exceptions;
 namespace Remembrance.Core.Exchange
 {
     [UsedImplicitly]
-    internal abstract class BaseFileImporter<T> : IFileImporter
+    internal abstract class BaseFileImporter<T> : IFileImporter, IDisposable
         where T : IExchangeEntry
     {
         private const int MaxBlockSize = 25;
@@ -66,6 +66,11 @@ namespace Remembrance.Core.Exchange
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        }
+
+        public void Dispose()
+        {
+            _messenger.Unregister(this);
         }
 
         public event EventHandler<ProgressEventArgs> Progress;

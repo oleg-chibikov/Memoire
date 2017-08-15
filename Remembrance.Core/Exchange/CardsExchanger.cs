@@ -131,6 +131,7 @@ namespace Remembrance.Core.Exchange
         {
             foreach (var importer in _importers)
                 importer.Progress -= Importer_Progress;
+            _messenger.Unregister(this);
         }
 
         private void Importer_Progress(object sender, ProgressEventArgs e)
