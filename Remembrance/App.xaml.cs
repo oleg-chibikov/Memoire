@@ -18,8 +18,10 @@ using Remembrance.DAL;
 using Remembrance.Resources;
 using Remembrance.View.Card;
 using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
 using Scar.Common;
+using Scar.Common.Exceptions;
 using Scar.Common.IO;
 using Scar.Common.Logging;
 using Scar.Common.WPF.Localization;
@@ -44,6 +46,9 @@ namespace Remembrance
         [NotNull]
         private readonly Mutex _mutex;
 
+        [NotNull]
+        private SynchronizationContext _synchronizationContext;
+
         public App()
         {
             _container = RegisterDependencies();
@@ -52,9 +57,9 @@ namespace Remembrance
 
             _messenger = _container.Resolve<IMessenger>();
             _messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
-            _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Information));
-            _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Warning));
-            _messenger.Register<string>(this, MessengerTokens.UserErrorToken, message => MessageBox.Show(message, nameof(Remembrance), MessageBoxButton.OK, MessageBoxImage.Error));
+            _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => ShowMessage(message, MessageType.Message));
+            _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => ShowMessage(message, MessageType.Warning));
+            _messenger.Register<string>(this, MessengerTokens.UserErrorToken, message => ShowMessage(message, MessageType.Error));
 
             _logger = _container.Resolve<ILog>();
             _mutex = CreateMutex();
@@ -99,7 +104,15 @@ namespace Remembrance
 
         private void NotifyError(Exception e)
         {
-            _messenger.Send($"{Errors.DefaultError}: {e.GetMostInnerException()}", MessengerTokens.UserErrorToken);
+            var exception = e.GetMostInnerException();
+            var localizable = exception as LocalizableException;
+            var message = localizable != null
+                ? localizable.LocalizedMessage
+                : $"{Errors.DefaultError}: {exception}";
+            var messageType = localizable != null
+                ? MessengerTokens.UserWarningToken
+                : MessengerTokens.UserErrorToken;
+            _messenger.Send(message, messageType);
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -117,6 +130,8 @@ namespace Remembrance
                 Current.Shutdown();
                 return;
             }
+
+            _synchronizationContext = SynchronizationContext.Current;
 
             _container.Resolve<ITrayWindow>().ShowDialog();
             _container.Resolve<IAssessmentCardManager>();
@@ -148,6 +163,12 @@ namespace Remembrance
             builder.RegisterModule<LoggingModule>();
 
             return builder.Build();
+        }
+
+        private void ShowMessage([NotNull] string message, MessageType messageType)
+        {
+            var viewModel = _container.Resolve<MessageViewModel>(new TypedParameter(typeof(string), message), new TypedParameter(typeof(MessageType), messageType));
+            _synchronizationContext.Post(x => _container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel)).Restore(), null);
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, [NotNull] UnobservedTaskExceptionEventArgs e)

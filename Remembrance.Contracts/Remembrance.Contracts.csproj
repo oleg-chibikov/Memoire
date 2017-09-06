@@ -43,8 +43,8 @@
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.4\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.View.Contracts.1.0.5\lib\net462\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -98,6 +98,7 @@
     <Compile Include="View\Card\ITranslationResultCardWindow.cs" />
     <Compile Include="View\Card\IAssessmentCardWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Settings\IMessageWindow.cs" />
     <Compile Include="View\Settings\IAddTranslationWindow.cs" />
     <Compile Include="View\Settings\IDictionaryWindow.cs" />
     <Compile Include="View\Settings\ISettingsWindow.cs" />

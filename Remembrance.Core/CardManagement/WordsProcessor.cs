@@ -102,16 +102,16 @@ namespace Remembrance.Core.CardManagement
             return translationDetails;
         }
 
-        public bool ProcessNewWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        public void ProcessNewWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
         {
             _logger.Info($"Processing word {text}...");
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            return ProcessWordInternal(null, text, sourceLanguage, targetLanguage, ownerWindow);
+            ProcessWordInternal(null, text, sourceLanguage, targetLanguage, ownerWindow);
         }
 
-        public bool ChangeWord(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        public void ChangeWord(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
         {
             _logger.Info($"Changing text for {text} for word {id}...");
             if (id == null)
@@ -123,7 +123,7 @@ namespace Remembrance.Core.CardManagement
             if (targetLanguage == null)
                 throw new ArgumentNullException(nameof(targetLanguage));
 
-            return ProcessWordInternal(id, text, sourceLanguage, targetLanguage, ownerWindow);
+            ProcessWordInternal(id, text, sourceLanguage, targetLanguage, ownerWindow);
         }
 
         public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)
@@ -212,24 +212,11 @@ namespace Remembrance.Core.CardManagement
             _cardManager.ShowCard(translationInfo, ownerWindow);
         }
 
-        private bool ProcessWordInternal([CanBeNull] object id, [NotNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, [CanBeNull] IWindow ownerWindow)
+        private void ProcessWordInternal([CanBeNull] object id, [NotNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, [CanBeNull] IWindow ownerWindow)
         {
-            TranslationInfo translationInfo;
-            try
-            {
-                translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
-            }
-            catch (LocalizableException ex)
-            {
-                _logger.Warn(ex.Message);
-                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserMessageToken);
-                _logger.Warn($"Processing failed for word {text}");
-                return false;
-            }
-
+            var translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
             PostProcessWord(ownerWindow, translationInfo);
             _logger.Trace($"Processing finished for word {text}");
-            return true;
         }
 
         [NotNull]
@@ -238,7 +225,7 @@ namespace Remembrance.Core.CardManagement
             // Used En as ui language to simplify conversion of common words to the enums
             var translationResult = _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage).Result;
             if (!translationResult.PartOfSpeechTranslations.Any())
-                throw new LocalizableException($"No translations found for {text}", Errors.CannotTranslate);
+                throw new LocalizableException($"No translations found for {text}", string.Format(Errors.CannotTranslate, text, sourceLanguage, targetLanguage));
             _logger.Trace("Received translation");
 
             return translationResult;

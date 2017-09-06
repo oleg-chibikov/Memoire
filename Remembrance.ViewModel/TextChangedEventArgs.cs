@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.ViewModel
 {
-    public delegate bool TextChangedEventHandler(object sender, TextChangedEventArgs e);
+    public delegate void TextChangedEventHandler(object sender, TextChangedEventArgs e);
 
     public sealed class TextChangedEventArgs : EventArgs
     {

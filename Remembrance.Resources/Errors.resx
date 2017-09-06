@@ -127,7 +127,7 @@
     <value>Cannot detect language for the word.</value>
   </data>
   <data name="CannotTranslate" xml:space="preserve">
-    <value>Cannot translate given word.</value>
+    <value>Cannot translate word '{0}' from {1} to {2}.</value>
   </data>
   <data name="WordIsMissing" xml:space="preserve">
     <value>Word is missing.</value>

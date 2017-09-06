@@ -387,14 +387,15 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        private bool TranslationEntryViewModel_TextChanged([NotNull] object sender, [NotNull] TextChangedEventArgs e)
+        private void TranslationEntryViewModel_TextChanged([NotNull] object sender, [NotNull] TextChangedEventArgs e)
         {
             var translationEntryViewModel = (TranslationEntryViewModel) sender;
             Logger.Info($"Changing translation's text for {translationEntryViewModel} to {e.NewValue}...");
 
             var sourceLanguage = translationEntryViewModel.Language;
             var targetLanguage = translationEntryViewModel.TargetLanguage;
-            return e.NewValue != null && WordsProcessor.ChangeWord(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage, Window);
+            if (e.NewValue != null)
+                WordsProcessor.ChangeWord(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage, Window);
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)

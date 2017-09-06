@@ -124,7 +124,7 @@
     <value>Не получилось определить язык.</value>
   </data>
   <data name="CannotTranslate" xml:space="preserve">
-    <value>Не получилось перевести слово.</value>
+    <value>Не получилось перевести слово '{0}' c {1} на {2}.</value>
   </data>
   <data name="DefaultError" xml:space="preserve">
     <value>Простите, что-то пошло не так.</value>

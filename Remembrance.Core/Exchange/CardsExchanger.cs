@@ -119,7 +119,7 @@ namespace Remembrance.Core.Exchange
                     }
                 }
 
-                _messenger.Send(Texts.ImportFailed, MessengerTokens.UserWarningToken);
+                _messenger.Send(Texts.ImportFailed, MessengerTokens.UserErrorToken);
             }
             finally
             {

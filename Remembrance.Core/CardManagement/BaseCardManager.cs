@@ -5,7 +5,6 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
-using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
@@ -41,15 +40,13 @@ namespace Remembrance.Core.CardManagement
                         return;
                     }
 
+                    //CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
                     window.Draggable = false;
-                    Logger.Info($"Showing {translationInfo}");
-                    CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
                     if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
                         window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
-                    window.Topmost = true;
-                    window.Show();
-                    window.Topmost = false;
+                    Logger.Info($"Showing {translationInfo}");
+                    window.Restore();
                 });
         }
 

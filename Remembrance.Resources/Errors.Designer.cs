@@ -79,7 +79,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot translate given word..
+        ///   Looks up a localized string similar to Cannot translate word &apos;{0}&apos; from {1} to {2}..
         /// </summary>
         public static string CannotTranslate {
             get {

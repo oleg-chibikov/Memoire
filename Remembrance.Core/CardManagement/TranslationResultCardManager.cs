@@ -9,7 +9,6 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
-using Scar.Common;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
@@ -18,7 +17,7 @@ namespace Remembrance.Core.CardManagement
     internal sealed class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
         // TODO: config timeout
-        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(10);
 
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
@@ -37,15 +36,7 @@ namespace Remembrance.Core.CardManagement
                 new TypedParameter(typeof(TranslationResultCardViewModel), translationResultCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
             translationResultCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
-
-            Logger.Trace($"Closing window in {CloseTimeout}...");
-            ActionExtensions.DoAfterAsync(
-                () =>
-                {
-                    _syncContext.Post(x => translationResultCardWindow.Close(), null);
-                    Logger.Trace("Window is closed");
-                },
-                CloseTimeout);
+            translationResultCardWindow.AutoCloseTimeout = CloseTimeout;
             return translationResultCardWindow;
         }
     }
