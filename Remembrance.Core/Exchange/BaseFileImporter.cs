@@ -104,7 +104,7 @@ namespace Remembrance.Core.Exchange
                         return new ExchangeResult(false, null, count);
                     }
 
-                    _logger.Trace($"Getting all translations...");
+                    _logger.Trace("Getting all translations...");
                     var existing = _translationEntryRepository.GetAll();
                     var existingKeys = new HashSet<TranslationEntryKey>(existing.Select(x => x.Key));
 
