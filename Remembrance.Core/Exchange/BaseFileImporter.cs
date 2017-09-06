@@ -126,7 +126,7 @@ namespace Remembrance.Core.Exchange
                                     if (priorityTranslations == null && existingKeys.Contains(key))
                                         continue;
 
-                                    var translationInfo = WordsProcessor.AddWord(key.Text, key.SourceLanguage, key.TargetLanguage);
+                                    var translationInfo = WordsProcessor.AddOrChangeWord(key.Text, key.SourceLanguage, key.TargetLanguage, null, false);
                                     if (priorityTranslations != null)
                                         if (ImportPriority(priorityTranslations, translationInfo.TranslationDetails) == 0)
                                             continue; //No priority imported

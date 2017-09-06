@@ -32,7 +32,7 @@ namespace Remembrance.WebApi.Controllers
 
             try
             {
-                _wordsProcessor.ProcessNewWord(word);
+                _wordsProcessor.AddOrChangeWord(word);
             }
             catch (LocalizableException ex)
             {

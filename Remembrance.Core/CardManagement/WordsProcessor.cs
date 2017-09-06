@@ -102,32 +102,12 @@ namespace Remembrance.Core.CardManagement
             return translationDetails;
         }
 
-        public void ProcessNewWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
+        public TranslationInfo AddOrChangeWord(string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow, bool needPostProcess, object id)
         {
             _logger.Info($"Processing word {text}...");
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            ProcessWordInternal(null, text, sourceLanguage, targetLanguage, ownerWindow);
-        }
-
-        public void ChangeWord(object id, string text, string sourceLanguage, string targetLanguage, IWindow ownerWindow)
-        {
-            _logger.Info($"Changing text for {text} for word {id}...");
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (sourceLanguage == null)
-                throw new ArgumentNullException(nameof(sourceLanguage));
-            if (targetLanguage == null)
-                throw new ArgumentNullException(nameof(targetLanguage));
-
-            ProcessWordInternal(id, text, sourceLanguage, targetLanguage, ownerWindow);
-        }
-
-        public TranslationInfo AddWord(string text, string sourceLanguage, string targetLanguage, object id)
-        {
             // This method replaces translation with the actual one
             _logger.Trace($"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
 
@@ -162,9 +142,13 @@ namespace Remembrance.Core.CardManagement
                 translationDetails.Id = existingTranslationDetails.Id;
 
             _translationDetailsRepository.Save(translationDetails);
-            _logger.Trace($"Translation for {key} has been successfully added");
+            var translationInfo = new TranslationInfo(translationEntry, translationDetails);
 
-            return new TranslationInfo(translationEntry, translationDetails);
+            _logger.Trace($"Translation for {key} has been successfully added");
+            if (needPostProcess)
+                PostProcessWord(ownerWindow, translationInfo);
+            _logger.Trace($"Processing finished for word {text}");
+            return translationInfo;
         }
 
         public string GetDefaultTargetLanguage(string sourceLanguage)
@@ -185,7 +169,7 @@ namespace Remembrance.Core.CardManagement
         }
 
         [NotNull]
-        private TranslationEntryKey GetTranslationKey([CanBeNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage)
+        private TranslationEntryKey GetTranslationKey([NotNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(text))
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
@@ -210,13 +194,6 @@ namespace Remembrance.Core.CardManagement
             _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
             _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
             _cardManager.ShowCard(translationInfo, ownerWindow);
-        }
-
-        private void ProcessWordInternal([CanBeNull] object id, [NotNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, [CanBeNull] IWindow ownerWindow)
-        {
-            var translationInfo = AddWord(text, sourceLanguage, targetLanguage, id);
-            PostProcessWord(ownerWindow, translationInfo);
-            _logger.Trace($"Processing finished for word {text}");
         }
 
         [NotNull]

@@ -395,7 +395,7 @@ namespace Remembrance.ViewModel.Settings
             var sourceLanguage = translationEntryViewModel.Language;
             var targetLanguage = translationEntryViewModel.TargetLanguage;
             if (e.NewValue != null)
-                WordsProcessor.ChangeWord(translationEntryViewModel.Id, e.NewValue, sourceLanguage, targetLanguage, Window);
+                WordsProcessor.AddOrChangeWord(e.NewValue, sourceLanguage, targetLanguage, Window, id: translationEntryViewModel.Id);
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)

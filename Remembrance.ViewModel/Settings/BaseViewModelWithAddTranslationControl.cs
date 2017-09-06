@@ -160,7 +160,7 @@ namespace Remembrance.ViewModel.Settings
             var sourceLanguage = SelectedSourceLanguage.Code;
             var targetLanguage = SelectedTargetLanguage.Code;
 
-            WordsProcessor.ProcessNewWord(text, sourceLanguage, targetLanguage, Window);
+            WordsProcessor.AddOrChangeWord(text, sourceLanguage, targetLanguage, Window);
         }
     }
 }

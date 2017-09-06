@@ -101,7 +101,7 @@ namespace Remembrance.ViewModel.Translation
 
         private void LearnWord()
         {
-            WordsProcessor.ProcessNewWord(Text, Language);
+            WordsProcessor.AddOrChangeWord(Text, Language);
         }
 
         private void PlayTts()
