@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Input;
 using System.Windows.Shell;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
@@ -34,7 +34,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
@@ -44,7 +44,7 @@ namespace Remembrance.ViewModel.Settings
 
         private Language _uiLanguage;
 
-        public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessenger messenger, [NotNull] ICardsExchanger cardsExchanger)
+        public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessageHub messenger, [NotNull] ICardsExchanger cardsExchanger)
         {
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -118,7 +118,7 @@ namespace Remembrance.ViewModel.Settings
             set
             {
                 _uiLanguage = value;
-                _messenger.Send(_uiLanguage.Code, MessengerTokens.UiLanguageToken);
+                _messenger.Publish(_uiLanguage);
             }
         }
 
@@ -160,7 +160,6 @@ namespace Remembrance.ViewModel.Settings
         public void Dispose()
         {
             _cardsExchanger.Progress -= CardsExchanger_Progress;
-            _messenger.Unregister(this);
         }
 
         public event EventHandler RequestClose;
@@ -226,7 +225,7 @@ namespace Remembrance.ViewModel.Settings
             settings.UiLanguage = UiLanguage.Code;
             _settingsRepository.Save(settings);
             if (prevFreq != freq)
-                _messenger.Send(settings.CardShowFrequency, MessengerTokens.CardShowFrequencyToken);
+                _messenger.Publish(settings.CardShowFrequency);
             RequestClose?.Invoke(null, null);
             _logger.Trace("Settings has been saved");
         }

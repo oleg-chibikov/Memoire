@@ -33,8 +33,8 @@
         BorderThickness="2"
         BorderBrush="Black"
         Padding="10"
-        Background="{Binding MessageType, Mode=OneTime, Converter={StaticResource MessageTypeToBrushConverter}}">
+        Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBrushConverter}}">
         <TextBlock
-            Text="{Binding Message, Mode=OneTime}" />
+            Text="{Binding Message.Text, Mode=OneTime}" />
     </Border>
 </window:AnimatedWindow>

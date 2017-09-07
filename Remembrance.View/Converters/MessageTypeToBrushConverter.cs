@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using JetBrains.Annotations;
-using Remembrance.ViewModel.Settings;
+using Scar.Common.Messages;
 
 namespace Remembrance.View.Converters
 {

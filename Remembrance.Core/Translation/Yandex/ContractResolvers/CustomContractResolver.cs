@@ -17,14 +17,14 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
             var contract = base.CreateContract(objectType);
 
             // this will only be called once and then cached
-            if (PropertyConverters != null && PropertyConverters.TryGetValue(objectType, out JsonConverter jsonConverter))
+            if (PropertyConverters != null && PropertyConverters.TryGetValue(objectType, out var jsonConverter))
                 contract.Converter = jsonConverter;
             return contract;
         }
 
         protected override string ResolvePropertyName([NotNull] string propertyName)
         {
-            var resolved = PropertyMappings.TryGetValue(propertyName, out string resolvedName);
+            var resolved = PropertyMappings.TryGetValue(propertyName, out var resolvedName);
             return resolved
                 ? resolvedName
                 : base.ResolvePropertyName(propertyName);

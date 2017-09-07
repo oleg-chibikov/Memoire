@@ -7,10 +7,16 @@ namespace Remembrance.Contracts.CardManagement
     public interface IWordsProcessor
     {
         [NotNull]
-        string GetDefaultTargetLanguage([NotNull] string sourceLanguage);
+        TranslationInfo AddOrChangeWord(
+            [NotNull] string text,
+            [CanBeNull] string sourceLanguage = null,
+            [CanBeNull] string targetLanguage = null,
+            IWindow ownerWindow = null,
+            bool needPostProcess = true,
+            object id = null);
 
         [NotNull]
-        TranslationInfo AddOrChangeWord([NotNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null, IWindow ownerWindow = null, bool needPostProcess = true, object id = null);
+        string GetDefaultTargetLanguage([NotNull] string sourceLanguage);
 
         [NotNull]
         TranslationDetails ReloadTranslationDetailsIfNeeded([NotNull] object id, [NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage);

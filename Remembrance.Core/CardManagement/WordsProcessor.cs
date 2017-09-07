@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
@@ -19,7 +19,7 @@ namespace Remembrance.Core.CardManagement
 {
     // TODO: Think about class interface - it is not clear now
     [UsedImplicitly]
-    internal sealed class WordsProcessor : IWordsProcessor, IDisposable
+    internal sealed class WordsProcessor : IWordsProcessor
     {
         private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
 
@@ -41,7 +41,7 @@ namespace Remembrance.Core.CardManagement
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
@@ -62,7 +62,7 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ILog logger,
             [NotNull] ITranslationResultCardManager cardManager,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IWordsTranslator wordsTranslator,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -78,11 +78,6 @@ namespace Remembrance.Core.CardManagement
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-        }
-
-        public void Dispose()
-        {
-            _messenger.Unregister(this);
         }
 
         public TranslationDetails ReloadTranslationDetailsIfNeeded(object id, string text, string sourceLanguage, string targetLanguage)
@@ -192,7 +187,7 @@ namespace Remembrance.Core.CardManagement
         private void PostProcessWord([CanBeNull] IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
         {
             _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
-            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _messenger.Publish(translationInfo);
             _cardManager.ShowCard(translationInfo, ownerWindow);
         }
 

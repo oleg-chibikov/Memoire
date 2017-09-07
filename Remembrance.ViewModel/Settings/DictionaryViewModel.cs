@@ -12,7 +12,7 @@ using System.Windows.Threading;
 using Autofac;
 using CCSWE.Collections.ObjectModel;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
@@ -22,8 +22,8 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
-using Remembrance.Resources;
 using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel.Settings.Data;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.DAL;
 using Scar.Common.WPF.Commands;
@@ -47,7 +47,10 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILifetimeScope _lifetimeScope;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
@@ -84,7 +87,7 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessenger messenger)
+            [NotNull] IMessageHub messenger)
             : base(settingsRepository, languageDetector, wordsProcessor, logger)
         {
             _messenger = messenger;
@@ -126,10 +129,10 @@ namespace Remembrance.ViewModel.Settings
 
             Logger.Trace("Subscribing to the events...");
 
-            messenger.Register<TranslationInfo>(this, MessengerTokens.TranslationInfoToken, OnWordReceived);
-            messenger.Register<TranslationInfo[]>(this, MessengerTokens.TranslationInfoBatchToken, OnWordsBatchReceived);
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
+            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo>(OnWordReceived));
+            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo[]>(OnWordsBatchReceived));
+            _subscriptionTokens.Add(messenger.Subscribe<Language>(OnUiLanguageChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
 
             Logger.Info("Started");
             Logger.Trace("Receiving translations...");
@@ -163,7 +166,8 @@ namespace Remembrance.ViewModel.Settings
             _translationList.CollectionChanged -= TranslationList_CollectionChanged;
             _timer.Tick -= Timer_Tick;
             _timer.Stop();
-            _messenger.Unregister(this);
+            foreach (var token in _subscriptionTokens)
+                _messenger.UnSubscribe(token);
         }
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)
@@ -235,13 +239,13 @@ namespace Remembrance.ViewModel.Settings
                 ProcessNonPriority(priorityWordViewModel, translationEntryViewModel);
         }
 
-        private void OnUiLanguageChanged([NotNull] string uiLanguage)
+        private void OnUiLanguageChanged([NotNull] Language uiLanguage)
         {
             Logger.Trace($"Changing UI language to {uiLanguage}...");
             if (uiLanguage == null)
                 throw new ArgumentNullException(nameof(uiLanguage));
 
-            CultureUtilities.ChangeCulture(uiLanguage);
+            CultureUtilities.ChangeCulture(uiLanguage.Code);
 
             foreach (var translation in _translationList.SelectMany(translationEntryViewModel => translationEntryViewModel.Translations))
                 translation.ReRender();

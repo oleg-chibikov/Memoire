@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
@@ -18,7 +18,7 @@ namespace Remembrance.Core.Exchange
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
             [NotNull] IViewModelAdapter viewModelAdapter)

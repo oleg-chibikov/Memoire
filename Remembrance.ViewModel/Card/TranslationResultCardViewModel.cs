@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Resources;
+using Remembrance.ViewModel.Settings.Data;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Localization;
 
@@ -21,7 +21,10 @@ namespace Remembrance.ViewModel.Card
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
@@ -31,7 +34,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILog logger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IMessenger messenger)
+            [NotNull] IMessageHub messenger)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
@@ -46,8 +49,8 @@ namespace Remembrance.ViewModel.Card
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             Word = translationInfo.Key.Text;
 
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
-            messenger.Register<PriorityWordViewModel>(this, MessengerTokens.PriorityChangeToken, OnPriorityChanged);
+            _subscriptionTokens.Add(messenger.Subscribe<Language>(OnUiLanguageChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
         }
 
         [NotNull]
@@ -58,7 +61,8 @@ namespace Remembrance.ViewModel.Card
 
         public void Dispose()
         {
-            _messenger.Unregister(this);
+            foreach (var token in _subscriptionTokens)
+                _messenger.UnSubscribe(token);
         }
 
         [CanBeNull]
@@ -100,13 +104,13 @@ namespace Remembrance.ViewModel.Card
             }
         }
 
-        private void OnUiLanguageChanged([NotNull] string uiLanguage)
+        private void OnUiLanguageChanged([NotNull] Language uiLanguage)
         {
             _logger.Trace($"Changing UI language to {uiLanguage}...");
             if (uiLanguage == null)
                 throw new ArgumentNullException(nameof(uiLanguage));
 
-            CultureUtilities.ChangeCulture(uiLanguage);
+            CultureUtilities.ChangeCulture(uiLanguage.Code);
 
             foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
             {

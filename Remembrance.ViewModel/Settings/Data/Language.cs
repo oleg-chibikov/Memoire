@@ -24,8 +24,7 @@ namespace Remembrance.ViewModel.Settings.Data
             if (obj == this)
                 return true;
 
-            var cast = obj as Language;
-            return cast != null && Equals(cast);
+            return obj is Language cast && Equals(cast);
         }
 
         private bool Equals([NotNull] Language other)
@@ -39,6 +38,11 @@ namespace Remembrance.ViewModel.Settings.Data
             {
                 return (Code.GetHashCode() * 397) ^ DisplayName.GetHashCode();
             }
+        }
+
+        public override string ToString()
+        {
+            return Code;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts;
@@ -15,7 +15,6 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Core.CardManagement.Data;
-using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.Events;
@@ -24,7 +23,7 @@ using Scar.Common.Exceptions;
 namespace Remembrance.Core.Exchange
 {
     [UsedImplicitly]
-    internal abstract class BaseFileImporter<T> : IFileImporter, IDisposable
+    internal abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
         private const int MaxBlockSize = 25;
@@ -33,7 +32,7 @@ namespace Remembrance.Core.Exchange
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
@@ -54,7 +53,7 @@ namespace Remembrance.Core.Exchange
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] IWordsProcessor wordsProcessor,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
             [NotNull] IViewModelAdapter viewModelAdapter)
@@ -66,11 +65,6 @@ namespace Remembrance.Core.Exchange
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-        }
-
-        public void Dispose()
-        {
-            _messenger.Unregister(this);
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -145,7 +139,7 @@ namespace Remembrance.Core.Exchange
 
                             OnProgress(index + 1, blocksCount);
                             if (blockResult.Any())
-                                _messenger.Send(blockResult.ToArray(), MessengerTokens.TranslationInfoBatchToken);
+                                _messenger.Publish(blockResult.ToArray());
                             return true;
                         });
 
@@ -186,7 +180,7 @@ namespace Remembrance.Core.Exchange
                 return false;
 
             _wordPriorityRepository.MarkPriority(word, translationEntryId);
-            _messenger.Send(_viewModelAdapter.Adapt<PriorityWordViewModel>(word), MessengerTokens.PriorityChangeToken);
+            _messenger.Publish(_viewModelAdapter.Adapt<PriorityWordViewModel>(word));
             return true;
         }
 

@@ -1,31 +1,30 @@
 ﻿using System;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
-using Remembrance.Resources;
 
 namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
-    public class PriorityWordViewModel : WordViewModel, IDisposable
+    public class PriorityWordViewModel : WordViewModel
     {
         [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
 
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
@@ -40,11 +39,6 @@ namespace Remembrance.ViewModel.Translation
 
         [NotNull]
         public object TranslationEntryId { get; private set; }
-
-        public void Dispose()
-        {
-            _messenger.Unregister(this);
-        }
 
         public void SetProperties([NotNull] object translationEntryId, [NotNull] string targetLanguage, [CanBeNull] bool? isPriority = null)
         {
@@ -63,7 +57,7 @@ namespace Remembrance.ViewModel.Translation
             else
                 _wordPriorityRepository.MarkPriority(this, TranslationEntryId);
             IsPriority = !isPriority;
-            _messenger.Send(this, MessengerTokens.PriorityChangeToken);
+            _messenger.Publish(this);
         }
     }
 }

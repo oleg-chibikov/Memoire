@@ -4,13 +4,12 @@ using System.Reactive.Linq;
 using System.Windows;
 using Autofac;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.View.Card;
-using Remembrance.Resources;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
 
@@ -20,7 +19,9 @@ namespace Remembrance.Core.CardManagement
     internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, IDisposable
     {
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
+
+        private readonly Guid _onCardShowFrequencyChangedToken;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
@@ -43,7 +44,7 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] IWordsProcessor wordsProcessor)
             : base(lifetimeScope, settingsRepository, logger)
         {
@@ -55,13 +56,13 @@ namespace Remembrance.Core.CardManagement
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             var repeatTime = settingsRepository.Get().CardShowFrequency;
             _interval = CreateInterval(repeatTime);
-            messenger.Register<TimeSpan>(this, MessengerTokens.CardShowFrequencyToken, OnCardShowFrequencyChanged);
+            _onCardShowFrequencyChangedToken = messenger.Subscribe<TimeSpan>(OnCardShowFrequencyChanged);
         }
 
         public void Dispose()
         {
             _interval.Dispose();
-            _messenger.Unregister(this);
+            _messenger.UnSubscribe(_onCardShowFrequencyChangedToken);
             Logger.Info("Finished showing cards");
         }
 
@@ -126,7 +127,7 @@ namespace Remembrance.Core.CardManagement
             translationInfo.TranslationEntry.ShowCount++; // single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
             _translationEntryRepository.Save(translationInfo.TranslationEntry);
-            _messenger.Send(translationInfo, MessengerTokens.TranslationInfoToken);
+            _messenger.Publish(translationInfo);
             var assessmentViewModel = LifetimeScope.Resolve<AssessmentCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var window = LifetimeScope.Resolve<IAssessmentCardWindow>(new TypedParameter(typeof(AssessmentCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
             window.Closed += Window_Closed;

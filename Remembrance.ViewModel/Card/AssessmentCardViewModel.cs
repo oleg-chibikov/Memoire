@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
@@ -14,6 +14,7 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
+using Remembrance.ViewModel.Settings.Data;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -24,7 +25,7 @@ namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class AssessmentCardViewModel : IRequestCloseViewModel, IDisposable
+    public sealed class AssessmentCardViewModel : IRequestCloseViewModel
     {
         [NotNull]
         private static readonly Random Random = new Random();
@@ -42,7 +43,7 @@ namespace Remembrance.ViewModel.Card
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
@@ -58,7 +59,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] ILog logger)
         {
             if (settingsRepository == null)
@@ -92,7 +93,7 @@ namespace Remembrance.ViewModel.Card
             Word = assessmentInfo.Word;
             CorrectAnswer = assessmentInfo.CorrectAnswer;
 
-            messenger.Register<string>(this, MessengerTokens.UiLanguageToken, OnUiLanguageChanged);
+            messenger.Subscribe<Language>(OnUiLanguageChanged);
             logger.Trace("Card is initialized");
         }
 
@@ -110,11 +111,6 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         public string CorrectAnswer { get; private set; }
-
-        public void Dispose()
-        {
-            _messenger.Unregister(this);
-        }
 
         public event EventHandler RequestClose;
 
@@ -152,8 +148,8 @@ namespace Remembrance.ViewModel.Card
             _logger.Trace("Filtering translations by priority...");
             var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
             priorityPartOfSpeechTranslations.RemoveAll(
-                partOfSpeechTranslation => !partOfSpeechTranslation.TranslationVariants.Any(
-                    translationVariant => translationVariant.IsPriority || translationVariant.Synonyms?.Any(synonym => synonym.IsPriority) == true));
+                partOfSpeechTranslation =>
+                    !partOfSpeechTranslation.TranslationVariants.Any(translationVariant => translationVariant.IsPriority || translationVariant.Synonyms?.Any(synonym => synonym.IsPriority) == true));
             var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
             if (hasPriorityItems)
             {
@@ -295,13 +291,13 @@ namespace Remembrance.ViewModel.Card
             return isReverse;
         }
 
-        private void OnUiLanguageChanged([NotNull] string uiLanguage)
+        private void OnUiLanguageChanged([NotNull] Language uiLanguage)
         {
             _logger.Trace($"Changing UI language to {uiLanguage}...");
             if (uiLanguage == null)
                 throw new ArgumentNullException(nameof(uiLanguage));
 
-            CultureUtilities.ChangeCulture(uiLanguage);
+            CultureUtilities.ChangeCulture(uiLanguage.Code);
             Word.ReRender();
         }
 
@@ -348,7 +344,7 @@ namespace Remembrance.ViewModel.Card
             }
 
             _translationEntryRepository.Save(_translationInfo.TranslationEntry);
-            _messenger.Send(_translationInfo, MessengerTokens.TranslationInfoToken);
+            _messenger.Publish(_translationInfo);
             _logger.Trace($"Closing window in {closeTimeout}...");
             ActionExtensions.DoAfterAsync(
                 () =>

@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Resources;
 using Scar.Common.Exceptions;
+using Scar.Common.Messages;
 
 namespace Remembrance.WebApi.Controllers
 {
@@ -12,12 +12,12 @@ namespace Remembrance.WebApi.Controllers
     public sealed class WordsController : ApiController
     {
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly IWordsProcessor _wordsProcessor;
 
-        public WordsController([NotNull] IWordsProcessor wordsProcessor, [NotNull] IMessenger messenger)
+        public WordsController([NotNull] IWordsProcessor wordsProcessor, [NotNull] IMessageHub messenger)
         {
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
@@ -36,7 +36,7 @@ namespace Remembrance.WebApi.Controllers
             }
             catch (LocalizableException ex)
             {
-                _messenger.Send(ex.LocalizedMessage, MessengerTokens.UserWarningToken);
+                _messenger.Publish(ex.ToMessage());
             }
         }
     }

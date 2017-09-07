@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -8,7 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Autofac;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
@@ -19,11 +20,12 @@ using Remembrance.Resources;
 using Remembrance.View.Card;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
+using Remembrance.ViewModel.Settings.Data;
 using Remembrance.WebApi;
 using Scar.Common;
-using Scar.Common.Exceptions;
 using Scar.Common.IO;
 using Scar.Common.Logging;
+using Scar.Common.Messages;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View;
 
@@ -41,12 +43,15 @@ namespace Remembrance
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly Mutex _mutex;
 
         [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
+        [CanBeNull]
         private SynchronizationContext _synchronizationContext;
 
         public App()
@@ -55,11 +60,9 @@ namespace Remembrance
 
             CultureUtilities.ChangeCulture(_container.Resolve<ISettingsRepository>().Get().UiLanguage);
 
-            _messenger = _container.Resolve<IMessenger>();
-            _messenger.Register<string>(this, MessengerTokens.UiLanguageToken, CultureUtilities.ChangeCulture);
-            _messenger.Register<string>(this, MessengerTokens.UserMessageToken, message => ShowMessage(message, MessageType.Message));
-            _messenger.Register<string>(this, MessengerTokens.UserWarningToken, message => ShowMessage(message, MessageType.Warning));
-            _messenger.Register<string>(this, MessengerTokens.UserErrorToken, message => ShowMessage(message, MessageType.Error));
+            _messenger = _container.Resolve<IMessageHub>();
+            _subscriptionTokens.Add(_messenger.Subscribe<Language>(language => CultureUtilities.ChangeCulture(language.Code)));
+            _subscriptionTokens.Add(_messenger.Subscribe<Message>(ShowMessage));
 
             _logger = _container.Resolve<ILog>();
             _mutex = CreateMutex();
@@ -84,8 +87,7 @@ namespace Remembrance
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.FullControl, AccessControlType.Allow));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.ChangePermissions, AccessControlType.Deny));
             mutexSecurity.AddAccessRule(new MutexAccessRule(sid, MutexRights.Delete, AccessControlType.Deny));
-            bool createdNew;
-            return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out createdNew, mutexSecurity);
+            return new Mutex(false, $"Global\\{nameof(Remembrance)}-{AppGuid}", out _, mutexSecurity);
         }
 
         private void HandleException(Exception e)
@@ -105,28 +107,23 @@ namespace Remembrance
         private void NotifyError(Exception e)
         {
             var exception = e.GetMostInnerException();
-            var localizable = exception as LocalizableException;
-            var message = localizable != null
-                ? localizable.LocalizedMessage
-                : $"{Errors.DefaultError}: {exception}";
-            var messageType = localizable != null
-                ? MessengerTokens.UserWarningToken
-                : MessengerTokens.UserErrorToken;
-            _messenger.Send(message, messageType);
+            var message = exception.ToMessage();
+            _messenger.Publish(message);
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             _container.Dispose();
             _mutex.Dispose();
-            _messenger.Unregister(this);
+            foreach (var token in _subscriptionTokens)
+                _messenger.UnSubscribe(token);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             if (!_mutex.WaitOne(0, false))
             {
-                _messenger.Send(Errors.AlreadyRunning, MessengerTokens.UserWarningToken);
+                _messenger.Publish(Errors.AlreadyRunning.ToWarning());
                 Current.Shutdown();
                 return;
             }
@@ -150,7 +147,7 @@ namespace Remembrance
 
             // TODO: Use Autofac Factory
             builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
-            builder.RegisterType<Messenger>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterInstance(MessageHub.Instance).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
@@ -165,9 +162,11 @@ namespace Remembrance
             return builder.Build();
         }
 
-        private void ShowMessage([NotNull] string message, MessageType messageType)
+        private void ShowMessage([NotNull] Message message)
         {
-            var viewModel = _container.Resolve<MessageViewModel>(new TypedParameter(typeof(string), message), new TypedParameter(typeof(MessageType), messageType));
+            var viewModel = _container.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
+            if (_synchronizationContext == null)
+                throw new InvalidOperationException("Sync context is not initialized");
             _synchronizationContext.Post(x => _container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel)).Restore(), null);
         }
 

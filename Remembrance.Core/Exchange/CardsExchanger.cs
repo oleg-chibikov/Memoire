@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
@@ -11,6 +11,7 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Resources;
 using Scar.Common.Events;
 using Scar.Common.IO;
+using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
 {
@@ -29,7 +30,7 @@ namespace Remembrance.Core.Exchange
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessenger _messenger;
+        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly IOpenFileService _openFileService;
@@ -44,7 +45,7 @@ namespace Remembrance.Core.Exchange
             [NotNull] ILog logger,
             [NotNull] IFileExporter exporter,
             [NotNull] IFileImporter[] importers,
-            [NotNull] IMessenger messenger)
+            [NotNull] IMessageHub messenger)
         {
             _openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
             _saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
@@ -78,13 +79,13 @@ namespace Remembrance.Core.Exchange
             if (exchangeResult.Success)
             {
                 _logger.Info($"Export to {_saveFileService.FileName} has been performed");
-                _messenger.Send(Texts.ExportSucceeded, MessengerTokens.UserMessageToken);
+                _messenger.Publish(Texts.ExportSucceeded.ToMessage());
                 Process.Start(_saveFileService.FileName);
             }
             else
             {
                 _logger.Warn($"Export to {_saveFileService.FileName} failed");
-                _messenger.Send(Texts.ExportFailed, MessengerTokens.UserWarningToken);
+                _messenger.Publish(Texts.ExportFailed.ToError());
             }
         }
 
@@ -105,12 +106,10 @@ namespace Remembrance.Core.Exchange
                     {
                         _logger.Info($"ImportAsync from {_openFileService.FileName} has been performed");
                         var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
-                        if (exchangeResult.Errors != null)
-                            _messenger.Send(
-                                $"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}",
-                                MessengerTokens.UserWarningToken);
-                        else
-                            _messenger.Send($"[{importer.GetType().Name}] {mainMessage}", MessengerTokens.UserMessageToken);
+                        _messenger.Publish(
+                            exchangeResult.Errors != null
+                                ? $"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}".ToWarning()
+                                : $"[{importer.GetType().Name}] {mainMessage}".ToMessage());
                         return;
                     }
                     else
@@ -119,7 +118,7 @@ namespace Remembrance.Core.Exchange
                     }
                 }
 
-                _messenger.Send(Texts.ImportFailed, MessengerTokens.UserErrorToken);
+                _messenger.Publish(Texts.ImportFailed.ToError());
             }
             finally
             {
@@ -131,7 +130,6 @@ namespace Remembrance.Core.Exchange
         {
             foreach (var importer in _importers)
                 importer.Progress -= Importer_Progress;
-            _messenger.Unregister(this);
         }
 
         private void Importer_Progress(object sender, ProgressEventArgs e)

@@ -1,5 +1,5 @@
 ﻿using Common.Logging;
-using GalaSoft.MvvmLight.Messaging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
@@ -11,7 +11,7 @@ namespace Remembrance.ViewModel.Translation
     {
         public TranslationVariantViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IMessenger messenger,
+            [NotNull] IMessageHub messenger,
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] ILog logger,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
