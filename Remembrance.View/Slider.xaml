@@ -3,11 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     mc:Ignorable="d"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters">
-
-    <commonConverters:DoubleToTextTimeSpanConverter
-        x:Key="DoubleToTextTimeSpanConverter" />
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <!--TODO: library-->
 
     <!--Begin slider-->
     <Style
@@ -67,7 +64,7 @@
                                 VerticalAlignment="Center"
                                 Foreground="Black"
                                 FontSize="9"
-                                Text="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, RelativeSource={RelativeSource AncestorType={x:Type Slider}}}" />
+                                Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType={x:Type Slider}}}" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

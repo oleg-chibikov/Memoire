@@ -10,22 +10,25 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:translation="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=translation:WordViewModel}">
+    d:DataContext="{d:DesignInstance d:Type=viewModel:WordViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                    Source="../Styles.xaml" />
+                <ResourceDictionary>
+                    <converters:PartOfSpeechToVisibilityConverter
+                        x:Key="PartOfSpeechToVisibilityConverter" />
+                </ResourceDictionary>
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary>
@@ -36,6 +39,12 @@
                         x:Key="PriorityWordViewModelToVisibilityConverter" />
                     <converters:PriorityWordViewModelToBooleanConverter
                         x:Key="PriorityWordViewModelToBooleanConverter" />
+                    <converters:PartOfSpeechLocalizedConverter
+                        x:Key="PartOfSpeechLocalizedConverter" />
+                    <commonConverters:NotNullToVisibilityConverter
+                        x:Key="NotNullToVisibilityConverter" />
+                    <commonConverters:BoolToVisibilityConverter
+                        x:Key="BoolToVisibilityConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

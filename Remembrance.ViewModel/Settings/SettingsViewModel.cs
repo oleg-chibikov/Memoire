@@ -58,6 +58,9 @@ namespace Remembrance.ViewModel.Settings
             ReverseTranslation = settings.ReverseTranslation;
             RandomTranslation = settings.RandomTranslation;
             CardShowFrequency = settings.CardShowFrequency.TotalMinutes;
+            TranslationCloseTimeout = settings.TranslationCloseTimeout.TotalSeconds;
+            AssessmentSuccessCloseTimeout = settings.AssessmentSuccessCloseTimeout.TotalSeconds;
+            AssessmentFailureCloseTimeout = settings.AssessmentFailureCloseTimeout.TotalSeconds;
             OpenSharedFolderCommand = new CorrelationCommand(OpenSharedFolder);
             OpenSettingsFolderCommand = new CorrelationCommand(OpenSettingsFolder);
             SaveCommand = new CorrelationCommand(Save);
@@ -123,6 +126,27 @@ namespace Remembrance.ViewModel.Settings
         }
 
         public double CardShowFrequency
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public double TranslationCloseTimeout
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public double AssessmentSuccessCloseTimeout
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public double AssessmentFailureCloseTimeout
         {
             get;
             [UsedImplicitly]
@@ -218,6 +242,9 @@ namespace Remembrance.ViewModel.Settings
             var settings = _settingsRepository.Get();
             var prevFreq = settings.CardShowFrequency;
             settings.CardShowFrequency = freq;
+            settings.AssessmentSuccessCloseTimeout = TimeSpan.FromSeconds(AssessmentSuccessCloseTimeout);
+            settings.AssessmentFailureCloseTimeout = TimeSpan.FromSeconds(AssessmentFailureCloseTimeout);
+            settings.TranslationCloseTimeout = TimeSpan.FromSeconds(TranslationCloseTimeout);
             settings.TtsSpeaker = TtsSpeaker;
             settings.TtsVoiceEmotion = TtsVoiceEmotion;
             settings.ReverseTranslation = ReverseTranslation;

@@ -36,7 +36,7 @@ namespace Remembrance.Core.Translation.Yandex
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
-        public async Task<bool> PlayTtsAsync(string text, string lang)
+        public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken token)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -51,7 +51,7 @@ namespace Remembrance.Core.Translation.Yandex
                     var reset = new AutoResetEvent(false);
                     var uriPart =
                         $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
-                    var response = Client.GetAsync(uriPart).Result;
+                    var response = Client.GetAsync(uriPart, token).Result;
                     if (!response.IsSuccessStatusCode)
                         return false;
 
@@ -77,7 +77,8 @@ namespace Remembrance.Core.Translation.Yandex
 
                     _logger.Trace($"Finished speaking {text}");
                     return true;
-                });
+                },
+                token);
         }
 
         [NotNull]

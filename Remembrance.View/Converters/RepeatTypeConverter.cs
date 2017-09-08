@@ -5,28 +5,27 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common;
 
-namespace Remembrance.Resources.Converters
+namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(RepeatType), typeof(string))]
     public sealed class RepeatTypeConverter : IValueConverter
     {
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            var status = value as RepeatType?;
-            return status == null
+            return !(value is RepeatType status)
                 ? null
-                : Convert(status.Value);
+                : Convert(status);
         }
 
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         [NotNull]
         private static string Convert(RepeatType repeatType)
         {
-            return RepeatTypeSettings.RepeatTimes[repeatType].ToReadableFormat();
+            return $"{repeatType}: {RepeatTypeSettings.RepeatTimes[repeatType].ToReadableFormat()}";
         }
     }
 }

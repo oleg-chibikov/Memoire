@@ -9,6 +9,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -17,7 +18,7 @@
     d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
     <UserControl.Resources>
         <ResourceDictionary
-            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+            Source="../Styles.xaml" />
     </UserControl.Resources>
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -37,8 +38,8 @@
         <TextBox
             Grid.Column="1"
             HorizontalAlignment="Stretch"
-            Text="{Binding NewItemSource, UpdateSourceTrigger=PropertyChanged}"
-            Name="WordTextBox">
+            Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}">
             <TextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding SaveCommand}"
@@ -71,8 +72,7 @@
             <Button
                 Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc AddTranslation}"
-                Command="{Binding SaveCommand}"
-                CommandParameter="{Binding Text, ElementName=WordTextBox}">
+                Command="{Binding SaveCommand}">
                 <materialDesign:PackIcon
                     Kind="NotePlus" />
             </Button>

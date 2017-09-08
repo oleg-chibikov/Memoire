@@ -12,9 +12,6 @@ namespace Remembrance.View.Settings
         {
             DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             InitializeComponent();
-
-            // TODO: XAML only
-            AddTranslationControl.WordTextBox.Focus();
         }
     }
 }

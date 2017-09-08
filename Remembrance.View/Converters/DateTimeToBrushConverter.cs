@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using JetBrains.Annotations;
 
-namespace Remembrance.Resources.Converters
+namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(DateTime), typeof(Brush))]
     public sealed class DateTimeToBrushConverter : IValueConverter
@@ -20,7 +20,7 @@ namespace Remembrance.Resources.Converters
         [NotNull]
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

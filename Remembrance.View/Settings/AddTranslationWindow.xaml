@@ -23,7 +23,6 @@
     Width="500"
     Icon="../IconAlt.ico">
     <view:AddTranslationControl
-        x:Name="AddTranslationControl"
         VerticalAlignment="Center"
         VerticalContentAlignment="Center" />
 </window:AnimatedWindow>

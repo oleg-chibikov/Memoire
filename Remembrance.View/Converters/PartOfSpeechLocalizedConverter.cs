@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Localization;
 
-namespace Remembrance.Resources.Converters
+namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(string))]
     public sealed class PartOfSpeechLocalizedConverter : IValueConverter
@@ -19,7 +19,7 @@ namespace Remembrance.Resources.Converters
 
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

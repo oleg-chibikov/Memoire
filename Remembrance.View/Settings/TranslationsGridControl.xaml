@@ -10,23 +10,28 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:card="clr-namespace:Remembrance.View.Card"
-    xmlns:model="clr-namespace:Remembrance.Contracts.DAL.Model;assembly=Remembrance.Contracts"
+    xmlns:view="clr-namespace:Remembrance.View.Card"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:contracts="clr-namespace:Remembrance.Contracts.DAL.Model;assembly=Remembrance.Contracts"
+    xmlns:converters="clr-namespace:Remembrance.View.Converters"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                    Source="../Styles.xaml" />
+                <ResourceDictionary>
+                    <converters:RepeatTypeConverter
+                        x:Key="RepeatTypeConverter" />
+                    <converters:DateTimeToBrushConverter
+                        x:Key="DateTimeToBrushConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <Style
                 TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
@@ -55,7 +60,7 @@
                     Text="{Binding StringFormat=dd MMM HH:mm}" />
             </DataTemplate>
             <DataTemplate
-                DataType="{x:Type model:RepeatType}">
+                DataType="{x:Type contracts:RepeatType}">
                 <TextBlock
                     Text="{Binding Converter={StaticResource RepeatTypeConverter}}" />
             </DataTemplate>
@@ -81,7 +86,7 @@
                 Title="{lex:Loc Remembrance.Resources:Texts:Word}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
-                        <card:WordControl
+                        <view:WordControl
                             HorizontalAlignment="Stretch"
                             SpeakerAlignment="Right"
                             DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
@@ -109,7 +114,7 @@
                                     Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
                                     MouseAction="LeftDoubleClick" />
                             </DockPanel.InputBindings>
-                            <card:WordsControl
+                            <view:WordsControl
                                 ItemsSource="{Binding}"
                                 FontSize="{StaticResource SmallFontSize}"
                                 MaxWidth="Infinity" />

@@ -17,7 +17,6 @@ namespace Remembrance.Contracts.DAL.Model
             TargetLanguage = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
         }
 
-        // TODO: readonly?
         [NotNull]
         [UsedImplicitly]
         public string Text { get; set; }
@@ -42,8 +41,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override bool Equals(object obj)
         {
-            var key = obj as TranslationEntryKey;
-            return key != null && Equals(key);
+            return obj is TranslationEntryKey key && Equals(key);
         }
 
         public override int GetHashCode()

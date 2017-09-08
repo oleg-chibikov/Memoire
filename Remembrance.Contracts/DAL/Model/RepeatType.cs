@@ -2,22 +2,22 @@
 {
     public enum RepeatType
     {
-        T1,
+        Elementary,
 
-        T2,
+        Beginner,
 
-        T3,
+        Novice,
 
-        T4,
+        PreIntermediate,
 
-        T5,
+        Intermediate,
 
-        T6,
+        UpperIntermediate,
 
-        T7,
+        Advanced,
 
-        T8,
+        Proficiency,
 
-        T9
+        Expert
     }
 }

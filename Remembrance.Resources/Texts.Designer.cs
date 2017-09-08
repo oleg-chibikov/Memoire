@@ -88,6 +88,24 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assessment failure.
+        /// </summary>
+        public static string AssessmentFailureCloseTimeout {
+            get {
+                return ResourceManager.GetString("AssessmentFailureCloseTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assessment success .
+        /// </summary>
+        public static string AssessmentSuccessCloseTimeout {
+            get {
+                return ResourceManager.GetString("AssessmentSuccessCloseTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card show frequency.
         /// </summary>
         public static string CardShowFrequency {
@@ -480,6 +498,15 @@ namespace Remembrance.Resources {
         public static string Translation {
             get {
                 return ResourceManager.GetString("Translation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translation close.
+        /// </summary>
+        public static string TranslationCloseTimeout {
+            get {
+                return ResourceManager.GetString("TranslationCloseTimeout", resourceCulture);
             }
         }
         

@@ -273,4 +273,13 @@
   <data name="OpenSharedFolder" xml:space="preserve">
     <value>Open shared folder</value>
   </data>
+  <data name="AssessmentFailureCloseTimeout" xml:space="preserve">
+    <value>Assessment failure</value>
+  </data>
+  <data name="AssessmentSuccessCloseTimeout" xml:space="preserve">
+    <value>Assessment success </value>
+  </data>
+  <data name="TranslationCloseTimeout" xml:space="preserve">
+    <value>Translation close</value>
+  </data>
 </root>

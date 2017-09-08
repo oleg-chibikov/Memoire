@@ -11,6 +11,8 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Card"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:converters="clr-namespace:Remembrance.View.Converters"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationResultCardViewModel}"
     SizeToContent="WidthAndHeight"
@@ -22,9 +24,17 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                    Source="../Styles.xaml" />
+                <ResourceDictionary>
+                    <commonConverters:StringToVisibilityConverter
+                        x:Key="StringToVisibilityConverter" />
+                    <commonConverters:AddValueConverter
+                        x:Key="AddValueConverter" />
+                    <converters:WordConcatConverter
+                        x:Key="WordConcatConverter" />
+                    <commonConverters:ArrayToVisibilityConverter
+                        x:Key="ArrayToVisibilityConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </window:AnimatedWindow.Resources>

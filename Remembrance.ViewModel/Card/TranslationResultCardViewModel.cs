@@ -40,6 +40,7 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(translationInfo));
             if (viewModelAdapter == null)
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));

@@ -97,7 +97,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No translations are found for the word..
+        ///   Looks up a localized string similar to No translations were found for the word..
         /// </summary>
         public static string NoTranslations {
             get {

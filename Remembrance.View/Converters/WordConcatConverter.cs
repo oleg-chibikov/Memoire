@@ -2,20 +2,20 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using Remembrance.Contracts;
 using Scar.Common.WPF.Converters;
 
-namespace Remembrance.Resources.Converters
+namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(dynamic[]), typeof(string))]
     public sealed class WordConcatConverter : ArrayConcatConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var words = value as dynamic[];
-            if (words == null)
+            if (!(value is IWord[] words))
                 return null;
 
-            var texts = words.Select(x => (string) x.Text).ToArray();
+            var texts = words.Select(x => x.Text).ToArray();
             return base.Convert(texts, targetType, parameter, culture);
         }
     }

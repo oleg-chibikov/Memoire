@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using JetBrains.Annotations;
 using PropertyChanged;
@@ -106,7 +107,7 @@ namespace Remembrance.ViewModel.Translation
 
         private void PlayTts()
         {
-            _textToSpeechPlayer.PlayTtsAsync(Text, Language);
+            _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None);
         }
 
         public void ReRender()

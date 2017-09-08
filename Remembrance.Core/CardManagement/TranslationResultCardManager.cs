@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using Autofac;
 using Common.Logging;
@@ -16,12 +15,6 @@ namespace Remembrance.Core.CardManagement
     [UsedImplicitly]
     internal sealed class TranslationResultCardManager : BaseCardManager, ITranslationResultCardManager
     {
-        // TODO: config timeout
-        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(10);
-
-        [NotNull]
-        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
-
         public TranslationResultCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
             : base(lifetimeScope, settingsRepository, logger)
         {
@@ -36,7 +29,7 @@ namespace Remembrance.Core.CardManagement
                 new TypedParameter(typeof(TranslationResultCardViewModel), translationResultCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
             translationResultCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
-            translationResultCardWindow.AutoCloseTimeout = CloseTimeout;
+            translationResultCardWindow.AutoCloseTimeout = SettingsRepository.Get().TranslationCloseTimeout;
             return translationResultCardWindow;
         }
     }

@@ -34,8 +34,8 @@
     <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.27\lib\net462\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.29\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.DAL.1.0.7\lib\net462\Scar.Common.DAL.dll</HintPath>

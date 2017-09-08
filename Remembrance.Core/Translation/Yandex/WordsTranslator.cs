@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -27,7 +28,7 @@ namespace Remembrance.Core.Translation.Yandex
             BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
         };
 
-        public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui)
+        public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken token)
         {
             if (from == null)
                 throw new ArgumentNullException(nameof(from));
@@ -40,7 +41,7 @@ namespace Remembrance.Core.Translation.Yandex
 
             // falgs morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
-            var response = await _dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
+            var response = await _dictionaryClient.GetAsync(uriPart, token).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new TranslationResult
                 {

@@ -13,6 +13,8 @@ namespace Remembrance.View.Converters
         [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return Brushes.White;
             switch ((MessageType) value)
             {
                 case MessageType.Message:

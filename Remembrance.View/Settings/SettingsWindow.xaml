@@ -11,13 +11,15 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=settings:SettingsViewModel}"
-    SizeToContent="WidthAndHeight"
+    SizeToContent="Height"
+    Width="700"
     Icon="../IconAlt.ico">
     <i:Interaction.Triggers>
         <i:EventTrigger
@@ -30,11 +32,17 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+                    Source="../Styles.xaml" />
+                <ResourceDictionary>
+                    <commonConverters:PercentageIntToDoubleConverter
+                        x:Key="PercentageIntToDoubleConverter" />
+                </ResourceDictionary>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Slider.xaml" />
+                    Source="../Slider.xaml" />
+                <ResourceDictionary>
+                    <commonConverters:DoubleToTextTimeSpanConverter
+                        x:Key="DoubleToTextTimeSpanConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </window:AnimatedWindow.Resources>
@@ -68,12 +76,18 @@
                     Height="Auto" />
                 <RowDefinition
                     Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="180" />
                 <ColumnDefinition
-                    Width="Auto" />
+                    Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock
@@ -188,23 +202,71 @@
                 Grid.Column="0"
                 Text="{lex:Loc CardShowFrequency}" />
 
-            <StackPanel
+            <Slider
                 Grid.Row="4"
                 Grid.Column="1"
-                Orientation="Horizontal">
-                <Slider
                     Minimum="0.08333"
                     Maximum="120"
                     TickPlacement="BottomRight"
                     IsSnapToTickEnabled="True"
-                    AutoToolTipPlacement="BottomRight"
                     Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
                     Value="{Binding CardShowFrequency, Mode=TwoWay}"
-                    Width="300" />
-            </StackPanel>
+                AutoToolTipPlacement="None"
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}}" />
+
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="0"
+                Text="{lex:Loc TranslationCloseTimeout}" />
+
+            <Slider
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Minimum="1"
+                    Maximum="60"
+                    TickFrequency="1"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    Value="{Binding TranslationCloseTimeout, Mode=TwoWay}"
+                AutoToolTipPlacement="None"
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+
+            <TextBlock
+                Grid.Row="6"
+                Grid.Column="0"
+                Text="{lex:Loc AssessmentSuccessCloseTimeout}" />
+
+            <Slider
+                Grid.Row="6"
+                Grid.Column="1"
+                    Minimum="1"
+                    Maximum="60"
+                    TickFrequency="1"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    Value="{Binding AssessmentSuccessCloseTimeout, Mode=TwoWay}"
+                AutoToolTipPlacement="None"
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+
+            <TextBlock
+                Grid.Row="7"
+                Grid.Column="0"
+                Text="{lex:Loc AssessmentFailureCloseTimeout}" />
+
+            <Slider
+                Grid.Row="7"
+                Grid.Column="1"
+                    Minimum="1"
+                    Maximum="60"
+                    TickFrequency="1"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    Value="{Binding AssessmentFailureCloseTimeout, Mode=TwoWay}"
+                    AutoToolTipPlacement="None"
+                    ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
 
             <Button
-                Grid.Row="5"
+                Grid.Row="8"
                 Grid.Column="1"
                 Content="{lex:Loc Save}"
                 Width="120"

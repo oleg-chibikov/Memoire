@@ -41,11 +41,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.27\lib\net462\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.29.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.1.0.29\lib\net462\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.5\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Converters.1.0.6\lib\net462\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\ThirdParty\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
@@ -62,11 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Converters\DateTimeToBrushConverter.cs" />
-    <Compile Include="Converters\PartOfSpeechToVisibilityConverter.cs" />
-    <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
-    <Compile Include="Converters\WordConcatConverter.cs" />
-    <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Errors.Designer.cs">
@@ -80,11 +75,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="WordMetadata.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WordMetadata.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -95,20 +85,6 @@
     <Resource Include="Images\IconAlt.png" />
     <Resource Include="Images\Icon.ico" />
     <Resource Include="Images\Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="XamlResources\Slider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="XamlResources\Converters.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="XamlResources\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
@@ -129,15 +105,6 @@
       <LastGenOutput>Texts.ru-RU.Designer.cs</LastGenOutput>
       <DependentUpon>Texts.resx</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WordMetadata.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>WordMetadata.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WordMetadata.ru-RU.resx">
-      <SubType>Designer</SubType>
-      <LastGenOutput>WordMetadata.ru-RU.Designer.cs</LastGenOutput>
-      <DependentUpon>WordMetadata.resx</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\IconInactive.ico" />
@@ -148,6 +115,9 @@
       <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
       <Name>Remembrance.Contracts</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="XamlResources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

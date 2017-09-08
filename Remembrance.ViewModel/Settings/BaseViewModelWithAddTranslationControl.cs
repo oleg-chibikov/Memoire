@@ -47,7 +47,7 @@ namespace Remembrance.ViewModel.Settings
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            SaveCommand = new CorrelationCommand<string>(Save);
+            SaveCommand = new CorrelationCommand(Save);
 
             logger.Trace("Loading settings...");
 
@@ -127,7 +127,7 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [CanBeNull]
-        public string NewItemSource
+        public string Text
         {
             get;
             [UsedImplicitly]
@@ -149,13 +149,14 @@ namespace Remembrance.ViewModel.Settings
         {
         }
 
-        private void Save([NotNull] string text)
+        private void Save()
         {
+            var text = Text;
             Logger.Info($"Adding translation for {text}...");
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            NewItemSource = null;
+            Text = null;
 
             var sourceLanguage = SelectedSourceLanguage.Code;
             var targetLanguage = SelectedTargetLanguage.Code;

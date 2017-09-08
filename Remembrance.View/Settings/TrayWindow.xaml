@@ -1,4 +1,4 @@
-﻿<window:BaseWindow
+﻿<view:BaseWindow
     x:Class="Remembrance.View.Settings.TrayWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     mc:Ignorable="d"
     WindowState="Minimized"
     SizeToContent="WidthAndHeight"
@@ -19,15 +20,19 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=settings:TrayViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     Icon="../IconAlt.ico">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
-                <ResourceDictionary
-                    Source="/Remembrance.Resources;component/XamlResources/Converters.xaml" />
+                    Source="../Styles.xaml" />
+                <ResourceDictionary>
+                    <commonConverters:BoolToVisibilityConverter
+                        x:Key="BoolToVisibilityConverter" />
+                    <commonConverters:ReverseBoolToVisibilityConverter
+                        x:Key="ReverseBoolToVisibilityConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -131,4 +136,4 @@
             </tb:TaskbarIcon.Style>
         </tb:TaskbarIcon>
     </Grid>
-</window:BaseWindow>
+</view:BaseWindow>

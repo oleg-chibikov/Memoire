@@ -21,12 +21,7 @@ namespace Remembrance.Core
                 .ConstructUsing(
                     src => new TranslationEntry
                     {
-                        Key = new TranslationEntryKey
-                        {
-                            Text = src.Text,
-                            SourceLanguage = src.Language,
-                            TargetLanguage = src.TargetLanguage
-                        }
+                        Key = new TranslationEntryKey(src.Text, src.Language, src.TargetLanguage)
                     })
                 .Compile();
             TypeAdapterConfig<IWord, WordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<WordViewModel>()).Compile();
@@ -70,15 +65,17 @@ namespace Remembrance.Core
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+
             return source.Adapt<TDestination>();
         }
 
         public TDestination Adapt<TSource, TDestination>(TSource source, TDestination destination)
         {
-            if (source == null)
+            if (Equals(source, default(TSource)))
                 throw new ArgumentNullException(nameof(source));
-            if (destination == null)
+            if (Equals(destination, default(TDestination)))
                 throw new ArgumentNullException(nameof(destination));
+
             return source.Adapt(destination, TypeAdapterConfig.GlobalSettings);
         }
 

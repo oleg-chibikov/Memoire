@@ -273,4 +273,13 @@
   <data name="OpenSharedFolder" xml:space="preserve">
     <value>Открыть общую папку</value>
   </data>
+  <data name="AssessmentFailureCloseTimeout" xml:space="preserve">
+    <value>Время показа провала</value>
+  </data>
+  <data name="AssessmentSuccessCloseTimeout" xml:space="preserve">
+    <value>Время показа успеха</value>
+  </data>
+  <data name="TranslationCloseTimeout" xml:space="preserve">
+    <value>Время показа перевода</value>
+  </data>
 </root>

@@ -23,6 +23,7 @@ using Remembrance.ViewModel.Settings;
 using Remembrance.ViewModel.Settings.Data;
 using Remembrance.WebApi;
 using Scar.Common;
+using Scar.Common.Exceptions;
 using Scar.Common.IO;
 using Scar.Common.Logging;
 using Scar.Common.Messages;
@@ -107,7 +108,8 @@ namespace Remembrance
         private void NotifyError(Exception e)
         {
             var exception = e.GetMostInnerException();
-            var message = exception.ToMessage();
+            var localizable = exception as LocalizableException;
+            var message = localizable?.ToMessage() ?? exception.ToMessage();
             _messenger.Publish(message);
         }
 
@@ -145,7 +147,6 @@ namespace Remembrance
 
             var builder = new ContainerBuilder();
 
-            // TODO: Use Autofac Factory
             builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
             builder.RegisterInstance(MessageHub.Instance).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
@@ -167,6 +168,7 @@ namespace Remembrance
             var viewModel = _container.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
             if (_synchronizationContext == null)
                 throw new InvalidOperationException("Sync context is not initialized");
+
             _synchronizationContext.Post(x => _container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel)).Restore(), null);
         }
 

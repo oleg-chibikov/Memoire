@@ -10,29 +10,29 @@ namespace Remembrance.Contracts.DAL.Model
         public static readonly LinkedList<RepeatType> RepeatTypes = new LinkedList<RepeatType>(
             new[]
             {
-                RepeatType.T1,
-                RepeatType.T2,
-                RepeatType.T3,
-                RepeatType.T4,
-                RepeatType.T5,
-                RepeatType.T6,
-                RepeatType.T7,
-                RepeatType.T8,
-                RepeatType.T9
+                RepeatType.Elementary,
+                RepeatType.Beginner,
+                RepeatType.Novice,
+                RepeatType.PreIntermediate,
+                RepeatType.Intermediate,
+                RepeatType.UpperIntermediate,
+                RepeatType.Advanced,
+                RepeatType.Proficiency,
+                RepeatType.Expert
             });
 
         [NotNull]
         public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new Dictionary<RepeatType, TimeSpan>
         {
-            {RepeatType.T1, TimeSpan.FromSeconds(5)},
-            {RepeatType.T2, TimeSpan.FromMinutes(30)},
-            {RepeatType.T3, TimeSpan.FromHours(1)},
-            {RepeatType.T4, TimeSpan.FromDays(0.5)},
-            {RepeatType.T5, TimeSpan.FromDays(1)},
-            {RepeatType.T6, TimeSpan.FromDays(3.5)},
-            {RepeatType.T7, TimeSpan.FromDays(7)},
-            {RepeatType.T8, TimeSpan.FromDays(15)},
-            {RepeatType.T9, TimeSpan.FromDays(30)}
+            {RepeatType.Elementary, TimeSpan.FromSeconds(5)},
+            {RepeatType.Beginner, TimeSpan.FromMinutes(30)},
+            {RepeatType.Novice, TimeSpan.FromHours(1)},
+            {RepeatType.PreIntermediate, TimeSpan.FromDays(0.5)},
+            {RepeatType.Intermediate, TimeSpan.FromDays(1)},
+            {RepeatType.UpperIntermediate, TimeSpan.FromDays(3.5)},
+            {RepeatType.Advanced, TimeSpan.FromDays(7)},
+            {RepeatType.Proficiency, TimeSpan.FromDays(15)},
+            {RepeatType.Expert, TimeSpan.FromDays(30)}
         };
     }
 }

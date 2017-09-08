@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.Translate
 {
     public interface ITextToSpeechPlayer
     {
-        //TODO: cancellation
         [NotNull]
-        Task<bool> PlayTtsAsync([NotNull] string text, [NotNull] string lang);
+        Task<bool> PlayTtsAsync([NotNull] string text, [NotNull] string lang, CancellationToken token);
     }
 }

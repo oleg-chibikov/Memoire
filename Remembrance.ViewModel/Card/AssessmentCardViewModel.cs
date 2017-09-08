@@ -30,11 +30,9 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private static readonly Random Random = new Random();
 
-        // TODO: config timeout
-        private static readonly TimeSpan SuccessCloseTimeout = TimeSpan.FromSeconds(2);
+        private readonly TimeSpan _successCloseTimeout;
 
-        // TODO: config timeout
-        private static readonly TimeSpan ErrorCloseTimeout = TimeSpan.FromSeconds(5);
+        private readonly TimeSpan _failureCloseTimeout;
 
         [NotNull]
         private readonly HashSet<string> _acceptedAnswers;
@@ -81,6 +79,8 @@ namespace Remembrance.ViewModel.Card
 
             logger.Trace("Initializing card...");
             var settings = settingsRepository.Get();
+            _successCloseTimeout = settings.AssessmentSuccessCloseTimeout;
+            _failureCloseTimeout = settings.AssessmentFailureCloseTimeout;
             var hasPriorityItems = FilterPriorityPartOfSpeechTranslations(translationResult);
             var partOfSpeechGroup = SelectSinglePartOfSpeechGroup(settings, translationResult);
             var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup);
@@ -333,14 +333,14 @@ namespace Remembrance.ViewModel.Card
 
                 // The inputed answer can differ from the first one
                 CorrectAnswer = mostSuitable;
-                closeTimeout = SuccessCloseTimeout;
+                closeTimeout = _successCloseTimeout;
             }
             else
             {
                 _logger.Info($"Answer is not correct. Decreasing repeat type for {_translationInfo}...");
                 Accepted = false;
                 _translationInfo.TranslationEntry.DecreaseRepeatType();
-                closeTimeout = ErrorCloseTimeout;
+                closeTimeout = _failureCloseTimeout;
             }
 
             _translationEntryRepository.Save(_translationInfo.TranslationEntry);

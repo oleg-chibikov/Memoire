@@ -203,6 +203,7 @@ namespace Remembrance.ViewModel.Settings
                     {
                         if (CancellationTokenSource.IsCancellationRequested)
                             return false;
+
                         Logger.Trace($"Receiving translations page {pageNumber}...");
                         var translationEntryViewModels = _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize, null, SortOrder.Descending));
                         if (!translationEntryViewModels.Any())

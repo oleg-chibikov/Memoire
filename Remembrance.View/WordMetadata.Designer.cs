@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Remembrance.Resources {
+namespace Remembrance.View {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace Remembrance.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class WordMetadata {
+    internal class WordMetadata {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace Remembrance.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Remembrance.Resources.WordMetadata", typeof(WordMetadata).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Remembrance.View.WordMetadata", typeof(WordMetadata).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace Remembrance.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to adj.
         /// </summary>
-        public static string Adjective {
+        internal static string Adjective {
             get {
                 return ResourceManager.GetString("Adjective", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to adv.
         /// </summary>
-        public static string Adverb {
+        internal static string Adverb {
             get {
                 return ResourceManager.GetString("Adverb", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to apart.
         /// </summary>
-        public static string AdverbialParticiple {
+        internal static string AdverbialParticiple {
             get {
                 return ResourceManager.GetString("AdverbialParticiple", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to conj.
         /// </summary>
-        public static string Conjunction {
+        internal static string Conjunction {
             get {
                 return ResourceManager.GetString("Conjunction", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to noun.
         /// </summary>
-        public static string Noun {
+        internal static string Noun {
             get {
                 return ResourceManager.GetString("Noun", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to num.
         /// </summary>
-        public static string Numeral {
+        internal static string Numeral {
             get {
                 return ResourceManager.GetString("Numeral", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to part.
         /// </summary>
-        public static string Participle {
+        internal static string Participle {
             get {
                 return ResourceManager.GetString("Participle", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to particle.
         /// </summary>
-        public static string Particle {
+        internal static string Particle {
             get {
                 return ResourceManager.GetString("Particle", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to prep.
         /// </summary>
-        public static string Preposition {
+        internal static string Preposition {
             get {
                 return ResourceManager.GetString("Preposition", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to pron.
         /// </summary>
-        public static string Pronoun {
+        internal static string Pronoun {
             get {
                 return ResourceManager.GetString("Pronoun", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to -.
         /// </summary>
-        public static string Unknown {
+        internal static string Unknown {
             get {
                 return ResourceManager.GetString("Unknown", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace Remembrance.Resources {
         /// <summary>
         ///   Looks up a localized string similar to verb.
         /// </summary>
-        public static string Verb {
+        internal static string Verb {
             get {
                 return ResourceManager.GetString("Verb", resourceCulture);
             }

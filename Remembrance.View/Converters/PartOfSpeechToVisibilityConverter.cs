@@ -3,7 +3,7 @@ using System.Windows.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Converters;
 
-namespace Remembrance.Resources.Converters
+namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(Visibility))]
     public sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>

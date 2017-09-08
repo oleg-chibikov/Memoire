@@ -17,7 +17,6 @@ using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
 {
-    // TODO: Think about class interface - it is not clear now
     [UsedImplicitly]
     internal sealed class WordsProcessor : IWordsProcessor
     {
@@ -186,7 +185,7 @@ namespace Remembrance.Core.CardManagement
 
         private void PostProcessWord([CanBeNull] IWindow ownerWindow, [NotNull] TranslationInfo translationInfo)
         {
-            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage);
+            _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage, CancellationToken.None);
             _messenger.Publish(translationInfo);
             _cardManager.ShowCard(translationInfo, ownerWindow);
         }
@@ -195,9 +194,10 @@ namespace Remembrance.Core.CardManagement
         private TranslationResult Translate([NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage)
         {
             // Used En as ui language to simplify conversion of common words to the enums
-            var translationResult = _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage).Result;
+            var translationResult = _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage, CancellationToken.None).Result;
             if (!translationResult.PartOfSpeechTranslations.Any())
                 throw new LocalizableException($"No translations found for {text}", string.Format(Errors.CannotTranslate, text, sourceLanguage, targetLanguage));
+
             _logger.Trace("Received translation");
 
             return translationResult;

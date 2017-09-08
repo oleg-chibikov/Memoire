@@ -16,7 +16,7 @@
     d:DataContext="{d:DesignInstance card:AssessmentCardViewModel}">
     <UserControl.Resources>
         <ResourceDictionary
-            Source="/Remembrance.Resources;component/XamlResources/Styles.xaml" />
+            Source="../Styles.xaml" />
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"
