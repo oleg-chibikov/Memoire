@@ -7,12 +7,12 @@ using Scar.Common.WPF.Converters;
 
 namespace Remembrance.View.Converters
 {
-    [ValueConversion(typeof(dynamic[]), typeof(string))]
+    [ValueConversion(typeof(IWithText[]), typeof(string))]
     public sealed class WordConcatConverter : ArrayConcatConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is IWord[] words))
+            if (!(value is IWithText[] words))
                 return null;
 
             var texts = words.Select(x => x.Text).ToArray();

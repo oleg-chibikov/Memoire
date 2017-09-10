@@ -2,10 +2,8 @@
 
 namespace Remembrance.Contracts
 {
-    public interface IWord
+    public interface IWord : IWithText
     {
-        string Text { get; }
-
         PartOfSpeech PartOfSpeech { get; }
     }
 }

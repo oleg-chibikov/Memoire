@@ -3,7 +3,7 @@ using Scar.Common;
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
-    public class TextEntry
+    public class TextEntry: IWithText
     {
         private string _text;
 

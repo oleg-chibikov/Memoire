@@ -79,6 +79,7 @@
     <Compile Include="DAL\Model\TranslationInfo.cs" />
     <Compile Include="DAL\Model\WordPriority.cs" />
     <Compile Include="IViewModelAdapter.cs" />
+    <Compile Include="IWithText.cs" />
     <Compile Include="IWord.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />

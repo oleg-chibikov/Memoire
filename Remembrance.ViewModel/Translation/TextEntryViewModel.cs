@@ -1,8 +1,9 @@
 ﻿using JetBrains.Annotations;
+using Remembrance.Contracts;
 
 namespace Remembrance.ViewModel.Translation
 {
-    public class TextEntryViewModel
+    public class TextEntryViewModel: IWithText
     {
         [NotNull]
         public virtual string Text { get; set; }
