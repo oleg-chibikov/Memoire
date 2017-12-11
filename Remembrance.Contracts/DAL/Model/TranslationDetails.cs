@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
@@ -12,10 +12,11 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
+        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId, [CanBeNull] PrepositionsCollection prepositionsCollection = null)
         {
             TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
+            PrepositionsCollection = prepositionsCollection;
         }
 
         [NotNull]
@@ -32,6 +33,19 @@ namespace Remembrance.Contracts.DAL.Model
             get;
             [UsedImplicitly]
             set;
+        }
+
+        [CanBeNull]
+        public PrepositionsCollection PrepositionsCollection
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        public override string ToString()
+        {
+            return $"Translation details for {TranslationEntryId}";
         }
     }
 }

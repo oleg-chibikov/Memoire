@@ -11,5 +11,8 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         [NotNull]
         [UsedImplicitly]
         public TranslationVariant[] TranslationVariants { get; set; }
+
+        [UsedImplicitly]
+        public bool IsManual { get; set; }
     }
 }

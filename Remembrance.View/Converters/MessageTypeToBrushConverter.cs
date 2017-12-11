@@ -15,7 +15,8 @@ namespace Remembrance.View.Converters
         {
             if (value == null)
                 return Brushes.White;
-            switch ((MessageType) value)
+
+            switch ((MessageType)value)
             {
                 case MessageType.Message:
                     return Brushes.White;

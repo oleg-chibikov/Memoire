@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using Autofac;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Mapster;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Translation;
+using Scar.Common.Messages;
 
 namespace Remembrance.Core
 {
@@ -25,7 +27,10 @@ namespace Remembrance.Core
                     })
                 .Compile();
             TypeAdapterConfig<IWord, WordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<WordViewModel>()).Compile();
-            TypeAdapterConfig<IWord, PriorityWordViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<PriorityWordViewModel>()).Compile();
+            TypeAdapterConfig<IWord, PriorityWordViewModel>.NewConfig()
+                .ConstructUsing(src => lifetimeScope.Resolve<PriorityWordViewModel>())
+                .Map(dest => dest.Text, src => src.Text) //This is unexpected, but still needed
+                .Compile();
             TypeAdapterConfig<TranslationVariant, TranslationVariantViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<TranslationVariantViewModel>()).Compile();
             TypeAdapterConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>.NewConfig().ConstructUsing(src => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>()).Compile();
             TypeAdapterConfig<TranslationEntry, TranslationEntryViewModel>.NewConfig()
@@ -33,11 +38,24 @@ namespace Remembrance.Core
                 .Map(dest => dest.Text, src => src.Key.Text)
                 .Map(dest => dest.Language, src => src.Key.SourceLanguage)
                 .Map(dest => dest.TargetLanguage, src => src.Key.TargetLanguage)
-                .AfterMapping((src, dest) => dest.ReloadTranslations());
+                .AfterMapping(
+                    async (src, dest) =>
+                    {
+                        try
+                        {
+                            await dest.ReloadTranslationsAsync().ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            lifetimeScope.Resolve<IMessageHub>().Publish(ex.ToMessage());
+                        }
+                    })
+                .Compile();
             TypeAdapterConfig<TranslationInfo, TranslationDetailsViewModel>.NewConfig()
                 .ConstructUsing(src => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(dest => dest.TranslationResult, src => src.TranslationDetails.TranslationResult)
                 .Map(dest => dest.Id, src => src.TranslationDetails.Id)
+                .Map(dest => dest.PrepositionsCollection, src => src.TranslationDetails.PrepositionsCollection)
                 .Map(dest => dest.TranslationEntryId, src => src.TranslationDetails.TranslationEntryId)
                 .AfterMapping(
                     (src, dest) =>
@@ -52,9 +70,11 @@ namespace Remembrance.Core
                                     foreach (var synonym in translationVariant.Synonyms)
                                         SetPriorityWordProperties(synonym, src.Key.TargetLanguage, dest.TranslationEntryId);
 
-                                if (translationVariant.Meanings != null)
-                                    foreach (var meaning in translationVariant.Meanings)
-                                        meaning.Language = src.Key.SourceLanguage;
+                                if (translationVariant.Meanings == null)
+                                    continue;
+
+                                foreach (var meaning in translationVariant.Meanings)
+                                    meaning.Language = src.Key.SourceLanguage;
                             }
                         }
                     })

@@ -1,21 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.ViewModel.Settings.Data;
 using Remembrance.ViewModel.Translation;
+using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 
 namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationResultCardViewModel : IDisposable
+    public sealed class TranslationDetailsCardViewModel : IDisposable
     {
         [NotNull]
         private readonly ILog _logger;
@@ -27,19 +30,27 @@ namespace Remembrance.ViewModel.Card
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
+        private readonly TranslationEntry _translationEntry;
+
+        [NotNull]
+        private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
-        public TranslationResultCardViewModel(
+        public TranslationDetailsCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILog logger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IMessageHub messenger)
+            [NotNull] IMessageHub messenger,
+            [NotNull] ITranslationEntryRepository translationEntryRepository)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
             if (viewModelAdapter == null)
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
@@ -48,11 +59,17 @@ namespace Remembrance.ViewModel.Card
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
+            _translationEntry = translationInfo.TranslationEntry;
+            IsFavorited = _translationEntry.IsFavorited;
             Word = translationInfo.Key.Text;
 
-            _subscriptionTokens.Add(messenger.Subscribe<Language>(OnUiLanguageChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
             _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
+            FavoriteCommand = new CorrelationCommand(Favorite);
         }
+
+        [NotNull]
+        public ICommand FavoriteCommand { get; }
 
         [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
@@ -60,10 +77,12 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         public string Word { get; }
 
+        public bool IsFavorited { get; private set; }
+
         public void Dispose()
         {
-            foreach (var token in _subscriptionTokens)
-                _messenger.UnSubscribe(token);
+            foreach (var subscriptionToken in _subscriptionTokens)
+                _messenger.UnSubscribe(subscriptionToken);
         }
 
         [CanBeNull]
@@ -105,13 +124,13 @@ namespace Remembrance.ViewModel.Card
             }
         }
 
-        private void OnUiLanguageChanged([NotNull] Language uiLanguage)
+        private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
         {
-            _logger.Trace($"Changing UI language to {uiLanguage}...");
-            if (uiLanguage == null)
-                throw new ArgumentNullException(nameof(uiLanguage));
+            _logger.Trace($"Changing UI language to {cultureInfo}...");
+            if (cultureInfo == null)
+                throw new ArgumentNullException(nameof(cultureInfo));
 
-            CultureUtilities.ChangeCulture(uiLanguage.Code);
+            CultureUtilities.ChangeCulture(cultureInfo);
 
             foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
             {
@@ -127,6 +146,16 @@ namespace Remembrance.ViewModel.Card
                             meaning.ReRender();
                 }
             }
+        }
+
+        private void Favorite()
+        {
+            var text = IsFavorited
+                ? "Unfavoriting"
+                : "Favoriting";
+            _logger.Trace($"{text} {TranslationDetails}...");
+            _translationEntry.IsFavorited = IsFavorited = !IsFavorited;
+            _translationEntryRepository.Save(_translationEntry);
         }
     }
 }

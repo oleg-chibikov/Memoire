@@ -1,4 +1,4 @@
-﻿<view:BaseWindow
+<view:BaseWindow
     x:Class="Remembrance.View.Settings.TrayWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -38,9 +38,9 @@
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
-            ToolTipText="Remembrance"
             LeftClickCommand="{Binding ToggleActiveCommand}"
-            DoubleClickCommand="{Binding ShowDictionaryCommand}">
+            DoubleClickCommand="{Binding ShowDictionaryCommand}"
+            ToolTipText="{lex:Loc Remembrance.Resources:Texts:Title}">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <ContextMenu.Resources>
@@ -134,6 +134,18 @@
                     </Style.Triggers>
                 </Style>
             </tb:TaskbarIcon.Style>
+            <tb:TaskbarIcon.TrayToolTip>
+                <Border
+                    Background="White"
+                    BorderBrush="Orange"
+                    BorderThickness="2"
+                    CornerRadius="4"
+                    Padding="15">
+                    <TextBlock
+                        Foreground="Black"
+                        Text="{lex:Loc Remembrance.Resources:Texts:Title}" />
+                </Border>
+            </tb:TaskbarIcon.TrayToolTip>
         </tb:TaskbarIcon>
     </Grid>
 </view:BaseWindow>

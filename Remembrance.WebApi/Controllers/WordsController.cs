@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Web.Http;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -25,14 +26,14 @@ namespace Remembrance.WebApi.Controllers
 
         [HttpPut]
         [UsedImplicitly]
-        public void Put([NotNull] [FromBody] string word)
+        public async void PutAsync([NotNull] [FromBody] string word)
         {
             if (word == null)
                 throw new ArgumentNullException(nameof(word));
 
             try
             {
-                _wordsProcessor.AddOrChangeWord(word);
+                await _wordsProcessor.AddOrChangeWordAsync(word, CancellationToken.None).ConfigureAwait(false);
             }
             catch (LocalizableException ex)
             {

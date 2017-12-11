@@ -56,58 +56,61 @@ namespace Remembrance.Core.Exchange
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ExchangeResult> ExportAsync(string fileName, CancellationToken token)
+        public async Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            return await Task.Run(
-                () =>
+            //TODO: Export manual
+            var translationEntries = _translationEntryRepository.GetAll();
+            var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
+            foreach (var translationEntry in translationEntries)
+            {
+                var translationDetails = await _wordsProcessor.ReloadTranslationDetailsIfNeededAsync(
+                        translationEntry.Id,
+                        translationEntry.Key.Text,
+                        translationEntry.Key.SourceLanguage,
+                        translationEntry.Key.TargetLanguage,
+                        translationEntry.ManualTranslations,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                var translationInfo = new TranslationInfo(translationEntry, translationDetails);
+                var priorityWords = new HashSet<ExchangeWord>(_wordsEqualityComparer);
+                foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                 {
-                    var translationEntries = _translationEntryRepository.GetAll();
-                    var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
-                    foreach (var translationEntry in translationEntries)
-                    {
-                        var translationDetails = _wordsProcessor.ReloadTranslationDetailsIfNeeded(translationEntry.Id, translationEntry.Key.Text, translationEntry.Key.SourceLanguage, translationEntry.Key.TargetLanguage);
-                        var translationInfo = new TranslationInfo(translationEntry, translationDetails);
-                        var priorityWords = new HashSet<ExchangeWord>(_wordsEqualityComparer);
-                        foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
-                        {
-                            if (_wordPriorityRepository.IsPriority(translationVariant, translationEntry.Id))
-                                priorityWords.Add(new ExchangeWord(translationVariant));
-                            if (translationVariant.Synonyms == null)
-                                continue;
+                    if (_wordPriorityRepository.IsPriority(translationVariant, translationEntry.Id))
+                        priorityWords.Add(new ExchangeWord(translationVariant));
+                    if (translationVariant.Synonyms == null)
+                        continue;
 
-                            foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordPriorityRepository.IsPriority(synonym, translationEntry.Id)))
-                                priorityWords.Add(new ExchangeWord(synonym));
-                        }
+                    foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordPriorityRepository.IsPriority(synonym, translationEntry.Id)))
+                        priorityWords.Add(new ExchangeWord(synonym));
+                }
 
-                        exportEntries.Add(
-                            new RemembranceExchangeEntry(
-                                priorityWords.Any()
-                                    ? priorityWords
-                                    : null,
-                                translationEntry));
-                    }
+                exportEntries.Add(
+                    new RemembranceExchangeEntry(
+                        priorityWords.Any()
+                            ? priorityWords
+                            : null,
+                        translationEntry));
+            }
 
-                    try
-                    {
-                        var json = JsonConvert.SerializeObject(exportEntries, Formatting.Indented, ExportEntrySerializerSettings);
-                        File.WriteAllText(fileName, json);
-                        return new ExchangeResult(true, null, exportEntries.Count);
-                    }
-                    catch (IOException ex)
-                    {
-                        _logger.Warn("Cannot save file to disk", ex);
-                    }
-                    catch (JsonSerializationException ex)
-                    {
-                        _logger.Warn("Cannot serialize object", ex);
-                    }
+            try
+            {
+                var json = JsonConvert.SerializeObject(exportEntries, Formatting.Indented, ExportEntrySerializerSettings);
+                File.WriteAllText(fileName, json);
+                return new ExchangeResult(true, null, exportEntries.Count);
+            }
+            catch (IOException ex)
+            {
+                _logger.Warn("Cannot save file to disk", ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                _logger.Warn("Cannot serialize object", ex);
+            }
 
-                    return new ExchangeResult(false, null, 0);
-                },
-                token);
+            return new ExchangeResult(false, null, 0);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<window:AnimatedWindow
+<window:AnimatedWindow
     x:Class="Remembrance.View.Settings.MessageWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -22,6 +22,7 @@
     Draggable="False"
     ShowActivated="False"
     Focusable="False"
+    Topmost="True"
     ShowInTaskbar="False"
     AutoCloseTimeout="00:00:03"
     Icon="../IconAlt.ico">

@@ -20,7 +20,7 @@
     AdvancedWindowStartupLocation="BottomLeft"
     WindowStartupLocation="Manual"
     Draggable="False"
-    Width="500"
+    Width="800"
     Icon="../IconAlt.ico">
     <view:AddTranslationControl
         VerticalAlignment="Center"

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using Autofac;
 using Common.Logging;
@@ -31,6 +31,7 @@ namespace Remembrance.Core.CardManagement
 
         public void ShowCard(TranslationInfo translationInfo, IWindow ownerWindow)
         {
+            //TODO: Sync context?
             Application.Current.Dispatcher.Invoke(
                 () =>
                 {
@@ -46,7 +47,9 @@ namespace Remembrance.Core.CardManagement
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
                     if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
                         window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
-                    Logger.Info($"Showing {translationInfo}");
+                    Logger.Info($"Showing {translationInfo}...");
+                    window.ShowActivated = false;
+                    window.Topmost = true;
                     window.Restore();
                 });
         }

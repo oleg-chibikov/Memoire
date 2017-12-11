@@ -8,6 +8,6 @@ namespace Remembrance.Contracts.CardManagement
     public interface IFileExporter
     {
         [ItemNotNull]
-        Task<ExchangeResult> ExportAsync([NotNull] string fileName, CancellationToken token);
+        Task<ExchangeResult> ExportAsync([NotNull] string fileName, CancellationToken cancellationToken);
     }
 }

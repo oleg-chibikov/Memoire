@@ -13,7 +13,7 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Settings"
-    MinWidth="800"
+    MinWidth="1200"
     MinHeight="300"
     Width="1200"
     Height="600"
@@ -40,54 +40,60 @@
             CaptionHeight="0"
             ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
-    <Grid
-        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-        commonView:MarginSetter.Orientation="Vertical"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="Auto" />
-        </Grid.RowDefinitions>
-        <DockPanel
-            Grid.Row="0">
-            <view:SearchControl
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center" />
-        </DockPanel>
-        <view:TranslationsGridControl
-            Width="Auto"
-            Grid.Row="1" />
-        <DockPanel
+    <materialDesign:DialogHost
+        IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
+        <materialDesign:DialogHost.DialogContent>
+            <view:EditManualTranslationsDialog
+                DataContext="{Binding EditManualTranslationsViewModel, Mode=OneTime}" />
+        </materialDesign:DialogHost.DialogContent>
+        <Grid
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-            commonView:MarginSetter.Orientation="Horizontal"
-            Grid.Row="2">
-            <Image
-                Width="200"
-                DockPanel.Dock="Left"
-                Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
-            <Button
-                Style="{StaticResource ImageButton}"
-                ToolTip="{lex:Loc EditSettings}"
-                Command="{Binding OpenSettingsCommand}">
-                <materialDesign:PackIcon
-                    Kind="Settings" />
-            </Button>
-            <TextBlock
-                Text="{lex:Loc Total}" />
-            <TextBlock
-                Text="{Binding Count}" />
-            <view:AddTranslationControl
-                x:Name="AddTranslationControl"
-                Width="500"
-                DockPanel.Dock="Right"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center" />
-        </DockPanel>
-    </Grid>
+            commonView:MarginSetter.Orientation="Vertical"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="*" />
+                <RowDefinition
+                    Height="Auto" />
+            </Grid.RowDefinitions>
+            <DockPanel
+                Grid.Row="0">
+                <view:SearchControl
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center" />
+            </DockPanel>
+            <view:TranslationsGridControl
+                Width="Auto"
+                Grid.Row="1" />
+            <DockPanel
+                commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                commonView:MarginSetter.Orientation="Horizontal"
+                Grid.Row="2">
+                <Image
+                    Width="200"
+                    DockPanel.Dock="Left"
+                    Source="pack://application:,,/Remembrance.Resources;component/Images/Logo.png" />
+                <Button
+                    Style="{StaticResource ImageButton}"
+                    ToolTip="{lex:Loc EditSettings}"
+                    Command="{Binding OpenSettingsCommand}">
+                    <materialDesign:PackIcon
+                        Kind="Settings" />
+                </Button>
+                <TextBlock
+                    Text="{lex:Loc Total}" />
+                <TextBlock
+                    Text="{Binding Count}" />
+                <view:AddTranslationControl
+                    Width="800"
+                    DockPanel.Dock="Right"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center" />
+            </DockPanel>
+        </Grid>
+    </materialDesign:DialogHost>
 </window:AnimatedWindow>

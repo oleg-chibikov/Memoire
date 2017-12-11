@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -43,10 +44,11 @@ namespace Remembrance.Core.Exchange
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
-        protected override TranslationEntryKey GetKey(EachWordExchangeEntry exchangeEntry, CancellationToken token)
+        protected override async Task<TranslationEntryKey> GetKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            var sourceLanguage = _languageDetector.DetectLanguageAsync(exchangeEntry.Text, token).Result.Language ?? Constants.EnLanguage;
-            var targetLanguage = WordsProcessor.GetDefaultTargetLanguage(sourceLanguage);
+            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
+            var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
+            var targetLanguage = await WordsProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
@@ -59,6 +61,11 @@ namespace Remembrance.Core.Exchange
                         Text = x
                     })
                 .ToArray();
+        }
+
+        protected override bool SetLearningInfo(EachWordExchangeEntry exchangeEntry, TranslationEntry translationEntry)
+        {
+            return false;
         }
     }
 }

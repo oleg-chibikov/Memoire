@@ -10,7 +10,7 @@ namespace Remembrance.Contracts.CardManagement
     public interface IFileImporter
     {
         [ItemNotNull]
-        Task<ExchangeResult> ImportAsync([NotNull] string fileName, CancellationToken token);
+        Task<ExchangeResult> ImportAsync([NotNull] string fileName, CancellationToken cancellationToken);
 
         event EventHandler<ProgressEventArgs> Progress;
     }

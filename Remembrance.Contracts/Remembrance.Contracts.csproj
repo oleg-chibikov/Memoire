@@ -31,25 +31,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common, Version=1.0.30.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.30\lib\net47\Scar.Common.dll</HintPath>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.8\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.2\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="WPFLocalizeExtension, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WPFLocalizeExtension.3.0.1\lib\net35\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
@@ -60,16 +62,19 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CardManagement\Data\ExchangeResult.cs" />
+    <Compile Include="CardManagement\Data\IntervalModificator.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
     <Compile Include="CardManagement\ICardsExchanger.cs" />
     <Compile Include="CardManagement\IFileExporter.cs" />
     <Compile Include="CardManagement\IFileImporter.cs" />
-    <Compile Include="CardManagement\ITranslationResultCardManager.cs" />
+    <Compile Include="CardManagement\ITranslationDetailsCardManager.cs" />
     <Compile Include="CardManagement\IWordsProcessor.cs" />
     <Compile Include="DAL\ISettingsRepository.cs" />
     <Compile Include="DAL\ITranslationDetailsRepository.cs" />
     <Compile Include="DAL\ITranslationEntryRepository.cs" />
     <Compile Include="DAL\IWordPriorityRepository.cs" />
+    <Compile Include="DAL\Model\ManualTranslation.cs" />
+    <Compile Include="DAL\Model\PrepositionsCollection.cs" />
     <Compile Include="DAL\Model\RepeatType.cs" />
     <Compile Include="DAL\Model\RepeatTypeSettings.cs" />
     <Compile Include="DAL\Model\Settings.cs" />
@@ -83,6 +88,7 @@
     <Compile Include="IWord.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
+    <Compile Include="Translate\Data\Predictor\PredictionResult.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\Format.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\Speaker.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\VoiceEmotion.cs" />
@@ -93,11 +99,13 @@
     <Compile Include="Translate\Data\WordsTranslator\TranslationResult.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TranslationVariant.cs" />
     <Compile Include="Translate\Data\WordsTranslator\Word.cs" />
+    <Compile Include="Translate\IPredictor.cs" />
     <Compile Include="Translate\ILanguageDetector.cs" />
     <Compile Include="Translate\ITextToSpeechPlayer.cs" />
     <Compile Include="Translate\IWordsTranslator.cs" />
-    <Compile Include="View\Card\ITranslationResultCardWindow.cs" />
-    <Compile Include="View\Card\IAssessmentCardWindow.cs" />
+    <Compile Include="View\Card\IAssessmentViewOnlyCardWindow.cs" />
+    <Compile Include="View\Card\ITranslationDetailsCardWindow.cs" />
+    <Compile Include="View\Card\IAssessmentTextInputCardWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Settings\IMessageWindow.cs" />
     <Compile Include="View\Settings\IAddTranslationWindow.cs" />
@@ -106,9 +114,7 @@
     <Compile Include="View\Settings\ISplashScreenWindow.cs" />
     <Compile Include="View\Settings\ITrayWindow.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

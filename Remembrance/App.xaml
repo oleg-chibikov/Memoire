@@ -1,7 +1,8 @@
-﻿<Application
+﻿<startup:BaseApplication
     x:Class="Remembrance.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:startup="clr-namespace:Scar.Common.WPF.Startup;assembly=Scar.Common.WPF.Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,4 +19,4 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
-</Application>
+</startup:BaseApplication>

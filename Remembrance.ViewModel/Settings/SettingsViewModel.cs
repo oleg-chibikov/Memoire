@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
@@ -121,7 +123,7 @@ namespace Remembrance.ViewModel.Settings
             set
             {
                 _uiLanguage = value;
-                _messenger.Publish(_uiLanguage);
+                _messenger.Publish(CultureInfo.GetCultureInfo(value.Code));
             }
         }
 
@@ -191,6 +193,8 @@ namespace Remembrance.ViewModel.Settings
         private void BeginProgress()
         {
             ProgressState = TaskbarItemProgressState.Normal;
+            _logger.Trace("Pausing showing cards...");
+            _messenger.Publish(IntervalModificator.Pause);
             ProgressDescription = "Caclulating...";
             Progress = 0;
         }
@@ -213,6 +217,8 @@ namespace Remembrance.ViewModel.Settings
         private void EndProgress()
         {
             ProgressState = TaskbarItemProgressState.None;
+            _logger.Trace("Resuming showing cards...");
+            _messenger.Publish(IntervalModificator.Resume);
         }
 
         private void Export()

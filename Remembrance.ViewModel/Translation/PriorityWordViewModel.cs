@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;

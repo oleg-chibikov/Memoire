@@ -138,4 +138,10 @@
   <data name="WordIsPresent" xml:space="preserve">
     <value>Слово уже есть в словаре.</value>
   </data>
+  <data name="TranslationIsPresent" xml:space="preserve">
+    <value>Такой перевод уже имеется.</value>
+  </data>
+  <data name="CannotDeleteManual" xml:space="preserve">
+    <value>Нельзя удалить особый перевод, так как это приведёт к отсутствию переводов.</value>
+  </data>
 </root>

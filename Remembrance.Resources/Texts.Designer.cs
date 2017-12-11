@@ -106,6 +106,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card show frequency.
         /// </summary>
         public static string CardShowFrequency {
@@ -151,11 +160,29 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translation details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dictionary.
         /// </summary>
         public static string Dictionary {
             get {
                 return ResourceManager.GetString("Dictionary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit manual translations.
+        /// </summary>
+        public static string EditManualTranslations {
+            get {
+                return ResourceManager.GetString("EditManualTranslations", resourceCulture);
             }
         }
         
@@ -174,6 +201,15 @@ namespace Remembrance.Resources {
         public static string EnterTheAnswer {
             get {
                 return ResourceManager.GetString("EnterTheAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Example.
+        /// </summary>
+        public static string Example {
+            get {
+                return ResourceManager.GetString("Example", resourceCulture);
             }
         }
         
@@ -210,6 +246,15 @@ namespace Remembrance.Resources {
         public static string ExportSucceeded {
             get {
                 return ResourceManager.GetString("ExportSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite.
+        /// </summary>
+        public static string Favorite {
+            get {
+                return ResourceManager.GetString("Favorite", resourceCulture);
             }
         }
         
@@ -277,6 +322,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ✭.
+        /// </summary>
+        public static string IsFavorited {
+            get {
+                return ResourceManager.GetString("IsFavorited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last ShowTime.
         /// </summary>
         public static string LastCardShowTime {
@@ -295,20 +349,20 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Maximize.
+        ///   Looks up a localized string similar to Getting possible words....
         /// </summary>
-        public static string Maximize {
+        public static string Loading {
             get {
-                return ResourceManager.GetString("Maximize", resourceCulture);
+                return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimize.
+        ///   Looks up a localized string similar to Meaning.
         /// </summary>
-        public static string Minimize {
+        public static string Meaning {
             get {
-                return ResourceManager.GetString("Minimize", resourceCulture);
+                return ResourceManager.GetString("Meaning", resourceCulture);
             }
         }
         
@@ -327,6 +381,15 @@ namespace Remembrance.Resources {
         public static string NextCardShowTime {
             get {
                 return ResourceManager.GetString("NextCardShowTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
             }
         }
         
@@ -358,6 +421,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Part of speech.
+        /// </summary>
+        public static string PartOfSpeech {
+            get {
+                return ResourceManager.GetString("PartOfSpeech", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Random translation choice.
         /// </summary>
         public static string RandomTranslation {
@@ -372,15 +444,6 @@ namespace Remembrance.Resources {
         public static string Repeat {
             get {
                 return ResourceManager.GetString("Repeat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Restore.
-        /// </summary>
-        public static string Restore {
-            get {
-                return ResourceManager.GetString("Restore", resourceCulture);
             }
         }
         
@@ -534,6 +597,15 @@ namespace Remembrance.Resources {
         public static string ViewLogs {
             get {
                 return ResourceManager.GetString("ViewLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to with custom translation.
+        /// </summary>
+        public static string WithCustomTranslation {
+            get {
+                return ResourceManager.GetString("WithCustomTranslation", resourceCulture);
             }
         }
         

@@ -1,11 +1,13 @@
-﻿//TODO: Set all bindings mode manually
+//TODO: Set all bindings mode manually
 
 using System;
 using System.Windows;
 using System.Windows.Input;
 using Common.Logging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.View.Settings;
 using Scar.Common.WPF.Commands;
@@ -27,6 +29,9 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly IMessageHub _messenger;
+
+        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
@@ -41,8 +46,10 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] WindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] WindowFactory<ISettingsWindow> settingsWindowFactory,
-            [NotNull] WindowFactory<ISplashScreenWindow> splashScreenWindowFactory)
+            [NotNull] WindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
+            [NotNull] IMessageHub messenger)
         {
+            _messenger = messenger;
             _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
@@ -106,6 +113,16 @@ namespace Remembrance.ViewModel.Settings
             settings.IsActive = IsActive;
             _settingsRepository.Save(settings);
             _logger.Info($"New state is {IsActive}");
+            if (IsActive)
+            {
+                _logger.Trace("Resuming showing cards...");
+                _messenger.Publish(IntervalModificator.Resume);
+            }
+            else
+            {
+                _logger.Trace("Pausing showing cards...");
+                _messenger.Publish(IntervalModificator.Pause);
+            }
         }
     }
 }

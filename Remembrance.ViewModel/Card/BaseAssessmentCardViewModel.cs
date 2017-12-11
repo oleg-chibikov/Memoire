@@ -1,86 +1,92 @@
-﻿// TODO: Feature: if the word level is low, replace textbox with dropdown
+// TODO: Feature: if the word level is low, replace textbox with dropdown
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
+using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
-using Remembrance.ViewModel.Settings.Data;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
+using Scar.Common.Exceptions;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.ViewModel;
 
 namespace Remembrance.ViewModel.Card
 {
-    [UsedImplicitly]
+    //TODO: Test delete file then save or smth
     [AddINotifyPropertyChangedInterface]
-    public sealed class AssessmentCardViewModel : IRequestCloseViewModel
+    public abstract class BaseAssessmentCardViewModel : IRequestCloseViewModel
     {
         [NotNull]
         private static readonly Random Random = new Random();
-
-        private readonly TimeSpan _successCloseTimeout;
-
-        private readonly TimeSpan _failureCloseTimeout;
-
-        [NotNull]
-        private readonly HashSet<string> _acceptedAnswers;
-
-        [NotNull]
-        private readonly ILog _logger;
-
-        [NotNull]
-        private readonly IMessageHub _messenger;
 
         [NotNull]
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
         [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
         [NotNull]
-        private readonly TranslationInfo _translationInfo;
+        protected readonly HashSet<WordViewModel> AcceptedAnswers;
 
-        public AssessmentCardViewModel(
+        protected readonly TimeSpan FailureCloseTimeout;
+
+        [NotNull]
+        protected readonly ILog Logger;
+
+        [NotNull]
+        protected readonly IMessageHub Messenger;
+
+        protected readonly TimeSpan SuccessCloseTimeout;
+
+        [NotNull]
+        protected readonly TranslationInfo TranslationInfo;
+
+        [NotNull]
+        protected readonly IViewModelAdapter ViewModelAdapter;
+
+        protected BaseAssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessageHub messenger,
-            [NotNull] ILog logger)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] ILog logger,
+            [NotNull] ILifetimeScope lifetimeScope)
         {
             if (settingsRepository == null)
                 throw new ArgumentNullException(nameof(settingsRepository));
-            if (viewModelAdapter == null)
-                throw new ArgumentNullException(nameof(viewModelAdapter));
+            ViewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
+            Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
-            _translationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
-            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.Trace("Pausing showing cards...");
+            messenger.Publish(IntervalModificator.Pause);
 
-            ProvideAnswerCommand = new CorrelationCommand<string>(ProvideAnswer);
-
-            LanguagePair = $"{_translationInfo.Key.TargetLanguage} - {_translationInfo.Key.SourceLanguage}";
+            LanguagePair = $"{TranslationInfo.Key.SourceLanguage} -> {TranslationInfo.Key.TargetLanguage}";
 
             var translationDetailsViewModel = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             var translationResult = translationDetailsViewModel.TranslationResult;
 
             logger.Trace("Initializing card...");
             var settings = settingsRepository.Get();
-            _successCloseTimeout = settings.AssessmentSuccessCloseTimeout;
-            _failureCloseTimeout = settings.AssessmentFailureCloseTimeout;
+            SuccessCloseTimeout = settings.AssessmentSuccessCloseTimeout;
+            FailureCloseTimeout = settings.AssessmentFailureCloseTimeout;
             var hasPriorityItems = FilterPriorityPartOfSpeechTranslations(translationResult);
             var partOfSpeechGroup = SelectSinglePartOfSpeechGroup(settings, translationResult);
             var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup);
@@ -88,29 +94,36 @@ namespace Remembrance.ViewModel.Card
             var assessmentInfo = IsReverse(settings)
                 ? GetReverseAssessmentInfo(needRandom, acceptedWordGroups)
                 : GetStraightAssessmentInfo(acceptedWordGroups);
-            _acceptedAnswers = assessmentInfo.AcceptedAnswers;
+            TranslationDetailsCardViewModel = lifetimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), TranslationInfo));
+            AcceptedAnswers = assessmentInfo.AcceptedAnswers;
             assessmentInfo.Word.CanLearnWord = false;
             Word = assessmentInfo.Word;
+            PrepositionsCollection = translationInfo.TranslationDetails.PrepositionsCollection;
             CorrectAnswer = assessmentInfo.CorrectAnswer;
+            WindowClosedCommand = new CorrelationCommand(WindowClosed);
 
-            messenger.Subscribe<Language>(OnUiLanguageChanged);
-            logger.Trace("Card is initialized");
+            messenger.Subscribe<CultureInfo>(OnUiLanguageChanged);
         }
 
         [NotNull]
+        public TranslationDetailsCardViewModel TranslationDetailsCardViewModel { get; }
+
+        public bool IsTranslationResultVisible { get; private set; }
+
+        [NotNull]
+        public ICommand WindowClosedCommand { get; }
+
+        [NotNull]
         public WordViewModel Word { get; }
+
+        [CanBeNull]
+        public PrepositionsCollection PrepositionsCollection { get; }
 
         [NotNull]
         public string LanguagePair { get; }
 
         [NotNull]
-        public ICommand ProvideAnswerCommand { get; }
-
-        [CanBeNull]
-        public bool? Accepted { get; private set; }
-
-        [NotNull]
-        public string CorrectAnswer { get; private set; }
+        public WordViewModel CorrectAnswer { get; protected set; }
 
         public event EventHandler RequestClose;
 
@@ -119,7 +132,7 @@ namespace Remembrance.ViewModel.Card
         /// </summary>
         private void FilterAcceptedWordsGroupsByPriority([NotNull] ref KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
         {
-            _logger.Trace("Filtering accepted words groups by priority...");
+            Logger.Trace("Filtering accepted words groups by priority...");
             var tmp = new List<KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>>();
 
             foreach (var acceptedWordGroup in acceptedWordGroups)
@@ -132,11 +145,11 @@ namespace Remembrance.ViewModel.Card
 
             if (tmp.Any())
             {
-                _logger.Trace($"There are {tmp.Count} groups that contain priority translations. Filtering was applied");
+                Logger.Trace($"There are {tmp.Count} groups that contain priority translations. Filtering was applied");
                 acceptedWordGroups = tmp.ToArray();
             }
 
-            _logger.Trace("There are no groups that contain priority translations. Filtering was not applied");
+            Logger.Trace("There are no groups that contain priority translations. Filtering was not applied");
         }
 
         /// <summary>
@@ -145,7 +158,7 @@ namespace Remembrance.ViewModel.Card
         /// <returns>Try - has priority items</returns>
         private bool FilterPriorityPartOfSpeechTranslations([NotNull] TranslationResultViewModel translationResult)
         {
-            _logger.Trace("Filtering translations by priority...");
+            Logger.Trace("Filtering translations by priority...");
             var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
             priorityPartOfSpeechTranslations.RemoveAll(
                 partOfSpeechTranslation =>
@@ -153,12 +166,12 @@ namespace Remembrance.ViewModel.Card
             var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
             if (hasPriorityItems)
             {
-                _logger.Trace($"There are {priorityPartOfSpeechTranslations.Count} priority translations. Filtering was applied");
+                Logger.Trace($"There are {priorityPartOfSpeechTranslations.Count} priority translations. Filtering was applied");
                 translationResult.PartOfSpeechTranslations = priorityPartOfSpeechTranslations.ToArray();
             }
             else
             {
-                _logger.Trace("There are no priority translations. Filtering was not applied");
+                Logger.Trace("There are no priority translations. Filtering was not applied");
             }
 
             return hasPriorityItems;
@@ -168,18 +181,19 @@ namespace Remembrance.ViewModel.Card
         /// Get all possible original word variants of this part of speech
         /// </summary>
         [NotNull]
-        private KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] GetAcceptedWordGroups([NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> partOfSpeechGroup)
+        private KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] GetAcceptedWordGroups([NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> partOfSpeechGroup)
         {
-            _logger.Trace($"Getting accepted words groups for {partOfSpeechGroup.Key}...");
+            Logger.Trace($"Getting accepted words groups for {partOfSpeechGroup.Key}...");
             var acceptedWordGroups = partOfSpeechGroup.SelectMany(
                     partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(traslationVariant => GetPossibleTranslations(traslationVariant, partOfSpeechTranslation)))
                 .ToArray();
             if (!acceptedWordGroups.Any())
-                throw new InvalidOperationException(Errors.NoTranslations);
+                throw new LocalizableException(Errors.NoTranslations);
 
-            _logger.Trace($"There are {acceptedWordGroups.Length} accepted words groups");
+            Logger.Trace($"There are {acceptedWordGroups.Length} accepted words groups");
             FilterAcceptedWordsGroupsByPriority(ref acceptedWordGroups);
-            return acceptedWordGroups;
+
+            return acceptedWordGroups.Select(x => new KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>(x.Key, ViewModelAdapter.Adapt<WordViewModel[]>(x.Value))).ToArray();
         }
 
         /// <summary>
@@ -189,7 +203,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] TranslationVariantViewModel traslationVariant,
             [NotNull] PartOfSpeechTranslationViewModel partOfSpeechTranslation)
         {
-            _logger.Trace($"Getting accepted words groups for {traslationVariant}...");
+            Logger.Trace($"Getting accepted words groups for {traslationVariant}...");
             var translations = traslationVariant.Synonyms != null
                 ? new[]
                     {
@@ -209,7 +223,7 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> GetRandomPartOfSpeechGroup([NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel>[] partOfSpeechGroups)
         {
-            _logger.Trace("Getting random part of speech group...");
+            Logger.Trace("Getting random part of speech group...");
             var randomPartOfSpeechGroupIndex = Random.Next(partOfSpeechGroups.Length);
             var result = partOfSpeechGroups.ElementAt(randomPartOfSpeechGroupIndex);
             return result;
@@ -219,9 +233,9 @@ namespace Remembrance.ViewModel.Card
         /// Decide whether the Word would be chosen randomly or not
         /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] acceptedWordGroups)
         {
-            _logger.Trace("Getting reverse assessment info...");
+            Logger.Trace("Getting reverse assessment info...");
             return needRandom
                 ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups)
                 : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
@@ -231,14 +245,14 @@ namespace Remembrance.ViewModel.Card
         /// The first variant for part of speech will be selected and the first translation inside it
         /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] acceptedWordGroups)
         {
-            _logger.Trace("Getting info from first translation...");
+            Logger.Trace("Getting info from first translation...");
             var acceptedWordGroup = acceptedWordGroups.First();
             var translation = acceptedWordGroup.Value.First();
-            var correct = acceptedWordGroup.Key.Text;
+            var correct = acceptedWordGroup.Key;
             return new AssessmentInfo(
-                new HashSet<string>
+                new HashSet<WordViewModel>(_wordsEqualityComparer)
                 {
                     correct
                 },
@@ -250,16 +264,16 @@ namespace Remembrance.ViewModel.Card
         /// Random variant for part of speech will be selected and random translation inside it
         /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] acceptedWordGroups)
         {
-            _logger.Trace("Getting info from random translation...");
+            Logger.Trace("Getting info from random translation...");
             var randomAcceptedWordGroupIndex = Random.Next(acceptedWordGroups.Length);
             var randomAcceptedWordGroup = acceptedWordGroups.ElementAt(randomAcceptedWordGroupIndex);
             var randomTranslationIndex = Random.Next(randomAcceptedWordGroup.Value.Length);
             var randomTranslation = randomAcceptedWordGroup.Value[randomTranslationIndex];
-            var correct = randomAcceptedWordGroup.Key.Text;
+            var correct = randomAcceptedWordGroup.Key;
             return new AssessmentInfo(
-                new HashSet<string>
+                new HashSet<WordViewModel>(_wordsEqualityComparer)
                 {
                     correct
                 },
@@ -271,10 +285,10 @@ namespace Remembrance.ViewModel.Card
         /// Settings the first variant in the group as the Word and all possible variants as the Acceptable answers
         /// </summary>
         [NotNull]
-        private AssessmentInfo GetStraightAssessmentInfo([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>[] acceptedWordGroups)
+        private AssessmentInfo GetStraightAssessmentInfo([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] acceptedWordGroups)
         {
-            _logger.Trace("Getting straight assessment info...");
-            var accept = new HashSet<string>(acceptedWordGroups.SelectMany(x => x.Value.Select(v => v.Text)));
+            Logger.Trace("Getting straight assessment info...");
+            var accept = new HashSet<WordViewModel>(acceptedWordGroups.SelectMany(x => x.Value), _wordsEqualityComparer);
             var word = acceptedWordGroups.First().Key;
             var correct = accept.First();
             return new AssessmentInfo(accept, word, correct);
@@ -291,68 +305,14 @@ namespace Remembrance.ViewModel.Card
             return isReverse;
         }
 
-        private void OnUiLanguageChanged([NotNull] Language uiLanguage)
+        private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
         {
-            _logger.Trace($"Changing UI language to {uiLanguage}...");
-            if (uiLanguage == null)
-                throw new ArgumentNullException(nameof(uiLanguage));
+            Logger.Trace($"Changing UI language to {cultureInfo}...");
+            if (cultureInfo == null)
+                throw new ArgumentNullException(nameof(cultureInfo));
 
-            CultureUtilities.ChangeCulture(uiLanguage.Code);
+            CultureUtilities.ChangeCulture(cultureInfo);
             Word.ReRender();
-        }
-
-        private void ProvideAnswer([CanBeNull] string answer)
-        {
-            _logger.Info($"Providing answer {answer}...");
-            string mostSuitable = null;
-            var currentMinDistance = int.MaxValue;
-            if (!string.IsNullOrWhiteSpace(answer))
-                foreach (var acceptedAnswer in _acceptedAnswers)
-                {
-                    // 20% of the word could be errors
-                    var maxDistance = acceptedAnswer.Length / 5;
-                    var distance = answer.LevenshteinDistance(acceptedAnswer);
-                    if (distance < 0 || distance > maxDistance)
-                        continue;
-
-                    if (distance < currentMinDistance)
-                    {
-                        currentMinDistance = distance;
-                        mostSuitable = acceptedAnswer;
-                    }
-
-                    Accepted = true;
-                }
-
-            TimeSpan closeTimeout;
-
-            if (Accepted == true)
-            {
-                _logger.Info($"Answer is correct. Most suitable accepted word was {mostSuitable} with distance {currentMinDistance}. Increasing repeat type for {_translationInfo}...");
-                _translationInfo.TranslationEntry.IncreaseRepeatType();
-
-                // The inputed answer can differ from the first one
-                CorrectAnswer = mostSuitable;
-                closeTimeout = _successCloseTimeout;
-            }
-            else
-            {
-                _logger.Info($"Answer is not correct. Decreasing repeat type for {_translationInfo}...");
-                Accepted = false;
-                _translationInfo.TranslationEntry.DecreaseRepeatType();
-                closeTimeout = _failureCloseTimeout;
-            }
-
-            _translationEntryRepository.Save(_translationInfo.TranslationEntry);
-            _messenger.Publish(_translationInfo);
-            _logger.Trace($"Closing window in {closeTimeout}...");
-            ActionExtensions.DoAfterAsync(
-                () =>
-                {
-                    _syncContext.Post(x => RequestClose?.Invoke(null, null), null);
-                    _logger.Trace("Window is closed");
-                },
-                closeTimeout);
         }
 
         /// <summary>
@@ -361,20 +321,38 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> SelectSinglePartOfSpeechGroup([NotNull] Contracts.DAL.Model.Settings settings, [NotNull] TranslationResultViewModel translationResult)
         {
-            _logger.Trace("Selecting single part of speech group...");
+            Logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
             var partOfSpeechGroup = settings.RandomTranslation
                 ? GetRandomPartOfSpeechGroup(partOfSpeechGroups)
                 : partOfSpeechGroups.First();
             if (partOfSpeechGroup == null)
-                throw new InvalidOperationException(Errors.NoTranslations);
+                throw new LocalizableException(Errors.NoTranslations);
 
             return partOfSpeechGroup;
         }
 
+        protected void CloseWindowWithTimeout(TimeSpan closeTimeout)
+        {
+            Logger.Trace($"Closing window in {closeTimeout}...");
+            ActionExtensions.DoAfterAsync(
+                () =>
+                {
+                    Logger.Trace("Window is closing...");
+                    _syncContext.Post(x => RequestClose?.Invoke(null, null), null);
+                },
+                closeTimeout);
+        }
+
+        private void WindowClosed()
+        {
+            Logger.Trace("Resuming showing cards...");
+            Messenger.Publish(IntervalModificator.Resume);
+        }
+
         private sealed class AssessmentInfo
         {
-            public AssessmentInfo([NotNull] HashSet<string> acceptedAnswers, [NotNull] WordViewModel word, [NotNull] string correctAnswer)
+            public AssessmentInfo([NotNull] HashSet<WordViewModel> acceptedAnswers, [NotNull] WordViewModel word, [NotNull] WordViewModel correctAnswer)
             {
                 AcceptedAnswers = acceptedAnswers;
                 Word = word;
@@ -382,13 +360,13 @@ namespace Remembrance.ViewModel.Card
             }
 
             [NotNull]
-            public HashSet<string> AcceptedAnswers { get; }
+            public HashSet<WordViewModel> AcceptedAnswers { get; }
 
             [NotNull]
             public WordViewModel Word { get; }
 
             [NotNull]
-            public string CorrectAnswer { get; }
+            public WordViewModel CorrectAnswer { get; }
         }
     }
 }

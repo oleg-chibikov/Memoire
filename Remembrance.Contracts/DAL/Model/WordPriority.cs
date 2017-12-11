@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordPriority : Entity<int>, IWord
+    public sealed class WordPriority : Entity, IWord
     {
         [UsedImplicitly]
         public WordPriority()
@@ -40,6 +40,11 @@ namespace Remembrance.Contracts.DAL.Model
             get;
             [UsedImplicitly]
             set;
+        }
+
+        public override string ToString()
+        {
+            return $"{Text} ({PartOfSpeech})";
         }
     }
 }

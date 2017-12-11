@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -9,10 +9,10 @@ namespace Remembrance.Contracts.CardManagement
     public interface ICardsExchanger
     {
         [NotNull]
-        Task ExportAsync(CancellationToken token);
+        Task ExportAsync(CancellationToken cancellationToken);
 
         [NotNull]
-        Task ImportAsync(CancellationToken token);
+        Task ImportAsync(CancellationToken cancellationToken);
 
         event EventHandler<ProgressEventArgs> Progress;
     }

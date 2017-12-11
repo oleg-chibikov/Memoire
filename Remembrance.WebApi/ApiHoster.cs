@@ -15,6 +15,12 @@ namespace Remembrance.WebApi
         {
         }
 
+        [NotNull]
+        protected override string BaseAddress => "http://localhost:2053/";
+
+        [NotNull]
+        protected override Assembly ControllersAssembly => Assembly.GetExecutingAssembly();
+
         protected override void RegisterRoutes(HttpRouteCollection routes)
         {
             routes.MapHttpRoute(
@@ -25,11 +31,5 @@ namespace Remembrance.WebApi
                     word = RouteParameter.Optional
                 });
         }
-
-        [NotNull]
-        protected override string BaseAddress => "http://localhost:2053/";
-
-        [NotNull]
-        protected override Assembly ControllersAssembly => Assembly.GetExecutingAssembly();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Remembrance.Contracts.View.Card
 {
-    public interface IAssessmentCardWindow : IWindow
+    public interface ITranslationDetailsCardWindow : IWindow
     {
     }
 }

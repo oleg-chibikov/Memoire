@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
@@ -64,12 +65,12 @@ namespace Remembrance.ViewModel.Translation
                     var handler = Volatile.Read(ref TextChanged);
                     handler?.Invoke(this, new TextChangedEventArgs(newValue, _text));
                 }
-                else
-                {
-                    _text = newValue;
-                }
+                _text = newValue;
             }
         }
+
+        [CanBeNull]
+        public ManualTranslation[] ManualTranslations { get; set; }
 
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations { get; private set; }
@@ -94,6 +95,9 @@ namespace Remembrance.ViewModel.Translation
         [UsedImplicitly]
         public DateTime NextCardShowTime { get; set; }
 
+        [UsedImplicitly]
+        public bool IsFavorited { get; set; }
+
         public bool NotificationIsSupressed { get; set; }
 
         [NotNull]
@@ -102,9 +106,32 @@ namespace Remembrance.ViewModel.Translation
             return new NotificationSupresser(this);
         }
 
-        private IEnumerable<IWord> GetPriorityWordsInTranslationDetails(IWord[] priorityWords)
+        public async Task ReloadNonPriorityAsync()
         {
-            var translationDetails = WordsProcessor.ReloadTranslationDetailsIfNeeded(Id, Text, Language, TargetLanguage);
+            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            Reload(translationDetails.TranslationResult.GetDefaultWords(), false);
+        }
+
+        public async Task ReloadTranslationsAsync()
+        {
+            //If there are priority words - load only them
+            var priorityWords = _wordPriorityRepository.GetPriorityWordsForTranslationEntry(Id);
+            if (priorityWords.Any())
+                await ReloadPriorityAsync(priorityWords).ConfigureAwait(false);
+            //otherwise load default words
+            else
+                await ReloadNonPriorityAsync().ConfigureAwait(false);
+        }
+
+        public event TextChangedEventHandler TextChanged;
+
+        public override string ToString()
+        {
+            return $"{Id}: {Text} [{Language}->{TargetLanguage}]";
+        }
+
+        private IEnumerable<IWord> GetPriorityWordsInTranslationDetails(IWord[] priorityWords, [NotNull] TranslationDetails translationDetails)
+        {
             foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (priorityWords.Any(priorityWord => _wordsEqualityComparer.Equals(translationVariant, priorityWord)))
@@ -118,42 +145,20 @@ namespace Remembrance.ViewModel.Translation
             }
         }
 
-        public void ReloadNonPriority()
+        private async Task ReloadPriorityAsync([NotNull] IWord[] priorityWords)
         {
-            var translationDetails = WordsProcessor.ReloadTranslationDetailsIfNeeded(Id, Text, Language, TargetLanguage);
-            var defaultWords = translationDetails.TranslationResult.GetDefaultWords();
-            var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(defaultWords);
+            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var priorityWordsDetails = GetPriorityWordsInTranslationDetails(priorityWords, translationDetails);
+            Reload(priorityWordsDetails, true);
+        }
+
+        private void Reload([NotNull] IEnumerable<IWord> words, bool isPriority)
+        {
+            var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(words);
             foreach (var translation in translations)
-                translation.SetProperties(Id, TargetLanguage, false);
+                translation.SetProperties(Id, TargetLanguage, isPriority);
 
             Translations = new ObservableCollection<PriorityWordViewModel>(translations);
-        }
-
-        private void ReloadPriority([NotNull] IWord[] priorityWords)
-        {
-            var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(GetPriorityWordsInTranslationDetails(priorityWords));
-            foreach (var translation in translations)
-                translation.SetProperties(Id, TargetLanguage, true);
-
-            Translations = new ObservableCollection<PriorityWordViewModel>(translations);
-        }
-
-        public void ReloadTranslations()
-        {
-            //If there are priority words - load only them
-            var priorityWords = _wordPriorityRepository.GetPriorityWordsForTranslationEntry(Id);
-            if (priorityWords.Any())
-                ReloadPriority(priorityWords);
-            //otherwise load default words
-            else
-                ReloadNonPriority();
-        }
-
-        public event TextChangedEventHandler TextChanged;
-
-        public override string ToString()
-        {
-            return $"{Text} [{Language}->{TargetLanguage}]";
         }
     }
 }

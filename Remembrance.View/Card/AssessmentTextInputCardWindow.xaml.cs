@@ -6,14 +6,13 @@ using Remembrance.ViewModel.Card;
 namespace Remembrance.View.Card
 {
     [UsedImplicitly]
-    internal sealed partial class AssessmentCardWindow : IAssessmentCardWindow
+    internal sealed partial class AssessmentTextInputCardWindow : IAssessmentTextInputCardWindow
     {
-        public AssessmentCardWindow([NotNull] AssessmentCardViewModel viewModel, [CanBeNull] Window ownerWindow = null)
+        public AssessmentTextInputCardWindow([NotNull] AssessmentTextInputCardViewModel viewModel, [CanBeNull] Window ownerWindow = null)
         {
             DataContext = viewModel;
             Owner = ownerWindow;
             InitializeComponent();
-            AnswerControl.AnswerTextBox.Focus();
         }
     }
 }

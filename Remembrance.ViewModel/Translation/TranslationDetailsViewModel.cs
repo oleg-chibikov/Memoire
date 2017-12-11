@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -26,5 +27,13 @@ namespace Remembrance.ViewModel.Translation
 
         [NotNull]
         public TranslationResultViewModel TranslationResult { get; set; }
+
+        [CanBeNull]
+        public PrepositionsCollection PrepositionsCollection { get; set; }
+
+        public override string ToString()
+        {
+            return $"Translation details for {TranslationEntryId}";
+        }
     }
 }

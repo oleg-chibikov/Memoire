@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Remembrance.View.Settings.TranslationsGridControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,6 +14,8 @@
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:contracts="clr-namespace:Remembrance.Contracts.DAL.Model;assembly=Remembrance.Contracts"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:various="clr-namespace:Remembrance.View.Various"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -65,19 +67,23 @@
                     Text="{Binding Converter={StaticResource RepeatTypeConverter}}" />
             </DataTemplate>
         </xceed:XceedAutoFitColumnGrid.Resources>
-        <!--<xceed:XceedAutoFitColumnGrid.View>
-            <xcdg:TableflowView HorizontalGridLineThickness="1" UseDefaultHeadersFooters="False">
-                <xcdg:TableflowView.FixedHeaders>
-                    <DataTemplate>
-                        <StackPanel>
-                            <xcdg:HierarchicalGroupByControl NoGroupContent="{lex:Loc GridGroupHeader}" />
-                            <xcdg:ColumnManagerRow AllowColumnResize="False" AllowColumnReorder="True" />
-                        </StackPanel>
-                    </DataTemplate>
-                </xcdg:TableflowView.FixedHeaders>
-            </xcdg:TableflowView>
-        </xceed:XceedAutoFitColumnGrid.View>-->
         <xceed:XceedAutoFitColumnGrid.Columns>
+            <xcdg:Column
+                CellVerticalContentAlignment="Center"
+                ReadOnly="True"
+                Title="{lex:Loc Remembrance.Resources:Texts:IsFavorited}"
+                FieldName="IsFavorited"
+                AllowGroup="True"
+                AllowSort="True">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <various:FavoriteButton
+                            IsFavorited="{Binding Mode=OneWay}"
+                            Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}, Mode=OneTime}"
+                            CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
             <xcdg:Column
                 IsMainColumn="True"
                 CellVerticalContentAlignment="Center"
@@ -89,7 +95,7 @@
                         <view:WordControl
                             HorizontalAlignment="Stretch"
                             SpeakerAlignment="Right"
-                            DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -99,7 +105,7 @@
                 ReadOnly="True"
                 FieldName="Translations"
                 AllowGroup="False"
-                AllowSort="false"
+                AllowSort="False"
                 Title="{lex:Loc Remembrance.Resources:Texts:Translation}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
@@ -179,15 +185,27 @@
                 FieldName="Id">
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
-                        <Button
-                            Style="{StaticResource ImageButton}"
-                            Background="OrangeRed"
-                            ToolTip="{lex:Loc DeleteTranslation}"
-                            CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
-                            <materialDesign:PackIcon
-                                Kind="Delete" />
-                        </Button>
+                        <StackPanel
+                            Orientation="Horizontal"
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+                            <Button
+                                Style="{StaticResource ImageButton}"
+                                ToolTip="{lex:Loc EditManualTranslations}"
+                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                                <materialDesign:PackIcon
+                                    Kind="TooltipEdit" />
+                            </Button>
+                            <Button
+                                Style="{StaticResource ImageButton}"
+                                Background="OrangeRed"
+                                ToolTip="{lex:Loc DeleteTranslation}"
+                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                                <materialDesign:PackIcon
+                                    Kind="Delete" />
+                            </Button>
+                        </StackPanel>
                     </DataTemplate>
                 </xcdg:UnboundColumn.CellContentTemplate>
             </xcdg:UnboundColumn>

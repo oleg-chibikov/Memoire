@@ -205,12 +205,12 @@
             <Slider
                 Grid.Row="4"
                 Grid.Column="1"
-                    Minimum="0.08333"
-                    Maximum="120"
-                    TickPlacement="BottomRight"
-                    IsSnapToTickEnabled="True"
-                    Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
-                    Value="{Binding CardShowFrequency, Mode=TwoWay}"
+                Minimum="0.08333"
+                Maximum="120"
+                TickPlacement="BottomRight"
+                IsSnapToTickEnabled="True"
+                Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
+                Value="{Binding CardShowFrequency, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
                 ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}}" />
 
@@ -220,14 +220,14 @@
                 Text="{lex:Loc TranslationCloseTimeout}" />
 
             <Slider
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    Minimum="1"
-                    Maximum="60"
-                    TickFrequency="1"
-                    TickPlacement="BottomRight"
-                    IsSnapToTickEnabled="True"
-                    Value="{Binding TranslationCloseTimeout, Mode=TwoWay}"
+                Grid.Row="5"
+                Grid.Column="1"
+                Minimum="1"
+                Maximum="60"
+                TickFrequency="1"
+                TickPlacement="BottomRight"
+                IsSnapToTickEnabled="True"
+                Value="{Binding TranslationCloseTimeout, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
                 ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
 
@@ -239,12 +239,12 @@
             <Slider
                 Grid.Row="6"
                 Grid.Column="1"
-                    Minimum="1"
-                    Maximum="60"
-                    TickFrequency="1"
-                    TickPlacement="BottomRight"
-                    IsSnapToTickEnabled="True"
-                    Value="{Binding AssessmentSuccessCloseTimeout, Mode=TwoWay}"
+                Minimum="1"
+                Maximum="60"
+                TickFrequency="1"
+                TickPlacement="BottomRight"
+                IsSnapToTickEnabled="True"
+                Value="{Binding AssessmentSuccessCloseTimeout, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
                 ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
 
@@ -256,14 +256,14 @@
             <Slider
                 Grid.Row="7"
                 Grid.Column="1"
-                    Minimum="1"
-                    Maximum="60"
-                    TickFrequency="1"
-                    TickPlacement="BottomRight"
-                    IsSnapToTickEnabled="True"
-                    Value="{Binding AssessmentFailureCloseTimeout, Mode=TwoWay}"
-                    AutoToolTipPlacement="None"
-                    ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+                Minimum="1"
+                Maximum="60"
+                TickFrequency="1"
+                TickPlacement="BottomRight"
+                IsSnapToTickEnabled="True"
+                Value="{Binding AssessmentFailureCloseTimeout, Mode=TwoWay}"
+                AutoToolTipPlacement="None"
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
 
             <Button
                 Grid.Row="8"

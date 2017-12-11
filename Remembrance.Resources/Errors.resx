@@ -120,6 +120,9 @@
   <data name="NoTranslations" xml:space="preserve">
     <value>No translations were found for the word.</value>
   </data>
+  <data name="CannotDeleteManual" xml:space="preserve">
+    <value>Cannot delete the manual translation because it will lead to the abscence of translations.</value>
+  </data>
   <data name="DefaultError" xml:space="preserve">
     <value>An error has occured.</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="WordIsPresent" xml:space="preserve">
     <value>Word has already been added to the dictionary.</value>
+  </data>
+  <data name="TranslationIsPresent" xml:space="preserve">
+    <value>Such translation is already added to the list.</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
     <value>Remembrance is already running.</value>

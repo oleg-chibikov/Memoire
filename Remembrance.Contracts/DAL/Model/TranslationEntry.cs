@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Scar.Common.DAL.Model;
@@ -31,6 +31,10 @@ namespace Remembrance.Contracts.DAL.Model
         [UsedImplicitly]
         public TranslationEntryKey Key { get; set; }
 
+        [CanBeNull]
+        [UsedImplicitly]
+        public ManualTranslation[] ManualTranslations { get; set; }
+
         [UsedImplicitly]
         public RepeatType RepeatType
         {
@@ -60,6 +64,9 @@ namespace Remembrance.Contracts.DAL.Model
         [UsedImplicitly]
         public DateTime NextCardShowTime { get; set; }
 
+        [UsedImplicitly]
+        public bool IsFavorited { get; set; }
+
         public void DecreaseRepeatType()
         {
             var prev = _current.Previous;
@@ -87,7 +94,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return Key.ToString();
+            return $"{Id}: {Key}";
         }
     }
 }

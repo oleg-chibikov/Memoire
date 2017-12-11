@@ -4,6 +4,7 @@ using PropertyChanged;
 namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
+    [UsedImplicitly]
     public sealed class TranslationResultViewModel
     {
         [NotNull]

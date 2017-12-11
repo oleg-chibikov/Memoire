@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Remembrance.View.Card.AnswerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,12 +8,14 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
+    xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance card:AssessmentCardViewModel}">
+    d:DataContext="{d:DesignInstance card:AssessmentTextInputCardViewModel}">
     <UserControl.Resources>
         <ResourceDictionary
             Source="../Styles.xaml" />
@@ -22,22 +24,24 @@
         Orientation="Horizontal"
         view:MarginSetter.Margin="{StaticResource CommonMargin}">
         <TextBlock
-            Text="{lex:Loc EnterTheAnswer}"
-            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-        <TextBox
-            ToolTip="{lex:Loc MistakesTooltip}"
-            Width="200"
             Name="AnswerTextBox"
-            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}}">
-            <TextBox.InputBindings>
+            Text="{lex:Loc EnterTheAnswer}"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
+            ToolTip="{lex:Loc MistakesTooltip}" />
+        <controls:CompletableTextBox
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
+            Width="200"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
+            Text="{Binding ProvidedAnswer, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+            DataProvider="{StaticResource SuggestionProvider}">
+            <controls:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding ProvideAnswerCommand}"
-                    Key="Enter"
-                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-            </TextBox.InputBindings>
-        </TextBox>
+                    Key="Enter" />
+            </controls:CompletableTextBox.InputBindings>
+        </controls:CompletableTextBox>
         <Button
             Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Answer}"

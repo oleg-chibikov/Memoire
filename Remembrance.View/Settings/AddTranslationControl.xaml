@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Remembrance.View.Settings.AddTranslationControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
@@ -17,9 +18,14 @@
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
     <UserControl.Resources>
-        <ResourceDictionary
-            Source="../Styles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="../Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
+    <!--TODO Bindings-->
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
         view:MarginSetter.Orientation="Horizontal">
@@ -35,23 +41,36 @@
         <TextBlock
             Grid.Column="0"
             Text="{lex:Loc Translate}" />
-        <TextBox
+
+        <controls:CompletableTextBox
             Grid.Column="1"
-            HorizontalAlignment="Stretch"
-            Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}">
-            <TextBox.InputBindings>
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
+            Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            DataProvider="{StaticResource SuggestionProvider}">
+            <controls:CompletableTextBox.InputBindings>
                 <KeyBinding
-                    Command="{Binding SaveCommand}"
-                    Key="Enter"
-                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-            </TextBox.InputBindings>
-        </TextBox>
+                    Command="{Binding SaveCommand, Mode=OneTime}"
+                    Key="Enter" />
+            </controls:CompletableTextBox.InputBindings>
+        </controls:CompletableTextBox>
 
         <StackPanel
             Grid.Column="2"
             Orientation="Horizontal"
             view:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <TextBlock
+                Text="{lex:Loc WithCustomTranslation}" />
+
+            <controls:CompletableTextBox
+                Width="200"
+                Text="{Binding ManualTranslation, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                DataProvider="{StaticResource SuggestionProvider}">
+                <controls:CompletableTextBox.InputBindings>
+                    <KeyBinding
+                        Command="{Binding SaveCommand, Mode=OneTime}"
+                        Key="Enter" />
+                </controls:CompletableTextBox.InputBindings>
+            </controls:CompletableTextBox>
             <TextBlock
                 Text="{lex:Loc From}" />
             <ComboBox
@@ -72,7 +91,7 @@
             <Button
                 Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc AddTranslation}"
-                Command="{Binding SaveCommand}">
+                Command="{Binding SaveCommand, Mode=OneTime}">
                 <materialDesign:PackIcon
                     Kind="NotePlus" />
             </Button>

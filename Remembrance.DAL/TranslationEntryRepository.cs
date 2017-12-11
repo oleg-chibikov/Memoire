@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Common.Logging;
 using JetBrains.Annotations;
@@ -15,6 +15,7 @@ namespace Remembrance.DAL
         public TranslationEntryRepository([NotNull] ILog logger)
             : base(logger)
         {
+            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Key, true);
             Collection.EnsureIndex(x => x.NextCardShowTime);
         }
@@ -28,7 +29,8 @@ namespace Remembrance.DAL
         public TranslationEntry GetCurrent()
         {
             return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to show
-                .OrderBy(x => x.ShowCount) // the lower the value, the greater the priority
+                .OrderByDescending(x => x.IsFavorited) // favorited are shown first
+                .ThenBy(x => x.ShowCount) // the lower the value, the greater the priority
                 .ThenBy(x => Guid.NewGuid()) // similar values are ordered randomly
                 .FirstOrDefault();
         }

@@ -1,9 +1,10 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -36,7 +37,7 @@ namespace Remembrance.ViewModel.Translation
         }
 
         [CanBeNull]
-        public ExampleViewModel[] Examples
+        public Example[] Examples
         {
             get;
             [UsedImplicitly]

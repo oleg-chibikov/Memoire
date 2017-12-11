@@ -1,4 +1,7 @@
-﻿using JetBrains.Annotations;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.WPF.View.Contracts;
 
@@ -6,19 +9,31 @@ namespace Remembrance.Contracts.CardManagement
 {
     public interface IWordsProcessor
     {
-        [NotNull]
-        TranslationInfo AddOrChangeWord(
-            [NotNull] string text,
+        [ItemNotNull]
+        Task<TranslationInfo> AddOrChangeWordAsync(
+            [CanBeNull] string text,
+            CancellationToken cancellationToken,
             [CanBeNull] string sourceLanguage = null,
             [CanBeNull] string targetLanguage = null,
-            IWindow ownerWindow = null,
+            [CanBeNull] IWindow ownerWindow = null,
             bool needPostProcess = true,
-            object id = null);
+            [CanBeNull] object id = null,
+            [CanBeNull] ManualTranslation[] manualTranslations = null);
 
-        [NotNull]
-        string GetDefaultTargetLanguage([NotNull] string sourceLanguage);
+        [ItemNotNull]
+        Task<string> GetDefaultTargetLanguageAsync([NotNull] string sourceLanguage, CancellationToken cancellationToken);
 
-        [NotNull]
-        TranslationDetails ReloadTranslationDetailsIfNeeded([NotNull] object id, [NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage);
+        [ItemNotNull]
+        Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
+            [NotNull] object id,
+            [NotNull] string text,
+            [NotNull] string sourceLanguage,
+            [NotNull] string targetLanguage,
+            [CanBeNull] ManualTranslation[] manualTranslations,
+            CancellationToken cancellationToken,
+            [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
+
+        [ItemNotNull]
+        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] object id, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
     }
 }

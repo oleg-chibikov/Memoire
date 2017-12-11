@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
@@ -13,6 +13,7 @@ namespace Remembrance.ViewModel.Settings
     [UsedImplicitly]
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl
     {
+        //TODO: Every textbox - add TypeAhead like in yandex translate
         [NotNull]
         private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Common.Logging;
 using JetBrains.Annotations;
 using LiteDB;
@@ -15,6 +15,7 @@ namespace Remembrance.DAL
         public TranslationDetailsRepository([NotNull] ILog logger)
             : base(logger)
         {
+            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.TranslationEntryId, true);
         }
 

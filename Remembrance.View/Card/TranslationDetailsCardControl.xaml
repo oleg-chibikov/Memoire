@@ -1,26 +1,20 @@
-﻿<window:AnimatedWindow
-    x:Class="Remembrance.View.Card.TranslationResultCardWindow"
-    x:ClassModifier="internal"
+<UserControl
+    x:Class="Remembrance.View.Card.TranslationDetailsCardControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     MaxWidth="1000"
     MaxHeight="800"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Card"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:various="clr-namespace:Remembrance.View.Various"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationResultCardViewModel}"
-    SizeToContent="WidthAndHeight"
-    ShowActivated="false"
-    ShowInTaskbar="false"
-    Focusable="False"
-    Icon="../IconAlt.ico">
-    <window:AnimatedWindow.Resources>
+    d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}">
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
@@ -37,7 +31,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </window:AnimatedWindow.Resources>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
@@ -45,18 +39,29 @@
             <RowDefinition
                 Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock
-            FontSize="{StaticResource HugeFontSize}"
-            FontWeight="Bold"
+        <StackPanel
+            Orientation="Horizontal"
             Grid.Row="0"
-            Text="{Binding Word}" />
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <various:FavoriteButton
+                IsFavorited="{Binding IsFavorited, Mode=OneWay}"
+                Command="{Binding FavoriteCommand, Mode=OneTime}" />
+            <TextBlock
+                FontSize="{StaticResource HugeFontSize}"
+                FontWeight="Bold"
+                Text="{Binding Word, Mode=OneTime}" />
+            <TextBlock
+                FontSize="{StaticResource MediumFontSize}"
+                Foreground="DimGray"
+                Text="{Binding TranslationDetails.PrepositionsCollection, Mode=OneTime}" />
+        </StackPanel>
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto"
             Grid.Row="1">
             <ItemsControl
                 Grid.IsSharedSizeScope="True"
-                ItemsSource="{Binding TranslationDetails.TranslationResult.PartOfSpeechTranslations}">
+                ItemsSource="{Binding TranslationDetails.TranslationResult.PartOfSpeechTranslations, Mode=OneTime}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DataTemplate.Resources>
@@ -72,14 +77,14 @@
                                 <view:WordControl
                                     FontWeight="Bold"
                                     FontSize="{StaticResource BigFontSize}"
-                                    DataContext="{Binding}" />
+                                    DataContext="{Binding Mode=OneTime}" />
                                 <TextBlock
-                                    Text="{Binding Transcription, StringFormat={StaticResource AdditionalInfoFormat}}"
-                                    Visibility="{Binding Transcription, Converter={StaticResource StringToVisibilityConverter}}" />
+                                    Text="{Binding Transcription, Mode=OneTime, StringFormat={StaticResource AdditionalInfoFormat}}"
+                                    Visibility="{Binding Transcription, Mode=OneTime, Converter={StaticResource StringToVisibilityConverter}}" />
                             </StackPanel>
                             <ItemsControl
                                 AlternationCount="100"
-                                ItemsSource="{Binding TranslationVariants}">
+                                ItemsSource="{Binding TranslationVariants, Mode=OneTime}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
@@ -99,12 +104,12 @@
                                                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                                                     <TextBlock
                                                         FontSize="{StaticResource BigFontSize}"
-                                                        Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
+                                                        Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
                                                     <view:WordControl
                                                         FontSize="{StaticResource MediumFontSize}"
-                                                        DataContext="{Binding}" />
+                                                        DataContext="{Binding Mode=OneTime}" />
                                                     <view:WordsControl
-                                                        ItemsSource="{Binding Synonyms}"
+                                                        ItemsSource="{Binding Synonyms, Mode=OneTime}"
                                                         FontSize="{StaticResource MediumFontSize}"
                                                         MaxWidth="{StaticResource WordsWidth}" />
                                                 </StackPanel>
@@ -112,19 +117,19 @@
                                                     Foreground="IndianRed"
                                                     HorizontalAlignment="Left"
                                                     FontSize="{StaticResource SmallFontSize}"
-                                                    ItemsSource="{Binding Meanings}"
+                                                    ItemsSource="{Binding Meanings, Mode=OneTime}"
                                                     MaxWidth="{StaticResource WordsWidth}" />
                                                 <ItemsControl
-                                                    ItemsSource="{Binding Examples}"
-                                                    Visibility="{Binding Examples, Converter={StaticResource ArrayToVisibilityConverter}}">
+                                                    ItemsSource="{Binding Examples, Mode=OneTime}"
+                                                    Visibility="{Binding Examples, Mode=OneTime, Converter={StaticResource ArrayToVisibilityConverter}}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
                                                             <StackPanel
                                                                 Orientation="Horizontal">
                                                                 <TextBlock
-                                                                    Text="{Binding Text}" />
+                                                                    Text="{Binding Text, Mode=OneTime}" />
                                                                 <TextBlock
-                                                                    Text="{Binding Translations, Converter={StaticResource WordConcatConverter}, StringFormat=' - {0}'}" />
+                                                                    Text="{Binding Translations, Mode=OneTime, Converter={StaticResource WordConcatConverter}, StringFormat=' - {0}'}" />
                                                             </StackPanel>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -140,4 +145,4 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
-</window:AnimatedWindow>
+</UserControl>

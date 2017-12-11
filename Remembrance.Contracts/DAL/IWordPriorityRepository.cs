@@ -4,6 +4,8 @@ namespace Remembrance.Contracts.DAL
 {
     public interface IWordPriorityRepository
     {
+        void ClearForTranslationEntry([NotNull] object translationEntryId);
+
         [NotNull]
         IWord[] GetPriorityWordsForTranslationEntry([NotNull] object translationEntryId);
 

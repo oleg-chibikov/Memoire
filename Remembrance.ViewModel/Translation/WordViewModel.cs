@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
@@ -13,7 +13,7 @@ using Scar.Common.WPF.Commands;
 namespace Remembrance.ViewModel.Translation
 {
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel : TextEntryViewModel, IWord
+    public class WordViewModel : TextEntry, IWord
     {
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
@@ -25,8 +25,8 @@ namespace Remembrance.ViewModel.Translation
         {
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
-            PlayTtsCommand = new CorrelationCommand(PlayTts);
-            LearnWordCommand = new CorrelationCommand(LearnWord, () => CanLearnWord);
+            PlayTtsCommand = new CorrelationCommand(PlayTtsAsync);
+            LearnWordCommand = new CorrelationCommand(LearnWordAsync, () => CanLearnWord);
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
@@ -100,14 +100,14 @@ namespace Remembrance.ViewModel.Translation
             set;
         }
 
-        private void LearnWord()
+        private async void LearnWordAsync()
         {
-            WordsProcessor.AddOrChangeWord(Text, Language);
+            await WordsProcessor.AddOrChangeWordAsync(Text, CancellationToken.None, Language).ConfigureAwait(false);
         }
 
-        private void PlayTts()
+        private async void PlayTtsAsync()
         {
-            _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None);
+            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
         }
 
         public void ReRender()

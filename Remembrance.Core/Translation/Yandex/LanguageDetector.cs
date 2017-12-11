@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Threading;
@@ -40,7 +40,7 @@ namespace Remembrance.Core.Translation.Yandex
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}";
+            var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}&options=1";
             var response = await _client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new DetectionResult();

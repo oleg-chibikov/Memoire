@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -13,6 +13,7 @@ namespace Remembrance.DAL
         public SettingsRepository([NotNull] ILog logger)
             : base(logger)
         {
+            Collection.EnsureIndex(x => x.Id, true);
         }
 
         [NotNull]

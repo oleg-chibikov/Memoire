@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,49 +36,44 @@ namespace Remembrance.Core.Translation.Yandex
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
-        public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken token)
+        public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
             if (lang == null)
                 throw new ArgumentNullException(nameof(lang));
 
-            return await Task.Run(
-                () =>
+            _logger.Trace($"Starting speaking {text}...");
+            var settings = _settingsRepository.Get();
+            var reset = new AutoResetEvent(false);
+            var uriPart =
+                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+            var response = await Client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+                return false;
+
+            var soundStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+            using (var reader = new Mp3FileReader(soundStream))
+            {
+                waveOut.Init(reader);
+
+                // Thread should be alive while playback is not stopped
+                void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                 {
-                    _logger.Trace($"Starting speaking {text}...");
-                    var settings = _settingsRepository.Get();
-                    var reset = new AutoResetEvent(false);
-                    var uriPart =
-                        $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
-                    var response = Client.GetAsync(uriPart, token).Result;
-                    if (!response.IsSuccessStatusCode)
-                        return false;
+                    ((WaveOut)s).PlaybackStopped -= PlaybackStoppedHandler;
+                    reset.Set();
+                }
 
-                    var soundStream = response.Content.ReadAsStreamAsync().Result;
-                    using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                    using (var reader = new Mp3FileReader(soundStream))
-                    {
-                        waveOut.Init(reader);
+                waveOut.PlaybackStopped += PlaybackStoppedHandler;
+                waveOut.Play();
 
-                        // Thread should be alive while playback is not stopped
-                        void PlaybackStoppedHandler(object s, StoppedEventArgs e)
-                        {
-                            ((WaveOut) s).PlaybackStopped -= PlaybackStoppedHandler;
-                            reset.Set();
-                        }
+                // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
+                reset.WaitOne(TimeSpan.FromSeconds(5));
+            }
 
-                        waveOut.PlaybackStopped += PlaybackStoppedHandler;
-                        waveOut.Play();
-
-                        // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
-                        reset.WaitOne(TimeSpan.FromSeconds(5));
-                    }
-
-                    _logger.Trace($"Finished speaking {text}");
-                    return true;
-                },
-                token);
+            _logger.Trace($"Finished speaking {text}");
+            return true;
         }
 
         [NotNull]

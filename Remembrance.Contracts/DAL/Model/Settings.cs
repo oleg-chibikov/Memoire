@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Scar.Common.DAL.Model;
@@ -28,6 +28,10 @@ namespace Remembrance.Contracts.DAL.Model
 
         public TimeSpan CardShowFrequency { get; set; }
 
+        public DateTime? LastCardShowTime { get; set; }
+
+        public TimeSpan PausedTime { get; set; }
+
         public TimeSpan TranslationCloseTimeout { get; set; }
 
         public TimeSpan AssessmentSuccessCloseTimeout { get; set; }
@@ -45,5 +49,10 @@ namespace Remembrance.Contracts.DAL.Model
         public bool RandomTranslation { get; set; }
 
         public bool IsActive { get; set; }
+
+        public override string ToString()
+        {
+            return "Settings";
+        }
     }
 }
