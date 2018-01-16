@@ -67,7 +67,14 @@ namespace Remembrance.Core.Exchange
             OnProgress(0, 1);
             try
             {
-                await Task.Run(async () => { exchangeResult = await _exporter.ExportAsync(_saveFileService.FileName, cancellationToken).ConfigureAwait(false); }, cancellationToken).ConfigureAwait(false);
+                await Task.Run(
+                        async () =>
+                        {
+                            exchangeResult = await _exporter.ExportAsync(_saveFileService.FileName, cancellationToken)
+                                .ConfigureAwait(false);
+                        },
+                        cancellationToken)
+                    .ConfigureAwait(false);
             }
             finally
             {
@@ -100,8 +107,9 @@ namespace Remembrance.Core.Exchange
                         {
                             foreach (var importer in _importers)
                             {
-                                _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType().Name}...");
-                                var exchangeResult = await importer.ImportAsync(_openFileService.FileName, cancellationToken).ConfigureAwait(false);
+                                _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType() .Name}...");
+                                var exchangeResult = await importer.ImportAsync(_openFileService.FileName, cancellationToken)
+                                    .ConfigureAwait(false);
 
                                 if (exchangeResult.Success)
                                 {
@@ -109,8 +117,8 @@ namespace Remembrance.Core.Exchange
                                     var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
                                     _messenger.Publish(
                                         exchangeResult.Errors != null
-                                            ? $"[{importer.GetType().Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}".ToWarning()
-                                            : $"[{importer.GetType().Name}] {mainMessage}".ToMessage());
+                                            ? $"[{importer.GetType() .Name}] {mainMessage}. {Texts.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}".ToWarning()
+                                            : $"[{importer.GetType() .Name}] {mainMessage}".ToMessage());
                                     return;
                                 }
 

@@ -42,7 +42,9 @@ namespace Remembrance.Core.CardManagement
                         return;
                     }
 
-                    CultureUtilities.ChangeCulture(SettingsRepository.Get().UiLanguage);
+                    CultureUtilities.ChangeCulture(
+                        SettingsRepository.Get()
+                            .UiLanguage);
                     window.Draggable = false;
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
                     if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)

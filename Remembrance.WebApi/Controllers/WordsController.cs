@@ -33,7 +33,8 @@ namespace Remembrance.WebApi.Controllers
 
             try
             {
-                await _wordsProcessor.AddOrChangeWordAsync(word, CancellationToken.None).ConfigureAwait(false);
+                await _wordsProcessor.AddOrChangeWordAsync(word, CancellationToken.None)
+                    .ConfigureAwait(false);
             }
             catch (LocalizableException ex)
             {

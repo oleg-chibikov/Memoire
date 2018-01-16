@@ -12,6 +12,7 @@ using Scar.Common.WPF.Commands;
 
 namespace Remembrance.ViewModel.Translation
 {
+    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public class WordViewModel : TextEntry, IWord
     {
@@ -51,63 +52,46 @@ namespace Remembrance.ViewModel.Translation
 
         [CanBeNull]
         [DoNotNotify]
-        public string VerbType
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string VerbType { get; set; }
 
         [CanBeNull]
         [DoNotNotify]
-        public string NounAnimacy
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string NounAnimacy { get; set; }
 
         [CanBeNull]
         [DoNotNotify]
-        public string NounGender
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string NounGender { get; set; }
 
         [CanBeNull]
-        public string WordInfo => VerbType == null && NounAnimacy == null && NounGender == null
-            ? null
-            : string.Join(
-                ", ",
-                new[]
-                {
-                    VerbType,
-                    NounAnimacy,
-                    NounGender
-                }.Where(x => x != null));
+        public string WordInfo =>
+            VerbType == null && NounAnimacy == null && NounGender == null
+                ? null
+                : string.Join(
+                    ", ",
+                    new[]
+                    {
+                        VerbType,
+                        NounAnimacy,
+                        NounGender
+                    }.Where(x => x != null));
 
         public ICommand PlayTtsCommand { get; }
 
         public ICommand LearnWordCommand { get; }
 
         [DoNotNotify]
-        public PartOfSpeech PartOfSpeech
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public PartOfSpeech PartOfSpeech { get; set; }
 
         private async void LearnWordAsync()
         {
-            await WordsProcessor.AddOrChangeWordAsync(Text, CancellationToken.None, Language).ConfigureAwait(false);
+            await WordsProcessor.AddOrChangeWordAsync(Text, CancellationToken.None, Language)
+                .ConfigureAwait(false);
         }
 
         private async void PlayTtsAsync()
         {
-            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None)
+                .ConfigureAwait(false);
         }
 
         public void ReRender()

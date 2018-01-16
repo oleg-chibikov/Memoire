@@ -10,6 +10,8 @@ using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.ImageSearch;
+using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
@@ -22,7 +24,8 @@ namespace Remembrance.Core.CardManagement
     [UsedImplicitly]
     internal sealed class WordsProcessor : IWordsProcessor
     {
-        private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
+        private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture()
+            .TwoLetterISOLanguageName;
 
         private static readonly string[] DefaultTargetLanguages =
         {
@@ -34,6 +37,12 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         private readonly ITranslationDetailsCardManager _cardManager;
+
+        [NotNull]
+        private readonly IImageDownloader _imageDownloader;
+
+        [NotNull]
+        private readonly IImageSearcher _imageSearcher;
 
         [NotNull]
         private readonly ILanguageDetector _languageDetector;
@@ -48,6 +57,9 @@ namespace Remembrance.Core.CardManagement
         private readonly IPredictor _predictor;
 
         [NotNull]
+        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
+
+        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
@@ -58,6 +70,9 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
+        private readonly IWordImagesInfoRepository _wordImagesInfoRepository;
 
         [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
@@ -80,8 +95,16 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IPredictor predictor)
+            [NotNull] IPredictor predictor,
+            [NotNull] IImageSearcher imageSearcher,
+            [NotNull] IWordImagesInfoRepository imagesInfoRepository,
+            [NotNull] IImageDownloader imageDownloader,
+            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
         {
+            _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
+            _imageDownloader = imageDownloader ?? throw new ArgumentNullException(nameof(imageDownloader));
+            _wordImagesInfoRepository = imagesInfoRepository ?? throw new ArgumentNullException(nameof(imagesInfoRepository));
+            _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
@@ -109,16 +132,17 @@ namespace Remembrance.Core.CardManagement
             if (translationDetails != null)
             {
                 processNonReloaded?.Invoke(translationDetails);
-                ReloadPrepositionsIfNeeded(text, cancellationToken, translationDetails);
+                ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
                 return translationDetails;
             }
 
-            var translationResult = await TranslateAsync(text, sourceLanguage, targetLanguage, manualTranslations, cancellationToken).ConfigureAwait(false);
+            var translationResult = await TranslateAsync(text, sourceLanguage, targetLanguage, manualTranslations, cancellationToken)
+                .ConfigureAwait(false);
 
             // There are no translation details for this word
             translationDetails = new TranslationDetails(translationResult, id);
             _translationDetailsRepository.Save(translationDetails);
-            ReloadPrepositionsIfNeeded(text, cancellationToken, translationDetails);
+            ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
             return translationDetails;
         }
 
@@ -138,14 +162,17 @@ namespace Remembrance.Core.CardManagement
                     ? $"Changing word translation ({id}) to {text} ({sourceLanguage} - {targetLanguage})..."
                     : $"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
 
-            var key = await GetTranslationKeyAsync(text, sourceLanguage, targetLanguage, cancellationToken).ConfigureAwait(false);
+            var key = await GetTranslationKeyAsync(text, sourceLanguage, targetLanguage, cancellationToken)
+                .ConfigureAwait(false);
             if (text == null)
                 throw new InvalidOperationException();
 
-            var translationResult = await TranslateAsync(key.Text, key.SourceLanguage, key.TargetLanguage, manualTranslations, cancellationToken).ConfigureAwait(false);
+            var translationResult = await TranslateAsync(key.Text, key.SourceLanguage, key.TargetLanguage, manualTranslations, cancellationToken)
+                .ConfigureAwait(false);
 
             // replace the original text with the corrected one
-            key.Text = translationResult.PartOfSpeechTranslations.First().Text;
+            key.Text = translationResult.PartOfSpeechTranslations.First()
+                .Text;
             var existingByKey = _translationEntryRepository.TryGetByKey(key);
             if (id != null)
             {
@@ -173,12 +200,13 @@ namespace Remembrance.Core.CardManagement
                 translationDetails.Id = existingTranslationDetails.Id;
 
             _translationDetailsRepository.Save(translationDetails);
-            ReloadPrepositionsIfNeeded(text, cancellationToken, translationDetails);
+            ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
 
             _logger.Trace($"Translation for {key} has been successfully added");
             if (needPostProcess)
-                await PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
+                await PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken)
+                    .ConfigureAwait(false);
             _logger.Trace($"Processing finished for word {text}");
             return translationInfo;
         }
@@ -197,7 +225,8 @@ namespace Remembrance.Core.CardManagement
             while (targetLanguage == sourceLanguage)
                 targetLanguage = possibleTargetLanguages.Pop();
 
-            return await Task.FromResult(targetLanguage).ConfigureAwait(false);
+            return await Task.FromResult(targetLanguage)
+                .ConfigureAwait(false);
         }
 
         public async Task<TranslationInfo> UpdateManualTranslationsAsync(object id, ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
@@ -228,30 +257,90 @@ namespace Remembrance.Core.CardManagement
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
-        private void ReloadPrepositionsIfNeeded([NotNull] string text, CancellationToken cancellationToken, [NotNull] TranslationDetails translationDetails)
+        private void ReloadAdditionalInfoIfNeeded([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
             //Fire and Forget
 #pragma warning disable 4014
-            ReloadPrepositionsAsync(text, translationDetails, cancellationToken);
+            ReloadAdditionalInfoAsync(text, translationDetails, cancellationToken);
 #pragma warning restore 4014
+        }
+
+        private async void ReloadAdditionalInfoAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        {
+            await ReloadPrepositionsAsync(text, translationDetails, cancellationToken);
+            await ReloadImagesAsync(translationDetails, cancellationToken);
         }
 
         private async Task ReloadPrepositionsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
-            if (translationDetails.PrepositionsCollection == null)
+            if (_prepositionsInfoRepository.CheckPrepositionsInfoExists(translationDetails.TranslationEntryId))
+                return;
+            _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
+            var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
+                .ConfigureAwait(false);
+            var prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
+            _prepositionsInfoRepository.Save(prepositionsInfo);
+            _messenger.Publish(prepositionsInfo);
+        }
+
+        private async Task ReloadImagesAsync([NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        {
+            //TODO https://api.qwant.com/api/search/images?count=1&offset=0&q=horse
+            //http://www.faroo.com/hp/api/api.html#ratelimit
+
+            //TODO: 1) Separate DBs for Preposition and Images.
+            //2) sTORE 3 IMAGES WITH THUMBNAILS AND IMAGE Bitmaps in separate DB
+            //3) When image or preposition is loaded- send event through messageHub. All forms which display image or prep should handle it.
+            //4)Image control - like in PhotoReviewer - display square image with two arrows, cross to hide image at all and Browse to upload own image
+            _logger.Info($"Reloading images for {translationDetails.TranslationEntryId}...");
+            var translationEntry = _translationEntryRepository.GetById(translationDetails.TranslationEntryId);
+            IList<Task> tasks = translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
+                    partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(translationVariant => ReloadAndUpdateImageAsync(translationEntry, translationVariant, cancellationToken)))
+                .ToList();
+            await Task.WhenAll(tasks);
+            translationDetails.ImagesUrlsAreLoaded = true;
+        }
+
+        private async Task ReloadAndUpdateImageAsync([NotNull] TranslationEntry translationEntry, [NotNull] TranslationVariant translationVariant, CancellationToken cancellationToken)
+        {
+            if (_wordImagesInfoRepository.CheckImagesInfoExists(translationEntry.Id, translationVariant))
+                return;
+
+            var imagesUrls = await _imageSearcher.SearchImagesAsync(translationVariant.Text, translationEntry.Key.TargetLanguage, cancellationToken, 0, 3)
+                .ConfigureAwait(false);
+            if (imagesUrls == null)
+                return;
+
+            var tasks = new List<Task<byte[]>>(imagesUrls.Length * 2);
+            foreach (var image in imagesUrls)
             {
-                _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
-                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
-                translationDetails.PrepositionsCollection = prepositions;
-                _logger.Trace($"Saving translation details for {translationDetails.TranslationEntryId}...");
-                _translationDetailsRepository.Save(translationDetails);
+                tasks.Add(_imageDownloader.DownloadImageAsync(image.Url));
+                tasks.Add(_imageDownloader.DownloadImageAsync(image.ThumbnailUrl));
             }
+
+            var images = await Task.WhenAll(tasks)
+                .ConfigureAwait(false);
+            var i = 0;
+            //The order of images should be correct after Task.WhenAll
+            var imagesWithBitmap = imagesUrls.Select(
+                    image => new ImageInfoWithBitmap
+                    {
+                        ImageBitmap = images[i++],
+                        ThumbnailBitmap = images[i++],
+                        ImageInfo = image
+                    })
+                .ToArray();
+
+            var wordImagesInfo = new WordImagesInfo(translationEntry.Id, translationVariant.Text, translationVariant.PartOfSpeech, imagesWithBitmap);
+            _wordImagesInfoRepository.Save(wordImagesInfo);
+            _messenger.Publish(wordImagesInfo);
         }
 
         [ItemNotNull]
         private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
         {
-            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
+            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken)
+                .ConfigureAwait(false);
             var prepositionsCollection = new PrepositionsCollection
             {
                 Texts = predictionResult.Position > 0
@@ -324,7 +413,8 @@ namespace Remembrance.Core.CardManagement
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
             {
                 // if not specified or autodetect - try to detect
-                var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
+                var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken)
+                    .ConfigureAwait(false);
                 sourceLanguage = detectionResult.Language;
             }
 
@@ -334,7 +424,8 @@ namespace Remembrance.Core.CardManagement
             if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
 
                 // if not specified - try to find best matching target language
-                targetLanguage = await GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
+                targetLanguage = await GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken)
+                    .ConfigureAwait(false);
 
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
@@ -343,7 +434,8 @@ namespace Remembrance.Core.CardManagement
         {
             _messenger.Publish(translationInfo);
             _cardManager.ShowCard(translationInfo, ownerWindow);
-            await _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage, cancellationToken).ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         [ItemNotNull]
@@ -355,7 +447,8 @@ namespace Remembrance.Core.CardManagement
             CancellationToken cancellationToken)
         {
             // Used En as ui language to simplify conversion of common words to the enums
-            var translationResult = await _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage, cancellationToken).ConfigureAwait(false);
+            var translationResult = await _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage, cancellationToken)
+                .ConfigureAwait(false);
             if (!translationResult.PartOfSpeechTranslations.Any())
             {
                 _logger.Warn($"No translations found for {text}");
@@ -369,7 +462,8 @@ namespace Remembrance.Core.CardManagement
             }
 
             if (manualTranslations != null)
-                translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(text, manualTranslations, translationResult.PartOfSpeechTranslations).ToArray();
+                translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(text, manualTranslations, translationResult.PartOfSpeechTranslations)
+                    .ToArray();
 
             return translationResult;
         }

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Remembrance.Core.Translation.Yandex.ContractResolvers
+namespace Remembrance.Core
 {
     internal abstract class CustomContractResolver : DefaultContractResolver
     {

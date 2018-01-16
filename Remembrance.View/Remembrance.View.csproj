@@ -64,10 +64,10 @@
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.30\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.31\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6550.23680, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.27\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6577.26071, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.28\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
@@ -89,10 +89,10 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFLocalizeExtension.3.0.1\lib\net35\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\packages\WPFLocalizeExtension.3.1.0\lib\net35\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+      <HintPath>..\packages\XAMLMarkupExtensions.1.3.0\lib\net40\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>

@@ -29,7 +29,9 @@ namespace Remembrance.DAL
 
         public IWord[] GetPriorityWordsForTranslationEntry(object translationEntryId)
         {
-            return Collection.Find(x => x.TranslationEntryId == translationEntryId).Cast<IWord>().ToArray();
+            return Collection.Find(x => x.TranslationEntryId == translationEntryId)
+                .Cast<IWord>()
+                .ToArray();
         }
 
         public bool IsPriority(IWord word, object translationEntryId)

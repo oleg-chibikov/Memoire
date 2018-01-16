@@ -124,6 +124,33 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paused at {0}.
+        /// </summary>
+        public static string CardShowIsPausedInfo {
+            get {
+                return ResourceManager.GetString("CardShowIsPausedInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to , paused time {0}.
+        /// </summary>
+        public static string CardShowPauseTimeInfo {
+            get {
+                return ResourceManager.GetString("CardShowPauseTimeInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next card show in {0} (last show at {1} (now is {4}), frequency {2}{3}).
+        /// </summary>
+        public static string CardShowTimeInfo {
+            get {
+                return ResourceManager.GetString("CardShowTimeInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {

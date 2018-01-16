@@ -39,7 +39,9 @@ namespace Remembrance.Resources
                 jsonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), infoPath);
             return !File.Exists(jsonPath)
                 ? null
-                : File.ReadAllText(jsonPath).Split('\"')[5].Replace(@"\\", @"\");
+                : File.ReadAllText(jsonPath)
+                    .Split('\"')[5]
+                    .Replace(@"\\", @"\");
         }
 
         [CanBeNull]

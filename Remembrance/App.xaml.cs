@@ -24,37 +24,58 @@ namespace Remembrance
 
         protected override void OnStartup()
         {
-            Container.Resolve<ITrayWindow>().ShowDialog();
+            var myResourceDictionary = new ResourceDictionary
+            {
+                { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
+            };
+
+            Current.Resources.MergedDictionaries.Add(myResourceDictionary);
+            Container.Resolve<ITrayWindow>()
+                .ShowDialog();
             Container.Resolve<IAssessmentCardManager>();
             // Need to create first instance of this class in the UI thread (for proper SyncContext)
             Container.Resolve<ITranslationDetailsCardManager>();
             Container.Resolve<ApiHoster>();
-            var myResourceDictionary = new ResourceDictionary
-            {
-                {"SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>()}
-            };
-
-            Current.Resources.MergedDictionaries.Add(myResourceDictionary);
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(WindowFactory<>)).SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
-            builder.RegisterType<OpenFileService>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<SaveFileService>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterGeneric(typeof(WindowFactory<>))
+                .SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly)
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly)
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterType<ApiHoster>()
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterType<OpenFileService>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterType<SaveFileService>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
             //TODO: move autocomplete to library and nuget
-            builder.RegisterType<SuggestionProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).AsSelf().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<SuggestionProvider>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)
+                .AsSelf()
+                .InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly)
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
         }
 
         protected override void ShowMessage(Message message)
         {
             var viewModel = Container.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
-            SynchronizationContext.Post(x => Container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel)).Restore(), null);
+            SynchronizationContext.Post(
+                x => Container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel))
+                    .Restore(),
+                null);
         }
     }
 }

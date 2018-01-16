@@ -93,7 +93,8 @@ namespace Remembrance.Core.Exchange
             }
 
             _logger.Trace("Getting all translations...");
-            var existingTranslationEntries = _translationEntryRepository.GetAll().ToDictionary(x => x.Key, x => x);
+            var existingTranslationEntries = _translationEntryRepository.GetAll()
+                .ToDictionary(x => x.Key, x => x);
             var totalCount = deserialized.Length;
             var errorsList = new List<string>();
             var count = 0;
@@ -111,7 +112,8 @@ namespace Remembrance.Core.Exchange
                                 try
                                 {
                                     var changed = false;
-                                    var key = await GetKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
+                                    var key = await GetKeyAsync(exchangeEntry, cancellationToken)
+                                        .ConfigureAwait(false);
                                     var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                                     TranslationEntry translationEntry = null;
                                     TranslationInfo translationInfo = null;
@@ -129,7 +131,8 @@ namespace Remembrance.Core.Exchange
 
                                     //TODO: See inside
                                     var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, translationEntry);
-                                    var priorityTranslationsUpdated = await UpdatePrioirityTranslationsAsync(cancellationToken, priorityTranslations, translationInfo, translationEntry).ConfigureAwait(false);
+                                    var priorityTranslationsUpdated = await UpdatePrioirityTranslationsAsync(cancellationToken, priorityTranslations, translationInfo, translationEntry)
+                                        .ConfigureAwait(false);
                                     changed |= learningInfoUpdated;
                                     changed |= priorityTranslationsUpdated;
                                     return changed
@@ -143,6 +146,7 @@ namespace Remembrance.Core.Exchange
                                     {
                                         errorsList.Add(exchangeEntry.Text);
                                     }
+
                                     return null;
                                 }
                                 finally
@@ -150,10 +154,13 @@ namespace Remembrance.Core.Exchange
                                     OnProgress(Interlocked.Increment(ref count), totalCount);
                                 }
                             });
-                        var blockResult = await Task.WhenAll(importTasks).ConfigureAwait(false);
+                        var blockResult = await Task.WhenAll(importTasks)
+                            .ConfigureAwait(false);
 
                         if (blockResult.Any())
-                            _messenger.Publish(blockResult.Where(x => x != null).ToArray());
+                            _messenger.Publish(
+                                blockResult.Where(x => x != null)
+                                    .ToArray());
                         return true;
                     })
                 .ConfigureAwait(false);
@@ -186,15 +193,18 @@ namespace Remembrance.Core.Exchange
                         .ConfigureAwait(false);
                     translationInfo = new TranslationInfo(translationEntry, translationDetails);
                 }
+
                 var importedPriorityWordsCount = ImportPriority(priorityTranslations, translationInfo);
                 if (importedPriorityWordsCount != 0)
                 {
                     _logger.Trace($"Imported {importedPriorityWordsCount} priority words for {translationInfo}");
                     return true;
                 }
+
                 _logger.Trace($"No priority words were imported for {translationInfo}");
                 return false;
             }
+
             return false;
         }
 
@@ -264,9 +274,11 @@ namespace Remembrance.Core.Exchange
                 throw new ArgumentNullException(nameof(items));
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
+
             var objArray = items as T[] ?? items.ToArray();
             if (objArray.Length == 0)
                 return;
+
             if (maxBlockSize <= 0)
                 maxBlockSize = 100;
             var num = objArray.Length / maxBlockSize;
@@ -274,7 +286,9 @@ namespace Remembrance.Core.Exchange
                 ++num;
             for (var index = 0; index < num; ++index)
             {
-                var array = objArray.Skip(index * maxBlockSize).Take(maxBlockSize).ToArray();
+                var array = objArray.Skip(index * maxBlockSize)
+                    .Take(maxBlockSize)
+                    .ToArray();
                 if (array.Length == 0 || !await action(array, index, num))
                     break;
             }

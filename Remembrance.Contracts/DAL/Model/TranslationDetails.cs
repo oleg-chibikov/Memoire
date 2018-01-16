@@ -12,36 +12,19 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId, [CanBeNull] PrepositionsCollection prepositionsCollection = null)
+        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
         {
             TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
-            PrepositionsCollection = prepositionsCollection;
         }
 
         [NotNull]
-        public object TranslationEntryId
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public object TranslationEntryId { get; set; }
 
         [NotNull]
-        public TranslationResult TranslationResult
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public TranslationResult TranslationResult { get; set; }
 
-        [CanBeNull]
-        public PrepositionsCollection PrepositionsCollection
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public bool ImagesUrlsAreLoaded { get; set; }
 
         public override string ToString()
         {

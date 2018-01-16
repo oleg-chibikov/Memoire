@@ -28,7 +28,8 @@ namespace Remembrance.Core.CardManagement
                 new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
             translationDetailsCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
-            translationDetailsCardWindow.AutoCloseTimeout = SettingsRepository.Get().TranslationCloseTimeout;
+            translationDetailsCardWindow.AutoCloseTimeout = SettingsRepository.Get()
+                .TranslationCloseTimeout;
             return translationDetailsCardWindow;
         }
     }

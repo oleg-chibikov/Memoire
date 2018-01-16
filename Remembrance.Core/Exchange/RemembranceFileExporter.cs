@@ -61,7 +61,6 @@ namespace Remembrance.Core.Exchange
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            //TODO: Export manual
             var translationEntries = _translationEntryRepository.GetAll();
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
             foreach (var translationEntry in translationEntries)

@@ -46,9 +46,11 @@ namespace Remembrance.Core.Exchange
 
         protected override async Task<TranslationEntryKey> GetKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
+            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken)
+                .ConfigureAwait(false);
             var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
-            var targetLanguage = await WordsProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
+            var targetLanguage = await WordsProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken)
+                .ConfigureAwait(false);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 

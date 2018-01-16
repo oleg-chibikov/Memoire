@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 
 namespace Remembrance.ViewModel.Settings.Data
 {
@@ -12,11 +12,9 @@ namespace Remembrance.ViewModel.Settings.Data
 
         // TODO: Readonly?
         [NotNull]
-        [UsedImplicitly]
         public string Code { get; set; }
 
         [NotNull]
-        [UsedImplicitly]
         public string DisplayName { get; set; }
 
         public override bool Equals(object obj)

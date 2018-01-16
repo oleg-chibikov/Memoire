@@ -14,7 +14,7 @@ namespace Remembrance.Core.Translation.Yandex
     internal sealed class WordsTranslator : IWordsTranslator
     {
         [NotNull]
-        private static readonly JsonSerializerSettings TranslationResultSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new TranslationResultContractResolver()
         };
@@ -23,7 +23,7 @@ namespace Remembrance.Core.Translation.Yandex
         /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
         /// </summary>
         [NotNull]
-        private readonly HttpClient _dictionaryClient = new HttpClient
+        private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
         };
@@ -41,15 +41,17 @@ namespace Remembrance.Core.Translation.Yandex
 
             // falgs morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
-            var response = await _dictionaryClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
+                .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new TranslationResult
                 {
                     PartOfSpeechTranslations = new PartOfSpeechTranslation[0]
                 };
 
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TranslationResult>(result, TranslationResultSettings);
+            var result = await response.Content.ReadAsStringAsync()
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
         }
 
         /*

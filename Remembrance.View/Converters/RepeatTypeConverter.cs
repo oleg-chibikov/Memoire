@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using JetBrains.Annotations;
@@ -25,7 +25,7 @@ namespace Remembrance.View.Converters
         [NotNull]
         private static string Convert(RepeatType repeatType)
         {
-            return $"{repeatType}: {RepeatTypeSettings.RepeatTimes[repeatType].ToReadableFormat()}";
+            return $"{repeatType}: {RepeatTypeSettings.RepeatTimes[repeatType] .ToReadableFormat()}";
         }
     }
 }

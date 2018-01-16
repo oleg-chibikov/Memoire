@@ -16,7 +16,8 @@ namespace Remembrance.Contracts.DAL.Model
             AssessmentFailureCloseTimeout = TimeSpan.FromSeconds(5);
             TtsSpeaker = Speaker.Alyss;
             TtsVoiceEmotion = VoiceEmotion.Neutral;
-            UiLanguage = CultureUtilities.GetCurrentCulture().ToString();
+            UiLanguage = CultureUtilities.GetCurrentCulture()
+                .ToString();
             IsActive = true;
         }
 

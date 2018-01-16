@@ -14,13 +14,13 @@ namespace Remembrance.Core.Translation.Yandex
     internal sealed class Predictor : IPredictor
     {
         [NotNull]
-        private static readonly JsonSerializerSettings PredictionResultSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new PredictionResultContractResolver()
         };
 
         [NotNull]
-        private readonly HttpClient _client = new HttpClient
+        private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://predictor.yandex.net/api/v1/predict.json/")
         };
@@ -38,15 +38,18 @@ namespace Remembrance.Core.Translation.Yandex
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            var lang = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
+            var lang = await _languageDetector.DetectLanguageAsync(text, cancellationToken)
+                .ConfigureAwait(false);
 
             var uriPart = $"complete?key={YandexConstants.PredictorApiKey}&q={text}&lang={lang.Language}&limit={limit}";
-            var response = await _client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
+                .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new PredictionResult();
 
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<PredictionResult>(result, PredictionResultSettings);
+            var result = await response.Content.ReadAsStringAsync()
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<PredictionResult>(result, SerializerSettings);
         }
     }
 }

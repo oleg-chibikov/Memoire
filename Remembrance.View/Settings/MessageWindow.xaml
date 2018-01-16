@@ -17,7 +17,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=viewModel:MessageViewModel}"
     SizeToContent="WidthAndHeight"
-    AdvancedWindowStartupLocation="BottomRight"
+    AdvancedWindowStartupLocation="TopLeft"
     WindowStartupLocation="Manual"
     Draggable="False"
     ShowActivated="False"

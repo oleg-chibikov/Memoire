@@ -16,6 +16,7 @@ using Scar.Common.Notification;
 
 namespace Remembrance.ViewModel.Translation
 {
+    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
     {
@@ -30,7 +31,6 @@ namespace Remembrance.ViewModel.Translation
 
         private string _text;
 
-        [UsedImplicitly]
         public TranslationEntryViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] IWordsProcessor wordsProcessor,
@@ -45,11 +45,9 @@ namespace Remembrance.ViewModel.Translation
             CanLearnWord = false;
         }
 
-        [UsedImplicitly]
         [DoNotNotify]
         public object Id { get; set; }
 
-        [UsedImplicitly]
         public override string Text
         {
             get => _text ?? string.Empty;
@@ -65,6 +63,7 @@ namespace Remembrance.ViewModel.Translation
                     var handler = Volatile.Read(ref TextChanged);
                     handler?.Invoke(this, new TextChangedEventArgs(newValue, _text));
                 }
+
                 _text = newValue;
             }
         }
@@ -75,27 +74,20 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations { get; private set; }
 
-        [UsedImplicitly]
         public int ShowCount { get; set; }
 
         [NotNull]
-        [UsedImplicitly]
         public override string Language { get; set; }
 
         [NotNull]
-        [UsedImplicitly]
         public string TargetLanguage { get; set; }
 
-        [UsedImplicitly]
         public RepeatType RepeatType { get; set; }
 
-        [UsedImplicitly]
         public DateTime LastCardShowTime { get; set; }
 
-        [UsedImplicitly]
         public DateTime NextCardShowTime { get; set; }
 
-        [UsedImplicitly]
         public bool IsFavorited { get; set; }
 
         public bool NotificationIsSupressed { get; set; }
@@ -108,7 +100,8 @@ namespace Remembrance.ViewModel.Translation
 
         public async Task ReloadNonPriorityAsync()
         {
-            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None)
+                .ConfigureAwait(false);
             Reload(translationDetails.TranslationResult.GetDefaultWords(), false);
         }
 
@@ -117,10 +110,12 @@ namespace Remembrance.ViewModel.Translation
             //If there are priority words - load only them
             var priorityWords = _wordPriorityRepository.GetPriorityWordsForTranslationEntry(Id);
             if (priorityWords.Any())
-                await ReloadPriorityAsync(priorityWords).ConfigureAwait(false);
+                await ReloadPriorityAsync(priorityWords)
+                    .ConfigureAwait(false);
             //otherwise load default words
             else
-                await ReloadNonPriorityAsync().ConfigureAwait(false);
+                await ReloadNonPriorityAsync()
+                    .ConfigureAwait(false);
         }
 
         public event TextChangedEventHandler TextChanged;
@@ -147,7 +142,8 @@ namespace Remembrance.ViewModel.Translation
 
         private async Task ReloadPriorityAsync([NotNull] IWord[] priorityWords)
         {
-            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None)
+                .ConfigureAwait(false);
             var priorityWordsDetails = GetPriorityWordsInTranslationDetails(priorityWords, translationDetails);
             Reload(priorityWordsDetails, true);
         }

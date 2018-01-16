@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using Common.Logging;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Scar.Common.Messages;
 
 namespace Remembrance.ViewModel.Settings
 {
     [UsedImplicitly]
+    [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel
     {
         //TODO: Configure

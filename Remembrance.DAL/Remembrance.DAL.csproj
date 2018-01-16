@@ -44,8 +44,8 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="LiteDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiteDB.4.0.0\lib\net40\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=4.1.1.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.4.1.1\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Scar.Common.DAL, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
@@ -60,10 +60,12 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="PrepositionsInfoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsRepository.cs" />
     <Compile Include="TranslationDetailsRepository.cs" />
     <Compile Include="TranslationEntryRepository.cs" />
+    <Compile Include="WordImagesInfoRepository.cs" />
     <Compile Include="WordPriorityRepository.cs" />
   </ItemGroup>
   <ItemGroup>

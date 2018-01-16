@@ -5,13 +5,7 @@ namespace Remembrance.Contracts.DAL.Model
     public sealed class PrepositionsCollection
     {
         [CanBeNull]
-        public string[] Texts
-        {
-            get;
-
-            [UsedImplicitly]
-            set;
-        }
+        public string[] Texts { get; set; }
 
         public override string ToString()
         {

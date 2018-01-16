@@ -28,14 +28,11 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        [UsedImplicitly]
         public TranslationEntryKey Key { get; set; }
 
         [CanBeNull]
-        [UsedImplicitly]
         public ManualTranslation[] ManualTranslations { get; set; }
 
-        [UsedImplicitly]
         public RepeatType RepeatType
         {
             get => _repeatType;
@@ -47,10 +44,8 @@ namespace Remembrance.Contracts.DAL.Model
             }
         }
 
-        [UsedImplicitly]
         public int ShowCount { get; set; }
 
-        [UsedImplicitly]
         public DateTime LastCardShowTime
         {
             get => _lastCardShowTime;
@@ -61,10 +56,8 @@ namespace Remembrance.Contracts.DAL.Model
             }
         }
 
-        [UsedImplicitly]
         public DateTime NextCardShowTime { get; set; }
 
-        [UsedImplicitly]
         public bool IsFavorited { get; set; }
 
         public void DecreaseRepeatType()

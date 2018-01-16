@@ -1,10 +1,10 @@
 using System;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.ViewModel.Translation
 {
+    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsViewModel
     {
@@ -13,23 +13,14 @@ namespace Remembrance.ViewModel.Translation
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 
-        [UsedImplicitly]
         [DoNotNotify]
         public object Id { get; set; }
 
         [DoNotNotify]
-        public object TranslationEntryId
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public object TranslationEntryId { get; set; }
 
         [NotNull]
         public TranslationResultViewModel TranslationResult { get; set; }
-
-        [CanBeNull]
-        public PrepositionsCollection PrepositionsCollection { get; set; }
 
         public override string ToString()
         {

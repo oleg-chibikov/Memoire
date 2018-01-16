@@ -75,10 +75,14 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [NotNull]
-        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
+        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker))
+            .Cast<Speaker>()
+            .ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
-        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
+        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion))
+            .Cast<VoiceEmotion>()
+            .ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
         public Language[] AvailableUiLanguages { get; } =
@@ -117,9 +121,7 @@ namespace Remembrance.ViewModel.Settings
 
         public Language UiLanguage
         {
-            get { return _uiLanguage; }
-
-            [UsedImplicitly]
+            get => _uiLanguage;
             set
             {
                 _uiLanguage = value;
@@ -127,61 +129,21 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        public double CardShowFrequency
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public double CardShowFrequency { get; set; }
 
-        public double TranslationCloseTimeout
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public double TranslationCloseTimeout { get; set; }
 
-        public double AssessmentSuccessCloseTimeout
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public double AssessmentSuccessCloseTimeout { get; set; }
 
-        public double AssessmentFailureCloseTimeout
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public double AssessmentFailureCloseTimeout { get; set; }
 
-        public Speaker TtsSpeaker
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public Speaker TtsSpeaker { get; set; }
 
-        public VoiceEmotion TtsVoiceEmotion
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public VoiceEmotion TtsVoiceEmotion { get; set; }
 
-        public bool ReverseTranslation
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public bool ReverseTranslation { get; set; }
 
-        public bool RandomTranslation
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public bool RandomTranslation { get; set; }
 
         public void Dispose()
         {
@@ -223,12 +185,14 @@ namespace Remembrance.ViewModel.Settings
 
         private void Export()
         {
-            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token)
+                .ConfigureAwait(false);
         }
 
         private void Import()
         {
-            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token)
+                .ConfigureAwait(false);
         }
 
         private static void OpenSettingsFolder()

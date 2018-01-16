@@ -1,4 +1,4 @@
-﻿namespace Remembrance.Contracts.CardManagement
+namespace Remembrance.Contracts.CardManagement
 {
     public interface IAssessmentCardManager
     {

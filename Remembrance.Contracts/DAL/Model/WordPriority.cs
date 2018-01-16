@@ -20,31 +20,15 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        public object TranslationEntryId
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public object TranslationEntryId { get; set; }
 
-        [NotNull]
-        public string Text
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string Text { get; set; }
 
-        public PartOfSpeech PartOfSpeech
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public PartOfSpeech PartOfSpeech { get; set; }
 
         public override string ToString()
         {
-            return $"{Text} ({PartOfSpeech})";
+            return $"Word priority for {TranslationEntryId} - {Text} ({PartOfSpeech})";
         }
     }
 }

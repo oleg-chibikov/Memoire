@@ -20,7 +20,6 @@
     d:DataContext="{d:DesignInstance viewModel:AssessmentTextInputCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
-    ShowInTaskbar="false"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
@@ -60,6 +59,7 @@
             Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             Grid.Row="0">
+            <!--<Image Width="100" Source="{Binding ImageBitmap, Mode=OneTime}" />-->
             <view:WordControl
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"

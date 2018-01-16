@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Translate;
 
@@ -12,19 +12,9 @@ namespace Remembrance.ViewModel.Translation
             CanLearnWord = false;
         }
 
-        public string Transcription
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string Transcription { get; set; }
 
         [NotNull]
-        public TranslationVariantViewModel[] TranslationVariants
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public TranslationVariantViewModel[] TranslationVariants { get; set; }
     }
 }

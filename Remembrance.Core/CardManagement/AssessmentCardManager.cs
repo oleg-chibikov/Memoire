@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows;
@@ -18,9 +19,13 @@ using Scar.Common.WPF.View.Contracts;
 namespace Remembrance.Core.CardManagement
 {
     [UsedImplicitly]
-    internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, IDisposable
+    internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
         private readonly DateTime _initTime;
+
+        [NotNull]
+        private readonly object _intervalLocker = new object();
+
         private readonly Guid _intervalModifiedToken;
 
         [NotNull]
@@ -34,23 +39,10 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         private readonly IWordsProcessor _wordsProcessor;
 
-        [NotNull]
-        private readonly object intervalLocker = new object();
-
-        private TimeSpan _cardShowFrequency;
-
         private bool _hasOpenWindows;
 
         [NotNull]
         private IDisposable _interval;
-
-        private bool _isPaused;
-
-        [CanBeNull]
-        private DateTime? _lastCardShowTime;
-
-        [CanBeNull]
-        private DateTime? _lastPausedTime;
 
         private TimeSpan _pausedTime;
 
@@ -64,28 +56,49 @@ namespace Remembrance.Core.CardManagement
             : base(lifetimeScope, settingsRepository, logger)
         {
             logger.Info("Starting showing cards...");
-
+            _interval = Disposable.Empty; //just to assign the field in the costructor
             _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _initTime = DateTime.Now;
             var settings = settingsRepository.Get();
-            _isPaused = !settings.IsActive;
-            _cardShowFrequency = settings.CardShowFrequency;
-            _lastCardShowTime = settings.LastCardShowTime;
+            IsPaused = !settings.IsActive;
+            CardShowFrequency = settings.CardShowFrequency;
+            LastCardShowTime = settings.LastCardShowTime;
             _pausedTime = settings.PausedTime;
-            if (!_isPaused)
+            if (!IsPaused)
                 CreateInterval();
+            else
+                LastPausedTime = DateTime.Now;
             _onCardShowFrequencyChangedToken = messenger.Subscribe<TimeSpan>(OnCardShowFrequencyChanged);
             _intervalModifiedToken = messenger.Subscribe<IntervalModificator>(OnIntervalModified);
         }
 
-        private TimeSpan TimeLeftToShowCard
+        public bool IsPaused { get; private set; }
+
+        public TimeSpan CardShowFrequency { get; private set; }
+
+        public DateTime? LastCardShowTime { get; private set; }
+
+        public DateTime LastPausedTime { get; private set; } = DateTime.MinValue;
+
+        public TimeSpan PausedTime
         {
             get
             {
-                var requiredInterval = _cardShowFrequency + _pausedTime;
-                var alreadyPassedTime = DateTime.Now - (_lastCardShowTime ?? _initTime);
+                if (!IsPaused)
+                    return _pausedTime;
+
+                return _pausedTime + (DateTime.Now - LastPausedTime);
+            }
+        }
+
+        public TimeSpan TimeLeftToShowCard
+        {
+            get
+            {
+                var requiredInterval = CardShowFrequency + PausedTime;
+                var alreadyPassedTime = DateTime.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval
                     ? TimeSpan.Zero
                     : requiredInterval - alreadyPassedTime;
@@ -94,10 +107,11 @@ namespace Remembrance.Core.CardManagement
 
         public void Dispose()
         {
-            lock (intervalLocker)
+            lock (_intervalLocker)
             {
                 _interval.Dispose();
             }
+
             _messenger.UnSubscribe(_onCardShowFrequencyChangedToken);
             _messenger.UnSubscribe(_intervalModifiedToken);
 
@@ -109,10 +123,11 @@ namespace Remembrance.Core.CardManagement
         private void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
-            Logger.Trace($"Next card will be shown in: {delay} (frequency is {_cardShowFrequency})");
-            lock (intervalLocker)
+            Logger.Trace($"Next card will be shown in: {delay} (frequency is {CardShowFrequency})");
+            lock (_intervalLocker)
             {
-                _interval = Observable.Timer(delay, _cardShowFrequency)
+                _interval.Dispose();
+                _interval = Observable.Timer(delay, CardShowFrequency)
                     .Subscribe(
                         async x =>
                         {
@@ -120,7 +135,6 @@ namespace Remembrance.Core.CardManagement
                             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
                             var settings = SettingsRepository.Get();
                             settings.PausedTime = _pausedTime = TimeSpan.Zero;
-                            _lastPausedTime = null;
 
                             if (!settings.IsActive)
                             {
@@ -129,7 +143,7 @@ namespace Remembrance.Core.CardManagement
                                 return;
                             }
 
-                            settings.LastCardShowTime = _lastCardShowTime = DateTime.Now;
+                            settings.LastCardShowTime = LastCardShowTime = DateTime.Now;
                             SettingsRepository.Save(settings);
                             var translationEntry = _translationEntryRepository.GetCurrent();
                             if (translationEntry == null)
@@ -155,8 +169,8 @@ namespace Remembrance.Core.CardManagement
 
         private void OnCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
         {
-            _cardShowFrequency = newCardShowFrequency;
-            if (!_isPaused)
+            CardShowFrequency = newCardShowFrequency;
+            if (!IsPaused)
             {
                 Logger.Trace($"Recreating interval for new frequency {newCardShowFrequency}...");
                 CreateInterval();
@@ -173,37 +187,39 @@ namespace Remembrance.Core.CardManagement
             switch (intervalModificator)
             {
                 case IntervalModificator.Pause:
-                    if (!_isPaused)
+                    if (!IsPaused)
                     {
-                        lock (intervalLocker)
+                        lock (_intervalLocker)
                         {
                             _interval.Dispose();
                         }
-                        _isPaused = true;
-                        _lastPausedTime = DateTime.Now;
+
+                        IsPaused = true;
+                        LastPausedTime = DateTime.Now;
                     }
+
                     break;
                 case IntervalModificator.Resume:
-                    if (_isPaused)
+                    if (IsPaused)
                     {
                         RecordPausedTime();
                         CreateInterval();
                     }
+
                     break;
             }
         }
 
         private void RecordPausedTime()
         {
-            _isPaused = false;
-            if (_lastPausedTime != null)
-            {
-                var settings = SettingsRepository.Get();
-                settings.PausedTime = _pausedTime += DateTime.Now - _lastPausedTime.Value;
-                Logger.Trace($"Paused time is {_pausedTime}...");
-                SettingsRepository.Save(settings);
-                _lastPausedTime = null;
-            }
+            if (!IsPaused)
+                return;
+
+            IsPaused = false;
+            var settings = SettingsRepository.Get();
+            settings.PausedTime = _pausedTime += DateTime.Now - LastPausedTime;
+            Logger.Trace($"Paused time is {PausedTime}...");
+            SettingsRepository.Save(settings);
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
@@ -235,8 +251,8 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.UpperIntermediate:
                 {
                     //TODO: Dropdown
-                    var assessmentViewModel = LifetimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = LifetimeScope.Resolve<IAssessmentTextInputCardWindow>(new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    var assessmentViewModel = LifetimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = LifetimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
                     break;
                 }
                 case RepeatType.Advanced:
@@ -251,6 +267,7 @@ namespace Remembrance.Core.CardManagement
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             window.Closed += Window_Closed;
             _hasOpenWindows = true;
             return window;

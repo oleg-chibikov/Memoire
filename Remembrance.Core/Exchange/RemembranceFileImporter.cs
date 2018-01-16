@@ -29,7 +29,8 @@ namespace Remembrance.Core.Exchange
 
         protected override async Task<TranslationEntryKey> GetKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(exchangeEntry.TranslationEntry.Key).ConfigureAwait(false);
+            return await Task.FromResult(exchangeEntry.TranslationEntry.Key)
+                .ConfigureAwait(false);
         }
 
         protected override ManualTranslation[] GetManualTranslations(RemembranceExchangeEntry exchangeEntry)

@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using PropertyChanged;
 
 namespace Remembrance.ViewModel.Translation
 {
-    [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
+    [AddINotifyPropertyChangedInterface]
     public sealed class TranslationResultViewModel
     {
         [NotNull]

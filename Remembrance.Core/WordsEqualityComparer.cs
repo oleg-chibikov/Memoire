@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
@@ -21,7 +21,8 @@ namespace Remembrance.Core
         {
             unchecked
             {
-                var hashCode = obj.Text.ToLowerInvariant().GetHashCode();
+                var hashCode = obj.Text.ToLowerInvariant()
+                    .GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.PartOfSpeech.GetHashCode();
                 return hashCode;
             }

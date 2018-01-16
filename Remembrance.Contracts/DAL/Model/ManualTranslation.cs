@@ -38,20 +38,13 @@ namespace Remembrance.Contracts.DAL.Model
             set => _meaning = value ?? "";
         }
 
-        [NotNull]
         public string Text
         {
-            get { return _text; }
-            [UsedImplicitly]
-            set { _text = value.Capitalize(); }
+            get => _text;
+            set => _text = value.Capitalize();
         }
 
-        public PartOfSpeech PartOfSpeech
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public PartOfSpeech PartOfSpeech { get; set; }
 
         public override string ToString()
         {

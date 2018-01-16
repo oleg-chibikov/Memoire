@@ -16,7 +16,7 @@ namespace Remembrance.Core.Translation.Yandex
     internal sealed class LanguageDetector : ILanguageDetector
     {
         [NotNull]
-        private static readonly JsonSerializerSettings DetectionResultSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new DetectionResultContractResolver()
         };
@@ -30,7 +30,7 @@ namespace Remembrance.Core.Translation.Yandex
         private readonly ConcurrentDictionary<string, Task<ListResult>> _cacheTasks = new ConcurrentDictionary<string, Task<ListResult>>();
 
         [NotNull]
-        private readonly HttpClient _client = new HttpClient
+        private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
@@ -40,13 +40,15 @@ namespace Remembrance.Core.Translation.Yandex
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}&options=1";
-            var response = await _client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+            var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture() .TwoLetterISOLanguageName}&options=1";
+            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
+                .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new DetectionResult();
 
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<DetectionResult>(result, DetectionResultSettings);
+            var result = await response.Content.ReadAsStringAsync()
+                .ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<DetectionResult>(result, SerializerSettings);
         }
 
         public async Task<ListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
@@ -59,11 +61,13 @@ namespace Remembrance.Core.Translation.Yandex
                     async x =>
                     {
                         var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
-                        var response = await _client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+                        var response = await _httpClient.GetAsync(uriPart, cancellationToken)
+                            .ConfigureAwait(false);
                         if (!response.IsSuccessStatusCode)
                             return new ListResult();
 
-                        var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        var result = await response.Content.ReadAsStringAsync()
+                            .ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<ListResult>(result, ListResultSettings);
                     })
                 .ConfigureAwait(false);

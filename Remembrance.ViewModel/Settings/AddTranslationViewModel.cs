@@ -1,6 +1,7 @@
 using System;
 using Common.Logging;
 using JetBrains.Annotations;
+using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
@@ -11,6 +12,7 @@ using Scar.Common.WPF.View.Contracts;
 namespace Remembrance.ViewModel.Settings
 {
     [UsedImplicitly]
+    [AddINotifyPropertyChangedInterface]
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl
     {
         //TODO: Every textbox - add TypeAhead like in yandex translate

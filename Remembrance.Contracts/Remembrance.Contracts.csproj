@@ -35,6 +35,7 @@
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
@@ -49,12 +50,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFLocalizeExtension.3.0.1\lib\net35\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\packages\WPFLocalizeExtension.3.1.0\lib\net35\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XAMLMarkupExtensions.1.2.2\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+      <HintPath>..\packages\XAMLMarkupExtensions.1.3.0\lib\net40\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -67,12 +74,17 @@
     <Compile Include="CardManagement\ICardsExchanger.cs" />
     <Compile Include="CardManagement\IFileExporter.cs" />
     <Compile Include="CardManagement\IFileImporter.cs" />
+    <Compile Include="CardManagement\ICardShowTimeProvider.cs" />
     <Compile Include="CardManagement\ITranslationDetailsCardManager.cs" />
     <Compile Include="CardManagement\IWordsProcessor.cs" />
     <Compile Include="DAL\ISettingsRepository.cs" />
     <Compile Include="DAL\ITranslationDetailsRepository.cs" />
     <Compile Include="DAL\ITranslationEntryRepository.cs" />
+    <Compile Include="DAL\IPrepositionsInfoRepository.cs" />
+    <Compile Include="DAL\IWordImagesInfoRepository.cs" />
     <Compile Include="DAL\IWordPriorityRepository.cs" />
+    <Compile Include="DAL\Model\PrepositionsInfo.cs" />
+    <Compile Include="ImageSearch\Data\ImageInfoWithBitmap.cs" />
     <Compile Include="DAL\Model\ManualTranslation.cs" />
     <Compile Include="DAL\Model\PrepositionsCollection.cs" />
     <Compile Include="DAL\Model\RepeatType.cs" />
@@ -82,7 +94,11 @@
     <Compile Include="DAL\Model\TranslationEntry.cs" />
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
     <Compile Include="DAL\Model\TranslationInfo.cs" />
+    <Compile Include="DAL\Model\WordImagesInfo.cs" />
     <Compile Include="DAL\Model\WordPriority.cs" />
+    <Compile Include="ImageSearch\Data\ImageInfo.cs" />
+    <Compile Include="ImageSearch\IImageDownloader.cs" />
+    <Compile Include="ImageSearch\IImageSearcher.cs" />
     <Compile Include="IViewModelAdapter.cs" />
     <Compile Include="IWithText.cs" />
     <Compile Include="IWord.cs" />

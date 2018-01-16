@@ -22,6 +22,8 @@
                 <ResourceDictionary>
                     <commonConverters:StringToVisibilityConverter
                         x:Key="StringToVisibilityConverter" />
+                    <commonConverters:NotNullToVisibilityConverter
+                        x:Key="NotNullToVisibilityConverter" />
                     <commonConverters:AddValueConverter
                         x:Key="AddValueConverter" />
                     <converters:WordConcatConverter
@@ -53,7 +55,7 @@
             <TextBlock
                 FontSize="{StaticResource MediumFontSize}"
                 Foreground="DimGray"
-                Text="{Binding TranslationDetails.PrepositionsCollection, Mode=OneTime}" />
+                Text="{Binding PrepositionsCollection, Mode=OneWay}" />
         </StackPanel>
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"
@@ -105,6 +107,10 @@
                                                     <TextBlock
                                                         FontSize="{StaticResource BigFontSize}"
                                                         Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
+                                                    <Image
+                                                        Width="100"
+                                                        Visibility="{Binding Image, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                                        Source="{Binding Image, Mode=OneWay}" />
                                                     <view:WordControl
                                                         FontSize="{StaticResource MediumFontSize}"
                                                         DataContext="{Binding Mode=OneTime}" />

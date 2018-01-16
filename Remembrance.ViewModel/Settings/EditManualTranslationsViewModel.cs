@@ -43,7 +43,9 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [NotNull]
-        public static PartOfSpeech[] AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
+        public static PartOfSpeech[] AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech))
+            .Cast<PartOfSpeech>()
+            .ToArray();
 
         private TranslationEntryViewModel TranslationEntryViewModel { get; set; }
 
@@ -132,7 +134,8 @@ namespace Remembrance.ViewModel.Settings
                 ? ManualTranslations.ToArray()
                 : null;
             IsManualTranslationsDialogOpen = false;
-            var translationInfo = await _wordsProcessor.UpdateManualTranslationsAsync(TranslationEntryViewModel.Id, TranslationEntryViewModel.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationInfo = await _wordsProcessor.UpdateManualTranslationsAsync(TranslationEntryViewModel.Id, TranslationEntryViewModel.ManualTranslations, CancellationToken.None)
+                .ConfigureAwait(false);
             _messenger.Publish(translationInfo);
         }
     }

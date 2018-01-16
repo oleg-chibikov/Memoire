@@ -12,7 +12,6 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}"
     SizeToContent="WidthAndHeight"
     ShowActivated="false"
-    ShowInTaskbar="false"
     Focusable="False"
     Icon="../IconAlt.ico">
     <view:TranslationDetailsCardControl />

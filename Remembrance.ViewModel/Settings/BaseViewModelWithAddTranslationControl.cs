@@ -56,11 +56,17 @@ namespace Remembrance.ViewModel.Settings
             var settings = settingsRepository.Get();
 
             logger.Trace("Loading languages...");
-            var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationTokenSource.Token).Result;
+            var languages = languageDetector.ListLanguagesAsync(
+                    CultureUtilities.GetCurrentCulture()
+                        .TwoLetterISOLanguageName,
+                    CancellationTokenSource.Token)
+                .Result;
 
             // var acceptableLanguages = languages.Directions.Where(x => x.StartsWith(UiLanguage)).Select(x => x.Split('-')[1]).Concat(new []{UiLanguage}).ToArray();
             // AvailableTargetLanguages = languages.Languages.Where(x => acceptableLanguages.Contains(x.Key)).Select(x => new Language(x.Key, x.Value)).ToArray();
-            var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value)).OrderBy(x => x.DisplayName).ToArray();
+            var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value))
+                .OrderBy(x => x.DisplayName)
+                .ToArray();
 
             var autoSourceLanguage = new Language(Constants.AutoDetectLanguage, "--AutoDetect--");
             var autoTargetLanguage = new Language(Constants.AutoDetectLanguage, "--Reverse--");
@@ -104,9 +110,7 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public Language SelectedTargetLanguage
         {
-            get { return _selectedTargetLanguage; }
-
-            [UsedImplicitly]
+            get => _selectedTargetLanguage;
             set
             {
                 // TODO: Transactions?
@@ -120,9 +124,7 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public Language SelectedSourceLanguage
         {
-            get { return _selectedSourceLanguage; }
-
-            [UsedImplicitly]
+            get => _selectedSourceLanguage;
             set
             {
                 // TODO: Transactions - https://github.com/mbdavid/LiteDB/wiki/Transactions-and-Concurrency? across all solution
@@ -134,20 +136,10 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [CanBeNull]
-        public string Text
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string Text { get; set; }
 
         [CanBeNull]
-        public string ManualTranslation
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string ManualTranslation { get; set; }
 
         [CanBeNull]
         protected abstract IWindow Window { get; }
@@ -182,7 +174,8 @@ namespace Remembrance.ViewModel.Settings
             var sourceLanguage = SelectedSourceLanguage.Code;
             var targetLanguage = SelectedTargetLanguage.Code;
 
-            await WordsProcessor.AddOrChangeWordAsync(text, CancellationTokenSource.Token, sourceLanguage, targetLanguage, Window, manualTranslations: manualTranslation).ConfigureAwait(false);
+            await WordsProcessor.AddOrChangeWordAsync(text, CancellationTokenSource.Token, sourceLanguage, targetLanguage, Window, manualTranslations: manualTranslation)
+                .ConfigureAwait(false);
         }
     }
 }

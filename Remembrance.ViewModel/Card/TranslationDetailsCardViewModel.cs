@@ -44,12 +44,16 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ILog logger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IMessageHub messenger,
-            [NotNull] ITranslationEntryRepository translationEntryRepository)
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
             if (viewModelAdapter == null)
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            if (prepositionsInfoRepository == null)
+                throw new ArgumentNullException(nameof(prepositionsInfoRepository));
+
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
@@ -62,11 +66,17 @@ namespace Remembrance.ViewModel.Card
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
             Word = translationInfo.Key.Text;
+            PrepositionsCollection = prepositionsInfoRepository.GetPrepositionsInfo(translationInfo.TranslationEntry.Id)
+                ?.Prepositions;
 
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
             _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<PrepositionsInfo>(OnPrepositionsInfoReceived));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
+
+        [CanBeNull]
+        public PrepositionsCollection PrepositionsCollection { get; private set; }
 
         [NotNull]
         public ICommand FavoriteCommand { get; }
@@ -83,6 +93,15 @@ namespace Remembrance.ViewModel.Card
         {
             foreach (var subscriptionToken in _subscriptionTokens)
                 _messenger.UnSubscribe(subscriptionToken);
+        }
+
+        private void OnPrepositionsInfoReceived([NotNull] PrepositionsInfo prepositionsInfo)
+        {
+            if (Equals(prepositionsInfo.TranslationEntryId, _translationEntry.Id))
+            {
+                _logger.InfoFormat("Received prepositions for {0}", this);
+                PrepositionsCollection = prepositionsInfo.Prepositions;
+            }
         }
 
         [CanBeNull]
@@ -111,11 +130,11 @@ namespace Remembrance.ViewModel.Card
             if (!priorityWordViewModel.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
                 return;
 
-            _logger.Trace($"Priority changed for {priorityWordViewModel}. Updating the word in translation details...");
+            _logger.TraceFormat("Priority changed for {0}. Updating the word in translation details...", priorityWordViewModel);
             var translation = GetWordInTranslationDetails(priorityWordViewModel);
             if (translation != null)
             {
-                _logger.Trace($"Priority for {translation} is updated");
+                _logger.TraceFormat("Priority for {0} is updated", translation);
                 translation.IsPriority = priorityWordViewModel.IsPriority;
             }
             else
@@ -126,7 +145,7 @@ namespace Remembrance.ViewModel.Card
 
         private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
         {
-            _logger.Trace($"Changing UI language to {cultureInfo}...");
+            _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
             if (cultureInfo == null)
                 throw new ArgumentNullException(nameof(cultureInfo));
 
@@ -153,7 +172,7 @@ namespace Remembrance.ViewModel.Card
             var text = IsFavorited
                 ? "Unfavoriting"
                 : "Favoriting";
-            _logger.Trace($"{text} {TranslationDetails}...");
+            _logger.TraceFormat("{0} {1}...", text, TranslationDetails);
             _translationEntry.IsFavorited = IsFavorited = !IsFavorited;
             _translationEntryRepository.Save(_translationEntry);
         }

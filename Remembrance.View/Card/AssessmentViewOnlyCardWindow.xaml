@@ -19,7 +19,6 @@
     d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
-    ShowInTaskbar="false"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
@@ -55,7 +54,7 @@
             <TextBlock
                 FontSize="{StaticResource MediumFontSize}"
                 Foreground="DimGray"
-                Text="{Binding PrepositionsCollection, Mode=OneTime}" />
+                Text="{Binding TranslationDetailsCardViewModel.PrepositionsCollection, Mode=OneWay}" />
             <TextBlock
                 FontSize="{StaticResource MediumFontSize}"
                 Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />

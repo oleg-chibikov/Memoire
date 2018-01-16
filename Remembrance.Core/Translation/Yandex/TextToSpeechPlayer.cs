@@ -19,7 +19,7 @@ namespace Remembrance.Core.Translation.Yandex
         private const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
 
         [NotNull]
-        private static readonly HttpClient Client = new HttpClient
+        private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://tts.voicetech.yandex.net/")
         };
@@ -47,12 +47,14 @@ namespace Remembrance.Core.Translation.Yandex
             var settings = _settingsRepository.Get();
             var reset = new AutoResetEvent(false);
             var uriPart =
-                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
-            var response = await Client.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+                $"generate?text={text}&format={Format.Mp3.ToString() .ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString() .ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString() .ToLowerInvariant()}&key={ApiKey}";
+            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
+                .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return false;
 
-            var soundStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var soundStream = await response.Content.ReadAsStreamAsync()
+                .ConfigureAwait(false);
             using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
             using (var reader = new Mp3FileReader(soundStream))
             {

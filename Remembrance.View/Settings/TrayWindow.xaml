@@ -11,11 +11,12 @@
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     mc:Ignorable="d"
     WindowState="Minimized"
     SizeToContent="WidthAndHeight"
-    ShowInTaskbar="False"
     Visibility="Hidden"
+    ShowInTaskbar="False"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -30,6 +31,8 @@
                 <ResourceDictionary>
                     <commonConverters:BoolToVisibilityConverter
                         x:Key="BoolToVisibilityConverter" />
+                    <commonConverters:NotNullToVisibilityConverter
+                        x:Key="NotNullToVisibilityConverter" />
                     <commonConverters:ReverseBoolToVisibilityConverter
                         x:Key="ReverseBoolToVisibilityConverter" />
                 </ResourceDictionary>
@@ -38,9 +41,21 @@
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
-            LeftClickCommand="{Binding ToggleActiveCommand}"
-            DoubleClickCommand="{Binding ShowDictionaryCommand}"
+            LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
+            DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
             ToolTipText="{lex:Loc Remembrance.Resources:Texts:Title}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger
+                    EventName="TrayToolTipClose">
+                    <i:InvokeCommandAction
+                        Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
+                </i:EventTrigger>
+                <i:EventTrigger
+                    EventName="TrayToolTipOpen">
+                    <i:InvokeCommandAction
+                        Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <ContextMenu.Resources>
@@ -56,7 +71,7 @@
                     </ContextMenu.Resources>
                     <MenuItem
                         Header="{lex:Loc Remembrance.Resources:Texts:Settings}"
-                        Command="{Binding ShowSettingsCommand}">
+                        Command="{Binding ShowSettingsCommand, Mode=OneTime}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="Settings" />
@@ -65,7 +80,7 @@
 
                     <MenuItem
                         Header="{lex:Loc Remembrance.Resources:Texts:AddTranslation}"
-                        Command="{Binding AddTranslationCommand}">
+                        Command="{Binding AddTranslationCommand, Mode=OneTime}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="PlusBox" />
@@ -74,7 +89,7 @@
 
                     <MenuItem
                         Header="{lex:Loc Remembrance.Resources:Texts:Dictionary}"
-                        Command="{Binding ShowDictionaryCommand}">
+                        Command="{Binding ShowDictionaryCommand, Mode=OneTime}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="Dictionary" />
@@ -82,9 +97,9 @@
                     </MenuItem>
 
                     <MenuItem
-                        Command="{Binding ToggleActiveCommand}"
+                        Command="{Binding ToggleActiveCommand, Mode=OneTime}"
                         Header="{lex:Loc Remembrance.Resources:Texts:Deactivate}"
-                        Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="ToggleSwitchOff" />
@@ -92,9 +107,9 @@
                     </MenuItem>
 
                     <MenuItem
-                        Command="{Binding ToggleActiveCommand}"
+                        Command="{Binding ToggleActiveCommand, Mode=OneTime}"
                         Header="{lex:Loc Remembrance.Resources:Texts:Activate}"
-                        Visibility="{Binding IsActive, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
+                        Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="ToggleSwitch" />
@@ -105,7 +120,7 @@
 
                     <MenuItem
                         Header="{lex:Loc Remembrance.Resources:Texts:Exit}"
-                        Command="{Binding ExitCommand}">
+                        Command="{Binding ExitCommand, Mode=OneTime}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon
                                 Kind="ExitToApp" />
@@ -118,14 +133,14 @@
                     TargetType="tb:TaskbarIcon">
                     <Style.Triggers>
                         <DataTrigger
-                            Binding="{Binding IsActive}"
+                            Binding="{Binding IsActive, Mode=OneWay}"
                             Value="True">
                             <Setter
                                 Property="IconSource"
                                 Value="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico" />
                         </DataTrigger>
                         <DataTrigger
-                            Binding="{Binding IsActive}"
+                            Binding="{Binding IsActive, Mode=OneWay}"
                             Value="False">
                             <Setter
                                 Property="IconSource"
@@ -141,9 +156,19 @@
                     BorderThickness="2"
                     CornerRadius="4"
                     Padding="15">
-                    <TextBlock
-                        Foreground="Black"
-                        Text="{lex:Loc Remembrance.Resources:Texts:Title}" />
+                    <StackPanel
+                        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+                        <TextBlock
+                            Foreground="Black"
+                            Text="{lex:Loc Remembrance.Resources:Texts:Title}" />
+                        <TextBlock
+                            Foreground="Black"
+                            Text="{Binding CardShowTimeInfo, Mode=OneWay}" />
+                        <TextBlock
+                            Visibility="{Binding CardShowPauseInfo, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                            Foreground="Black"
+                            Text="{Binding CardShowPauseInfo, Mode=OneWay}" />
+                    </StackPanel>
                 </Border>
             </tb:TaskbarIcon.TrayToolTip>
         </tb:TaskbarIcon>

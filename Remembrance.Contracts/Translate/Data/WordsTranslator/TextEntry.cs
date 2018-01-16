@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Scar.Common;
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
@@ -7,8 +6,6 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
     {
         private string _text;
 
-        [NotNull]
-        [UsedImplicitly]
         public virtual string Text
         {
             get => _text;

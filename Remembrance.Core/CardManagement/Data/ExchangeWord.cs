@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts;
@@ -17,26 +17,14 @@ namespace Remembrance.Core.CardManagement.Data
             PartOfSpeech = word.PartOfSpeech;
         }
 
-        [UsedImplicitly]
         public ExchangeWord()
         {
         }
 
         [JsonProperty("Text", Required = Required.Always)]
-        [NotNull]
-        public string Text
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public string Text { get; set; }
 
         [JsonProperty("PartOfSpeech", Required = Required.Always)]
-        public PartOfSpeech PartOfSpeech
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public PartOfSpeech PartOfSpeech { get; set; }
     }
 }

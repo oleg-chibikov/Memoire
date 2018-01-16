@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
@@ -18,15 +18,12 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        [UsedImplicitly]
         public string Text { get; set; }
 
         [NotNull]
-        [UsedImplicitly]
         public string SourceLanguage { get; set; }
 
         [NotNull]
-        [UsedImplicitly]
         public string TargetLanguage { get; set; }
 
         public bool Equals(TranslationEntryKey other)

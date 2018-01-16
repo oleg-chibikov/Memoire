@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Remembrance.Core.CardManagement.Data
 {
-    [UsedImplicitly]
     internal sealed class EachWordExchangeEntry : IExchangeEntry
     {
         public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string translation)
