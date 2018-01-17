@@ -16,6 +16,7 @@
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:various="clr-namespace:Remembrance.View.Various"
+    xmlns:view1="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -26,14 +27,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="../Styles.xaml" />
-                <ResourceDictionary>
-                    <converters:RepeatTypeConverter
-                        x:Key="RepeatTypeConverter" />
-                    <converters:DateTimeToBrushConverter
-                        x:Key="DateTimeToBrushConverter" />
-                </ResourceDictionary>
+                <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style
                 TargetType="{x:Type xcdg:HierarchicalGroupByControl}">

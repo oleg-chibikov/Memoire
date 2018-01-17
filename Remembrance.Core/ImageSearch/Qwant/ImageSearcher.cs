@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,11 +34,15 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
         };
 
+        private readonly object _locker = new object();
+
         [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
         private readonly IMessageHub _messenger;
+
+        private bool _captchaPassing;
 
         public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messenger)
         {
@@ -59,7 +64,26 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                     .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
+                {
+                    if ((int)response.StatusCode == 429)
+                        if (!_captchaPassing)
+                            lock (_locker)
+                            {
+                                if (!_captchaPassing)
+                                {
+                                    Process.Start($"https://www.qwant.com/?q={text}&t=images");
+                                    _captchaPassing = true;
+                                }
+                            }
+
                     throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                }
+
+                if (_captchaPassing)
+                    lock (_locker)
+                    {
+                        _captchaPassing = false;
+                    }
 
                 var result = await response.Content.ReadAsStringAsync()
                     .ConfigureAwait(false);

@@ -12,6 +12,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:view1="clr-namespace:Remembrance.View"
     mc:Ignorable="d"
     WindowState="Minimized"
     SizeToContent="WidthAndHeight"
@@ -24,20 +25,7 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     Icon="../IconAlt.ico">
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="../Styles.xaml" />
-                <ResourceDictionary>
-                    <commonConverters:BoolToVisibilityConverter
-                        x:Key="BoolToVisibilityConverter" />
-                    <commonConverters:NotNullToVisibilityConverter
-                        x:Key="NotNullToVisibilityConverter" />
-                    <commonConverters:ReverseBoolToVisibilityConverter
-                        x:Key="ReverseBoolToVisibilityConverter" />
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon

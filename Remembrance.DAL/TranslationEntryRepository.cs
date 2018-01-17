@@ -21,7 +21,7 @@ namespace Remembrance.DAL
         }
 
         [NotNull]
-        protected override string DbName => "Dictionary";
+        protected override string DbName => nameof(TranslationEntry);
 
         [NotNull]
         protected override string DbPath => Paths.SharedDataPath;

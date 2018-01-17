@@ -52,7 +52,8 @@ namespace Remembrance.Core.Exchange
             _importers = importers ?? throw new ArgumentNullException(nameof(importers));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             foreach (var importer in importers)
-                importer.Progress += Importer_Progress;
+                importer.Progress += ImporterExporter_Progress;
+            exporter.Progress += ImporterExporter_Progress;
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -139,10 +140,11 @@ namespace Remembrance.Core.Exchange
         public void Dispose()
         {
             foreach (var importer in _importers)
-                importer.Progress -= Importer_Progress;
+                importer.Progress -= ImporterExporter_Progress;
+            _exporter.Progress -= ImporterExporter_Progress;
         }
 
-        private void Importer_Progress(object sender, ProgressEventArgs e)
+        private void ImporterExporter_Progress(object sender, ProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
         }

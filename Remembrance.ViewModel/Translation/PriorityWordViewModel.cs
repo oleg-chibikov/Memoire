@@ -6,6 +6,7 @@ using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
+using Scar.Common.Events;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -39,11 +40,14 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public object TranslationEntryId { get; private set; }
 
+        public event EventHandler<EventArgs<object>> TranslationEntryIdSet;
+
         public void SetProperties([NotNull] object translationEntryId, [NotNull] string targetLanguage, [CanBeNull] bool? isPriority = null)
         {
             Language = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
             TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
             IsPriority = isPriority ?? _wordPriorityRepository.IsPriority(this, TranslationEntryId);
+            TranslationEntryIdSet?.Invoke(this, new EventArgs<object>(TranslationEntryIdSet));
         }
 
         protected override void TogglePriority()

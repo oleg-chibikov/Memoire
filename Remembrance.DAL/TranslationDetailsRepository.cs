@@ -20,7 +20,7 @@ namespace Remembrance.DAL
         }
 
         [NotNull]
-        protected override string DbName => "TranslationDetails";
+        protected override string DbName => nameof(TranslationDetails);
 
         /// <remarks>
         /// Not shared folder - if details are missing - they are re-downloaded

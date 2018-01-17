@@ -35,5 +35,7 @@ namespace Remembrance.Contracts.CardManagement
 
         [ItemNotNull]
         Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] object id, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
+
+        Task ReloadAdditionalInfoAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken);
     }
 }

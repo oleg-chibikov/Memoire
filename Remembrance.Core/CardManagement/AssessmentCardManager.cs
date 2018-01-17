@@ -236,14 +236,16 @@ namespace Remembrance.Core.CardManagement
             _translationEntryRepository.Save(translationInfo.TranslationEntry);
             _messenger.Publish(translationInfo);
             IWindow window;
+
+            var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
             switch (translationInfo.TranslationEntry.RepeatType)
             {
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
                 {
-                    var assessmentViewModel = LifetimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = LifetimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
                     break;
                 }
                 case RepeatType.PreIntermediate:
@@ -251,8 +253,8 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.UpperIntermediate:
                 {
                     //TODO: Dropdown
-                    var assessmentViewModel = LifetimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = LifetimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
                     break;
                 }
                 case RepeatType.Advanced:
@@ -260,8 +262,8 @@ namespace Remembrance.Core.CardManagement
                 //TODO: Reverse and random trans for high levels
                 case RepeatType.Expert:
                 {
-                    var assessmentViewModel = LifetimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = LifetimeScope.Resolve<IAssessmentTextInputCardWindow>(new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
                     break;
                 }
                 default:
@@ -269,6 +271,7 @@ namespace Remembrance.Core.CardManagement
             }
 
             window.Closed += Window_Closed;
+            window.AssociateDisposable(nestedLifeTimeScope);
             _hasOpenWindows = true;
             return window;
         }

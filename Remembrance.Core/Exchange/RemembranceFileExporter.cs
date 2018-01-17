@@ -14,6 +14,7 @@ using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.CardManagement.Data;
+using Scar.Common.Events;
 
 namespace Remembrance.Core.Exchange
 {
@@ -41,6 +42,13 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         private readonly IWordsProcessor _wordsProcessor;
 
+        public event EventHandler<ProgressEventArgs> Progress;
+
+        private void OnProgress(int current, int total)
+        {
+            Progress?.Invoke(this, new ProgressEventArgs(current, total));
+        }
+
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
@@ -63,6 +71,8 @@ namespace Remembrance.Core.Exchange
 
             var translationEntries = _translationEntryRepository.GetAll();
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
+            var totalCount = translationEntries.Length;
+            var count = 0;
             foreach (var translationEntry in translationEntries)
             {
                 var translationDetails = await _wordsProcessor.ReloadTranslationDetailsIfNeededAsync(
@@ -92,6 +102,7 @@ namespace Remembrance.Core.Exchange
                             ? priorityWords
                             : null,
                         translationEntry));
+                OnProgress(Interlocked.Increment(ref count), totalCount);
             }
 
             try

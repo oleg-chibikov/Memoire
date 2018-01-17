@@ -9,37 +9,40 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.Messages;
 
-namespace Remembrance.Core
+namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     public sealed class ViewModelAdapter : IViewModelAdapter
     {
+        private readonly TypeAdapterConfig _config;
         public ViewModelAdapter([NotNull] ILifetimeScope lifetimeScope)
         {
             if (lifetimeScope == null)
                 throw new ArgumentNullException(nameof(lifetimeScope));
 
-            TypeAdapterConfig<TranslationEntryViewModel, TranslationEntry>.NewConfig()
+            _config = new TypeAdapterConfig();
+
+            _config.NewConfig<TranslationEntryViewModel, TranslationEntry>()
                 .ConstructUsing(
                     translationEntryViewModel => new TranslationEntry
                     {
                         Key = new TranslationEntryKey(translationEntryViewModel.Text, translationEntryViewModel.Language, translationEntryViewModel.TargetLanguage)
                     })
                 .Compile();
-            TypeAdapterConfig<IWord, WordViewModel>.NewConfig()
+            _config.NewConfig<IWord, WordViewModel>()
                 .ConstructUsing(word => lifetimeScope.Resolve<WordViewModel>())
                 .Compile();
-            TypeAdapterConfig<IWord, PriorityWordViewModel>.NewConfig()
+            _config.NewConfig<IWord, PriorityWordViewModel>()
                 .ConstructUsing(word => lifetimeScope.Resolve<PriorityWordViewModel>())
                 .Map(priorityWordViewModel => priorityWordViewModel.Text, word => word.Text) //This is unexpected, but still needed
                 .Compile();
-            TypeAdapterConfig<TranslationVariant, TranslationVariantViewModel>.NewConfig()
+            _config.NewConfig<TranslationVariant, TranslationVariantViewModel>()
                 .ConstructUsing(translationVariant => lifetimeScope.Resolve<TranslationVariantViewModel>())
                 .Compile();
-            TypeAdapterConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>.NewConfig()
+            _config.NewConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>()
                 .ConstructUsing(partOfSpeechTranslation => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>())
                 .Compile();
-            TypeAdapterConfig<TranslationEntry, TranslationEntryViewModel>.NewConfig()
+            _config.NewConfig<TranslationEntry, TranslationEntryViewModel>()
                 .ConstructUsing(translationEntry => lifetimeScope.Resolve<TranslationEntryViewModel>())
                 .Map(translationEntryViewModel => translationEntryViewModel.Text, translationEntry => translationEntry.Key.Text)
                 .Map(translationEntryViewModel => translationEntryViewModel.Language, translationEntry => translationEntry.Key.SourceLanguage)
@@ -59,7 +62,7 @@ namespace Remembrance.Core
                         }
                     })
                 .Compile();
-            TypeAdapterConfig<TranslationInfo, TranslationDetailsViewModel>.NewConfig()
+            _config.NewConfig<TranslationInfo, TranslationDetailsViewModel>()
                 .ConstructUsing(translationInfo => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationResult, translationInfo => translationInfo.TranslationDetails.TranslationResult)
                 .Map(translationDetailsViewModel => translationDetailsViewModel.Id, translationInfo => translationInfo.TranslationDetails.Id)
@@ -93,7 +96,7 @@ namespace Remembrance.Core
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Adapt<TDestination>();
+            return source.Adapt<TDestination>(_config);
         }
 
         public TDestination Adapt<TSource, TDestination>(TSource source, TDestination destination)
@@ -103,7 +106,7 @@ namespace Remembrance.Core
             if (Equals(destination, default(TDestination)))
                 throw new ArgumentNullException(nameof(destination));
 
-            return source.Adapt(destination, TypeAdapterConfig.GlobalSettings);
+            return source.Adapt(destination, _config);
         }
 
         private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] string targetLanguage, [NotNull] object translationEntryId)

@@ -45,14 +45,15 @@
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.4\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.5\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid">
       <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.5\lib\net462\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
@@ -64,13 +65,13 @@
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.31\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.33\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6577.26071, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.28\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6591.29489, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.29\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.2\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
@@ -81,8 +82,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -114,6 +117,10 @@
     <Compile Include="Card\TranslationDetailsCardControl.xaml.cs">
       <DependentUpon>TranslationDetailsCardControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Card\WordImageViewerControl.xaml.cs">
+      <DependentUpon>WordImageViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DesignTimeResourceDictionary.cs" />
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
     <Compile Include="Converters\MessageTypeToBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
@@ -190,6 +197,10 @@
     <Page Include="Card\TranslationDetailsCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Card\WordImageViewerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Card\WordsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -279,9 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <Resource Include="Web Serveroff.ttf" />
   </ItemGroup>
   <ItemGroup>

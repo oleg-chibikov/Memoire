@@ -46,7 +46,7 @@
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -102,6 +102,7 @@
     <Compile Include="IViewModelAdapter.cs" />
     <Compile Include="IWithText.cs" />
     <Compile Include="IWord.cs" />
+    <Compile Include="Sync\ISynchronizationManager.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
     <Compile Include="Translate\Data\Predictor\PredictionResult.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="View\Settings\ISplashScreenWindow.cs" />
     <Compile Include="View\Settings\ITrayWindow.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

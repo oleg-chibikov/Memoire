@@ -1,19 +1,15 @@
-﻿<ItemsControl
+<ItemsControl
     x:Class="Remembrance.View.Card.WordsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:card="clr-namespace:Remembrance.View.Card"
+    xmlns:view="clr-namespace:Remembrance.View"
     mc:Ignorable="d"
     x:Name="Control">
     <ItemsControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>

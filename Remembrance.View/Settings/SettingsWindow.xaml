@@ -1,4 +1,4 @@
-﻿<window:AnimatedWindow
+<window:AnimatedWindow
     x:Class="Remembrance.View.Settings.SettingsWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -12,6 +12,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:view="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -31,18 +32,8 @@
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="../Styles.xaml" />
-                <ResourceDictionary>
-                    <commonConverters:PercentageIntToDoubleConverter
-                        x:Key="PercentageIntToDoubleConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary
-                    Source="../Slider.xaml" />
-                <ResourceDictionary>
-                    <commonConverters:DoubleToTextTimeSpanConverter
-                        x:Key="DoubleToTextTimeSpanConverter" />
-                </ResourceDictionary>
+                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                <ResourceDictionary Source="../Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </window:AnimatedWindow.Resources>

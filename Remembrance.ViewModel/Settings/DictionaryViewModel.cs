@@ -365,23 +365,27 @@ namespace Remembrance.ViewModel.Settings
                     CancellationTokenSource.Token)
                 .ConfigureAwait(false);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
-            var translationDetailsCardViewModel = _lifetimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>()
+            var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
+            var translationDetailsCardViewModel = nestedLifeTimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            var dictionaryWindow = nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>()
                 .GetWindow();
-            var detailsWindow = _lifetimeScope.Resolve<ITranslationDetailsCardWindow>(
+            var detailsWindow = nestedLifeTimeScope.Resolve<ITranslationDetailsCardWindow>(
                 new TypedParameter(typeof(Window), dictionaryWindow),
                 new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel));
+            detailsWindow.AssociateDisposable(nestedLifeTimeScope);
             detailsWindow.Show();
         }
 
         private void OpenSettings()
         {
             Logger.Trace("Opening settings...");
-            var dictionaryWindow = _lifetimeScope.Resolve<WindowFactory<IDictionaryWindow>>()
+            var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
+            var dictionaryWindow = nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>()
                 .GetWindow();
+            dictionaryWindow.AssociateDisposable(nestedLifeTimeScope);
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            _lifetimeScope.Resolve<WindowFactory<ISettingsWindow>>()
-                .ShowWindow(dictionaryWindowParameter);
+            var windowFactory = nestedLifeTimeScope.Resolve<WindowFactory<ISettingsWindow>>();
+            windowFactory.ShowWindow(dictionaryWindowParameter);
         }
 
         private async Task ProcessNonPriorityAsync([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] TranslationEntryViewModel translationEntryViewModel)

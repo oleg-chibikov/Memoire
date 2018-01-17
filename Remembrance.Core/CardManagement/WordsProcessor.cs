@@ -132,7 +132,6 @@ namespace Remembrance.Core.CardManagement
             if (translationDetails != null)
             {
                 processNonReloaded?.Invoke(translationDetails);
-                ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
                 return translationDetails;
             }
 
@@ -142,7 +141,6 @@ namespace Remembrance.Core.CardManagement
             // There are no translation details for this word
             translationDetails = new TranslationDetails(translationResult, id);
             _translationDetailsRepository.Save(translationDetails);
-            ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
             return translationDetails;
         }
 
@@ -200,7 +198,6 @@ namespace Remembrance.Core.CardManagement
                 translationDetails.Id = existingTranslationDetails.Id;
 
             _translationDetailsRepository.Save(translationDetails);
-            ReloadAdditionalInfoIfNeeded(text, translationDetails, cancellationToken);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
 
             _logger.Trace($"Translation for {key} has been successfully added");
@@ -257,15 +254,7 @@ namespace Remembrance.Core.CardManagement
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
-        private void ReloadAdditionalInfoIfNeeded([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
-        {
-            //Fire and Forget
-#pragma warning disable 4014
-            ReloadAdditionalInfoAsync(text, translationDetails, cancellationToken);
-#pragma warning restore 4014
-        }
-
-        private async void ReloadAdditionalInfoAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        public async Task ReloadAdditionalInfoAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
             await ReloadPrepositionsAsync(text, translationDetails, cancellationToken);
             await ReloadImagesAsync(translationDetails, cancellationToken);
@@ -295,43 +284,39 @@ namespace Remembrance.Core.CardManagement
             _logger.Info($"Reloading images for {translationDetails.TranslationEntryId}...");
             var translationEntry = _translationEntryRepository.GetById(translationDetails.TranslationEntryId);
             IList<Task> tasks = translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
-                    partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(translationVariant => ReloadAndUpdateImageAsync(translationEntry, translationVariant, cancellationToken)))
+                    partOfSpeechTranslation =>
+                        partOfSpeechTranslation.TranslationVariants.Select(translationVariant => ReloadAndUpdateImagesAsync(translationEntry, translationVariant, partOfSpeechTranslation, cancellationToken)))
                 .ToList();
             await Task.WhenAll(tasks);
             translationDetails.ImagesUrlsAreLoaded = true;
         }
 
-        private async Task ReloadAndUpdateImageAsync([NotNull] TranslationEntry translationEntry, [NotNull] TranslationVariant translationVariant, CancellationToken cancellationToken)
+        private async Task ReloadAndUpdateImagesAsync(
+            [NotNull] TranslationEntry translationEntry,
+            [NotNull] TranslationVariant translationVariant,
+            [NotNull] PartOfSpeechTranslation partOfSpeechTranslation,
+            CancellationToken cancellationToken)
         {
             if (_wordImagesInfoRepository.CheckImagesInfoExists(translationEntry.Id, translationVariant))
                 return;
 
-            var imagesUrls = await _imageSearcher.SearchImagesAsync(translationVariant.Text, translationEntry.Key.TargetLanguage, cancellationToken, 0, 3)
+            var imagesUrls = await _imageSearcher.SearchImagesAsync(translationVariant.Text + " " + partOfSpeechTranslation.Text, translationEntry.Key.TargetLanguage, cancellationToken)
                 .ConfigureAwait(false);
             if (imagesUrls == null)
                 return;
 
-            var tasks = new List<Task<byte[]>>(imagesUrls.Length * 2);
-            foreach (var image in imagesUrls)
-            {
-                tasks.Add(_imageDownloader.DownloadImageAsync(image.Url));
-                tasks.Add(_imageDownloader.DownloadImageAsync(image.ThumbnailUrl));
-            }
-
-            var images = await Task.WhenAll(tasks)
+            var imageDownloadTasks = imagesUrls.Select(
+                async image => new ImageInfoWithBitmap
+                {
+                    ImageBitmap = null, //images[i++],
+                    ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(image.ThumbnailUrl)
+                        .ConfigureAwait(false),
+                    ImageInfo = image
+                });
+            var imageInfoWithBitmaps = await Task.WhenAll(imageDownloadTasks)
                 .ConfigureAwait(false);
-            var i = 0;
-            //The order of images should be correct after Task.WhenAll
-            var imagesWithBitmap = imagesUrls.Select(
-                    image => new ImageInfoWithBitmap
-                    {
-                        ImageBitmap = images[i++],
-                        ThumbnailBitmap = images[i++],
-                        ImageInfo = image
-                    })
-                .ToArray();
 
-            var wordImagesInfo = new WordImagesInfo(translationEntry.Id, translationVariant.Text, translationVariant.PartOfSpeech, imagesWithBitmap);
+            var wordImagesInfo = new WordImagesInfo(translationEntry.Id, translationVariant.Text, translationVariant.PartOfSpeech, imageInfoWithBitmaps);
             _wordImagesInfoRepository.Save(wordImagesInfo);
             _messenger.Publish(wordImagesInfo);
         }

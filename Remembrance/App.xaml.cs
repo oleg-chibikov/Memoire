@@ -2,12 +2,14 @@ using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
 using Remembrance.DAL;
 using Remembrance.Resources;
 using Remembrance.View.Card;
 using Remembrance.View.Various;
+using Remembrance.ViewModel;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
@@ -36,13 +38,14 @@ namespace Remembrance
             // Need to create first instance of this class in the UI thread (for proper SyncContext)
             Container.Resolve<ITranslationDetailsCardManager>();
             Container.Resolve<ApiHoster>();
+            Container.Resolve<ISynchronizationManager>();
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
         {
             builder.RegisterGeneric(typeof(WindowFactory<>))
                 .SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly)
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).Except<ViewModelAdapter>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly)
@@ -61,9 +64,13 @@ namespace Remembrance
             builder.RegisterType<SuggestionProvider>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
+            //Including ViewModelAdapter
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)
-                .AsSelf()
-                .InstancePerDependency();
+                .AsSelf().AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<ViewModelAdapter>()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly)
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
@@ -71,10 +78,15 @@ namespace Remembrance
 
         protected override void ShowMessage(Message message)
         {
-            var viewModel = Container.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
+            var nestedLifeTimeScope = Container.BeginLifetimeScope();
+            var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
             SynchronizationContext.Post(
-                x => Container.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel))
-                    .Restore(),
+                x =>
+                {
+                    var window = nestedLifeTimeScope.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel));
+                    window.AssociateDisposable(nestedLifeTimeScope);
+                    window.Restore();
+                },
                 null);
         }
     }

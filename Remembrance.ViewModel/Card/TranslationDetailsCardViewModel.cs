@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.ViewModel.Translation;
@@ -45,7 +47,8 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IMessageHub messenger,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
+            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
+            [NotNull] IWordsProcessor wordsProcessor)
         {
             if (translationInfo == null)
                 throw new ArgumentNullException(nameof(translationInfo));
@@ -53,6 +56,8 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(viewModelAdapter));
             if (prepositionsInfoRepository == null)
                 throw new ArgumentNullException(nameof(prepositionsInfoRepository));
+            if (wordsProcessor == null)
+                throw new ArgumentNullException(nameof(wordsProcessor));
 
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
@@ -61,7 +66,7 @@ namespace Remembrance.ViewModel.Card
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
+            wordsProcessor.ReloadAdditionalInfoAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
@@ -91,6 +96,7 @@ namespace Remembrance.ViewModel.Card
 
         public void Dispose()
         {
+            //TODO not called when it is not the DataContext of the window!
             foreach (var subscriptionToken in _subscriptionTokens)
                 _messenger.UnSubscribe(subscriptionToken);
         }

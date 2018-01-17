@@ -23,13 +23,15 @@ namespace Remembrance.Core.CardManagement
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             Logger.Trace($"Creating window for {translationInfo}...");
-            var translationDetailsCardViewModel = LifetimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var translationDetailsCardWindow = LifetimeScope.Resolve<ITranslationDetailsCardWindow>(
+            var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
+            var translationDetailsCardViewModel = nestedLifeTimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            var translationDetailsCardWindow = nestedLifeTimeScope.Resolve<ITranslationDetailsCardWindow>(
                 new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
             translationDetailsCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
             translationDetailsCardWindow.AutoCloseTimeout = SettingsRepository.Get()
                 .TranslationCloseTimeout;
+            translationDetailsCardWindow.AssociateDisposable(nestedLifeTimeScope);
             return translationDetailsCardWindow;
         }
     }
