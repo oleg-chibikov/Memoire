@@ -184,7 +184,9 @@ namespace Remembrance.ViewModel.Settings
             _timer.Tick -= Timer_Tick;
             _timer.Stop();
             foreach (var subscriptionToken in _subscriptionTokens)
+            {
                 _messenger.UnSubscribe(subscriptionToken);
+            }
         }
 
         private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)
@@ -192,7 +194,9 @@ namespace Remembrance.ViewModel.Settings
             // TODO: prompt
             Logger.Trace($"Deleting {translationEntryViewModel} from the list...");
             if (translationEntryViewModel == null)
+            {
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
+            }
 
             bool deleted;
             lock (_lockObject)
@@ -202,9 +206,13 @@ namespace Remembrance.ViewModel.Settings
 
             translationEntryViewModel.TextChanged -= TranslationEntryViewModel_TextChangedAsync;
             if (!deleted)
+            {
                 Logger.Warn($"{translationEntryViewModel} is not deleted from the list");
+            }
             else
+            {
                 Logger.Trace($"{translationEntryViewModel} has been deleted from the list");
+            }
         }
 
         private void Favorite([NotNull] TranslationEntryViewModel translationEntryViewModel)
@@ -226,7 +234,9 @@ namespace Remembrance.ViewModel.Settings
                 var result = await LoadTranslationsPageAsync(pageNumber++)
                     .ConfigureAwait(false);
                 if (!result)
+                {
                     break;
+                }
             }
         }
 
@@ -236,17 +246,23 @@ namespace Remembrance.ViewModel.Settings
                     () =>
                     {
                         if (CancellationTokenSource.IsCancellationRequested)
+                        {
                             return false;
+                        }
 
                         Logger.Trace($"Receiving translations page {pageNumber}...");
                         var translationEntryViewModels = _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize, null, SortOrder.Descending));
                         if (!translationEntryViewModels.Any())
+                        {
                             return false;
+                        }
 
                         lock (_lockObject)
                         {
                             foreach (var translationEntryViewModel in translationEntryViewModels)
+                            {
                                 _translationList.Add(translationEntryViewModel);
+                            }
                         }
 
                         Logger.Trace($"{translationEntryViewModels.Length} translations have been received");
@@ -260,13 +276,15 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace($"Changing priority for {priorityWordViewModel} in the list...");
             if (priorityWordViewModel == null)
+            {
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
+            }
 
             var parentId = priorityWordViewModel.TranslationEntryId;
             TranslationEntryViewModel translationEntryViewModel;
             lock (_lockObject)
             {
-                translationEntryViewModel = _translationList.SingleOrDefault(x => Equals(x.Id, parentId));
+                translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(parentId));
             }
 
             if (translationEntryViewModel == null)
@@ -276,16 +294,22 @@ namespace Remembrance.ViewModel.Settings
             }
 
             if (priorityWordViewModel.IsPriority)
+            {
                 ProcessPriority(priorityWordViewModel, translationEntryViewModel);
+            }
             else
+            {
                 await ProcessNonPriorityAsync(priorityWordViewModel, translationEntryViewModel)
                     .ConfigureAwait(false);
+            }
         }
 
         private void OnTranslationInfoReceived([NotNull] TranslationInfo translationInfo)
         {
             if (translationInfo == null)
+            {
                 throw new ArgumentNullException(nameof(translationInfo));
+            }
 
             Logger.Trace($"Received {translationInfo} from external source...");
             var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationInfo.TranslationEntry);
@@ -293,7 +317,7 @@ namespace Remembrance.ViewModel.Settings
             TranslationEntryViewModel existing;
             lock (_lockObject)
             {
-                existing = _translationList.SingleOrDefault(x => Equals(x.Id, translationInfo.TranslationEntry.Id));
+                existing = _translationList.SingleOrDefault(x => x.Id.Equals(translationInfo.TranslationEntry.Id));
             }
 
             if (existing != null)
@@ -331,21 +355,27 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace($"Received a batch of translations ({translationInfos.Length} items) from external source...");
             foreach (var translationInfo in translationInfos)
+            {
                 OnTranslationInfoReceived(translationInfo);
+            }
         }
 
         private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
         {
             Logger.Trace($"Changing UI language to {cultureInfo}...");
             if (cultureInfo == null)
+            {
                 throw new ArgumentNullException(nameof(cultureInfo));
+            }
 
             CultureUtilities.ChangeCulture(cultureInfo);
 
             lock (_lockObject)
             {
                 foreach (var translation in _translationList.SelectMany(translationEntryViewModel => translationEntryViewModel.Translations))
+                {
                     translation.ReRender();
+                }
             }
         }
 
@@ -353,7 +383,9 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace($"Opening details for {translationEntryViewModel}...");
             if (translationEntryViewModel == null)
+            {
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
+            }
 
             var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(translationEntryViewModel);
             var translationDetails = await _wordsProcessor.ReloadTranslationDetailsIfNeededAsync(
@@ -435,7 +467,9 @@ namespace Remembrance.ViewModel.Settings
                 }
 
                 if (!translation.IsPriority)
+                {
                     translations.RemoveAt(i--);
+                }
             }
 
             if (!found)
@@ -450,9 +484,14 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace($"Searching for {text}...");
             if (string.IsNullOrWhiteSpace(text))
+            {
                 View.Filter = null;
+            }
             else
+            {
                 View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel)o).Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
+            }
+
             _filterChanged = true;
             //Count = View.Cast<object>().Count();
         }
@@ -471,7 +510,9 @@ namespace Remembrance.ViewModel.Settings
         private void UpdateCount()
         {
             if (!_filterChanged && _count == _lastRecordedCount)
+            {
                 return;
+            }
 
             _filterChanged = false;
             _lastRecordedCount = _count;
@@ -490,6 +531,7 @@ namespace Remembrance.ViewModel.Settings
             var sourceLanguage = translationEntryViewModel.Language;
             var targetLanguage = translationEntryViewModel.TargetLanguage;
             if (e.NewValue != null)
+            {
                 try
                 {
                     await WordsProcessor.AddOrChangeWordAsync(
@@ -512,6 +554,7 @@ namespace Remembrance.ViewModel.Settings
 
                     throw;
                 }
+            }
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)

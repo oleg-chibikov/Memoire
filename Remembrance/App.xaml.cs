@@ -13,6 +13,7 @@ using Remembrance.ViewModel;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
+using Scar.Common.Async;
 using Scar.Common.IO;
 using Scar.Common.Messages;
 using Scar.Common.WPF.View;
@@ -45,7 +46,7 @@ namespace Remembrance
         {
             builder.RegisterGeneric(typeof(WindowFactory<>))
                 .SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).Except<ViewModelAdapter>()
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly)
                 .AsImplementedInterfaces()
                 .SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly)
@@ -66,12 +67,16 @@ namespace Remembrance
                 .SingleInstance();
             //Including ViewModelAdapter
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)
-                .AsSelf().AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+                .Except<ViewModelAdapter>()
+                .AsSelf()
+                .InstancePerDependency();
             builder.RegisterType<ViewModelAdapter>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly)
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
+            builder.RegisterType<CancellationTokenSourceProvider>()
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
         }

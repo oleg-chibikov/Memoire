@@ -10,7 +10,6 @@
     xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
     xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
-    xmlns:commonView="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -18,7 +17,7 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance card:AssessmentTextInputCardViewModel}">
     <UserControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"

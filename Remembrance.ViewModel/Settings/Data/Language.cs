@@ -20,7 +20,9 @@ namespace Remembrance.ViewModel.Settings.Data
         public override bool Equals(object obj)
         {
             if (obj == this)
+            {
                 return true;
+            }
 
             return obj is Language cast && Equals(cast);
         }

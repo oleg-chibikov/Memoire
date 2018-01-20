@@ -126,10 +126,10 @@
   <data name="CardShowTimeInfo" xml:space="preserve">
     <value>Следующий показ карточки в {0} (прошлый был в {1} (сейчас {4}), частота показа {2}{3})</value>
   </data>
-    <data name="CardShowPauseTimeInfo" xml:space="preserve">
+  <data name="CardShowPauseTimeInfo" xml:space="preserve">
     <value>, время на паузе {0}</value>
   </data>
-    <data name="CardShowIsPausedInfo" xml:space="preserve">
+  <data name="CardShowIsPausedInfo" xml:space="preserve">
     <value>Поставлено на паузу в {0}</value>
   </data>
   <data name="Favorite" xml:space="preserve">
@@ -137,6 +137,18 @@
   </data>
   <data name="IsFavorited" xml:space="preserve">
     <value>✭</value>
+  </data>
+  <data name="SetPreviousImage" xml:space="preserve">
+    <value>Предыдущее изображение</value>
+  </data>
+  <data name="SetNextImage" xml:space="preserve">
+    <value>Следующее изображение</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="LoadingFailed" xml:space="preserve">
+    <value>Провал</value>
   </data>
   <data name="From" xml:space="preserve">
     <value>с</value>
@@ -227,9 +239,6 @@
   </data>
   <data name="WrongAnswer" xml:space="preserve">
     <value>Неправда!</value>
-  </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Получение возможных вариантов...</value>
   </data>
   <data name="ViewLogs" xml:space="preserve">
     <value>Логи</value>

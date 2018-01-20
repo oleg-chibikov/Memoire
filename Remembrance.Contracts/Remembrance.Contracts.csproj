@@ -94,7 +94,7 @@
     <Compile Include="DAL\Model\TranslationEntry.cs" />
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
     <Compile Include="DAL\Model\TranslationInfo.cs" />
-    <Compile Include="DAL\Model\WordImagesInfo.cs" />
+    <Compile Include="DAL\Model\WordImageInfo.cs" />
     <Compile Include="DAL\Model\WordPriority.cs" />
     <Compile Include="ImageSearch\Data\ImageInfo.cs" />
     <Compile Include="ImageSearch\IImageDownloader.cs" />

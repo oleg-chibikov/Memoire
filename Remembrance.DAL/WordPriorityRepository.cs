@@ -29,14 +29,14 @@ namespace Remembrance.DAL
 
         public IWord[] GetPriorityWordsForTranslationEntry(object translationEntryId)
         {
-            return Collection.Find(x => x.TranslationEntryId == translationEntryId)
+            return Collection.Find(x => x.TranslationEntryId.Equals(translationEntryId))
                 .Cast<IWord>()
                 .ToArray();
         }
 
         public bool IsPriority(IWord word, object translationEntryId)
         {
-            return Collection.Exists(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId == translationEntryId);
+            return Collection.Exists(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId.Equals(translationEntryId));
         }
 
         public void MarkPriority(IWord word, object translationEntryId)
@@ -46,12 +46,12 @@ namespace Remembrance.DAL
 
         public void MarkNonPriority(IWord word, object translationEntryId)
         {
-            Collection.Delete(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId == translationEntryId);
+            Collection.Delete(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId.Equals(translationEntryId));
         }
 
         public void ClearForTranslationEntry(object translationEntryId)
         {
-            Collection.Delete(x => x.TranslationEntryId == translationEntryId);
+            Collection.Delete(x => x.TranslationEntryId.Equals(translationEntryId));
         }
     }
 }

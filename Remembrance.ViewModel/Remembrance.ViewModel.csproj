@@ -57,6 +57,9 @@
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Async.1.0.1\lib\net47\Scar.Common.Async.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.8\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
@@ -106,7 +109,7 @@
     <Compile Include="Card\AssessmentTextInputCardViewModel.cs" />
     <Compile Include="Settings\EditManualTranslationsViewModel.cs" />
     <Compile Include="Settings\MessageViewModel.cs" />
-    <Compile Include="Translation\ImageViewModel.cs" />
+    <Compile Include="Card\WordImageViewerViewModel.cs" />
     <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
     <Compile Include="Translation\PriorityWordViewModel.cs" />
     <Compile Include="Settings\AddTranslationViewModel.cs" />

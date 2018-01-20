@@ -67,9 +67,14 @@ namespace Remembrance.Core.CardManagement
             LastCardShowTime = settings.LastCardShowTime;
             _pausedTime = settings.PausedTime;
             if (!IsPaused)
+            {
                 CreateInterval();
+            }
             else
+            {
                 LastPausedTime = DateTime.Now;
+            }
+
             _onCardShowFrequencyChangedToken = messenger.Subscribe<TimeSpan>(OnCardShowFrequencyChanged);
             _intervalModifiedToken = messenger.Subscribe<IntervalModificator>(OnIntervalModified);
         }
@@ -87,7 +92,9 @@ namespace Remembrance.Core.CardManagement
             get
             {
                 if (!IsPaused)
+                {
                     return _pausedTime;
+                }
 
                 return _pausedTime + (DateTime.Now - LastPausedTime);
             }
@@ -213,7 +220,9 @@ namespace Remembrance.Core.CardManagement
         private void RecordPausedTime()
         {
             if (!IsPaused)
+            {
                 return;
+            }
 
             IsPaused = false;
             var settings = SettingsRepository.Get();

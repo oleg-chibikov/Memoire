@@ -31,23 +31,36 @@ namespace Remembrance.Core.Translation.Yandex
         public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken cancellationToken)
         {
             if (from == null)
-                throw new ArgumentNullException(nameof(from));
+            {
+                throw new ArgumentNullException(nameof(@from));
+            }
+
             if (to == null)
+            {
                 throw new ArgumentNullException(nameof(to));
+            }
+
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
+
             if (ui == null)
+            {
                 throw new ArgumentNullException(nameof(ui));
+            }
 
             // falgs morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
             var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                 .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
+            {
                 return new TranslationResult
                 {
                     PartOfSpeechTranslations = new PartOfSpeechTranslation[0]
                 };
+            }
 
             var result = await response.Content.ReadAsStringAsync()
                 .ConfigureAwait(false);

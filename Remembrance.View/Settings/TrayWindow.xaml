@@ -25,7 +25,7 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     Icon="../IconAlt.ico">
     <Window.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon

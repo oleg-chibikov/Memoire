@@ -31,7 +31,9 @@ namespace Remembrance.DAL
         public TranslationDetails TryGetByTranslationEntryId(object translationEntryId)
         {
             if (translationEntryId == null)
+            {
                 throw new ArgumentNullException(nameof(translationEntryId));
+            }
 
             return Collection.FindOne(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
         }
@@ -39,7 +41,9 @@ namespace Remembrance.DAL
         public void DeleteByTranslationEntryId(object translationEntryId)
         {
             if (translationEntryId == null)
+            {
                 throw new ArgumentNullException(nameof(translationEntryId));
+            }
 
             Collection.Delete(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
         }

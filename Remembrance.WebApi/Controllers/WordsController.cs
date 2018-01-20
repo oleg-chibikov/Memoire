@@ -29,7 +29,9 @@ namespace Remembrance.WebApi.Controllers
         public async void PutAsync([NotNull] [FromBody] string word)
         {
             if (word == null)
+            {
                 throw new ArgumentNullException(nameof(word));
+            }
 
             try
             {

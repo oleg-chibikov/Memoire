@@ -43,7 +43,9 @@ namespace Remembrance.ViewModel.Settings
         protected BaseViewModelWithAddTranslationControl([NotNull] ISettingsRepository settingsRepository, [NotNull] ILanguageDetector languageDetector, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
         {
             if (languageDetector == null)
+            {
                 throw new ArgumentNullException(nameof(languageDetector));
+            }
 
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
@@ -84,16 +86,28 @@ namespace Remembrance.ViewModel.Settings
 
             Language targetLanguage = null;
             if (settings.LastUsedTargetLanguage != null)
+            {
                 targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == settings.LastUsedTargetLanguage);
+            }
+
             if (targetLanguage == null)
+            {
                 targetLanguage = autoTargetLanguage;
+            }
+
             _selectedTargetLanguage = targetLanguage;
 
             Language sourceLanguage = null;
             if (settings.LastUsedSourceLanguage != null)
+            {
                 sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == settings.LastUsedSourceLanguage);
+            }
+
             if (sourceLanguage == null)
+            {
                 sourceLanguage = autoSourceLanguage;
+            }
+
             _selectedSourceLanguage = sourceLanguage;
             logger.Trace("Languages have been loaded");
         }

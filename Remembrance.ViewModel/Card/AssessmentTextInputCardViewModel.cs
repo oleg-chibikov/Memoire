@@ -37,9 +37,14 @@ namespace Remembrance.ViewModel.Card
             : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
         {
             if (settingsRepository == null)
+            {
                 throw new ArgumentNullException(nameof(settingsRepository));
+            }
+
             if (viewModelAdapter == null)
+            {
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            }
 
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
@@ -62,13 +67,16 @@ namespace Remembrance.ViewModel.Card
             var mostSuitable = AcceptedAnswers.First();
             var currentMinDistance = int.MaxValue;
             if (!string.IsNullOrWhiteSpace(ProvidedAnswer))
+            {
                 foreach (var acceptedAnswer in AcceptedAnswers)
                 {
                     // 20% of the word could be errors
                     var maxDistance = acceptedAnswer.Text.Length / 5;
                     var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.Text);
                     if (distance < 0 || distance > maxDistance)
+                    {
                         continue;
+                    }
 
                     if (distance < currentMinDistance)
                     {
@@ -78,6 +86,7 @@ namespace Remembrance.ViewModel.Card
 
                     Accepted = true;
                 }
+            }
 
             var closeTimeout = ChangeRepeatType(mostSuitable, currentMinDistance);
             CloseWindowWithTimeout(closeTimeout);

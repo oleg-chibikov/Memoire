@@ -1,32 +1,94 @@
-<UserControl x:Class="Remembrance.View.Card.WordImageViewerControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-             xmlns:view1="clr-namespace:Remembrance.View"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             lex:LocalizeDictionary.DesignCulture="en"
-             lex:LocalizeDictionary.OutputMissingKeys="True"
-             lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
-             lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:translation="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance d:Type=translation:ImageViewModel}">
+<UserControl
+    x:Class="Remembrance.View.Card.WordImageViewerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:card="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance d:Type=card:WordImageViewerViewModel}">
     <UserControl.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <view:DesignTimeResourceDictionary
+                    Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/Remembrance.View;component/Spinner.xaml" />
+                <ResourceDictionary>
+                    <DataTemplate
+                        x:Key="ImageTemplate">
+                        <Image
+                            MaxWidth="100"
+                            ToolTip="{Binding DataContext.ToolTip, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Source="{Binding DataContext.Image, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                    </DataTemplate>
+                    <DataTemplate
+                        x:Key="LoadingTemplate">
+                        <Control
+                            ToolTip="{lex:Loc Loading}"
+                            Style="{StaticResource BusyAnimationStyle}" />
+                    </DataTemplate>
+                    <DataTemplate
+                        x:Key="FailedLoadingTemplate">
+                        <TextBlock
+                            Text="{lex:Loc LoadingFailed}"></TextBlock>
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Margin="3" Orientation="Horizontal"
-                view:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Button Style="{StaticResource ImageButton}"
-                ToolTip="{lex:Loc AddTranslation}"
-                Command="{Binding AddTranslationCommand, Mode=OneTime}">
-            <materialDesign:PackIcon Kind="NotePlus" />
+    <StackPanel
+        Margin="3"
+        Orientation="Horizontal"
+        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+        <Button
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc SetPreviousImage}"
+            Background="Transparent"
+            Command="{Binding SetPreviousImageCommand, Mode=OneTime}">
+            <materialDesign:PackIcon
+                Kind="ChevronLeft" />
         </Button>
-        <Image
-            Width="70"
-            Visibility="{Binding Image, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
-            Source="{Binding Image, Mode=OneWay}" />
+        <ContentControl DataContext="{Binding Mode=OneTime}">
+            <ContentControl.Style>
+                <Style
+                    TargetType="{x:Type ContentControl}">
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding Path=Image, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                            Value="False">
+                            <Setter
+                                Property="ContentTemplate"
+                                Value="{StaticResource FailedLoadingTemplate}" />
+                        </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding Path=IsLoading, Mode=OneWay}"
+                            Value="True">
+                            <Setter
+                                Property="ContentTemplate"
+                                Value="{StaticResource LoadingTemplate}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter
+                        Property="ContentTemplate"
+                        Value="{StaticResource ImageTemplate}"></Setter>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <Button
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc SetNextImage}"
+            Background="Transparent"
+            Command="{Binding SetNextImageCommand, Mode=OneTime}">
+            <materialDesign:PackIcon
+                Kind="ChevronRight" />
+        </Button>
     </StackPanel>
 </UserControl>

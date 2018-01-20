@@ -25,12 +25,12 @@ namespace Remembrance.DAL
 
         public PrepositionsInfo GetPrepositionsInfo(object translationEntryId)
         {
-            return Collection.FindOne(x => x.TranslationEntryId == translationEntryId);
+            return Collection.FindOne(x => x.TranslationEntryId.Equals(translationEntryId));
         }
 
         public bool CheckPrepositionsInfoExists(object translationEntryId)
         {
-            return Collection.Exists(x => x.TranslationEntryId == translationEntryId);
+            return Collection.Exists(x => x.TranslationEntryId.Equals(translationEntryId));
         }
     }
 }

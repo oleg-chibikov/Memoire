@@ -11,7 +11,9 @@ namespace Remembrance.Core.CardManagement.Data
         public ExchangeWord([NotNull] IWord word)
         {
             if (word == null)
+            {
                 throw new ArgumentNullException(nameof(word));
+            }
 
             Text = word.Text;
             PartOfSpeech = word.PartOfSpeech;

@@ -28,7 +28,7 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </window:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>

@@ -55,7 +55,9 @@ namespace Remembrance.ViewModel.Translation
             {
                 var newValue = value.Capitalize();
                 if (newValue == _text)
+                {
                     return;
+                }
 
                 // For the new item this event should not be fired
                 if (_text != null && !NotificationIsSupressed)
@@ -110,12 +112,16 @@ namespace Remembrance.ViewModel.Translation
             //If there are priority words - load only them
             var priorityWords = _wordPriorityRepository.GetPriorityWordsForTranslationEntry(Id);
             if (priorityWords.Any())
+            {
                 await ReloadPriorityAsync(priorityWords)
                     .ConfigureAwait(false);
+            }
             //otherwise load default words
             else
+            {
                 await ReloadNonPriorityAsync()
                     .ConfigureAwait(false);
+            }
         }
 
         public event TextChangedEventHandler TextChanged;
@@ -130,13 +136,19 @@ namespace Remembrance.ViewModel.Translation
             foreach (var translationVariant in translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (priorityWords.Any(priorityWord => _wordsEqualityComparer.Equals(translationVariant, priorityWord)))
+                {
                     yield return translationVariant;
+                }
 
                 if (translationVariant.Synonyms == null)
+                {
                     continue;
+                }
 
                 foreach (var synonym in translationVariant.Synonyms.Where(synonym => priorityWords.Any(priorityWord => _wordsEqualityComparer.Equals(synonym, priorityWord))))
+                {
                     yield return synonym;
+                }
             }
         }
 
@@ -152,7 +164,9 @@ namespace Remembrance.ViewModel.Translation
         {
             var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(words);
             foreach (var translation in translations)
-                translation.SetProperties(Id, TargetLanguage, isPriority);
+            {
+                translation.SetIsPriority(isPriority);
+            }
 
             Translations = new ObservableCollection<PriorityWordViewModel>(translations);
         }

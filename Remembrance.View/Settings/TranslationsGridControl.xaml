@@ -27,7 +27,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style
                 TargetType="{x:Type xcdg:HierarchicalGroupByControl}">

@@ -39,9 +39,14 @@ namespace Remembrance.Core.Translation.Yandex
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
+
             if (lang == null)
+            {
                 throw new ArgumentNullException(nameof(lang));
+            }
 
             _logger.Trace($"Starting speaking {text}...");
             var settings = _settingsRepository.Get();
@@ -51,7 +56,9 @@ namespace Remembrance.Core.Translation.Yandex
             var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                 .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
+            {
                 return false;
+            }
 
             var soundStream = await response.Content.ReadAsStreamAsync()
                 .ConfigureAwait(false);

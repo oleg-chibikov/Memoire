@@ -67,7 +67,9 @@ namespace Remembrance.Core.Exchange
         public async Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {
             if (fileName == null)
+            {
                 throw new ArgumentNullException(nameof(fileName));
+            }
 
             var translationEntries = _translationEntryRepository.GetAll();
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
@@ -88,12 +90,19 @@ namespace Remembrance.Core.Exchange
                 foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                 {
                     if (_wordPriorityRepository.IsPriority(translationVariant, translationEntry.Id))
+                    {
                         priorityWords.Add(new ExchangeWord(translationVariant));
+                    }
+
                     if (translationVariant.Synonyms == null)
+                    {
                         continue;
+                    }
 
                     foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordPriorityRepository.IsPriority(synonym, translationEntry.Id)))
+                    {
                         priorityWords.Add(new ExchangeWord(synonym));
+                    }
                 }
 
                 exportEntries.Add(

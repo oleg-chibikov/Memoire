@@ -8,6 +8,7 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.ViewModel.Card;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -25,9 +26,11 @@ namespace Remembrance.ViewModel.Translation
             : base(textToSpeechPlayer, messenger, wordsProcessor, logger, wordPriorityRepository)
         {
             if (lifetimeScope == null)
+            {
                 throw new ArgumentNullException(nameof(lifetimeScope));
+            }
 
-            ImageViewModel = lifetimeScope.Resolve<ImageViewModel>(new TypedParameter(typeof(PriorityWordViewModel), this));
+            WordImageViewerViewModel = lifetimeScope.Resolve<WordImageViewerViewModel>(new TypedParameter(typeof(PriorityWordViewModel), this));
         }
 
         [CanBeNull]
@@ -40,6 +43,6 @@ namespace Remembrance.ViewModel.Translation
         public Example[] Examples { get; set; }
 
         [NotNull]
-        public ImageViewModel ImageViewModel { get; }
+        public WordImageViewerViewModel WordImageViewerViewModel { get; }
     }
 }

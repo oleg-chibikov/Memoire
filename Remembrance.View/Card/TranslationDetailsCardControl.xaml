@@ -13,7 +13,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}">
     <UserControl.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -70,7 +70,7 @@
                                                             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                                                     <TextBlock FontSize="{StaticResource BigFontSize}"
                                                                Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
-                                                    <view:WordImageViewerControl DataContext="{Binding ImageViewModel, Mode=OneTime}" />
+                                                    <view:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
                                                     <view:WordControl FontSize="{StaticResource MediumFontSize}"
                                                                       DataContext="{Binding Mode=OneTime}" />
                                                     <view:WordsControl ItemsSource="{Binding Synonyms, Mode=OneTime}"

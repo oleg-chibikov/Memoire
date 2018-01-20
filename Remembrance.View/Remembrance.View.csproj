@@ -65,7 +65,7 @@
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.33\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.34\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6591.29489, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.29\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
@@ -120,7 +120,6 @@
     <Compile Include="Card\WordImageViewerControl.xaml.cs">
       <DependentUpon>WordImageViewerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DesignTimeResourceDictionary.cs" />
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
     <Compile Include="Converters\MessageTypeToBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
@@ -211,6 +210,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Card\WordControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Spinner.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

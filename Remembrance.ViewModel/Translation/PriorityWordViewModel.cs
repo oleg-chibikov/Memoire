@@ -10,6 +10,25 @@ using Scar.Common.Events;
 
 namespace Remembrance.ViewModel.Translation
 {
+    public class PriorityWordViewModelMainProperties
+    {
+        public PriorityWordViewModelMainProperties([NotNull] object translationEntryId, [NotNull] string partOfSpeechTranslationText, [NotNull] string language)
+        {
+            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
+            PartOfSpeechTranslationText = partOfSpeechTranslationText ?? throw new ArgumentNullException(nameof(partOfSpeechTranslationText));
+            Language = language ?? throw new ArgumentNullException(nameof(language));
+        }
+
+        [NotNull]
+        public object TranslationEntryId { get; }
+
+        [NotNull]
+        public string PartOfSpeechTranslationText { get; }
+
+        [NotNull]
+        public string Language { get; }
+    }
+
     [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
@@ -40,14 +59,24 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public object TranslationEntryId { get; private set; }
 
-        public event EventHandler<EventArgs<object>> TranslationEntryIdSet;
+        public event EventHandler<EventArgs<PriorityWordViewModelMainProperties>> TranslationEntryIdSet;
 
-        public void SetProperties([NotNull] object translationEntryId, [NotNull] string targetLanguage, [CanBeNull] bool? isPriority = null)
+        public void SetProperties([NotNull] PriorityWordViewModelMainProperties priorityWordViewModelMainProperties)
         {
-            Language = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
-            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
-            IsPriority = isPriority ?? _wordPriorityRepository.IsPriority(this, TranslationEntryId);
-            TranslationEntryIdSet?.Invoke(this, new EventArgs<object>(TranslationEntryIdSet));
+            if (priorityWordViewModelMainProperties == null)
+            {
+                throw new ArgumentNullException(nameof(priorityWordViewModelMainProperties));
+            }
+
+            //This function should be considered as a part of constructor. It cannot be a part of it because of using Mapster
+            Language = priorityWordViewModelMainProperties.Language;
+            TranslationEntryId = priorityWordViewModelMainProperties.TranslationEntryId;
+            TranslationEntryIdSet?.Invoke(this, new EventArgs<PriorityWordViewModelMainProperties>(priorityWordViewModelMainProperties));
+        }
+
+        public void SetIsPriority(bool isPriority)
+        {
+            IsPriority = isPriority;
         }
 
         protected override void TogglePriority()
@@ -56,9 +85,14 @@ namespace Remembrance.ViewModel.Translation
             Logger.Info($"Changing priority for {this} to {!isPriority}");
 
             if (isPriority)
+            {
                 _wordPriorityRepository.MarkNonPriority(this, TranslationEntryId);
+            }
             else
+            {
                 _wordPriorityRepository.MarkPriority(this, TranslationEntryId);
+            }
+
             IsPriority = !isPriority;
             Messenger.Publish(this);
         }

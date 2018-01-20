@@ -11,7 +11,6 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:settings="clr-namespace:Remembrance.View.Settings"
-    xmlns:converters="clr-namespace:Remembrance.View.Converters"
     xmlns:view1="clr-namespace:Remembrance.View"
     mc:Ignorable="d"
     PreviewLostKeyboardFocus="EditManualTranslationsDialog_OnPreviewLostKeyboardFocus"
@@ -20,7 +19,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
                 <ResourceDictionary>
                     <Style
                         TargetType="{x:Type xcdg:DataCell}"

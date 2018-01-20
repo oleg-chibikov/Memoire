@@ -75,13 +75,17 @@ namespace Remembrance.ViewModel.Settings
         private void AddTranslation()
         {
             if (string.IsNullOrWhiteSpace(ManualTranslationText))
+            {
                 throw new LocalizableException(Errors.WordIsMissing);
+            }
 
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
             _logger.Trace($"Adding {ManualTranslationText}...");
             ManualTranslationText = null;
             if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 throw new LocalizableException(Errors.TranslationIsPresent);
+            }
 
             ManualTranslations.Add(newManualTranslation);
         }
@@ -95,7 +99,9 @@ namespace Remembrance.ViewModel.Settings
         private async void DeleteAsync([NotNull] ManualTranslation manualTranslation)
         {
             if (manualTranslation == null)
+            {
                 throw new ArgumentNullException(nameof(manualTranslation));
+            }
 
             _logger.Trace($"Deleting manual translation {manualTranslation}...");
             if (ManualTranslations.Count == 1)
@@ -110,7 +116,9 @@ namespace Remembrance.ViewModel.Settings
                     .ConfigureAwait(false);
                 //if non manual translations not exist
                 if (translationDetails.TranslationResult.PartOfSpeechTranslations.All(t => t.IsManual))
+                {
                     throw new LocalizableException(Errors.CannotDeleteManual);
+                }
             }
 
             ManualTranslations.Remove(manualTranslation);

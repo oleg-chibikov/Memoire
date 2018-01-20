@@ -5,11 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:card="clr-namespace:Remembrance.View.Card"
-    xmlns:view="clr-namespace:Remembrance.View"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     mc:Ignorable="d"
     x:Name="Control">
     <ItemsControl.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>

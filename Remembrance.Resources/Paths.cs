@@ -36,7 +36,10 @@ namespace Remembrance.Resources
 
             var jsonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), infoPath);
             if (!File.Exists(jsonPath))
+            {
                 jsonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), infoPath);
+            }
+
             return !File.Exists(jsonPath)
                 ? null
                 : File.ReadAllText(jsonPath)
@@ -58,7 +61,9 @@ namespace Remembrance.Resources
         private static string SanitizePath([NotNull] this string path)
         {
             if (path == null)
+            {
                 throw new ArgumentNullException(nameof(path));
+            }
 
             return IllegalCharactersRegex.Replace(path, string.Empty);
         }

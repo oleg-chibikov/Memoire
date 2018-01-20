@@ -38,7 +38,9 @@ namespace Remembrance.DAL
         public TranslationEntry TryGetByKey(TranslationEntryKey key)
         {
             if (key == null)
+            {
                 throw new ArgumentNullException(nameof(key));
+            }
 
             return Collection.FindOne(x => x.Key.Text == key.Text && x.Key.SourceLanguage == key.SourceLanguage && x.Key.TargetLanguage == key.TargetLanguage);
         }

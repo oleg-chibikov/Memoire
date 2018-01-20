@@ -18,7 +18,7 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
     <UserControl.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"

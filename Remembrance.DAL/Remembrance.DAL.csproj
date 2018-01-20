@@ -52,7 +52,7 @@
       <HintPath>..\packages\Scar.Common.DAL.1.0.8\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.31\lib\net47\Scar.Common.DAL.LiteDB.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.33\lib\net47\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

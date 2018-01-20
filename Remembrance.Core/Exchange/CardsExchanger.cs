@@ -52,7 +52,10 @@ namespace Remembrance.Core.Exchange
             _importers = importers ?? throw new ArgumentNullException(nameof(importers));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             foreach (var importer in importers)
+            {
                 importer.Progress += ImporterExporter_Progress;
+            }
+
             exporter.Progress += ImporterExporter_Progress;
         }
 
@@ -61,7 +64,9 @@ namespace Remembrance.Core.Exchange
         public async Task ExportAsync(CancellationToken cancellationToken)
         {
             if (!_saveFileService.SaveFileDialog($"{Texts.Title}: {Texts.Export}", JsonFilesFilter))
+            {
                 return;
+            }
 
             _logger.Info($"Performing export to {_saveFileService.FileName}...");
             ExchangeResult exchangeResult = null;
@@ -98,7 +103,9 @@ namespace Remembrance.Core.Exchange
         public async Task ImportAsync(CancellationToken cancellationToken)
         {
             if (!_openFileService.OpenFileDialog($"{Texts.Title}: {Texts.Import}", JsonFilesFilter))
+            {
                 return;
+            }
 
             OnProgress(0, 1);
             try
@@ -140,7 +147,10 @@ namespace Remembrance.Core.Exchange
         public void Dispose()
         {
             foreach (var importer in _importers)
+            {
                 importer.Progress -= ImporterExporter_Progress;
+            }
+
             _exporter.Progress -= ImporterExporter_Progress;
         }
 

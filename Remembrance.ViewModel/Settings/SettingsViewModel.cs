@@ -169,9 +169,13 @@ namespace Remembrance.ViewModel.Settings
                     Progress = e.Percentage;
                     ProgressDescription = $"{e.Current} of {e.Total} ({e.Percentage} %)";
                     if (e.Current == 0)
+                    {
                         BeginProgress();
+                    }
                     else if (e.Current == e.Total)
+                    {
                         EndProgress();
+                    }
                 },
                 null);
         }
@@ -222,7 +226,10 @@ namespace Remembrance.ViewModel.Settings
             settings.UiLanguage = UiLanguage.Code;
             _settingsRepository.Save(settings);
             if (prevFreq != freq)
+            {
                 _messenger.Publish(settings.CardShowFrequency);
+            }
+
             RequestClose?.Invoke(null, null);
             _logger.Trace("Settings has been saved");
         }

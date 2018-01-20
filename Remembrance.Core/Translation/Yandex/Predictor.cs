@@ -36,7 +36,9 @@ namespace Remembrance.Core.Translation.Yandex
         public async Task<PredictionResult> PredictAsync(string text, int limit, CancellationToken cancellationToken)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
 
             var lang = await _languageDetector.DetectLanguageAsync(text, cancellationToken)
                 .ConfigureAwait(false);
@@ -45,7 +47,9 @@ namespace Remembrance.Core.Translation.Yandex
             var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                 .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
+            {
                 return new PredictionResult();
+            }
 
             var result = await response.Content.ReadAsStringAsync()
                 .ConfigureAwait(false);

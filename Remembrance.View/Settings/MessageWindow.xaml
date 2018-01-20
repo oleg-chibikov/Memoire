@@ -12,6 +12,7 @@
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
     xmlns:view="clr-namespace:Remembrance.View"
+    xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -28,7 +29,7 @@
     AutoCloseTimeout="00:00:03"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </window:AnimatedWindow.Resources>
     <Border
         BorderThickness="2"

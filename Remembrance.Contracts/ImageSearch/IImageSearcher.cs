@@ -9,6 +9,6 @@ namespace Remembrance.Contracts.ImageSearch
     {
         [NotNull]
         [ItemCanBeNull]
-        Task<ImageInfo[]> SearchImagesAsync([NotNull] string text, [NotNull] string language, CancellationToken cancellationToken, int skip = 0, int count = 1);
+        Task<ImageInfo[]> SearchImagesAsync([NotNull] string text, CancellationToken cancellationToken, int skip = 0, int count = 1, [CanBeNull] string language = null);
     }
 }

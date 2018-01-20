@@ -86,7 +86,7 @@
       <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.7\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.33\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.34\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6591.29489, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.29\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>

@@ -10,8 +10,6 @@ using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.ImageSearch;
-using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
@@ -37,12 +35,6 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         private readonly ITranslationDetailsCardManager _cardManager;
-
-        [NotNull]
-        private readonly IImageDownloader _imageDownloader;
-
-        [NotNull]
-        private readonly IImageSearcher _imageSearcher;
 
         [NotNull]
         private readonly ILanguageDetector _languageDetector;
@@ -72,9 +64,6 @@ namespace Remembrance.Core.CardManagement
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IWordImagesInfoRepository _wordImagesInfoRepository;
-
-        [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
 
         [NotNull]
@@ -96,15 +85,9 @@ namespace Remembrance.Core.CardManagement
             [NotNull] IWordPriorityRepository wordPriorityRepository,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IPredictor predictor,
-            [NotNull] IImageSearcher imageSearcher,
-            [NotNull] IWordImagesInfoRepository imagesInfoRepository,
-            [NotNull] IImageDownloader imageDownloader,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
         {
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
-            _imageDownloader = imageDownloader ?? throw new ArgumentNullException(nameof(imageDownloader));
-            _wordImagesInfoRepository = imagesInfoRepository ?? throw new ArgumentNullException(nameof(imagesInfoRepository));
-            _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
@@ -163,7 +146,9 @@ namespace Remembrance.Core.CardManagement
             var key = await GetTranslationKeyAsync(text, sourceLanguage, targetLanguage, cancellationToken)
                 .ConfigureAwait(false);
             if (text == null)
+            {
                 throw new InvalidOperationException();
+            }
 
             var translationResult = await TranslateAsync(key.Text, key.SourceLanguage, key.TargetLanguage, manualTranslations, cancellationToken)
                 .ConfigureAwait(false);
@@ -175,12 +160,16 @@ namespace Remembrance.Core.CardManagement
             if (id != null)
             {
                 if (!existingByKey?.Id.Equals(id) == true)
+                {
                     throw new LocalizableException($"An item with the same key {key} already exists", Errors.WordIsPresent);
+                }
             }
             else
             {
                 if (existingByKey != null)
+                {
                     id = existingByKey.Id;
+                }
             }
 
             var translationEntry = new TranslationEntry(key)
@@ -195,15 +184,20 @@ namespace Remembrance.Core.CardManagement
 
             var translationDetails = new TranslationDetails(translationResult, id);
             if (existingTranslationDetails != null)
+            {
                 translationDetails.Id = existingTranslationDetails.Id;
+            }
 
             _translationDetailsRepository.Save(translationDetails);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
 
             _logger.Trace($"Translation for {key} has been successfully added");
             if (needPostProcess)
+            {
                 await PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken)
                     .ConfigureAwait(false);
+            }
+
             _logger.Trace($"Processing finished for word {text}");
             return translationInfo;
         }
@@ -211,16 +205,23 @@ namespace Remembrance.Core.CardManagement
         public async Task<string> GetDefaultTargetLanguageAsync(string sourceLanguage, CancellationToken cancellationToken)
         {
             if (sourceLanguage == null)
+            {
                 throw new ArgumentNullException(nameof(sourceLanguage));
+            }
 
             var settings = _settingsRepository.Get();
             var lastUsedTargetLanguage = settings.LastUsedTargetLanguage;
             var possibleTargetLanguages = new Stack<string>(DefaultTargetLanguages);
             if (lastUsedTargetLanguage != null && lastUsedTargetLanguage != Constants.AutoDetectLanguage)
+            {
                 possibleTargetLanguages.Push(lastUsedTargetLanguage); // top priority
+            }
+
             var targetLanguage = possibleTargetLanguages.Pop();
             while (targetLanguage == sourceLanguage)
+            {
                 targetLanguage = possibleTargetLanguages.Pop();
+            }
 
             return await Task.FromResult(targetLanguage)
                 .ConfigureAwait(false);
@@ -254,71 +255,29 @@ namespace Remembrance.Core.CardManagement
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
-        public async Task ReloadAdditionalInfoAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
+        public async Task LoadAdditionalInfoIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
-            await ReloadPrepositionsAsync(text, translationDetails, cancellationToken);
-            await ReloadImagesAsync(translationDetails, cancellationToken);
-        }
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
 
-        private async Task ReloadPrepositionsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
-        {
+            if (translationDetails == null)
+            {
+                throw new ArgumentNullException(nameof(translationDetails));
+            }
+
             if (_prepositionsInfoRepository.CheckPrepositionsInfoExists(translationDetails.TranslationEntryId))
+            {
                 return;
+            }
+
             _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
             var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
                 .ConfigureAwait(false);
             var prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
             _prepositionsInfoRepository.Save(prepositionsInfo);
             _messenger.Publish(prepositionsInfo);
-        }
-
-        private async Task ReloadImagesAsync([NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
-        {
-            //TODO https://api.qwant.com/api/search/images?count=1&offset=0&q=horse
-            //http://www.faroo.com/hp/api/api.html#ratelimit
-
-            //TODO: 1) Separate DBs for Preposition and Images.
-            //2) sTORE 3 IMAGES WITH THUMBNAILS AND IMAGE Bitmaps in separate DB
-            //3) When image or preposition is loaded- send event through messageHub. All forms which display image or prep should handle it.
-            //4)Image control - like in PhotoReviewer - display square image with two arrows, cross to hide image at all and Browse to upload own image
-            _logger.Info($"Reloading images for {translationDetails.TranslationEntryId}...");
-            var translationEntry = _translationEntryRepository.GetById(translationDetails.TranslationEntryId);
-            IList<Task> tasks = translationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
-                    partOfSpeechTranslation =>
-                        partOfSpeechTranslation.TranslationVariants.Select(translationVariant => ReloadAndUpdateImagesAsync(translationEntry, translationVariant, partOfSpeechTranslation, cancellationToken)))
-                .ToList();
-            await Task.WhenAll(tasks);
-            translationDetails.ImagesUrlsAreLoaded = true;
-        }
-
-        private async Task ReloadAndUpdateImagesAsync(
-            [NotNull] TranslationEntry translationEntry,
-            [NotNull] TranslationVariant translationVariant,
-            [NotNull] PartOfSpeechTranslation partOfSpeechTranslation,
-            CancellationToken cancellationToken)
-        {
-            if (_wordImagesInfoRepository.CheckImagesInfoExists(translationEntry.Id, translationVariant))
-                return;
-
-            var imagesUrls = await _imageSearcher.SearchImagesAsync(translationVariant.Text + " " + partOfSpeechTranslation.Text, translationEntry.Key.TargetLanguage, cancellationToken)
-                .ConfigureAwait(false);
-            if (imagesUrls == null)
-                return;
-
-            var imageDownloadTasks = imagesUrls.Select(
-                async image => new ImageInfoWithBitmap
-                {
-                    ImageBitmap = null, //images[i++],
-                    ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(image.ThumbnailUrl)
-                        .ConfigureAwait(false),
-                    ImageInfo = image
-                });
-            var imageInfoWithBitmaps = await Task.WhenAll(imageDownloadTasks)
-                .ConfigureAwait(false);
-
-            var wordImagesInfo = new WordImagesInfo(translationEntry.Id, translationVariant.Text, translationVariant.PartOfSpeech, imageInfoWithBitmaps);
-            _wordImagesInfoRepository.Save(wordImagesInfo);
-            _messenger.Publish(wordImagesInfo);
         }
 
         [ItemNotNull]
@@ -384,16 +343,23 @@ namespace Remembrance.Core.CardManagement
                 .Cast<IWord>();
             var deletedManualTranslations = remainingManualTranslations;
             if (manualTranslations != null)
+            {
                 deletedManualTranslations = deletedManualTranslations.Except(manualTranslations, _wordsEqualityComparer);
+            }
+
             foreach (var word in deletedManualTranslations)
+            {
                 _wordPriorityRepository.MarkNonPriority(word, id);
+            }
         }
 
         [ItemNotNull]
         private async Task<TranslationEntryKey> GetTranslationKeyAsync([CanBeNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(text))
+            {
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
+            }
 
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
             {
@@ -404,13 +370,17 @@ namespace Remembrance.Core.CardManagement
             }
 
             if (sourceLanguage == null)
+            {
                 throw new LocalizableException($"Cannot detect language for '{text}'", Errors.CannotDetectLanguage);
+            }
 
             if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
 
                 // if not specified - try to find best matching target language
+            {
                 targetLanguage = await GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken)
                     .ConfigureAwait(false);
+            }
 
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
@@ -439,7 +409,9 @@ namespace Remembrance.Core.CardManagement
                 _logger.Warn($"No translations found for {text}");
 
                 if (manualTranslations == null)
+                {
                     throw new LocalizableException($"No translations found for {text}", string.Format(Errors.CannotTranslate, text, sourceLanguage, targetLanguage));
+                }
             }
             else
             {
@@ -447,8 +419,10 @@ namespace Remembrance.Core.CardManagement
             }
 
             if (manualTranslations != null)
+            {
                 translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(text, manualTranslations, translationResult.PartOfSpeechTranslations)
                     .ToArray();
+            }
 
             return translationResult;
         }

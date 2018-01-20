@@ -32,8 +32,9 @@
     <window:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
-                <ResourceDictionary Source="../Slider.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/Remembrance.View;component/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </window:AnimatedWindow.Resources>

@@ -29,9 +29,14 @@ namespace Remembrance.ViewModel.Card
             : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
         {
             if (settingsRepository == null)
+            {
                 throw new ArgumentNullException(nameof(settingsRepository));
+            }
+
             if (viewModelAdapter == null)
+            {
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            }
 
             Logger.Info($"Showing view-only card. Increasing repeat type for {TranslationInfo}...");
             TranslationInfo.TranslationEntry.IncreaseRepeatType();

@@ -1,3 +1,4 @@
+using System;
 using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
@@ -9,7 +10,7 @@ using Scar.Common.DAL.LiteDB;
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class WordImagesInfoRepository : LiteDbRepository<WordImagesInfo, int>, IWordImagesInfoRepository
+    internal sealed class WordImagesInfoRepository : LiteDbRepository<WordImageInfo, int>, IWordImagesInfoRepository
     {
         public WordImagesInfoRepository([NotNull] ILog logger)
             : base(logger)
@@ -21,19 +22,54 @@ namespace Remembrance.DAL
         }
 
         [NotNull]
-        protected override string DbName => nameof(WordImagesInfo);
+        protected override string DbName => nameof(WordImageInfo);
 
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
 
-        public WordImagesInfo GetImagesInfo(object translationEntryId, IWord word)
+        public WordImageInfo GetImageInfo(object translationEntryId, IWord word)
         {
-            return Collection.FindOne(x => x.TranslationEntryId == translationEntryId && x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech);
+            if (translationEntryId == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryId));
+            }
+
+            if (word == null)
+            {
+                throw new ArgumentNullException(nameof(word));
+            }
+
+            return Collection.FindOne(x => x.TranslationEntryId.Equals(translationEntryId) && x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech);
         }
 
         public bool CheckImagesInfoExists(object translationEntryId, IWord word)
         {
-            return Collection.Exists(x => x.TranslationEntryId == translationEntryId && x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech);
+            if (translationEntryId == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryId));
+            }
+
+            if (word == null)
+            {
+                throw new ArgumentNullException(nameof(word));
+            }
+
+            return Collection.Exists(x => x.TranslationEntryId.Equals(translationEntryId) && x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech);
+        }
+
+        public int DeleteImage(object translationEntryId, IWord word)
+        {
+            if (translationEntryId == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryId));
+            }
+
+            if (word == null)
+            {
+                throw new ArgumentNullException(nameof(word));
+            }
+
+            return Collection.Delete(x => x.TranslationEntryId.Equals(translationEntryId) && x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech);
         }
     }
 }

@@ -18,7 +18,9 @@ namespace Remembrance.ViewModel
         public ViewModelAdapter([NotNull] ILifetimeScope lifetimeScope)
         {
             if (lifetimeScope == null)
+            {
                 throw new ArgumentNullException(nameof(lifetimeScope));
+            }
 
             _config = new TypeAdapterConfig();
 
@@ -75,16 +77,24 @@ namespace Remembrance.ViewModel
                             partOfSpeechTranslationViewModel.Language = translationInfo.Key.SourceLanguage;
                             foreach (var translationVariantViewModel in partOfSpeechTranslationViewModel.TranslationVariants)
                             {
-                                SetPriorityWordProperties(translationVariantViewModel, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId);
+                                SetPriorityWordProperties(translationVariantViewModel, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId, partOfSpeechTranslationViewModel.Text);
                                 if (translationVariantViewModel.Synonyms != null)
+                                {
                                     foreach (var synonym in translationVariantViewModel.Synonyms)
-                                        SetPriorityWordProperties(synonym, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId);
+                                    {
+                                        SetPriorityWordProperties(synonym, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId, partOfSpeechTranslationViewModel.Text);
+                                    }
+                                }
 
                                 if (translationVariantViewModel.Meanings == null)
+                                {
                                     continue;
+                                }
 
                                 foreach (var meaning in translationVariantViewModel.Meanings)
+                                {
                                     meaning.Language = translationInfo.Key.SourceLanguage;
+                                }
                             }
                         }
                     })
@@ -94,7 +104,9 @@ namespace Remembrance.ViewModel
         public TDestination Adapt<TDestination>(object source)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException(nameof(source));
+            }
 
             return source.Adapt<TDestination>(_config);
         }
@@ -102,16 +114,21 @@ namespace Remembrance.ViewModel
         public TDestination Adapt<TSource, TDestination>(TSource source, TDestination destination)
         {
             if (Equals(source, default(TSource)))
+            {
                 throw new ArgumentNullException(nameof(source));
+            }
+
             if (Equals(destination, default(TDestination)))
+            {
                 throw new ArgumentNullException(nameof(destination));
+            }
 
             return source.Adapt(destination, _config);
         }
 
-        private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] string targetLanguage, [NotNull] object translationEntryId)
+        private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] string targetLanguage, [NotNull] object translationEntryId, [NotNull] string partOfSpeechTranslationText)
         {
-            priorityWordViewModel.SetProperties(translationEntryId, targetLanguage);
+            priorityWordViewModel.SetProperties(new PriorityWordViewModelMainProperties(translationEntryId, targetLanguage, partOfSpeechTranslationText));
         }
     }
 }

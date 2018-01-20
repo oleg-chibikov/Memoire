@@ -19,7 +19,7 @@
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=settings:EditManualTranslationsViewModel}">
     <UserControl.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
     <!--TODO Bindings-->
     <Grid

@@ -51,13 +51,24 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IWordsProcessor wordsProcessor)
         {
             if (translationInfo == null)
+            {
                 throw new ArgumentNullException(nameof(translationInfo));
+            }
+
             if (viewModelAdapter == null)
+            {
                 throw new ArgumentNullException(nameof(viewModelAdapter));
+            }
+
             if (prepositionsInfoRepository == null)
+            {
                 throw new ArgumentNullException(nameof(prepositionsInfoRepository));
+            }
+
             if (wordsProcessor == null)
+            {
                 throw new ArgumentNullException(nameof(wordsProcessor));
+            }
 
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
@@ -66,7 +77,7 @@ namespace Remembrance.ViewModel.Card
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            wordsProcessor.ReloadAdditionalInfoAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
+            wordsProcessor.LoadAdditionalInfoIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
@@ -98,7 +109,9 @@ namespace Remembrance.ViewModel.Card
         {
             //TODO not called when it is not the DataContext of the window!
             foreach (var subscriptionToken in _subscriptionTokens)
+            {
                 _messenger.UnSubscribe(subscriptionToken);
+            }
         }
 
         private void OnPrepositionsInfoReceived([NotNull] PrepositionsInfo prepositionsInfo)
@@ -116,13 +129,19 @@ namespace Remembrance.ViewModel.Card
             foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (_wordsEqualityComparer.Equals(translationVariant, word))
+                {
                     return translationVariant;
+                }
 
                 if (translationVariant.Synonyms == null)
+                {
                     continue;
+                }
 
                 foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, word)))
+                {
                     return synonym;
+                }
             }
 
             return null;
@@ -131,10 +150,14 @@ namespace Remembrance.ViewModel.Card
         private void OnPriorityChanged([NotNull] PriorityWordViewModel priorityWordViewModel)
         {
             if (priorityWordViewModel == null)
+            {
                 throw new ArgumentNullException(nameof(priorityWordViewModel));
+            }
 
             if (!priorityWordViewModel.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
+            {
                 return;
+            }
 
             _logger.TraceFormat("Priority changed for {0}. Updating the word in translation details...", priorityWordViewModel);
             var translation = GetWordInTranslationDetails(priorityWordViewModel);
@@ -153,7 +176,9 @@ namespace Remembrance.ViewModel.Card
         {
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
             if (cultureInfo == null)
+            {
                 throw new ArgumentNullException(nameof(cultureInfo));
+            }
 
             CultureUtilities.ChangeCulture(cultureInfo);
 
@@ -164,11 +189,20 @@ namespace Remembrance.ViewModel.Card
                 {
                     translationVariant.ReRender();
                     if (translationVariant.Synonyms != null)
+                    {
                         foreach (var synonym in translationVariant.Synonyms)
+                        {
                             synonym.ReRender();
+                        }
+                    }
+
                     if (translationVariant.Meanings != null)
+                    {
                         foreach (var meaning in translationVariant.Meanings)
+                        {
                             meaning.ReRender();
+                        }
+                    }
                 }
             }
         }

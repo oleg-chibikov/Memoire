@@ -8,8 +8,8 @@
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
-    xmlns:converters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
-    xmlns:converters1="clr-namespace:Remembrance.View.Converters">
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:converters="clr-namespace:Remembrance.View.Converters">
 
     <system:Double
         x:Key="CommonMargin">
@@ -128,21 +128,40 @@
             Value="./#Web Serveroff" />
     </Style>
 
-    <converters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
-    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    <converters:ReverseBoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter" />
-    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
-    <converters:AddValueConverter x:Key="AddValueConverter" />
-    <converters:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter" />
-    <converters:PercentageIntToDoubleConverter x:Key="PercentageIntToDoubleConverter" />
-    <converters:DoubleToTextTimeSpanConverter x:Key="DoubleToTextTimeSpanConverter" />
-    <converters1:RepeatTypeConverter x:Key="RepeatTypeConverter" />
-    <converters1:DateTimeToBrushConverter x:Key="DateTimeToBrushConverter" />
-    <converters1:WordConcatConverter x:Key="WordConcatConverter" />
-    <converters1:PartOfSpeechToVisibilityConverter x:Key="PartOfSpeechToVisibilityConverter" />
-    <converters1:PriorityWordViewModelToVisibilityConverter x:Key="PriorityWordViewModelToVisibilityConverter" />
-    <converters1:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
-    <converters1:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
-    <converters1:MessageTypeToBrushConverter x:Key="MessageTypeToBrushConverter" />
+    <commonConverters:NotNullToVisibilityConverter
+        x:Key="NotNullToVisibilityConverter" />
+    <commonConverters:NullToVisibilityConverter
+        x:Key="NullToVisibilityConverter" />
+    <commonConverters:BoolToVisibilityConverter
+        x:Key="BoolToVisibilityConverter" />
+    <commonConverters:NullToBooleanConverter
+        x:Key="NullToBooleanConverter" />
+    <commonConverters:ReverseBoolToVisibilityConverter
+        x:Key="ReverseBoolToVisibilityConverter" />
+    <commonConverters:StringToVisibilityConverter
+        x:Key="StringToVisibilityConverter" />
+    <commonConverters:AddValueConverter
+        x:Key="AddValueConverter" />
+    <commonConverters:ArrayToVisibilityConverter
+        x:Key="ArrayToVisibilityConverter" />
+    <commonConverters:PercentageIntToDoubleConverter
+        x:Key="PercentageIntToDoubleConverter" />
+    <commonConverters:DoubleToTextTimeSpanConverter
+        x:Key="DoubleToTextTimeSpanConverter" />
+    <converters:RepeatTypeConverter
+        x:Key="RepeatTypeConverter" />
+    <converters:DateTimeToBrushConverter
+        x:Key="DateTimeToBrushConverter" />
+    <converters:WordConcatConverter
+        x:Key="WordConcatConverter" />
+    <converters:PartOfSpeechToVisibilityConverter
+        x:Key="PartOfSpeechToVisibilityConverter" />
+    <converters:PriorityWordViewModelToVisibilityConverter
+        x:Key="PriorityWordViewModelToVisibilityConverter" />
+    <converters:PriorityWordViewModelToBooleanConverter
+        x:Key="PriorityWordViewModelToBooleanConverter" />
+    <converters:PartOfSpeechLocalizedConverter
+        x:Key="PartOfSpeechLocalizedConverter" />
+    <converters:MessageTypeToBrushConverter
+        x:Key="MessageTypeToBrushConverter" />
 </ResourceDictionary>

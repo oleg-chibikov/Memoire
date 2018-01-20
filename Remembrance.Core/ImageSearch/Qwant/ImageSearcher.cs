@@ -50,14 +50,17 @@ namespace Remembrance.Core.ImageSearch.Qwant
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ImageInfo[]> SearchImagesAsync(string text, string language, CancellationToken cancellationToken, int skip, int count)
+        public async Task<ImageInfo[]> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            }
 
-            var uriPart = $"images?count={count}&offset={skip}&q={text}&lang={language}_{language}";
+            language = language != null
+                ? $"&lang={language}_{language}"
+                : null;
+            var uriPart = $"images?count={count}&offset={skip}&q={text}{language}";
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try
             {
@@ -66,7 +69,9 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 if (!response.IsSuccessStatusCode)
                 {
                     if ((int)response.StatusCode == 429)
+                    {
                         if (!_captchaPassing)
+                        {
                             lock (_locker)
                             {
                                 if (!_captchaPassing)
@@ -75,15 +80,19 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                     _captchaPassing = true;
                                 }
                             }
+                        }
+                    }
 
                     throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
                 }
 
                 if (_captchaPassing)
+                {
                     lock (_locker)
                     {
                         _captchaPassing = false;
                     }
+                }
 
                 var result = await response.Content.ReadAsStringAsync()
                     .ConfigureAwait(false);

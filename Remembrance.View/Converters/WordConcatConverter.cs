@@ -13,7 +13,9 @@ namespace Remembrance.View.Converters
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is IWithText[] words))
+            {
                 return null;
+            }
 
             var texts = words.Select(x => x.Text)
                 .ToArray();

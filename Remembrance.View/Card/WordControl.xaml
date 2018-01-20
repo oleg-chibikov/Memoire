@@ -22,11 +22,11 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <view1:DesignTimeResourceDictionary>
+                <view:DesignTimeResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-                </view1:DesignTimeResourceDictionary>
+                </view:DesignTimeResourceDictionary>
                 <ResourceDictionary>
                     <Style
                         TargetType="TextBlock"

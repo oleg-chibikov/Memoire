@@ -376,11 +376,20 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Getting possible words....
+        ///   Looks up a localized string similar to Loading....
         /// </summary>
         public static string Loading {
             get {
                 return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading failed.
+        /// </summary>
+        public static string LoadingFailed {
+            get {
+                return ResourceManager.GetString("LoadingFailed", resourceCulture);
             }
         }
         
@@ -498,6 +507,24 @@ namespace Remembrance.Resources {
         public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next image.
+        /// </summary>
+        public static string SetNextImage {
+            get {
+                return ResourceManager.GetString("SetNextImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous image.
+        /// </summary>
+        public static string SetPreviousImage {
+            get {
+                return ResourceManager.GetString("SetPreviousImage", resourceCulture);
             }
         }
         

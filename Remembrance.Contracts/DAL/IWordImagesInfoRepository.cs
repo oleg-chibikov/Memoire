@@ -4,11 +4,13 @@ using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL
 {
-    public interface IWordImagesInfoRepository : IRepository<WordImagesInfo, int>
+    public interface IWordImagesInfoRepository : IRepository<WordImageInfo, int>
     {
         [CanBeNull]
-        WordImagesInfo GetImagesInfo([NotNull] object translationEntryId, [NotNull] IWord word);
+        WordImageInfo GetImageInfo([NotNull] object translationEntryId, [NotNull] IWord word);
 
         bool CheckImagesInfoExists([NotNull] object translationEntryId, [NotNull] IWord word);
+
+        int DeleteImage([NotNull] object translationEntryId, [NotNull] IWord word);
     }
 }

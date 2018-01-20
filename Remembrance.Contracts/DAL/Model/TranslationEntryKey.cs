@@ -29,9 +29,14 @@ namespace Remembrance.Contracts.DAL.Model
         public bool Equals(TranslationEntryKey other)
         {
             if (other == null)
+            {
                 return false;
+            }
+
             if (ReferenceEquals(this, other))
+            {
                 return true;
+            }
 
             return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }

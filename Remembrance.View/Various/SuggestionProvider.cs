@@ -23,7 +23,9 @@ namespace Remembrance.View.Various
         public async Task<IEnumerable<object>> GetItemsAsync([NotNull] string textPattern, CancellationToken cancellationToken)
         {
             if (textPattern == null)
+            {
                 throw new ArgumentNullException(nameof(textPattern));
+            }
 
             var variants = await _predictor.PredictAsync(textPattern, 5, cancellationToken)
                 .ConfigureAwait(false);

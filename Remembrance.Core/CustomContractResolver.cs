@@ -18,7 +18,10 @@ namespace Remembrance.Core
 
             // this will only be called once and then cached
             if (PropertyConverters != null && PropertyConverters.TryGetValue(objectType, out var jsonConverter))
+            {
                 contract.Converter = jsonConverter;
+            }
+
             return contract;
         }
 

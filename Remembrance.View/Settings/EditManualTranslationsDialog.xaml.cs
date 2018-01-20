@@ -17,7 +17,9 @@ namespace Remembrance.View.Settings
         {
             //TODO: View library
             if (e.NewFocus != null && (!e.NewFocus.Focusable || !e.NewFocus.IsEnabled))
+            {
                 e.Handled = true;
+            }
         }
 
         private void DataCell_OnLostFocus(object sender, RoutedEventArgs e)

@@ -48,7 +48,10 @@ namespace Remembrance.Core.CardManagement
                     window.Draggable = false;
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
                     if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
+                    {
                         window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
+                    }
+
                     Logger.Info($"Showing {translationInfo}...");
                     window.ShowActivated = false;
                     window.Topmost = true;

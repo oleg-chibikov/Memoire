@@ -72,7 +72,9 @@ namespace Remembrance.Core.Exchange
         public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken cancellationToken)
         {
             if (fileName == null)
+            {
                 throw new ArgumentNullException(nameof(fileName));
+            }
 
             T[] deserialized;
 
@@ -118,7 +120,10 @@ namespace Remembrance.Core.Exchange
                                     TranslationEntry translationEntry = null;
                                     TranslationInfo translationInfo = null;
                                     if (existingTranslationEntries.ContainsKey(key))
+                                    {
                                         translationEntry = existingTranslationEntries[key];
+                                    }
+
                                     if (translationEntry == null)
                                     {
                                         //TODO: Check manual tran changed. If so then set Changed=true;
@@ -158,9 +163,12 @@ namespace Remembrance.Core.Exchange
                             .ConfigureAwait(false);
 
                         if (blockResult.Any())
+                        {
                             _messenger.Publish(
                                 blockResult.Where(x => x != null)
                                     .ToArray());
+                        }
+
                         return true;
                     })
                 .ConfigureAwait(false);
@@ -212,7 +220,10 @@ namespace Remembrance.Core.Exchange
         {
             var learningInfoChanged = SetLearningInfo(exchangeEntry, translationEntry);
             if (learningInfoChanged)
+            {
                 _translationEntryRepository.Save(translationEntry);
+            }
+
             return learningInfoChanged;
         }
 
@@ -236,9 +247,14 @@ namespace Remembrance.Core.Exchange
             foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Id, translationInfo.TranslationEntry.Key.TargetLanguage))
+                {
                     result++;
+                }
+
                 if (translationVariant.Synonyms == null)
+                {
                     continue;
+                }
 
                 result += translationVariant.Synonyms.Count(synonym => MarkPriority(priorityTranslations, synonym, translationInfo.TranslationEntry.Id, translationInfo.TranslationEntry.Key.TargetLanguage));
             }
@@ -249,11 +265,13 @@ namespace Remembrance.Core.Exchange
         private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] object translationEntryId, string targetLanguage)
         {
             if (!priorityTranslations.Contains(word, _wordsEqualityComparer) || _wordPriorityRepository.IsPriority(word, translationEntryId))
+            {
                 return false;
+            }
 
             _wordPriorityRepository.MarkPriority(word, translationEntryId);
             var priorityWordViewModel = _viewModelAdapter.Adapt<PriorityWordViewModel>(word);
-            priorityWordViewModel.SetProperties(translationEntryId, targetLanguage, true);
+            priorityWordViewModel.SetIsPriority(true);
             _messenger.Publish(priorityWordViewModel);
             return true;
         }
@@ -271,26 +289,41 @@ namespace Remembrance.Core.Exchange
         public static async Task RunByBlocksAsync<T>([NotNull] this IEnumerable<T> items, int maxBlockSize, [NotNull] Func<T[], int, int, Task<bool>> action)
         {
             if (items == null)
+            {
                 throw new ArgumentNullException(nameof(items));
+            }
+
             if (action == null)
+            {
                 throw new ArgumentNullException(nameof(action));
+            }
 
             var objArray = items as T[] ?? items.ToArray();
             if (objArray.Length == 0)
+            {
                 return;
+            }
 
             if (maxBlockSize <= 0)
+            {
                 maxBlockSize = 100;
+            }
+
             var num = objArray.Length / maxBlockSize;
             if (objArray.Length % maxBlockSize > 0)
+            {
                 ++num;
+            }
+
             for (var index = 0; index < num; ++index)
             {
                 var array = objArray.Skip(index * maxBlockSize)
                     .Take(maxBlockSize)
                     .ToArray();
                 if (array.Length == 0 || !await action(array, index, num))
+                {
                     break;
+                }
             }
         }
     }

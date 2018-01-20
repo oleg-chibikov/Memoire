@@ -38,13 +38,17 @@ namespace Remembrance.Core.Translation.Yandex
         public async Task<DetectionResult> DetectLanguageAsync(string text, CancellationToken cancellationToken)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
 
             var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture() .TwoLetterISOLanguageName}&options=1";
             var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                 .ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
+            {
                 return new DetectionResult();
+            }
 
             var result = await response.Content.ReadAsStringAsync()
                 .ConfigureAwait(false);
@@ -54,7 +58,9 @@ namespace Remembrance.Core.Translation.Yandex
         public async Task<ListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
         {
             if (ui == null)
+            {
                 throw new ArgumentNullException(nameof(ui));
+            }
 
             return await _cacheTasks.GetOrAdd(
                     ui,
@@ -64,7 +70,9 @@ namespace Remembrance.Core.Translation.Yandex
                         var response = await _httpClient.GetAsync(uriPart, cancellationToken)
                             .ConfigureAwait(false);
                         if (!response.IsSuccessStatusCode)
+                        {
                             return new ListResult();
+                        }
 
                         var result = await response.Content.ReadAsStringAsync()
                             .ConfigureAwait(false);

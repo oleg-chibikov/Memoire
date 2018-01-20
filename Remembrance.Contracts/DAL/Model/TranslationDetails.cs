@@ -24,8 +24,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public TranslationResult TranslationResult { get; set; }
 
-        public bool ImagesUrlsAreLoaded { get; set; }
-
         public override string ToString()
         {
             return $"Translation details for {TranslationEntryId}";

@@ -71,7 +71,9 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ILifetimeScope lifetimeScope)
         {
             if (settingsRepository == null)
+            {
                 throw new ArgumentNullException(nameof(settingsRepository));
+            }
 
             ViewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
@@ -126,7 +128,9 @@ namespace Remembrance.ViewModel.Card
         public void Dispose()
         {
             foreach (var subscriptionToken in _subscriptionTokens)
+            {
                 Messenger.UnSubscribe(subscriptionToken);
+            }
         }
 
         public event EventHandler RequestClose;
@@ -144,7 +148,9 @@ namespace Remembrance.ViewModel.Card
                 var lst = acceptedWordGroup.Value.ToList();
                 lst.RemoveAll(x => !x.IsPriority);
                 if (lst.Any())
+                {
                     tmp.Add(new KeyValuePair<PartOfSpeechTranslationViewModel, PriorityWordViewModel[]>(acceptedWordGroup.Key, lst.ToArray()));
+                }
             }
 
             if (tmp.Any())
@@ -192,7 +198,9 @@ namespace Remembrance.ViewModel.Card
                     partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(traslationVariant => GetPossibleTranslations(traslationVariant, partOfSpeechTranslation)))
                 .ToArray();
             if (!acceptedWordGroups.Any())
+            {
                 throw new LocalizableException(Errors.NoTranslations);
+            }
 
             Logger.TraceFormat("There are {0} accepted words groups", acceptedWordGroups.Length);
             FilterAcceptedWordsGroupsByPriority(ref acceptedWordGroups);
@@ -307,7 +315,10 @@ namespace Remembrance.ViewModel.Card
         {
             var isReverse = false;
             if (settings.ReverseTranslation)
+            {
                 isReverse = Random.Next(2) == 1;
+            }
+
             return isReverse;
         }
 
@@ -316,7 +327,9 @@ namespace Remembrance.ViewModel.Card
             //TODO: Change all logs to Format
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
             if (cultureInfo == null)
+            {
                 throw new ArgumentNullException(nameof(cultureInfo));
+            }
 
             CultureUtilities.ChangeCulture(cultureInfo);
             Word.ReRender();
@@ -335,7 +348,9 @@ namespace Remembrance.ViewModel.Card
                 ? GetRandomPartOfSpeechGroup(partOfSpeechGroups)
                 : partOfSpeechGroups.First();
             if (partOfSpeechGroup == null)
+            {
                 throw new LocalizableException(Errors.NoTranslations);
+            }
 
             return partOfSpeechGroup;
         }

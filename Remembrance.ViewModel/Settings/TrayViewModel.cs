@@ -125,7 +125,9 @@ namespace Remembrance.ViewModel.Settings
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (!_isToolTipOpened)
+            {
                 return;
+            }
 
             const string format = @"hh\:mm\:ss";
             CardShowTimeInfo = string.Format(

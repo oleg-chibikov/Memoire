@@ -75,12 +75,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="Texts.Designer.cs">
-      <DependentUpon>Texts.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Texts.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -103,8 +103,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Texts.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Texts.ru-RU.resx">
       <SubType>Designer</SubType>

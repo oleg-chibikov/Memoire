@@ -64,7 +64,9 @@ namespace Remembrance.Contracts.DAL.Model
         {
             var prev = _current.Previous;
             if (prev == null)
+            {
                 return;
+            }
 
             RepeatType = prev.Value;
             _current = prev;
@@ -74,7 +76,9 @@ namespace Remembrance.Contracts.DAL.Model
         {
             var next = _current.Next;
             if (next == null)
+            {
                 return;
+            }
 
             RepeatType = next.Value;
             _current = next;
