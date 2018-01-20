@@ -26,6 +26,12 @@ namespace Remembrance.ViewModel.Card
         private readonly ICancellationTokenSourceProvider _cancellationTokenSourceProvider;
 
         [NotNull]
+        private readonly IImageDownloader _imageDownloader;
+
+        [NotNull]
+        private readonly IImageSearcher _imageSearcher;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
@@ -39,12 +45,6 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         private object _translationEntryId;
-
-        [NotNull]
-        private readonly IImageDownloader _imageDownloader;
-
-        [NotNull]
-        private readonly IImageSearcher _imageSearcher;
 
         public WordImageViewerViewModel(
             [NotNull] ILog logger,
@@ -119,7 +119,7 @@ namespace Remembrance.ViewModel.Card
             IsLoading = true;
             Image = null;
             WordImageInfo wordImageInfo = null;
-
+            _logger.TraceFormat("Setting new image for the word {0} and translationEntry {1} at search index {2}...", _word, _translationEntryId, SearchIndex);
             _wordImagesInfoRepository.DeleteImage(_translationEntryId, _word);
             await _cancellationTokenSourceProvider.ExecuteAsyncOperation(
                     async cancellationToken =>
@@ -143,18 +143,20 @@ namespace Remembrance.ViewModel.Card
                         }
                     })
                 .ConfigureAwait(false);
+            if (wordImageInfo == null)
+            {
+                _logger.WarnFormat("Image for the word {0} and translationEntry {1} at search index {2} was not set", _word, _translationEntryId, SearchIndex);
+                return;
+            }
+
             _wordImagesInfoRepository.Save(wordImageInfo);
+            _logger.InfoFormat("Image for the word {0} and translationEntry {1} at search index {2} was saved", _word, _translationEntryId, SearchIndex);
             await UpdateImageViewAsync(wordImageInfo)
                 .ConfigureAwait(false);
         }
 
-        private async Task UpdateImageViewAsync([CanBeNull] WordImageInfo wordImageInfo)
+        private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo)
         {
-            if (wordImageInfo == null)
-            {
-                return;
-            }
-
             IsLoading = false;
             SearchIndex = wordImageInfo.SearchIndex;
             var imageBytes = wordImageInfo.Image?.ThumbnailBitmap;

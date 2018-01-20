@@ -46,12 +46,6 @@ namespace Remembrance.Core.CardManagement
         private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly IPredictor _predictor;
-
-        [NotNull]
-        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
-
-        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
@@ -83,12 +77,8 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IPredictor predictor,
-            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
         {
-            _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
-            _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
@@ -253,45 +243,6 @@ namespace Remembrance.Core.CardManagement
 
             _translationDetailsRepository.Save(translationDetails);
             return new TranslationInfo(translationEntry, translationDetails);
-        }
-
-        public async Task LoadAdditionalInfoIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
-        {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            if (translationDetails == null)
-            {
-                throw new ArgumentNullException(nameof(translationDetails));
-            }
-
-            if (_prepositionsInfoRepository.CheckPrepositionsInfoExists(translationDetails.TranslationEntryId))
-            {
-                return;
-            }
-
-            _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
-            var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
-                .ConfigureAwait(false);
-            var prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
-            _prepositionsInfoRepository.Save(prepositionsInfo);
-            _messenger.Publish(prepositionsInfo);
-        }
-
-        [ItemNotNull]
-        private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
-        {
-            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken)
-                .ConfigureAwait(false);
-            var prepositionsCollection = new PrepositionsCollection
-            {
-                Texts = predictionResult.Position > 0
-                    ? predictionResult.PredictionVariants
-                    : null
-            };
-            return prepositionsCollection;
         }
 
         [NotNull]

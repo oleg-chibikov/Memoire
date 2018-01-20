@@ -267,6 +267,9 @@
   <data name="OpenDetails" xml:space="preserve">
     <value>Show translation details</value>
   </data>
+  <data name="BrowserWasOpened" xml:space="preserve">
+    <value>The browser was opened at qwant.com. Please confirm that you are not a robot.</value>
+  </data>
   <data name="Details" xml:space="preserve">
     <value>Translation details</value>
   </data>

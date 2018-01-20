@@ -272,7 +272,9 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Expert:
                 {
                     var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
+                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
+                        new TypedParameter(typeof(Window), ownerWindow));
                     break;
                 }
                 default:

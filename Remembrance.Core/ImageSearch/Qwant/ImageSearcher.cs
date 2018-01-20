@@ -11,6 +11,7 @@ using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Core.ImageSearch.Qwant.ContractResolvers;
 using Remembrance.Core.ImageSearch.Qwant.Data;
+using Remembrance.Resources;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
@@ -76,7 +77,9 @@ namespace Remembrance.Core.ImageSearch.Qwant
                             {
                                 if (!_captchaPassing)
                                 {
+                                    _logger.InfoFormat("Opening browser at Qwant.com to solve the captcha...");
                                     Process.Start($"https://www.qwant.com/?q={text}&t=images");
+                                    _messenger.Publish(Texts.BrowserWasOpened.ToWarning());
                                     _captchaPassing = true;
                                 }
                             }

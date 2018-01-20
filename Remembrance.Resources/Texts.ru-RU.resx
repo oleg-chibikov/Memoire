@@ -264,6 +264,9 @@
   <data name="OpenDetails" xml:space="preserve">
     <value>Подробности перевода</value>
   </data>
+  <data name="BrowserWasOpened" xml:space="preserve">
+    <value>Браузер был открыт по адресу qwant.com. Пожалуйста, подтвердите, что вы не робот.</value>
+  </data>
   <data name="Details" xml:space="preserve">
     <value>Подробности перевода</value>
   </data>

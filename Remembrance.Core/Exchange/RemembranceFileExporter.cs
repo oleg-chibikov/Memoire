@@ -42,13 +42,6 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         private readonly IWordsProcessor _wordsProcessor;
 
-        public event EventHandler<ProgressEventArgs> Progress;
-
-        private void OnProgress(int current, int total)
-        {
-            Progress?.Invoke(this, new ProgressEventArgs(current, total));
-        }
-
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
@@ -63,6 +56,8 @@ namespace Remembrance.Core.Exchange
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        public event EventHandler<ProgressEventArgs> Progress;
 
         public async Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {
@@ -130,6 +125,11 @@ namespace Remembrance.Core.Exchange
             }
 
             return new ExchangeResult(false, null, 0);
+        }
+
+        private void OnProgress(int current, int total)
+        {
+            Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
     }
 }

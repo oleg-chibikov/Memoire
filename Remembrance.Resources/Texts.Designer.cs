@@ -106,6 +106,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The browser was opened at qwant.com. Please confirm that you are not a robot..
+        /// </summary>
+        public static string BrowserWasOpened {
+            get {
+                return ResourceManager.GetString("BrowserWasOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {

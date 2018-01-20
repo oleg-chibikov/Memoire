@@ -36,8 +36,6 @@ namespace Remembrance.Contracts.CardManagement
         [ItemNotNull]
         Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] object id, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
 
-        Task LoadAdditionalInfoIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken);
-
         //TODO: remove notnull on tasks everywhere (leave only itemnotnull)
     }
 }

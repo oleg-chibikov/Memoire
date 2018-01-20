@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Translate;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
@@ -27,6 +28,12 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         private readonly IMessageHub _messenger;
+
+        [NotNull]
+        private readonly IPredictor _predictor;
+
+        [NotNull]
+        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
         [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
@@ -48,7 +55,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IMessageHub messenger,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] IWordsProcessor wordsProcessor)
+            [NotNull] IPredictor predictor)
         {
             if (translationInfo == null)
             {
@@ -60,34 +67,23 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(viewModelAdapter));
             }
 
-            if (prepositionsInfoRepository == null)
-            {
-                throw new ArgumentNullException(nameof(prepositionsInfoRepository));
-            }
-
-            if (wordsProcessor == null)
-            {
-                throw new ArgumentNullException(nameof(wordsProcessor));
-            }
-
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
+            _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
 
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            wordsProcessor.LoadAdditionalInfoIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
             Word = translationInfo.Key.Text;
-            PrepositionsCollection = prepositionsInfoRepository.GetPrepositionsInfo(translationInfo.TranslationEntry.Id)
-                ?.Prepositions;
+            LoadAdditionalInfoIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
             _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
-            _subscriptionTokens.Add(messenger.Subscribe<PrepositionsInfo>(OnPrepositionsInfoReceived));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
@@ -107,20 +103,39 @@ namespace Remembrance.ViewModel.Card
 
         public void Dispose()
         {
-            //TODO not called when it is not the DataContext of the window!
             foreach (var subscriptionToken in _subscriptionTokens)
             {
                 _messenger.UnSubscribe(subscriptionToken);
             }
         }
 
-        private void OnPrepositionsInfoReceived([NotNull] PrepositionsInfo prepositionsInfo)
+        [ItemNotNull]
+        private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
         {
-            if (Equals(prepositionsInfo.TranslationEntryId, _translationEntry.Id))
+            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken)
+                .ConfigureAwait(false);
+            var prepositionsCollection = new PrepositionsCollection
             {
-                _logger.InfoFormat("Received prepositions for {0}", this);
-                PrepositionsCollection = prepositionsInfo.Prepositions;
+                Texts = predictionResult.Position > 0
+                    ? predictionResult.PredictionVariants
+                    : null
+            };
+            return prepositionsCollection;
+        }
+
+        private async Task LoadAdditionalInfoIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        {
+            var prepositionsInfo = _prepositionsInfoRepository.GetPrepositionsInfo(translationDetails.TranslationEntryId);
+            if (prepositionsInfo == null)
+            {
+                _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
+                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
+                    .ConfigureAwait(false);
+                prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
+                _prepositionsInfoRepository.Save(prepositionsInfo);
             }
+
+            PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
         [CanBeNull]

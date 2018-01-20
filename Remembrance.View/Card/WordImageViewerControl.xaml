@@ -38,7 +38,7 @@
                     <DataTemplate
                         x:Key="FailedLoadingTemplate">
                         <TextBlock
-                            Text="{lex:Loc LoadingFailed}"></TextBlock>
+                            Text="{lex:Loc LoadingFailed}" />
                     </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -78,7 +78,7 @@
                     </Style.Triggers>
                     <Setter
                         Property="ContentTemplate"
-                        Value="{StaticResource ImageTemplate}"></Setter>
+                        Value="{StaticResource ImageTemplate}" />
                 </Style>
             </ContentControl.Style>
         </ContentControl>

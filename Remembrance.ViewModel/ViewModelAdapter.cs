@@ -15,6 +15,7 @@ namespace Remembrance.ViewModel
     public sealed class ViewModelAdapter : IViewModelAdapter
     {
         private readonly TypeAdapterConfig _config;
+
         public ViewModelAdapter([NotNull] ILifetimeScope lifetimeScope)
         {
             if (lifetimeScope == null)
@@ -126,7 +127,11 @@ namespace Remembrance.ViewModel
             return source.Adapt(destination, _config);
         }
 
-        private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] string targetLanguage, [NotNull] object translationEntryId, [NotNull] string partOfSpeechTranslationText)
+        private static void SetPriorityWordProperties(
+            [NotNull] PriorityWordViewModel priorityWordViewModel,
+            [NotNull] string targetLanguage,
+            [NotNull] object translationEntryId,
+            [NotNull] string partOfSpeechTranslationText)
         {
             priorityWordViewModel.SetProperties(new PriorityWordViewModelMainProperties(translationEntryId, targetLanguage, partOfSpeechTranslationText));
         }

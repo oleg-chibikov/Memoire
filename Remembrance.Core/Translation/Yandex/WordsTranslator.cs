@@ -32,7 +32,7 @@ namespace Remembrance.Core.Translation.Yandex
         {
             if (from == null)
             {
-                throw new ArgumentNullException(nameof(@from));
+                throw new ArgumentNullException(nameof(from));
             }
 
             if (to == null)
