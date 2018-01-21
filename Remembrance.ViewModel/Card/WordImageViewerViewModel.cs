@@ -145,6 +145,7 @@ namespace Remembrance.ViewModel.Card
                 .ConfigureAwait(false);
             if (wordImageInfo == null)
             {
+                IsLoading = false;
                 _logger.WarnFormat("Image for the word {0} and translationEntry {1} at search index {2} was not set", _word, _translationEntryId, SearchIndex);
                 return;
             }
