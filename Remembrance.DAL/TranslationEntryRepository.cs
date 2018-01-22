@@ -13,6 +13,7 @@ namespace Remembrance.DAL
     {
         public TranslationEntryRepository()
         {
+            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Key, true);
             Collection.EnsureIndex(x => x.NextCardShowTime);
         }

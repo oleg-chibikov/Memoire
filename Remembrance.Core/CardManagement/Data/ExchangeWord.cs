@@ -10,12 +10,7 @@ namespace Remembrance.Core.CardManagement.Data
     {
         public ExchangeWord([NotNull] IWord word)
         {
-            if (word == null)
-            {
-                throw new ArgumentNullException(nameof(word));
-            }
-
-            Text = word.Text;
+            Text = word?.Text ?? throw new ArgumentNullException(nameof(word));
             PartOfSpeech = word.PartOfSpeech;
         }
 

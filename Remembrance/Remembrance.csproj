@@ -91,8 +91,8 @@
     <Reference Include="Scar.Common.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.1\lib\net47\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.9\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.10\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.IO, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.IO.1.0.24\lib\net47\Scar.Common.IO.dll</HintPath>

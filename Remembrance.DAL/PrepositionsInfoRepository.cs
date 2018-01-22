@@ -7,11 +7,11 @@ using Scar.Common.DAL.LiteDB;
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, int>, IPrepositionsInfoRepository
+    internal sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo>, IPrepositionsInfoRepository
     {
         public PrepositionsInfoRepository()
         {
-            Collection.EnsureIndex(x => x.TranslationEntryId);
+            Collection.EnsureIndex(x => x.Id, true);
         }
 
         [NotNull]
@@ -19,15 +19,5 @@ namespace Remembrance.DAL
 
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
-
-        public PrepositionsInfo GetPrepositionsInfo(object translationEntryId)
-        {
-            return Collection.FindOne(x => x.TranslationEntryId.Equals(translationEntryId));
-        }
-
-        public bool CheckPrepositionsInfoExists(object translationEntryId)
-        {
-            return Collection.Exists(x => x.TranslationEntryId.Equals(translationEntryId));
-        }
     }
 }

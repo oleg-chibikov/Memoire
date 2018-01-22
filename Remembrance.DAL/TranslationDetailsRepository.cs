@@ -1,6 +1,4 @@
-using System;
 using JetBrains.Annotations;
-using LiteDB;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
@@ -9,11 +7,11 @@ using Scar.Common.DAL.LiteDB;
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, int>, ITranslationDetailsRepository
+    internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails>, ITranslationDetailsRepository
     {
         public TranslationDetailsRepository()
         {
-            Collection.EnsureIndex(x => x.TranslationEntryId, true);
+            Collection.EnsureIndex(x => x.Id, true);
         }
 
         [NotNull]
@@ -24,25 +22,5 @@ namespace Remembrance.DAL
         /// </remarks>
         [NotNull]
         protected override string DbPath => Paths.SettingsPath;
-
-        public TranslationDetails TryGetByTranslationEntryId(object translationEntryId)
-        {
-            if (translationEntryId == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryId));
-            }
-
-            return Collection.FindOne(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
-        }
-
-        public void DeleteByTranslationEntryId(object translationEntryId)
-        {
-            if (translationEntryId == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryId));
-            }
-
-            Collection.Delete(Query.EQ(nameof(TranslationDetails.TranslationEntryId), new BsonValue(translationEntryId)));
-        }
     }
 }

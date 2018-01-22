@@ -69,7 +69,7 @@ namespace Remembrance.ViewModel
                 .ConstructUsing(translationInfo => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationResult, translationInfo => translationInfo.TranslationDetails.TranslationResult)
                 .Map(translationDetailsViewModel => translationDetailsViewModel.Id, translationInfo => translationInfo.TranslationDetails.Id)
-                .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationEntryId, translationInfo => translationInfo.TranslationDetails.TranslationEntryId)
+                .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationEntryId, translationInfo => translationInfo.TranslationDetails.Id)
                 .AfterMapping(
                     (translationInfo, translationDetailsViewModel) =>
                     {

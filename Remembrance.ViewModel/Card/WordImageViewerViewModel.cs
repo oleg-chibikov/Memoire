@@ -44,7 +44,7 @@ namespace Remembrance.ViewModel.Card
         private string _parentText;
 
         [NotNull]
-        private object _translationEntryId;
+        private WordKey _wordKey;
 
         public WordImageViewerViewModel(
             [NotNull] ILog logger,
@@ -98,10 +98,10 @@ namespace Remembrance.ViewModel.Card
 
         private async void Word_TranslationEntryIdSet(object sender, [NotNull] EventArgs<PriorityWordViewModelMainProperties> e)
         {
-            _translationEntryId = e.Parameter.TranslationEntryId;
+            _wordKey = new WordKey(e.Parameter.TranslationEntryId,_word);
             _parentText = e.Parameter.PartOfSpeechTranslationText;
 
-            var wordImageInfo = _wordImagesInfoRepository.GetImageInfo(_translationEntryId, _word);
+            var wordImageInfo = _wordImagesInfoRepository.TryGetById(_wordKey);
             if (wordImageInfo != null)
             {
                 await UpdateImageViewAsync(wordImageInfo)
@@ -119,8 +119,8 @@ namespace Remembrance.ViewModel.Card
             IsLoading = true;
             Image = null;
             WordImageInfo wordImageInfo = null;
-            _logger.TraceFormat("Setting new image for the word {0} and translationEntry {1} at search index {2}...", _word, _translationEntryId, SearchIndex);
-            _wordImagesInfoRepository.DeleteImage(_translationEntryId, _word);
+            _logger.TraceFormat("Setting new image for {0} at search index {1}...", _wordKey, SearchIndex);
+            _wordImagesInfoRepository.Delete(_wordKey);
             await _cancellationTokenSourceProvider.ExecuteAsyncOperation(
                     async cancellationToken =>
                     {
@@ -139,19 +139,19 @@ namespace Remembrance.ViewModel.Card
                             var imageInfoWithBitmaps = await Task.WhenAll(imageDownloadTasks)
                                 .ConfigureAwait(false);
 
-                            wordImageInfo = new WordImageInfo(_translationEntryId, SearchIndex, _word, imageInfoWithBitmaps.SingleOrDefault());
+                            wordImageInfo = new WordImageInfo(_wordKey, SearchIndex, imageInfoWithBitmaps.SingleOrDefault());
                         }
                     })
                 .ConfigureAwait(false);
             if (wordImageInfo == null)
             {
                 IsLoading = false;
-                _logger.WarnFormat("Image for the word {0} and translationEntry {1} at search index {2} was not set", _word, _translationEntryId, SearchIndex);
+                _logger.WarnFormat("Image for {0} at search index {1} was not set", _wordKey, SearchIndex);
                 return;
             }
 
-            _wordImagesInfoRepository.Insert(wordImageInfo);
-            _logger.InfoFormat("Image for the word {0} and translationEntry {1} at search index {2} was saved", _word, _translationEntryId, SearchIndex);
+            _wordImagesInfoRepository.Upsert(wordImageInfo);
+            _logger.InfoFormat("Image for {0} at search index {1} was saved", _wordKey, SearchIndex);
             await UpdateImageViewAsync(wordImageInfo)
                 .ConfigureAwait(false);
         }

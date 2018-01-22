@@ -125,13 +125,13 @@ namespace Remembrance.ViewModel.Card
 
         private async Task LoadPrepositionsIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
-            var prepositionsInfo = _prepositionsInfoRepository.GetPrepositionsInfo(translationDetails.TranslationEntryId);
+            var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
             if (prepositionsInfo == null)
             {
-                _logger.Info($"Reloading preposition for {translationDetails.TranslationEntryId}...");
+                _logger.Info($"Reloading preposition for {translationDetails.Id}...");
                 var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
                     .ConfigureAwait(false);
-                prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
+                prepositionsInfo = new PrepositionsInfo(translationDetails.Id, prepositions);
                 _prepositionsInfoRepository.Insert(prepositionsInfo);
             }
 

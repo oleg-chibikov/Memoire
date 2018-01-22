@@ -84,6 +84,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                 }
                             }
                         }
+                        return null;
                     }
 
                     throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");

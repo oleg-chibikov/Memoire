@@ -565,7 +565,7 @@ namespace Remembrance.ViewModel.Settings
                     foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
                     {
                         Interlocked.Decrement(ref _count);
-                        _translationDetailsRepository.DeleteByTranslationEntryId(translationEntryViewModel.Id);
+                        _translationDetailsRepository.Delete(translationEntryViewModel.Id);
                         _translationEntryRepository.Delete(translationEntryViewModel.Id);
                         _wordPriorityRepository.ClearForTranslationEntry(translationEntryViewModel.Id);
                     }

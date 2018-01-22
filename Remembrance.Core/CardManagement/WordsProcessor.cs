@@ -101,7 +101,7 @@ namespace Remembrance.Core.CardManagement
             CancellationToken cancellationToken,
             Action<TranslationDetails> processNonReloaded)
         {
-            var translationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(id);
+            var translationDetails = _translationDetailsRepository.TryGetById(id);
             if (translationDetails != null)
             {
                 processNonReloaded?.Invoke(translationDetails);
@@ -170,7 +170,7 @@ namespace Remembrance.Core.CardManagement
 
             id = _translationEntryRepository.Insert(translationEntry);
 
-            var existingTranslationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(id);
+            var existingTranslationDetails = _translationDetailsRepository.TryGetById(id);
 
             var translationDetails = new TranslationDetails(translationResult, id);
             if (existingTranslationDetails != null)

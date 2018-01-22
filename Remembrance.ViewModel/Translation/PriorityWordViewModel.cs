@@ -10,7 +10,7 @@ using Scar.Common.Events;
 
 namespace Remembrance.ViewModel.Translation
 {
-    public class PriorityWordViewModelMainProperties
+    public sealed class PriorityWordViewModelMainProperties
     {
         public PriorityWordViewModelMainProperties([NotNull] object translationEntryId, [NotNull] string partOfSpeechTranslationText, [NotNull] string language)
         {
@@ -63,13 +63,8 @@ namespace Remembrance.ViewModel.Translation
 
         public void SetProperties([NotNull] PriorityWordViewModelMainProperties priorityWordViewModelMainProperties)
         {
-            if (priorityWordViewModelMainProperties == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordViewModelMainProperties));
-            }
-
             //This function should be considered as a part of constructor. It cannot be a part of it because of using Mapster
-            Language = priorityWordViewModelMainProperties.Language;
+            Language = priorityWordViewModelMainProperties?.Language ?? throw new ArgumentNullException(nameof(priorityWordViewModelMainProperties));
             TranslationEntryId = priorityWordViewModelMainProperties.TranslationEntryId;
             TranslationEntryIdSet?.Invoke(this, new EventArgs<PriorityWordViewModelMainProperties>(priorityWordViewModelMainProperties));
         }

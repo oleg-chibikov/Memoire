@@ -5,7 +5,7 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationDetails : Entity<int>
+    public sealed class TranslationDetails : Entity
     {
         [UsedImplicitly]
         public TranslationDetails()
@@ -14,19 +14,16 @@ namespace Remembrance.Contracts.DAL.Model
 
         public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
         {
-            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
+            Id = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
-
-        [NotNull]
-        public object TranslationEntryId { get; set; }
 
         [NotNull]
         public TranslationResult TranslationResult { get; set; }
 
         public override string ToString()
         {
-            return $"Translation details for {TranslationEntryId}";
+            return $"Translation details for {Id}";
         }
     }
 }
