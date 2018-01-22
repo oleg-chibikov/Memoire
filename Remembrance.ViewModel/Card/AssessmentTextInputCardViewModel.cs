@@ -113,7 +113,7 @@ namespace Remembrance.ViewModel.Card
                 closeTimeout = FailureCloseTimeout;
             }
 
-            _translationEntryRepository.Save(TranslationInfo.TranslationEntry);
+            _translationEntryRepository.Update(TranslationInfo.TranslationEntry);
             Messenger.Publish(TranslationInfo);
             return closeTimeout;
         }

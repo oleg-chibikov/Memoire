@@ -1,5 +1,4 @@
 using System;
-using Common.Logging;
 using JetBrains.Annotations;
 using LiteDB;
 using Remembrance.Contracts.DAL;
@@ -12,10 +11,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, int>, ITranslationDetailsRepository
     {
-        public TranslationDetailsRepository([NotNull] ILog logger)
-            : base(logger)
+        public TranslationDetailsRepository()
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.TranslationEntryId, true);
         }
 

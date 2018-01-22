@@ -223,7 +223,7 @@ namespace Remembrance.ViewModel.Settings
             Logger.Trace($"{text} {translationEntryViewModel}...");
             translationEntryViewModel.IsFavorited = !translationEntryViewModel.IsFavorited;
             var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(translationEntryViewModel);
-            _translationEntryRepository.Save(translationEntry);
+            _translationEntryRepository.Update(translationEntry);
         }
 
         private async void LoadTranslationsAsync()

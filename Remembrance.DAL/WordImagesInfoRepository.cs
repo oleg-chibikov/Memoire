@@ -1,5 +1,4 @@
 using System;
-using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL;
@@ -12,10 +11,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class WordImagesInfoRepository : LiteDbRepository<WordImageInfo, int>, IWordImagesInfoRepository
     {
-        public WordImagesInfoRepository([NotNull] ILog logger)
-            : base(logger)
+        public WordImagesInfoRepository()
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Text);
             Collection.EnsureIndex(x => x.PartOfSpeech);
             Collection.EnsureIndex(x => x.TranslationEntryId);

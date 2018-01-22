@@ -40,7 +40,7 @@ namespace Remembrance.ViewModel.Card
 
             Logger.Info($"Showing view-only card. Increasing repeat type for {TranslationInfo}...");
             TranslationInfo.TranslationEntry.IncreaseRepeatType();
-            translationEntryRepository.Save(TranslationInfo.TranslationEntry);
+            translationEntryRepository.Update(TranslationInfo.TranslationEntry);
             Messenger.Publish(TranslationInfo);
         }
     }

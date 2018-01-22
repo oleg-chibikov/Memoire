@@ -80,7 +80,7 @@ namespace Remembrance.ViewModel.Card
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
             Word = translationInfo.Key.Text;
-            LoadAdditionalInfoIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
+            LoadPrepositionsIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
             _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
@@ -123,7 +123,7 @@ namespace Remembrance.ViewModel.Card
             return prepositionsCollection;
         }
 
-        private async Task LoadAdditionalInfoIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        private async Task LoadPrepositionsIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
             var prepositionsInfo = _prepositionsInfoRepository.GetPrepositionsInfo(translationDetails.TranslationEntryId);
             if (prepositionsInfo == null)
@@ -132,7 +132,7 @@ namespace Remembrance.ViewModel.Card
                 var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
                     .ConfigureAwait(false);
                 prepositionsInfo = new PrepositionsInfo(translationDetails.TranslationEntryId, prepositions);
-                _prepositionsInfoRepository.Save(prepositionsInfo);
+                _prepositionsInfoRepository.Insert(prepositionsInfo);
             }
 
             PrepositionsCollection = prepositionsInfo.Prepositions;
@@ -229,7 +229,7 @@ namespace Remembrance.ViewModel.Card
                 : "Favoriting";
             _logger.TraceFormat("{0} {1}...", text, TranslationDetails);
             _translationEntry.IsFavorited = IsFavorited = !IsFavorited;
-            _translationEntryRepository.Save(_translationEntry);
+            _translationEntryRepository.Update(_translationEntry);
         }
     }
 }

@@ -221,7 +221,7 @@ namespace Remembrance.Core.Exchange
             var learningInfoChanged = SetLearningInfo(exchangeEntry, translationEntry);
             if (learningInfoChanged)
             {
-                _translationEntryRepository.Save(translationEntry);
+                _translationEntryRepository.Update(translationEntry);
             }
 
             return learningInfoChanged;

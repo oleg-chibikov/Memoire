@@ -132,7 +132,7 @@ namespace Remembrance.ViewModel.Card
                                 async image => new ImageInfoWithBitmap
                                 {
                                     ImageBitmap = null, //images[i++],
-                                    ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(image.ThumbnailUrl)
+                                    ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(image.ThumbnailUrl, cancellationToken)
                                         .ConfigureAwait(false),
                                     ImageInfo = image
                                 });
@@ -150,7 +150,7 @@ namespace Remembrance.ViewModel.Card
                 return;
             }
 
-            _wordImagesInfoRepository.Save(wordImageInfo);
+            _wordImagesInfoRepository.Insert(wordImageInfo);
             _logger.InfoFormat("Image for the word {0} and translationEntry {1} at search index {2} was saved", _word, _translationEntryId, SearchIndex);
             await UpdateImageViewAsync(wordImageInfo)
                 .ConfigureAwait(false);
@@ -158,7 +158,6 @@ namespace Remembrance.ViewModel.Card
 
         private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo)
         {
-            IsLoading = false;
             SearchIndex = wordImageInfo.SearchIndex;
             var imageBytes = wordImageInfo.Image?.ThumbnailBitmap;
             if (imageBytes == null || imageBytes.Length == 0)
@@ -171,6 +170,7 @@ namespace Remembrance.ViewModel.Card
             ImageName = wordImageInfo.Image.ImageInfo.Name;
             ImageUrl = wordImageInfo.Image.ImageInfo.Url;
             Image = LoadImage(imageBytes);
+            IsLoading = false;
         }
 
         [CanBeNull]

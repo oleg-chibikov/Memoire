@@ -1,4 +1,3 @@
-using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -10,10 +9,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, int>, IPrepositionsInfoRepository
     {
-        public PrepositionsInfoRepository([NotNull] ILog logger)
-            : base(logger)
+        public PrepositionsInfoRepository()
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.TranslationEntryId);
         }
 

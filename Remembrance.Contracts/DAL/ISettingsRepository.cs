@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.DAL;
 
@@ -8,5 +8,7 @@ namespace Remembrance.Contracts.DAL
     {
         [NotNull]
         Settings Get();
+
+        void UpdateOrInsert([NotNull] Settings settings);
     }
 }

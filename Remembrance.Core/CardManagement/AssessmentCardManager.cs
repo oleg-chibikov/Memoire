@@ -146,12 +146,12 @@ namespace Remembrance.Core.CardManagement
                             if (!settings.IsActive)
                             {
                                 Logger.Trace("Skipped showing card due to inactivity");
-                                SettingsRepository.Save(settings);
+                                SettingsRepository.UpdateOrInsert(settings);
                                 return;
                             }
 
                             settings.LastCardShowTime = LastCardShowTime = DateTime.Now;
-                            SettingsRepository.Save(settings);
+                            SettingsRepository.UpdateOrInsert(settings);
                             var translationEntry = _translationEntryRepository.GetCurrent();
                             if (translationEntry == null)
                             {
@@ -228,7 +228,7 @@ namespace Remembrance.Core.CardManagement
             var settings = SettingsRepository.Get();
             settings.PausedTime = _pausedTime += DateTime.Now - LastPausedTime;
             Logger.Trace($"Paused time is {PausedTime}...");
-            SettingsRepository.Save(settings);
+            SettingsRepository.UpdateOrInsert(settings);
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
@@ -242,7 +242,7 @@ namespace Remembrance.Core.CardManagement
             Logger.Trace($"Creating window for {translationInfo}...");
             translationInfo.TranslationEntry.ShowCount++; // single place to update show count - no need to synchronize
             translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
-            _translationEntryRepository.Save(translationInfo.TranslationEntry);
+            _translationEntryRepository.Update(translationInfo.TranslationEntry);
             _messenger.Publish(translationInfo);
             IWindow window;
 

@@ -184,7 +184,7 @@ namespace Remembrance.ViewModel.Settings
             IsActive = !IsActive;
             var settings = _settingsRepository.Get();
             settings.IsActive = IsActive;
-            _settingsRepository.Save(settings);
+            _settingsRepository.UpdateOrInsert(settings);
             _logger.Info($"New state is {IsActive}");
             if (IsActive)
             {

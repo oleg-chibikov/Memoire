@@ -113,7 +113,7 @@ namespace Remembrance.Core.CardManagement
 
             // There are no translation details for this word
             translationDetails = new TranslationDetails(translationResult, id);
-            _translationDetailsRepository.Save(translationDetails);
+            _translationDetailsRepository.Insert(translationDetails);
             return translationDetails;
         }
 
@@ -168,7 +168,7 @@ namespace Remembrance.Core.CardManagement
                 ManualTranslations = manualTranslations
             };
 
-            id = _translationEntryRepository.Save(translationEntry);
+            id = _translationEntryRepository.Insert(translationEntry);
 
             var existingTranslationDetails = _translationDetailsRepository.TryGetByTranslationEntryId(id);
 
@@ -178,7 +178,7 @@ namespace Remembrance.Core.CardManagement
                 translationDetails.Id = existingTranslationDetails.Id;
             }
 
-            _translationDetailsRepository.Save(translationDetails);
+            _translationDetailsRepository.Insert(translationDetails);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
 
             _logger.Trace($"Translation for {key} has been successfully added");
@@ -221,7 +221,7 @@ namespace Remembrance.Core.CardManagement
         {
             var translationEntry = _translationEntryRepository.GetById(id);
             translationEntry.ManualTranslations = manualTranslations;
-            _translationEntryRepository.Save(translationEntry);
+            _translationEntryRepository.Update(translationEntry);
             var key = translationEntry.Key;
             var translationDetails = await ReloadTranslationDetailsIfNeededAsync(
                     id,
@@ -240,8 +240,6 @@ namespace Remembrance.Core.CardManagement
                     })
                 .ConfigureAwait(false);
             DeleteFromPriority(id, manualTranslations, translationDetails);
-
-            _translationDetailsRepository.Save(translationDetails);
             return new TranslationInfo(translationEntry, translationDetails);
         }
 

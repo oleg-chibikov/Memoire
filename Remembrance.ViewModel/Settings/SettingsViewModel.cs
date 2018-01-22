@@ -224,7 +224,7 @@ namespace Remembrance.ViewModel.Settings
             settings.ReverseTranslation = ReverseTranslation;
             settings.RandomTranslation = RandomTranslation;
             settings.UiLanguage = UiLanguage.Code;
-            _settingsRepository.Save(settings);
+            _settingsRepository.UpdateOrInsert(settings);
             if (prevFreq != freq)
             {
                 _messenger.Publish(settings.CardShowFrequency);

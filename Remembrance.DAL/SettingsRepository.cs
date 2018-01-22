@@ -1,4 +1,4 @@
-using Common.Logging;
+using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
@@ -10,12 +10,6 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class SettingsRepository : LiteDbRepository<Settings, int>, ISettingsRepository
     {
-        public SettingsRepository([NotNull] ILog logger)
-            : base(logger)
-        {
-            Collection.EnsureIndex(x => x.Id, true);
-        }
-
         [NotNull]
         protected override string DbName => nameof(Settings);
 
@@ -25,6 +19,19 @@ namespace Remembrance.DAL
         public Settings Get()
         {
             return Collection.FindById(1) ?? new Settings();
+        }
+
+        public void UpdateOrInsert(Settings settings)
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            if (!Update(settings))
+            {
+                Insert(settings);
+            }
         }
     }
 }

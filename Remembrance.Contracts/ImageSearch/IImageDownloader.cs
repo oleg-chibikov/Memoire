@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
@@ -7,6 +8,6 @@ namespace Remembrance.Contracts.ImageSearch
     {
         [NotNull]
         [ItemCanBeNull]
-        Task<byte[]> DownloadImageAsync([NotNull] string imageUrl);
+        Task<byte[]> DownloadImageAsync([NotNull] string imageUrl, CancellationToken cancellationToken);
     }
 }

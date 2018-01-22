@@ -1,5 +1,4 @@
 using System.Linq;
-using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL;
@@ -12,10 +11,8 @@ namespace Remembrance.DAL
     [UsedImplicitly]
     internal sealed class WordPriorityRepository : LiteDbRepository<WordPriority>, IWordPriorityRepository
     {
-        public WordPriorityRepository([NotNull] ILog logger)
-            : base(logger)
+        public WordPriorityRepository()
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Text);
             Collection.EnsureIndex(x => x.PartOfSpeech);
             Collection.EnsureIndex(x => x.TranslationEntryId);
@@ -41,7 +38,7 @@ namespace Remembrance.DAL
 
         public void MarkPriority(IWord word, object translationEntryId)
         {
-            Save(new WordPriority(word.Text, word.PartOfSpeech, translationEntryId));
+            Insert(new WordPriority(word.Text, word.PartOfSpeech, translationEntryId));
         }
 
         public void MarkNonPriority(IWord word, object translationEntryId)

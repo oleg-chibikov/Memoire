@@ -131,7 +131,7 @@ namespace Remembrance.ViewModel.Settings
                 _selectedTargetLanguage = value;
                 var settings = _settingsRepository.Get();
                 settings.LastUsedTargetLanguage = value.Code;
-                _settingsRepository.Save(settings);
+                _settingsRepository.UpdateOrInsert(settings);
             }
         }
 
@@ -145,7 +145,7 @@ namespace Remembrance.ViewModel.Settings
                 _selectedSourceLanguage = value;
                 var settings = _settingsRepository.Get();
                 settings.LastUsedSourceLanguage = value.Code;
-                _settingsRepository.Save(settings);
+                _settingsRepository.UpdateOrInsert(settings);
             }
         }
 
