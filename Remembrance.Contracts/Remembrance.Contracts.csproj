@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="CardManagement\Data\ExchangeResult.cs" />
     <Compile Include="CardManagement\Data\IntervalModificator.cs" />
+    <Compile Include="CardManagement\Data\PriorityWordKey.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
     <Compile Include="CardManagement\ICardsExchanger.cs" />
     <Compile Include="CardManagement\IFileExporter.cs" />

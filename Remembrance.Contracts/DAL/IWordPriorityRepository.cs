@@ -1,18 +1,14 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
+using Remembrance.Contracts.DAL.Model;
+using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL
 {
-    public interface IWordPriorityRepository
+    public interface IWordPriorityRepository : IRepository<WordPriority, WordKey>
     {
-        void ClearForTranslationEntry([NotNull] object translationEntryId);
-
         [NotNull]
         IWord[] GetPriorityWordsForTranslationEntry([NotNull] object translationEntryId);
 
-        bool IsPriority([NotNull] IWord word, [NotNull] object translationEntryId);
-
-        void MarkNonPriority([NotNull] IWord word, [NotNull] object translationEntryId);
-
-        void MarkPriority([NotNull] IWord word, [NotNull] object translationEntryId);
+        void ClearForTranslationEntry([NotNull] object translationEntryId);
     }
 }

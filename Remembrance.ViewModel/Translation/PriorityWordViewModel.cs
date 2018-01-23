@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
 using Scar.Common.Events;
 
@@ -81,11 +82,11 @@ namespace Remembrance.ViewModel.Translation
 
             if (isPriority)
             {
-                _wordPriorityRepository.MarkNonPriority(this, TranslationEntryId);
+                _wordPriorityRepository.Delete(new WordKey(TranslationEntryId, this));
             }
             else
             {
-                _wordPriorityRepository.MarkPriority(this, TranslationEntryId);
+                _wordPriorityRepository.Insert(new WordPriority(new WordKey(TranslationEntryId, this)));
             }
 
             IsPriority = !isPriority;

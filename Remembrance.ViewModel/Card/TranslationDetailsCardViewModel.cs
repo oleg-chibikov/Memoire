@@ -10,6 +10,7 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
@@ -83,7 +84,7 @@ namespace Remembrance.ViewModel.Card
             LoadPrepositionsIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
-            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChanged));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
@@ -162,24 +163,24 @@ namespace Remembrance.ViewModel.Card
             return null;
         }
 
-        private void OnPriorityChanged([NotNull] PriorityWordViewModel priorityWordViewModel)
+        private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
         {
-            if (priorityWordViewModel == null)
+            if (priorityWordKey == null)
             {
-                throw new ArgumentNullException(nameof(priorityWordViewModel));
+                throw new ArgumentNullException(nameof(priorityWordKey));
             }
-
-            if (!priorityWordViewModel.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
+            var wordKey = priorityWordKey.WordKey;
+            if (!wordKey.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
             {
                 return;
             }
 
-            _logger.TraceFormat("Priority changed for {0}. Updating the word in translation details...", priorityWordViewModel);
-            var translation = GetWordInTranslationDetails(priorityWordViewModel);
+            _logger.TraceFormat("Priority changed for {0}. Updating the word in translation details...", priorityWordKey);
+            var translation = GetWordInTranslationDetails(wordKey);
             if (translation != null)
             {
                 _logger.TraceFormat("Priority for {0} is updated", translation);
-                translation.IsPriority = priorityWordViewModel.IsPriority;
+                translation.IsPriority = priorityWordKey.IsPriority;
             }
             else
             {

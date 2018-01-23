@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
+using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Resources;
 using Scar.Common.Events;
-using Scar.Common.IO;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
@@ -17,8 +17,6 @@ namespace Remembrance.Core.Exchange
     [UsedImplicitly]
     internal sealed class CardsExchanger : ICardsExchanger, IDisposable
     {
-        private const string JsonFilesFilter = "Json files (*.json)|*.json;";
-
         [NotNull]
         private readonly IFileExporter _exporter;
 
@@ -32,21 +30,21 @@ namespace Remembrance.Core.Exchange
         private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly IOpenFileService _openFileService;
+        private readonly OpenFileDialog _openFileDialog;
 
         [NotNull]
-        private readonly ISaveFileService _saveFileService;
+        private readonly SaveFileDialog _saveFileDialog;
 
         public CardsExchanger(
-            [NotNull] IOpenFileService openFileService,
-            [NotNull] ISaveFileService saveFileService,
             [NotNull] ILog logger,
             [NotNull] IFileExporter exporter,
             [NotNull] IFileImporter[] importers,
-            [NotNull] IMessageHub messenger)
+            [NotNull] IMessageHub messenger,
+            [NotNull] OpenFileDialog openFileDialog,
+            [NotNull] SaveFileDialog saveFileDialog)
         {
-            _openFileService = openFileService ?? throw new ArgumentNullException(nameof(openFileService));
-            _saveFileService = saveFileService ?? throw new ArgumentNullException(nameof(saveFileService));
+            _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
+            _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _exporter = exporter ?? throw new ArgumentNullException(nameof(exporter));
             _importers = importers ?? throw new ArgumentNullException(nameof(importers));
@@ -63,12 +61,13 @@ namespace Remembrance.Core.Exchange
 
         public async Task ExportAsync(CancellationToken cancellationToken)
         {
-            if (!_saveFileService.SaveFileDialog($"{Texts.Title}: {Texts.Export}", JsonFilesFilter))
+            var fileName = ShowSaveFileDialog();
+            if (fileName == null)
             {
                 return;
             }
 
-            _logger.Info($"Performing export to {_saveFileService.FileName}...");
+            _logger.Info($"Performing export to {fileName}...");
             ExchangeResult exchangeResult = null;
             OnProgress(0, 1);
             try
@@ -76,7 +75,7 @@ namespace Remembrance.Core.Exchange
                 await Task.Run(
                         async () =>
                         {
-                            exchangeResult = await _exporter.ExportAsync(_saveFileService.FileName, cancellationToken)
+                            exchangeResult = await _exporter.ExportAsync(fileName, cancellationToken)
                                 .ConfigureAwait(false);
                         },
                         cancellationToken)
@@ -89,20 +88,21 @@ namespace Remembrance.Core.Exchange
 
             if (exchangeResult.Success)
             {
-                _logger.Info($"Export to {_saveFileService.FileName} has been performed");
+                _logger.Info($"Export to {fileName} has been performed");
                 _messenger.Publish(Texts.ExportSucceeded.ToMessage());
-                Process.Start(_saveFileService.FileName);
+                Process.Start(fileName);
             }
             else
             {
-                _logger.Warn($"Export to {_saveFileService.FileName} failed");
+                _logger.Warn($"Export to {fileName} failed");
                 _messenger.Publish(Texts.ExportFailed.ToError());
             }
         }
 
         public async Task ImportAsync(CancellationToken cancellationToken)
         {
-            if (!_openFileService.OpenFileDialog($"{Texts.Title}: {Texts.Import}", JsonFilesFilter))
+            var fileName = ShowOpenFileDialog();
+            if (fileName == null)
             {
                 return;
             }
@@ -115,13 +115,13 @@ namespace Remembrance.Core.Exchange
                         {
                             foreach (var importer in _importers)
                             {
-                                _logger.Info($"Performing import from {_openFileService.FileName} with {importer.GetType() .Name}...");
-                                var exchangeResult = await importer.ImportAsync(_openFileService.FileName, cancellationToken)
+                                _logger.Info($"Performing import from {fileName} with {importer.GetType() .Name}...");
+                                var exchangeResult = await importer.ImportAsync(fileName, cancellationToken)
                                     .ConfigureAwait(false);
 
                                 if (exchangeResult.Success)
                                 {
-                                    _logger.Info($"ImportAsync from {_openFileService.FileName} has been performed");
+                                    _logger.Info($"ImportAsync from {fileName} has been performed");
                                     var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
                                     _messenger.Publish(
                                         exchangeResult.Errors != null
@@ -130,7 +130,7 @@ namespace Remembrance.Core.Exchange
                                     return;
                                 }
 
-                                _logger.Warn($"ImportAsync from {_openFileService.FileName} failed");
+                                _logger.Warn($"ImportAsync from {fileName} failed");
                             }
 
                             _messenger.Publish(Texts.ImportFailed.ToError());
@@ -152,6 +152,23 @@ namespace Remembrance.Core.Exchange
             }
 
             _exporter.Progress -= ImporterExporter_Progress;
+        }
+
+        [CanBeNull]
+        private string ShowOpenFileDialog()
+        {
+            return _openFileDialog.ShowDialog() == true
+                ? _openFileDialog.FileName
+                : null;
+        }
+
+        [CanBeNull]
+        private string ShowSaveFileDialog()
+        {
+            _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
+            return _saveFileDialog.ShowDialog() == true
+                ? _openFileDialog.FileName
+                : null;
         }
 
         private void ImporterExporter_Progress(object sender, ProgressEventArgs e)

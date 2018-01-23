@@ -13,9 +13,7 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Core.CardManagement.Data;
-using Remembrance.ViewModel.Translation;
 using Scar.Common.Events;
 using Scar.Common.Exceptions;
 using Scar.Common.Messages;
@@ -38,9 +36,6 @@ namespace Remembrance.Core.Exchange
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
-
-        [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
 
         [NotNull]
@@ -55,10 +50,8 @@ namespace Remembrance.Core.Exchange
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter)
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
         {
-            _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -244,9 +237,10 @@ namespace Remembrance.Core.Exchange
         private int ImportPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] TranslationInfo translationInfo)
         {
             var result = 0;
-            foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+            foreach (var partOfSpeechTranslation in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations)
+            foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
             {
-                if (MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Id, translationInfo.TranslationEntry.Key.TargetLanguage))
+                if (MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Id))
                 {
                     result++;
                 }
@@ -256,23 +250,23 @@ namespace Remembrance.Core.Exchange
                     continue;
                 }
 
-                result += translationVariant.Synonyms.Count(synonym => MarkPriority(priorityTranslations, synonym, translationInfo.TranslationEntry.Id, translationInfo.TranslationEntry.Key.TargetLanguage));
+                result += translationVariant.Synonyms.Count(synonym => MarkPriority(priorityTranslations, synonym, translationInfo.TranslationEntry.Id));
             }
 
             return result;
         }
 
-        private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] Word word, [NotNull] object translationEntryId, string targetLanguage)
+        private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] IWord word, [NotNull] object translationEntryId)
         {
-            if (!priorityTranslations.Contains(word, _wordsEqualityComparer) || _wordPriorityRepository.IsPriority(word, translationEntryId))
+            var wordKey = new WordKey(translationEntryId, word);
+            if (!priorityTranslations.Contains(word, _wordsEqualityComparer) || _wordPriorityRepository.Check(wordKey))
             {
                 return false;
             }
 
-            _wordPriorityRepository.MarkPriority(word, translationEntryId);
-            var priorityWordViewModel = _viewModelAdapter.Adapt<PriorityWordViewModel>(word);
-            priorityWordViewModel.SetIsPriority(true);
-            _messenger.Publish(priorityWordViewModel);
+            _wordPriorityRepository.Insert(new WordPriority(wordKey));
+            var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntryId, word));
+            _messenger.Publish(priorityWordKey);
             return true;
         }
 

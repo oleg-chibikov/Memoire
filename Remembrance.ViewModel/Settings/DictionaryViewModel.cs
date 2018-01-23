@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
@@ -141,7 +142,7 @@ namespace Remembrance.ViewModel.Settings
             _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo>(OnTranslationInfoReceived));
             _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo[]>(OnTranslationInfosBatchReceived));
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
-            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordViewModel>(OnPriorityChangedAsync));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
 
             Logger.Trace("Receiving translations...");
 
@@ -272,15 +273,15 @@ namespace Remembrance.ViewModel.Settings
                 .ConfigureAwait(false);
         }
 
-        private async void OnPriorityChangedAsync([NotNull] PriorityWordViewModel priorityWordViewModel)
+        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
         {
-            Logger.Trace($"Changing priority for {priorityWordViewModel} in the list...");
-            if (priorityWordViewModel == null)
+            Logger.Trace($"Changing priority for {priorityWordKey} in the list...");
+            if (priorityWordKey == null)
             {
-                throw new ArgumentNullException(nameof(priorityWordViewModel));
+                throw new ArgumentNullException(nameof(priorityWordKey));
             }
-
-            var parentId = priorityWordViewModel.TranslationEntryId;
+            var wordKey = priorityWordKey.WordKey;
+            var parentId = wordKey.TranslationEntryId;
             TranslationEntryViewModel translationEntryViewModel;
             lock (_lockObject)
             {
@@ -289,17 +290,17 @@ namespace Remembrance.ViewModel.Settings
 
             if (translationEntryViewModel == null)
             {
-                Logger.Warn($"{priorityWordViewModel} is not found in the list");
+                Logger.Warn($"{priorityWordKey} is not found in the list");
                 return;
             }
 
-            if (priorityWordViewModel.IsPriority)
+            if (priorityWordKey.IsPriority)
             {
-                ProcessPriority(priorityWordViewModel, translationEntryViewModel);
+                ProcessPriority(wordKey, translationEntryViewModel);
             }
             else
             {
-                await ProcessNonPriorityAsync(priorityWordViewModel, translationEntryViewModel)
+                await ProcessNonPriorityAsync(wordKey, translationEntryViewModel)
                     .ConfigureAwait(false);
             }
         }
@@ -420,7 +421,7 @@ namespace Remembrance.ViewModel.Settings
             windowFactory.ShowWindow(dictionaryWindowParameter);
         }
 
-        private async Task ProcessNonPriorityAsync([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private async Task ProcessNonPriorityAsync([NotNull] WordKey wordKey, [NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             var translations = translationEntryViewModel.Translations;
             Logger.Trace("Removing non-priority word from the list...");
@@ -428,7 +429,7 @@ namespace Remembrance.ViewModel.Settings
             {
                 var translation = translations[i];
 
-                if (_wordsEqualityComparer.Equals(translation, priorityWordViewModel))
+                if (_wordsEqualityComparer.Equals(translation, wordKey))
                 {
                     Logger.Trace($"Removing {translation} from the list...");
                     translations.RemoveAt(i--);
@@ -443,7 +444,7 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        private void ProcessPriority([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private void ProcessPriority([NotNull] WordKey wordKey, [NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             var translations = translationEntryViewModel.Translations;
             Logger.Trace($"Removing all non-priority translations for {translationEntryViewModel} except the current...");
@@ -451,16 +452,16 @@ namespace Remembrance.ViewModel.Settings
             for (var i = 0; i < translations.Count; i++)
             {
                 var translation = translations[i];
-                if (_wordsEqualityComparer.Equals(translation, priorityWordViewModel))
+                if (_wordsEqualityComparer.Equals(translation, wordKey))
                 {
                     if (!translation.IsPriority)
                     {
-                        Logger.Debug($"Found {priorityWordViewModel} in the list. Marking as priority...");
+                        Logger.Debug($"Found {wordKey} in the list. Marking as priority...");
                         translation.IsPriority = true;
                     }
                     else
                     {
-                        Logger.Trace($"Found {priorityWordViewModel} in the list but it is already priority");
+                        Logger.Trace($"Found {wordKey} in the list but it is already priority");
                     }
 
                     found = true;
@@ -474,8 +475,8 @@ namespace Remembrance.ViewModel.Settings
 
             if (!found)
             {
-                Logger.Trace($"Not found {priorityWordViewModel} in the list. Adding...");
-                var copy = _viewModelAdapter.Adapt<PriorityWordViewModel>(priorityWordViewModel);
+                Logger.Trace($"Not found {wordKey} in the list. Adding...");
+                var copy = _viewModelAdapter.Adapt<PriorityWordViewModel>(wordKey);
                 translations.Add(copy);
             }
         }

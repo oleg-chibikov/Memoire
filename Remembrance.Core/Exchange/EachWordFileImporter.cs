@@ -37,9 +37,8 @@ namespace Remembrance.Core.Exchange
             [NotNull] IMessageHub messenger,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository, viewModelAdapter)
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }

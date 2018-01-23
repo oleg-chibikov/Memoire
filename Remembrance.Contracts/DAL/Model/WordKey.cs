@@ -4,7 +4,7 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordKey : IEquatable<WordKey>, IWord
+    public class WordKey : IEquatable<WordKey>, IWord
     {
         [UsedImplicitly]
         public WordKey()
@@ -18,12 +18,8 @@ namespace Remembrance.Contracts.DAL.Model
             PartOfSpeech = word.PartOfSpeech;
         }
 
-        public string Text { get; set; }
-
         [NotNull]
         public object TranslationEntryId { get; set; }
-
-        public PartOfSpeech PartOfSpeech { get; set; }
 
         public bool Equals(WordKey other)
         {
@@ -39,6 +35,10 @@ namespace Remembrance.Contracts.DAL.Model
 
             return Text == other.Text && PartOfSpeech == other.PartOfSpeech && TranslationEntryId == other.TranslationEntryId;
         }
+
+        public string Text { get; set; }
+
+        public PartOfSpeech PartOfSpeech { get; set; }
 
         public override bool Equals(object obj)
         {

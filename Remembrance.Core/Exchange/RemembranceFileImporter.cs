@@ -21,9 +21,8 @@ namespace Remembrance.Core.Exchange
             [NotNull] IWordsProcessor wordsProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository, viewModelAdapter)
+            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
         {
         }
 

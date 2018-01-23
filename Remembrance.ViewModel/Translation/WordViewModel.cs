@@ -63,17 +63,16 @@ namespace Remembrance.ViewModel.Translation
         public string NounGender { get; set; }
 
         [CanBeNull]
-        public string WordInfo =>
-            VerbType == null && NounAnimacy == null && NounGender == null
-                ? null
-                : string.Join(
-                    ", ",
-                    new[]
-                    {
-                        VerbType,
-                        NounAnimacy,
-                        NounGender
-                    }.Where(x => x != null));
+        public string WordInfo => VerbType == null && NounAnimacy == null && NounGender == null
+            ? null
+            : string.Join(
+                ", ",
+                new[]
+                {
+                    VerbType,
+                    NounAnimacy,
+                    NounGender
+                }.Where(x => x != null));
 
         public ICommand PlayTtsCommand { get; }
 

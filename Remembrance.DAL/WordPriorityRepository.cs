@@ -9,13 +9,14 @@ using Scar.Common.DAL.LiteDB;
 namespace Remembrance.DAL
 {
     [UsedImplicitly]
-    internal sealed class WordPriorityRepository : LiteDbRepository<WordPriority>, IWordPriorityRepository
+    internal sealed class WordPriorityRepository : LiteDbRepository<WordPriority, WordKey>, IWordPriorityRepository
     {
         public WordPriorityRepository()
         {
-            Collection.EnsureIndex(x => x.Text);
-            Collection.EnsureIndex(x => x.PartOfSpeech);
-            Collection.EnsureIndex(x => x.TranslationEntryId);
+            Collection.EnsureIndex(x => x.Id, true);
+            Collection.EnsureIndex(x => x.Id.Text);
+            Collection.EnsureIndex(x => x.Id.PartOfSpeech);
+            Collection.EnsureIndex(x => x.Id.TranslationEntryId);
         }
 
         [NotNull]
@@ -26,29 +27,15 @@ namespace Remembrance.DAL
 
         public IWord[] GetPriorityWordsForTranslationEntry(object translationEntryId)
         {
-            return Collection.Find(x => x.TranslationEntryId.Equals(translationEntryId))
+            return Collection.Find(x => x.Id.TranslationEntryId.Equals(translationEntryId))
+                .Select(x => x.Id)
                 .Cast<IWord>()
                 .ToArray();
         }
 
-        public bool IsPriority(IWord word, object translationEntryId)
-        {
-            return Collection.Exists(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId.Equals(translationEntryId));
-        }
-
-        public void MarkPriority(IWord word, object translationEntryId)
-        {
-            Insert(new WordPriority(word.Text, word.PartOfSpeech, translationEntryId));
-        }
-
-        public void MarkNonPriority(IWord word, object translationEntryId)
-        {
-            Collection.Delete(x => x.Text == word.Text && x.PartOfSpeech == word.PartOfSpeech && x.TranslationEntryId.Equals(translationEntryId));
-        }
-
         public void ClearForTranslationEntry(object translationEntryId)
         {
-            Collection.Delete(x => x.TranslationEntryId.Equals(translationEntryId));
+            Collection.Delete(x => x.Id.TranslationEntryId.Equals(translationEntryId));
         }
     }
 }

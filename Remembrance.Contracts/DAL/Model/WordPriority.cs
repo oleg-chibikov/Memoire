@@ -1,34 +1,24 @@
 using System;
 using JetBrains.Annotations;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordPriority : Entity, IWord
+    public sealed class WordPriority : Entity<WordKey>
     {
         [UsedImplicitly]
         public WordPriority()
         {
         }
 
-        public WordPriority([NotNull] string text, PartOfSpeech partOfSpeech, [NotNull] object translationEntryId)
+        public WordPriority([NotNull] WordKey wordKey)
         {
-            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-            PartOfSpeech = partOfSpeech;
+            Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
         }
-
-        [NotNull]
-        public object TranslationEntryId { get; set; }
-
-        public string Text { get; set; }
-
-        public PartOfSpeech PartOfSpeech { get; set; }
 
         public override string ToString()
         {
-            return $"Word priority for {TranslationEntryId} - {Text} ({PartOfSpeech})";
+            return $"Word priority for {Id})";
         }
     }
 }

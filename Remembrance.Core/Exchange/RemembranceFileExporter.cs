@@ -84,7 +84,7 @@ namespace Remembrance.Core.Exchange
                 var priorityWords = new HashSet<ExchangeWord>(_wordsEqualityComparer);
                 foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                 {
-                    if (_wordPriorityRepository.IsPriority(translationVariant, translationEntry.Id))
+                    if (_wordPriorityRepository.Check(new WordKey(translationEntry.Id, translationVariant)))
                     {
                         priorityWords.Add(new ExchangeWord(translationVariant));
                     }
@@ -94,7 +94,7 @@ namespace Remembrance.Core.Exchange
                         continue;
                     }
 
-                    foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordPriorityRepository.IsPriority(synonym, translationEntry.Id)))
+                    foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordPriorityRepository.Check(new WordKey(translationEntry.Id, synonym))))
                     {
                         priorityWords.Add(new ExchangeWord(synonym));
                     }

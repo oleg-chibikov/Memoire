@@ -18,9 +18,6 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        public string Text { get; set; }
-
-        [NotNull]
         public string SourceLanguage { get; set; }
 
         [NotNull]
@@ -40,6 +37,9 @@ namespace Remembrance.Contracts.DAL.Model
 
             return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
+
+        [NotNull]
+        public string Text { get; set; }
 
         public override bool Equals(object obj)
         {

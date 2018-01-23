@@ -298,7 +298,7 @@ namespace Remembrance.Core.CardManagement
 
             foreach (var word in deletedManualTranslations)
             {
-                _wordPriorityRepository.MarkNonPriority(word, id);
+                _wordPriorityRepository.Delete(new WordKey(id, word));
             }
         }
 

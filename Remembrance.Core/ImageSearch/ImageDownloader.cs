@@ -11,10 +11,10 @@ namespace Remembrance.Core.ImageSearch
 {
     internal class ImageDownloader : IImageDownloader
     {
+        private readonly HttpClient _httpClient = new HttpClient();
+
         [NotNull]
         private readonly ILog _logger;
-
-        private readonly HttpClient _httpClient = new HttpClient();
 
         public ImageDownloader([NotNull] ILog logger)
         {

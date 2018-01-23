@@ -1,6 +1,7 @@
 using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
+using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.View.Settings;
@@ -14,7 +15,6 @@ using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
 using Scar.Common.Async;
-using Scar.Common.IO;
 using Scar.Common.Messages;
 using Scar.Common.WPF.View;
 
@@ -22,6 +22,8 @@ namespace Remembrance
 {
     public sealed partial class App
     {
+        private const string JsonFilesFilter = "Json files (*.json)|*.json;";
+        private static readonly string DefaultFilePattern = $"{nameof(Remembrance)}.json";
         protected override string AppGuid { get; } = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
         protected override string AlreadyRunningMessage { get; } = Errors.AlreadyRunning;
 
@@ -55,15 +57,30 @@ namespace Remembrance
             builder.RegisterType<ApiHoster>()
                 .AsSelf()
                 .SingleInstance();
-            builder.RegisterType<OpenFileService>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
-            builder.RegisterType<SaveFileService>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
             //TODO: move autocomplete to library and nuget
             builder.RegisterType<SuggestionProvider>()
                 .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterInstance(
+                    new OpenFileDialog
+                    {
+                        CheckFileExists = true,
+                        FileName = DefaultFilePattern,
+                        Filter = JsonFilesFilter,
+                        RestoreDirectory = true,
+                        Title = $"{Texts.Title}: {Texts.Import}"
+                    })
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterInstance(
+                    new SaveFileDialog
+                    {
+                        FileName = DefaultFilePattern,
+                        Filter = JsonFilesFilter,
+                        RestoreDirectory = true,
+                        Title = $"{Texts.Title}: {Texts.Export}"
+                    })
+                .AsSelf()
                 .SingleInstance();
             //Including ViewModelAdapter
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)

@@ -58,9 +58,6 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.10\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.IO, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.IO.1.0.24\lib\net47\Scar.Common.IO.dll</HintPath>
-    </Reference>
     <Reference Include="Scar.Common.Notification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Notification.1.0.5\lib\net47\Scar.Common.Notification.dll</HintPath>
     </Reference>

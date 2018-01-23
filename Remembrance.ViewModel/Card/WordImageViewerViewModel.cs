@@ -80,7 +80,7 @@ namespace Remembrance.ViewModel.Card
         public bool IsLoading { get; private set; } = true;
 
         [NotNull]
-        private string SearchText => _word.Text;
+        private string SearchText => _word.Text + " " + _parentText;
 
         [CanBeNull]
         public BitmapSource Image { get; private set; }
@@ -98,7 +98,7 @@ namespace Remembrance.ViewModel.Card
 
         private async void Word_TranslationEntryIdSet(object sender, [NotNull] EventArgs<PriorityWordViewModelMainProperties> e)
         {
-            _wordKey = new WordKey(e.Parameter.TranslationEntryId,_word);
+            _wordKey = new WordKey(e.Parameter.TranslationEntryId, _word);
             _parentText = e.Parameter.PartOfSpeechTranslationText;
 
             var wordImageInfo = _wordImagesInfoRepository.TryGetById(_wordKey);
