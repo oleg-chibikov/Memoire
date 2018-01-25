@@ -3,10 +3,11 @@ using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
-using Remembrance.DAL;
+using Remembrance.DAL.Shared;
 using Remembrance.Resources;
 using Remembrance.View.Card;
 using Remembrance.View.Various;
@@ -46,8 +47,15 @@ namespace Remembrance
 
         protected override void RegisterDependencies(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(WindowFactory<>))
+            builder.RegisterGeneric(typeof(WindowFactory<>)).AsSelf()
                 .SingleInstance();
+
+            builder.RegisterType<INamedInstancesFactory>().AsImplementedInterfaces()
+                .SingleInstance();
+            RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
+            RegisterNamed<WordPriorityRepository, IWordPriorityRepository>(builder);
+            RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
+
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly)
                 .AsImplementedInterfaces()
                 .SingleInstance();
@@ -94,6 +102,15 @@ namespace Remembrance
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>()
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
+        }
+
+        private static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
+            where T : TInterface
+        {
+            builder.RegisterType<T>()
+                .Named<TInterface>(typeof(TInterface).FullName)
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
         }

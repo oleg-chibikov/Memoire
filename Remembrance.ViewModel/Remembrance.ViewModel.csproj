@@ -60,8 +60,8 @@
     <Reference Include="Scar.Common.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.1\lib\net47\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.10\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Notification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Notification.1.0.5\lib\net47\Scar.Common.Notification.dll</HintPath>

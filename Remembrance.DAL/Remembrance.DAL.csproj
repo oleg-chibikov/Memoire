@@ -35,6 +35,9 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -48,25 +51,32 @@
       <HintPath>..\packages\LiteDB.4.1.1\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Scar.Common.DAL, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.10\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.35\lib\net47\Scar.Common.DAL.LiteDB.dll</HintPath>
+    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.6599.39701, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.6599.39701\lib\net47\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="PrepositionsInfoRepository.cs" />
+    <Compile Include="Local\PrepositionsInfoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsRepository.cs" />
-    <Compile Include="TranslationDetailsRepository.cs" />
-    <Compile Include="TranslationEntryRepository.cs" />
-    <Compile Include="WordImagesInfoRepository.cs" />
-    <Compile Include="WordPriorityRepository.cs" />
+    <Compile Include="Shared\SettingsRepository.cs" />
+    <Compile Include="Local\TranslationDetailsRepository.cs" />
+    <Compile Include="Shared\TranslationEntryRepository.cs" />
+    <Compile Include="Local\WordImagesInfoRepository.cs" />
+    <Compile Include="Shared\WordPriorityRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">

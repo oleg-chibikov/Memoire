@@ -5,16 +5,15 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL
+namespace Remembrance.DAL.Shared
 {
     [UsedImplicitly]
-    internal sealed class SettingsRepository : LiteDbRepository<Settings, int>, ISettingsRepository
+    internal sealed class SettingsRepository : TrackedLiteDbRepository<Settings, int>, ISettingsRepository
     {
-        [NotNull]
-        protected override string DbName => nameof(Settings);
-
-        [NotNull]
-        protected override string DbPath => Paths.SharedDataPath;
+        public SettingsRepository([CanBeNull] string directoryPath, [CanBeNull] string fileName = null, bool shrink = true)
+            : base(directoryPath ?? Paths.SharedDataPath, fileName, shrink)
+        {
+        }
 
         public Settings Get()
         {
@@ -32,6 +31,11 @@ namespace Remembrance.DAL
             {
                 Insert(settings);
             }
+        }
+
+        public SettingsRepository([CanBeNull] string directoryPath = null, bool shrink = true)
+            : base(directoryPath ?? Paths.SharedDataPath, null, shrink)
+        {
         }
     }
 }

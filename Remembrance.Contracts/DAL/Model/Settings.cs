@@ -6,7 +6,7 @@ using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class Settings : Entity<int>
+    public sealed class Settings : TrackedEntity<int>
     {
         public Settings()
         {

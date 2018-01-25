@@ -4,7 +4,7 @@ using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL
 {
-    public interface IWordPriorityRepository : IRepository<WordPriority, WordKey>
+    public interface IWordPriorityRepository : ITrackedRepository<WordPriority, WordKey>
     {
         [NotNull]
         IWord[] GetPriorityWordsForTranslationEntry([NotNull] object translationEntryId);

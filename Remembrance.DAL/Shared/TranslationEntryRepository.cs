@@ -6,23 +6,17 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL
+namespace Remembrance.DAL.Shared
 {
     [UsedImplicitly]
-    internal sealed class TranslationEntryRepository : LiteDbRepository<TranslationEntry>, ITranslationEntryRepository
+    internal sealed class TranslationEntryRepository : TrackedLiteDbRepository<TranslationEntry>, ITranslationEntryRepository
     {
-        public TranslationEntryRepository()
+        public TranslationEntryRepository([CanBeNull] string directoryPath = null, [CanBeNull] string fileName = null, bool shrink = true)
+            : base(directoryPath ?? Paths.SharedDataPath, fileName, shrink)
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Key, true);
             Collection.EnsureIndex(x => x.NextCardShowTime);
         }
-
-        [NotNull]
-        protected override string DbName => nameof(TranslationEntry);
-
-        [NotNull]
-        protected override string DbPath => Paths.SharedDataPath;
 
         public TranslationEntry GetCurrent()
         {

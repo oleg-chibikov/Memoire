@@ -4,7 +4,7 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordPriority : Entity<WordKey>
+    public sealed class WordPriority : TrackedEntity<WordKey>
     {
         [UsedImplicitly]
         public WordPriority()

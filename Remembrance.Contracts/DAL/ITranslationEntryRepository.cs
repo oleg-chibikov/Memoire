@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL
 {
-    public interface ITranslationEntryRepository : IRepository<TranslationEntry>
+    public interface ITranslationEntryRepository : ITrackedRepository<TranslationEntry>
     {
         [CanBeNull]
         TranslationEntry GetCurrent();

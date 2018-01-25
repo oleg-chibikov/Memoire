@@ -5,7 +5,7 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationEntry : Entity
+    public sealed class TranslationEntry : TrackedEntity
     {
         [NotNull]
         private LinkedListNode<RepeatType> _current;

@@ -6,24 +6,18 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL
+namespace Remembrance.DAL.Shared
 {
     [UsedImplicitly]
-    internal sealed class WordPriorityRepository : LiteDbRepository<WordPriority, WordKey>, IWordPriorityRepository
+    internal sealed class WordPriorityRepository : TrackedLiteDbRepository<WordPriority, WordKey>, IWordPriorityRepository
     {
-        public WordPriorityRepository()
+        public WordPriorityRepository([CanBeNull] string directoryPath = null, [CanBeNull] string fileName = null, bool shrink = true)
+            : base(directoryPath ?? Paths.SharedDataPath, fileName, shrink)
         {
-            Collection.EnsureIndex(x => x.Id, true);
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.PartOfSpeech);
             Collection.EnsureIndex(x => x.Id.TranslationEntryId);
         }
-
-        [NotNull]
-        protected override string DbName => nameof(WordPriority);
-
-        [NotNull]
-        protected override string DbPath => Paths.SharedDataPath;
 
         public IWord[] GetPriorityWordsForTranslationEntry(object translationEntryId)
         {

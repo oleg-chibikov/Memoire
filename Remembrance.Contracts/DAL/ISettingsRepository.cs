@@ -4,7 +4,7 @@ using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL
 {
-    public interface ISettingsRepository : IRepository<Settings, int>
+    public interface ISettingsRepository : ITrackedRepository<Settings, int>
     {
         [NotNull]
         Settings Get();
