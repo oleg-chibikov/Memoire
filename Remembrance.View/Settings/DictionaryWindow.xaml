@@ -13,7 +13,6 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Settings"
-    xmlns:view1="clr-namespace:Remembrance.View"
     MinWidth="1200"
     MinHeight="300"
     Width="1200"

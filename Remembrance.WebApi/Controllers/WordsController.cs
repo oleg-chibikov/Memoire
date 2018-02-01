@@ -3,7 +3,8 @@ using System.Threading;
 using System.Web.Http;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts;
+using Remembrance.Contracts.DAL.Model;
 using Scar.Common.Exceptions;
 using Scar.Common.Messages;
 
@@ -16,12 +17,12 @@ namespace Remembrance.WebApi.Controllers
         private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
+        private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        public WordsController([NotNull] IWordsProcessor wordsProcessor, [NotNull] IMessageHub messenger)
+        public WordsController([NotNull] ITranslationEntryProcessor translationEntryProcessor, [NotNull] IMessageHub messenger)
         {
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
         }
 
         [HttpPut]
@@ -35,8 +36,7 @@ namespace Remembrance.WebApi.Controllers
 
             try
             {
-                await _wordsProcessor.AddOrChangeWordAsync(word, CancellationToken.None)
-                    .ConfigureAwait(false);
+                await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
             }
             catch (LocalizableException ex)
             {

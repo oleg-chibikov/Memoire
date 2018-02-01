@@ -4,8 +4,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.ImageSearch;
+using Remembrance.Resources;
+using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch
 {
@@ -16,9 +19,13 @@ namespace Remembrance.Core.ImageSearch
         [NotNull]
         private readonly ILog _logger;
 
-        public ImageDownloader([NotNull] ILog logger)
+        [NotNull]
+        private readonly IMessageHub _messenger;
+
+        public ImageDownloader([NotNull] ILog logger, [NotNull] IMessageHub messenger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
@@ -27,14 +34,17 @@ namespace Remembrance.Core.ImageSearch
             try
             {
                 _logger.TraceFormat("Loading image {0}", imageUrl);
-                var response = await _httpClient.GetAsync(imageUrl, cancellationToken)
-                    .ConfigureAwait(false);
-                return await response.Content.ReadAsByteArrayAsync()
-                    .ConfigureAwait(false);
+                var response = await _httpClient.GetAsync(imageUrl, cancellationToken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                }
+
+                return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.Error("Cannot download image", ex);
+                _messenger.Publish(Errors.CannotDownloadImage.ToError(ex));
                 return null;
             }
         }

@@ -8,11 +8,11 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Core.CardManagement;
+using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Exchange;
 using Remembrance.Core.CardManagement.Data;
 using Scar.Common.Events;
 
@@ -31,6 +31,9 @@ namespace Remembrance.Core.Exchange
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+
+        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
@@ -39,20 +42,17 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
-        [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
-
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
         {
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
-            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -72,14 +72,7 @@ namespace Remembrance.Core.Exchange
             var count = 0;
             foreach (var translationEntry in translationEntries)
             {
-                var translationDetails = await _wordsProcessor.ReloadTranslationDetailsIfNeededAsync(
-                        translationEntry.Id,
-                        translationEntry.Key.Text,
-                        translationEntry.Key.SourceLanguage,
-                        translationEntry.Key.TargetLanguage,
-                        translationEntry.ManualTranslations,
-                        cancellationToken)
-                    .ConfigureAwait(false);
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, cancellationToken).ConfigureAwait(false);
                 var translationInfo = new TranslationInfo(translationEntry, translationDetails);
                 var priorityWords = new HashSet<ExchangeWord>(_wordsEqualityComparer);
                 foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))

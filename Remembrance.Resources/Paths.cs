@@ -42,9 +42,7 @@ namespace Remembrance.Resources
 
             return !File.Exists(jsonPath)
                 ? null
-                : File.ReadAllText(jsonPath)
-                    .Split('\"')[5]
-                    .Replace(@"\\", @"\");
+                : File.ReadAllText(jsonPath).Split('\"')[5].Replace(@"\\", @"\");
         }
 
         [CanBeNull]

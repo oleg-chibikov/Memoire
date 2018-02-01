@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -24,6 +24,6 @@ namespace Remembrance.Core.CardManagement.Data
         public TranslationEntry TranslationEntry { get; }
 
         [JsonIgnore]
-        public string Text => TranslationEntry.Key.Text;
+        public string Text => TranslationEntry.Id.Text;
     }
 }

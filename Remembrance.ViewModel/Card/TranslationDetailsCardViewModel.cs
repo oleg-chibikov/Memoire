@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,9 +9,9 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Commands;
@@ -45,14 +44,10 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
-
         public TranslationDetailsCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILog logger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IMessageHub messenger,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
@@ -74,17 +69,14 @@ namespace Remembrance.ViewModel.Card
 
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
-            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
-
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
-            Word = translationInfo.Key.Text;
-            LoadPrepositionsIfNotExistsAsync(translationInfo.Key.Text, translationInfo.TranslationDetails, CancellationToken.None);
+            Word = translationInfo.TranslationEntryKey.Text;
+            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
             _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
-            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChanged));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
@@ -110,11 +102,15 @@ namespace Remembrance.ViewModel.Card
             }
         }
 
-        [ItemNotNull]
+        [ItemCanBeNull]
         private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
         {
-            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken)
-                .ConfigureAwait(false);
+            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
+            if (predictionResult == null)
+            {
+                return null;
+            }
+
             var prepositionsCollection = new PrepositionsCollection
             {
                 Texts = predictionResult.Position > 0
@@ -130,62 +126,17 @@ namespace Remembrance.ViewModel.Card
             if (prepositionsInfo == null)
             {
                 _logger.Info($"Reloading preposition for {translationDetails.Id}...");
-                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken)
-                    .ConfigureAwait(false);
+                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
+                if (prepositions == null)
+                {
+                    return;
+                }
+
                 prepositionsInfo = new PrepositionsInfo(translationDetails.Id, prepositions);
                 _prepositionsInfoRepository.Insert(prepositionsInfo);
             }
 
             PrepositionsCollection = prepositionsInfo.Prepositions;
-        }
-
-        [CanBeNull]
-        private PriorityWordViewModel GetWordInTranslationDetails(IWord word)
-        {
-            foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
-            {
-                if (_wordsEqualityComparer.Equals(translationVariant, word))
-                {
-                    return translationVariant;
-                }
-
-                if (translationVariant.Synonyms == null)
-                {
-                    continue;
-                }
-
-                foreach (var synonym in translationVariant.Synonyms.Where(synonym => _wordsEqualityComparer.Equals(synonym, word)))
-                {
-                    return synonym;
-                }
-            }
-
-            return null;
-        }
-
-        private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
-        {
-            if (priorityWordKey == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordKey));
-            }
-            var wordKey = priorityWordKey.WordKey;
-            if (!wordKey.TranslationEntryId.Equals(TranslationDetails.TranslationEntryId))
-            {
-                return;
-            }
-
-            _logger.TraceFormat("Priority changed for {0}. Updating the word in translation details...", priorityWordKey);
-            var translation = GetWordInTranslationDetails(wordKey);
-            if (translation != null)
-            {
-                _logger.TraceFormat("Priority for {0} is updated", translation);
-                translation.IsPriority = priorityWordKey.IsPriority;
-            }
-            else
-            {
-                _logger.Trace("There is no matching translation in the card");
-            }
         }
 
         private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)

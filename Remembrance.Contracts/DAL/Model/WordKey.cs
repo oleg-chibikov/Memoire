@@ -4,26 +4,23 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public class WordKey : IEquatable<WordKey>, IWord
+    public sealed class WordKey : TranslationEntryKey, IEquatable<WordKey>, IWord
     {
         [UsedImplicitly]
         public WordKey()
         {
         }
 
-        public WordKey([NotNull] object translationEntryId, [NotNull] IWord word)
+        public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] IWord word)
+            : base(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage)
         {
-            TranslationEntryId = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
-            Text = word?.Text ?? throw new ArgumentNullException(nameof(word));
+            WordText = word?.WordText ?? throw new ArgumentNullException(nameof(word));
             PartOfSpeech = word.PartOfSpeech;
         }
 
-        [NotNull]
-        public object TranslationEntryId { get; set; }
-
         public bool Equals(WordKey other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }
@@ -33,24 +30,40 @@ namespace Remembrance.Contracts.DAL.Model
                 return true;
             }
 
-            return Text == other.Text && PartOfSpeech == other.PartOfSpeech && TranslationEntryId == other.TranslationEntryId;
+            return WordText == other.WordText && PartOfSpeech == other.PartOfSpeech && base.Equals(other);
         }
 
-        public string Text { get; set; }
+        public string WordText { get; set; }
 
         public PartOfSpeech PartOfSpeech { get; set; }
 
+        public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1?.Equals(obj2) == true;
+        }
+
+        // this is second one '!='
+        public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            return !(obj1 == obj2);
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is TranslationEntryKey key && Equals(key);
+            return obj is WordKey key && Equals(key);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = Text.GetHashCode();
-                hashCode = (hashCode * 397) ^ TranslationEntryId.GetHashCode();
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ WordText.GetHashCode();
                 hashCode = (hashCode * 397) ^ PartOfSpeech.GetHashCode();
                 return hashCode;
             }
@@ -58,7 +71,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{TranslationEntryId} - {Text} ({PartOfSpeech})";
+            return $"{base.ToString()} - {WordText} ({PartOfSpeech})";
         }
     }
 }

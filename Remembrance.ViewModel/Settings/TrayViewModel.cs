@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Scar.Common.WPF.Commands;
@@ -32,13 +32,13 @@ namespace Remembrance.ViewModel.Settings
         private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
         [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
         private readonly IMessageHub _messenger;
-
-        [NotNull]
-        private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
         private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;
@@ -52,7 +52,7 @@ namespace Remembrance.ViewModel.Settings
         private bool _isToolTipOpened;
 
         public TrayViewModel(
-            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
             [NotNull] WindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
@@ -67,7 +67,7 @@ namespace Remembrance.ViewModel.Settings
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             AddTranslationCommand = new CorrelationCommand(AddTranslation);
             ShowSettingsCommand = new CorrelationCommand(ShowSettings);
@@ -76,8 +76,7 @@ namespace Remembrance.ViewModel.Settings
             ToolTipOpenCommand = new CorrelationCommand(ToolTipOpen);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
             ExitCommand = new CorrelationCommand(Exit);
-            IsActive = settingsRepository.Get()
-                .IsActive;
+            IsActive = localSettingsRepository.Get().IsActive;
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -182,9 +181,9 @@ namespace Remembrance.ViewModel.Settings
         {
             _logger.Info("Toggling state...");
             IsActive = !IsActive;
-            var settings = _settingsRepository.Get();
+            var settings = _localSettingsRepository.Get();
             settings.IsActive = IsActive;
-            _settingsRepository.UpdateOrInsert(settings);
+            _localSettingsRepository.UpdateOrInsert(settings);
             _logger.Info($"New state is {IsActive}");
             if (IsActive)
             {

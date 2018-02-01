@@ -7,8 +7,8 @@ using System.Windows.Input;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
@@ -23,7 +23,7 @@ namespace Remembrance.ViewModel.Settings
     public abstract class BaseViewModelWithAddTranslationControl : IDisposable
     {
         [NotNull]
-        private readonly ISettingsRepository _settingsRepository;
+        private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
@@ -32,7 +32,7 @@ namespace Remembrance.ViewModel.Settings
         protected readonly ILog Logger;
 
         [NotNull]
-        protected readonly IWordsProcessor WordsProcessor;
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         [NotNull]
         private Language _selectedSourceLanguage;
@@ -40,35 +40,29 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private Language _selectedTargetLanguage;
 
-        protected BaseViewModelWithAddTranslationControl([NotNull] ISettingsRepository settingsRepository, [NotNull] ILanguageDetector languageDetector, [NotNull] IWordsProcessor wordsProcessor, [NotNull] ILog logger)
+        protected BaseViewModelWithAddTranslationControl(
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] ILog logger)
         {
             if (languageDetector == null)
             {
                 throw new ArgumentNullException(nameof(languageDetector));
             }
 
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
             SaveCommand = new CorrelationCommand(SaveAsync);
 
-            logger.Trace("Loading settings...");
-
-            var settings = settingsRepository.Get();
-
             logger.Trace("Loading languages...");
-            var languages = languageDetector.ListLanguagesAsync(
-                    CultureUtilities.GetCurrentCulture()
-                        .TwoLetterISOLanguageName,
-                    CancellationTokenSource.Token)
-                .Result;
+            var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationTokenSource.Token).Result;
 
             // var acceptableLanguages = languages.Directions.Where(x => x.StartsWith(UiLanguage)).Select(x => x.Split('-')[1]).Concat(new []{UiLanguage}).ToArray();
             // AvailableTargetLanguages = languages.Languages.Where(x => acceptableLanguages.Contains(x.Key)).Select(x => new Language(x.Key, x.Value)).ToArray();
-            var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value))
-                .OrderBy(x => x.DisplayName)
-                .ToArray();
+            var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value)).OrderBy(x => x.DisplayName).ToArray();
 
             var autoSourceLanguage = new Language(Constants.AutoDetectLanguage, "--AutoDetect--");
             var autoTargetLanguage = new Language(Constants.AutoDetectLanguage, "--Reverse--");
@@ -84,10 +78,11 @@ namespace Remembrance.ViewModel.Settings
                 }.Concat(availableLanguages)
                 .ToArray();
 
+            var localSettings = localSettingsRepository.Get();
             Language targetLanguage = null;
-            if (settings.LastUsedTargetLanguage != null)
+            if (localSettings.LastUsedTargetLanguage != null)
             {
-                targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == settings.LastUsedTargetLanguage);
+                targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == localSettings.LastUsedTargetLanguage);
             }
 
             if (targetLanguage == null)
@@ -98,9 +93,9 @@ namespace Remembrance.ViewModel.Settings
             _selectedTargetLanguage = targetLanguage;
 
             Language sourceLanguage = null;
-            if (settings.LastUsedSourceLanguage != null)
+            if (localSettings.LastUsedSourceLanguage != null)
             {
-                sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == settings.LastUsedSourceLanguage);
+                sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == localSettings.LastUsedSourceLanguage);
             }
 
             if (sourceLanguage == null)
@@ -129,9 +124,9 @@ namespace Remembrance.ViewModel.Settings
             {
                 // TODO: Transactions?
                 _selectedTargetLanguage = value;
-                var settings = _settingsRepository.Get();
+                var settings = _localSettingsRepository.Get();
                 settings.LastUsedTargetLanguage = value.Code;
-                _settingsRepository.UpdateOrInsert(settings);
+                _localSettingsRepository.UpdateOrInsert(settings);
             }
         }
 
@@ -143,9 +138,9 @@ namespace Remembrance.ViewModel.Settings
             {
                 // TODO: Transactions - https://github.com/mbdavid/LiteDB/wiki/Transactions-and-Concurrency? across all solution
                 _selectedSourceLanguage = value;
-                var settings = _settingsRepository.Get();
+                var settings = _localSettingsRepository.Get();
                 settings.LastUsedSourceLanguage = value.Code;
-                _settingsRepository.UpdateOrInsert(settings);
+                _localSettingsRepository.UpdateOrInsert(settings);
             }
         }
 
@@ -179,17 +174,15 @@ namespace Remembrance.ViewModel.Settings
                 {
                     new ManualTranslation(ManualTranslation)
                 };
+            var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage.Code, SelectedTargetLanguage.Code);
             var addition = manualTranslation == null
                 ? null
                 : $" with manual translation {ManualTranslation}";
-            Logger.Info($"Adding translation for {text}{addition}...");
+            Logger.Info($"Adding translation for {translationEntryAdditionInfo}{addition}...");
             Text = null;
             ManualTranslation = null;
-            var sourceLanguage = SelectedSourceLanguage.Code;
-            var targetLanguage = SelectedTargetLanguage.Code;
 
-            await WordsProcessor.AddOrChangeWordAsync(text, CancellationTokenSource.Token, sourceLanguage, targetLanguage, Window, manualTranslations: manualTranslation)
-                .ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, Window, manualTranslations: manualTranslation).ConfigureAwait(false);
         }
     }
 }

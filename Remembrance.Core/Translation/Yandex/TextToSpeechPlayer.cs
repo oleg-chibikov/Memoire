@@ -3,12 +3,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using NAudio.Wave;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
+using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
@@ -28,12 +30,16 @@ namespace Remembrance.Core.Translation.Yandex
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly IMessageHub _messenger;
+
+        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository)
+        public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] IMessageHub messenger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
@@ -52,37 +58,43 @@ namespace Remembrance.Core.Translation.Yandex
             var settings = _settingsRepository.Get();
             var reset = new AutoResetEvent(false);
             var uriPart =
-                $"generate?text={text}&format={Format.Mp3.ToString() .ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString() .ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString() .ToLowerInvariant()}&key={ApiKey}";
-            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
-                .ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
+                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+            try
             {
-                return false;
-            }
-
-            var soundStream = await response.Content.ReadAsStreamAsync()
-                .ConfigureAwait(false);
-            using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-            using (var reader = new Mp3FileReader(soundStream))
-            {
-                waveOut.Init(reader);
-
-                // Thread should be alive while playback is not stopped
-                void PlaybackStoppedHandler(object s, StoppedEventArgs e)
+                var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
                 {
-                    ((WaveOut)s).PlaybackStopped -= PlaybackStoppedHandler;
-                    reset.Set();
+                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
                 }
 
-                waveOut.PlaybackStopped += PlaybackStoppedHandler;
-                waveOut.Play();
+                var soundStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                using (var reader = new Mp3FileReader(soundStream))
+                {
+                    waveOut.Init(reader);
 
-                // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
-                reset.WaitOne(TimeSpan.FromSeconds(5));
+                    // Thread should be alive while playback is not stopped
+                    void PlaybackStoppedHandler(object s, StoppedEventArgs e)
+                    {
+                        ((WaveOut)s).PlaybackStopped -= PlaybackStoppedHandler;
+                        reset.Set();
+                    }
+
+                    waveOut.PlaybackStopped += PlaybackStoppedHandler;
+                    waveOut.Play();
+
+                    // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
+                    reset.WaitOne(TimeSpan.FromSeconds(5));
+                }
+
+                _logger.Trace($"Finished speaking {text}");
+                return true;
             }
-
-            _logger.Trace($"Finished speaking {text}");
-            return true;
+            catch (Exception ex)
+            {
+                _messenger.Publish(Errors.CannotSpeak.ToError(ex));
+                return false;
+            }
         }
 
         [NotNull]

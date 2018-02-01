@@ -8,8 +8,9 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
@@ -17,13 +18,12 @@ using Scar.Common.Exceptions;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Core.CardManagement
+namespace Remembrance.Core
 {
     [UsedImplicitly]
-    internal sealed class WordsProcessor : IWordsProcessor
+    internal sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
-        private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture()
-            .TwoLetterISOLanguageName;
+        private static readonly string CurerntCultureLanguage = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
 
         private static readonly string[] DefaultTargetLanguages =
         {
@@ -40,13 +40,16 @@ namespace Remembrance.Core.CardManagement
         private readonly ILanguageDetector _languageDetector;
 
         [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
         private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly ISettingsRepository _settingsRepository;
+        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
@@ -58,6 +61,9 @@ namespace Remembrance.Core.CardManagement
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
+        private readonly IWordImagesInfoRepository _wordImagesInfoRepository;
+
+        [NotNull]
         private readonly IWordPriorityRepository _wordPriorityRepository;
 
         [NotNull]
@@ -66,7 +72,7 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         private readonly IWordsTranslator _wordsTranslator;
 
-        public WordsProcessor(
+        public TranslationEntryProcessor(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ILog logger,
             [NotNull] ITranslationDetailsCardManager cardManager,
@@ -74,16 +80,20 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
             [NotNull] IWordsTranslator wordsTranslator,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [NotNull] IWordImagesInfoRepository wordImagesInfoRepository,
+            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
         {
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
+            _wordImagesInfoRepository = wordImagesInfoRepository ?? throw new ArgumentNullException(nameof(wordImagesInfoRepository));
+            _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
@@ -93,102 +103,82 @@ namespace Remembrance.Core.CardManagement
         }
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
-            object id,
-            string text,
-            string sourceLanguage,
-            string targetLanguage,
+            TranslationEntryKey translationEntryKey,
             ManualTranslation[] manualTranslations,
             CancellationToken cancellationToken,
             Action<TranslationDetails> processNonReloaded)
         {
-            var translationDetails = _translationDetailsRepository.TryGetById(id);
+            var translationDetails = _translationDetailsRepository.TryGetById(translationEntryKey);
             if (translationDetails != null)
             {
                 processNonReloaded?.Invoke(translationDetails);
                 return translationDetails;
             }
 
-            var translationResult = await TranslateAsync(text, sourceLanguage, targetLanguage, manualTranslations, cancellationToken)
-                .ConfigureAwait(false);
+            var translationResult = await TranslateAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
 
             // There are no translation details for this word
-            translationDetails = new TranslationDetails(translationResult, id);
+            translationDetails = new TranslationDetails(translationResult, translationEntryKey);
             _translationDetailsRepository.Insert(translationDetails);
             return translationDetails;
         }
 
-        public async Task<TranslationInfo> AddOrChangeWordAsync(
-            string text,
+        public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey)
+        {
+            if (translationEntryKey == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryKey));
+            }
+
+            _prepositionsInfoRepository.Delete(translationEntryKey);
+            _translationDetailsRepository.Delete(translationEntryKey);
+            _wordImagesInfoRepository.ClearForTranslationEntry(translationEntryKey);
+            _wordPriorityRepository.ClearForTranslationEntry(translationEntryKey);
+            _translationEntryRepository.Delete(translationEntryKey);
+        }
+
+        public async Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
+            TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            string sourceLanguage,
-            string targetLanguage,
             IWindow ownerWindow,
             bool needPostProcess,
-            object id,
             ManualTranslation[] manualTranslations)
         {
-            // This method replaces translation with the actual one
-            _logger.Info(
-                id != null
-                    ? $"Changing word translation ({id}) to {text} ({sourceLanguage} - {targetLanguage})..."
-                    : $"Adding new word translation for {text} ({sourceLanguage} - {targetLanguage})...");
+            if (translationEntryAdditionInfo == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
+            }
 
-            var key = await GetTranslationKeyAsync(text, sourceLanguage, targetLanguage, cancellationToken)
-                .ConfigureAwait(false);
-            if (text == null)
+            // This method replaces translation with the actual one
+            _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
+
+            var translationEntryKey = await GetTranslationKeyAsync(translationEntryAdditionInfo, cancellationToken).ConfigureAwait(false);
+            if (translationEntryKey.Text == null)
             {
                 throw new InvalidOperationException();
             }
 
-            var translationResult = await TranslateAsync(key.Text, key.SourceLanguage, key.TargetLanguage, manualTranslations, cancellationToken)
-                .ConfigureAwait(false);
+            var translationResult = await TranslateAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
 
             // replace the original text with the corrected one
-            key.Text = translationResult.PartOfSpeechTranslations.First()
-                .Text;
-            var existingByKey = _translationEntryRepository.TryGetByKey(key);
-            if (id != null)
-            {
-                if (!existingByKey?.Id.Equals(id) == true)
-                {
-                    throw new LocalizableException($"An item with the same key {key} already exists", Errors.WordIsPresent);
-                }
-            }
-            else
-            {
-                if (existingByKey != null)
-                {
-                    id = existingByKey.Id;
-                }
-            }
+            translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().WordText;
 
-            var translationEntry = new TranslationEntry(key)
+            var translationEntry = new TranslationEntry(translationEntryKey)
             {
-                Id = id,
+                Id = translationEntryKey,
                 ManualTranslations = manualTranslations
             };
+            _translationEntryRepository.Upsert(translationEntry);
+            var translationDetails = new TranslationDetails(translationResult, translationEntryKey);
+            _translationDetailsRepository.Upsert(translationDetails);
 
-            id = _translationEntryRepository.Insert(translationEntry);
-
-            var existingTranslationDetails = _translationDetailsRepository.TryGetById(id);
-
-            var translationDetails = new TranslationDetails(translationResult, id);
-            if (existingTranslationDetails != null)
-            {
-                translationDetails.Id = existingTranslationDetails.Id;
-            }
-
-            _translationDetailsRepository.Insert(translationDetails);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
-
-            _logger.Trace($"Translation for {key} has been successfully added");
             if (needPostProcess)
             {
-                await PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken)
-                    .ConfigureAwait(false);
+                PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken);
             }
 
-            _logger.Trace($"Processing finished for word {text}");
+            _logger.InfoFormat("Processing finished for word {0}", translationEntryKey);
             return translationInfo;
         }
 
@@ -199,7 +189,7 @@ namespace Remembrance.Core.CardManagement
                 throw new ArgumentNullException(nameof(sourceLanguage));
             }
 
-            var settings = _settingsRepository.Get();
+            var settings = _localSettingsRepository.Get();
             var lastUsedTargetLanguage = settings.LastUsedTargetLanguage;
             var possibleTargetLanguages = new Stack<string>(DefaultTargetLanguages);
             if (lastUsedTargetLanguage != null && lastUsedTargetLanguage != Constants.AutoDetectLanguage)
@@ -213,21 +203,21 @@ namespace Remembrance.Core.CardManagement
                 targetLanguage = possibleTargetLanguages.Pop();
             }
 
-            return await Task.FromResult(targetLanguage)
-                .ConfigureAwait(false);
+            return await Task.FromResult(targetLanguage).ConfigureAwait(false);
         }
 
-        public async Task<TranslationInfo> UpdateManualTranslationsAsync(object id, ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
+        public async Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
         {
-            var translationEntry = _translationEntryRepository.GetById(id);
+            if (translationEntryKey == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryKey));
+            }
+
+            var translationEntry = _translationEntryRepository.GetById(translationEntryKey);
             translationEntry.ManualTranslations = manualTranslations;
             _translationEntryRepository.Update(translationEntry);
-            var key = translationEntry.Key;
             var translationDetails = await ReloadTranslationDetailsIfNeededAsync(
-                    id,
-                    key.Text,
-                    key.SourceLanguage,
-                    key.TargetLanguage,
+                    translationEntryKey,
                     manualTranslations,
                     cancellationToken,
                     td =>
@@ -235,11 +225,12 @@ namespace Remembrance.Core.CardManagement
                         //if the new ones were applied - no need to merge
                         var nonManual = td.TranslationResult.PartOfSpeechTranslations.Where(x => !x.IsManual);
                         td.TranslationResult.PartOfSpeechTranslations = (manualTranslations != null
-                            ? ConcatTranslationsWithManual(key.Text, manualTranslations, nonManual)
+                            ? ConcatTranslationsWithManual(translationEntryKey.Text, manualTranslations, nonManual)
                             : nonManual).ToArray();
+                        _translationDetailsRepository.Update(td);
                     })
                 .ConfigureAwait(false);
-            DeleteFromPriority(id, manualTranslations, translationDetails);
+            DeleteFromPriority(translationEntryKey, manualTranslations, translationDetails);
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
@@ -255,11 +246,11 @@ namespace Remembrance.Core.CardManagement
                 {
                     IsManual = true,
                     PartOfSpeech = group.Key,
-                    Text = text,
+                    WordText = text,
                     TranslationVariants = group.Select(
                             manualTranslation => new TranslationVariant
                             {
-                                Text = manualTranslation.Text,
+                                WordText = manualTranslation.WordText,
                                 PartOfSpeech = manualTranslation.PartOfSpeech,
                                 Examples = string.IsNullOrWhiteSpace(manualTranslation.Example)
                                     ? null
@@ -276,7 +267,7 @@ namespace Remembrance.Core.CardManagement
                                     {
                                         new Word
                                         {
-                                            Text = manualTranslation.Meaning
+                                            WordText = manualTranslation.Meaning
                                         }
                                     }
                             })
@@ -285,7 +276,7 @@ namespace Remembrance.Core.CardManagement
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
-        private void DeleteFromPriority([NotNull] object id, [CanBeNull] ManualTranslation[] manualTranslations, [NotNull] TranslationDetails translationDetails)
+        private void DeleteFromPriority([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, [NotNull] TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
                 .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants)
@@ -298,13 +289,21 @@ namespace Remembrance.Core.CardManagement
 
             foreach (var word in deletedManualTranslations)
             {
-                _wordPriorityRepository.Delete(new WordKey(id, word));
+                _wordPriorityRepository.Delete(new WordKey(translationEntryKey, word));
             }
         }
 
         [ItemNotNull]
-        private async Task<TranslationEntryKey> GetTranslationKeyAsync([CanBeNull] string text, [CanBeNull] string sourceLanguage, [CanBeNull] string targetLanguage, CancellationToken cancellationToken)
+        private async Task<TranslationEntryKey> GetTranslationKeyAsync([NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
         {
+            if (translationEntryAdditionInfo == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
+            }
+
+            var text = translationEntryAdditionInfo.Text;
+            var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
+            var targetLanguage = translationEntryAdditionInfo.TargetLanguage;
             if (string.IsNullOrWhiteSpace(text))
             {
                 throw new LocalizableException("Text is empty", Errors.WordIsMissing);
@@ -313,8 +312,7 @@ namespace Remembrance.Core.CardManagement
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
             {
                 // if not specified or autodetect - try to detect
-                var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken)
-                    .ConfigureAwait(false);
+                var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
                 sourceLanguage = detectionResult.Language;
             }
 
@@ -327,8 +325,7 @@ namespace Remembrance.Core.CardManagement
 
                 // if not specified - try to find best matching target language
             {
-                targetLanguage = await GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken)
-                    .ConfigureAwait(false);
+                targetLanguage = await GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
             }
 
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
@@ -338,42 +335,47 @@ namespace Remembrance.Core.CardManagement
         {
             _messenger.Publish(translationInfo);
             _cardManager.ShowCard(translationInfo, ownerWindow);
-            await _textToSpeechPlayer.PlayTtsAsync(translationInfo.Key.Text, translationInfo.Key.SourceLanguage, cancellationToken)
-                .ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken).ConfigureAwait(false);
         }
 
         [ItemNotNull]
-        private async Task<TranslationResult> TranslateAsync(
-            [NotNull] string text,
-            [NotNull] string sourceLanguage,
-            [NotNull] string targetLanguage,
-            [CanBeNull] ManualTranslation[] manualTranslations,
-            CancellationToken cancellationToken)
+        private async Task<TranslationResult> TranslateAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
         {
-            // Used En as ui language to simplify conversion of common words to the enums
-            var translationResult = await _wordsTranslator.GetTranslationAsync(sourceLanguage, targetLanguage, text, Constants.EnLanguage, cancellationToken)
-                .ConfigureAwait(false);
-            if (!translationResult.PartOfSpeechTranslations.Any())
+            try
             {
-                _logger.Warn($"No translations found for {text}");
-
-                if (manualTranslations == null)
+                // Used En as ui language to simplify conversion of common words to the enums
+                var translationResult = await _wordsTranslator.GetTranslationAsync(
+                        translationEntryKey.SourceLanguage,
+                        translationEntryKey.TargetLanguage,
+                        translationEntryKey.Text,
+                        Constants.EnLanguage,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                if (translationResult.PartOfSpeechTranslations.Any())
                 {
-                    throw new LocalizableException($"No translations found for {text}", string.Format(Errors.CannotTranslate, text, sourceLanguage, targetLanguage));
+                    _logger.TraceFormat("Received translation for {0}", translationEntryKey);
                 }
-            }
-            else
-            {
-                _logger.Trace("Received translation");
-            }
+                else
+                {
+                    _logger.WarnFormat("No translations found for {0}", translationEntryKey);
 
-            if (manualTranslations != null)
-            {
-                translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(text, manualTranslations, translationResult.PartOfSpeechTranslations)
-                    .ToArray();
-            }
+                    if (manualTranslations == null)
+                    {
+                        throw new LocalizableException($"No translations found for {translationEntryKey}", string.Format(Errors.CannotTranslate, translationEntryKey));
+                    }
+                }
 
-            return translationResult;
+                if (manualTranslations != null)
+                {
+                    translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(translationEntryKey.Text, manualTranslations, translationResult.PartOfSpeechTranslations).ToArray();
+                }
+
+                return translationResult;
+            }
+            catch (Exception ex)
+            {
+                throw new LocalizableException($"Cannot translate {translationEntryKey}", ex, string.Format(Errors.CannotTranslate, translationEntryKey));
+            }
         }
     }
 }

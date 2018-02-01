@@ -9,13 +9,13 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Exchange;
 using Remembrance.Core.CardManagement.Data;
+using Remembrance.Resources;
 using Scar.Common.Events;
-using Scar.Common.Exceptions;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
@@ -42,12 +42,12 @@ namespace Remembrance.Core.Exchange
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
         [NotNull]
-        protected readonly IWordsProcessor WordsProcessor;
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
@@ -56,7 +56,7 @@ namespace Remembrance.Core.Exchange
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         }
 
@@ -88,8 +88,7 @@ namespace Remembrance.Core.Exchange
             }
 
             _logger.Trace("Getting all translations...");
-            var existingTranslationEntries = _translationEntryRepository.GetAll()
-                .ToDictionary(x => x.Key, x => x);
+            var existingTranslationEntries = _translationEntryRepository.GetAll().ToDictionary(translationEntry => translationEntry.Id, translationEntry => translationEntry);
             var totalCount = deserialized.Length;
             var errorsList = new List<string>();
             var count = 0;
@@ -98,48 +97,71 @@ namespace Remembrance.Core.Exchange
                     async (exchangeEntriesBlock, index, blocksCount) =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        _logger.Trace($"Processing block {index} out of {blocksCount} ({exchangeEntriesBlock.Length} files)...");
+                        _logger.TraceFormat("Processing block {0} out of {1} ({2} files)...", index, blocksCount, exchangeEntriesBlock.Length);
                         var importTasks = exchangeEntriesBlock.Select(
                             async exchangeEntry =>
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
-                                _logger.Info($"Importing from {exchangeEntry.Text}...");
+                                _logger.TraceFormat("Importing from {0}...", exchangeEntry.Text);
                                 try
                                 {
                                     var changed = false;
-                                    var key = await GetKeyAsync(exchangeEntry, cancellationToken)
-                                        .ConfigureAwait(false);
+                                    var translationEntryKey = await GetTranslationEntryKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
                                     var priorityTranslations = GetPriorityTranslations(exchangeEntry);
                                     TranslationEntry translationEntry = null;
                                     TranslationInfo translationInfo = null;
-                                    if (existingTranslationEntries.ContainsKey(key))
+                                    if (existingTranslationEntries.ContainsKey(translationEntryKey))
                                     {
-                                        translationEntry = existingTranslationEntries[key];
+                                        translationEntry = existingTranslationEntries[translationEntryKey];
                                     }
+
+                                    var manualTranslationsUpdated = false;
 
                                     if (translationEntry == null)
                                     {
-                                        //TODO: Check manual tran changed. If so then set Changed=true;
                                         var manualTranslations = GetManualTranslations(exchangeEntry);
-                                        translationInfo = await WordsProcessor.AddOrChangeWordAsync(key.Text, cancellationToken, key.SourceLanguage, key.TargetLanguage, null, false, null, manualTranslations)
+                                        translationInfo = await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
+                                                new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
+                                                cancellationToken,
+                                                null,
+                                                false,
+                                                manualTranslations)
                                             .ConfigureAwait(false);
                                         translationEntry = translationInfo.TranslationEntry;
                                         changed = true;
                                     }
+                                    else
+                                    {
+                                        var manualTranslations = GetManualTranslations(exchangeEntry);
+                                        if (manualTranslations != null)
+                                        {
+                                            if (translationEntry.ManualTranslations?.SequenceEqual(manualTranslations) != true)
+                                            {
+                                                translationEntry.ManualTranslations = manualTranslations;
+                                                manualTranslationsUpdated = true;
+                                            }
+                                        }
+                                    }
 
                                     //TODO: See inside
-                                    var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, translationEntry);
-                                    var priorityTranslationsUpdated = await UpdatePrioirityTranslationsAsync(cancellationToken, priorityTranslations, translationInfo, translationEntry)
-                                        .ConfigureAwait(false);
+                                    var learningInfoUpdated = SetLearningInfo(exchangeEntry, translationEntry);
+                                    if (manualTranslationsUpdated || learningInfoUpdated)
+                                    {
+                                        _translationEntryRepository.Update(translationEntry);
+                                    }
+
+                                    var priorityTranslationsUpdated = await UpdatePrioirityTranslationsAsync(cancellationToken, priorityTranslations, translationInfo, translationEntry).ConfigureAwait(false);
+                                    changed |= manualTranslationsUpdated;
                                     changed |= learningInfoUpdated;
                                     changed |= priorityTranslationsUpdated;
+                                    _logger.InfoFormat("Imported from {0}", exchangeEntry.Text);
                                     return changed
                                         ? translationInfo
                                         : null;
                                 }
-                                catch (LocalizableException ex)
+                                catch (Exception ex)
                                 {
-                                    _messenger.Publish($"Cannot translate {exchangeEntry.Text}. The word is skipped".ToError(ex));
+                                    _messenger.Publish(string.Format(Errors.CannotImportWord, exchangeEntry.Text).ToError(ex));
                                     lock (errorsList)
                                     {
                                         errorsList.Add(exchangeEntry.Text);
@@ -152,14 +174,11 @@ namespace Remembrance.Core.Exchange
                                     OnProgress(Interlocked.Increment(ref count), totalCount);
                                 }
                             });
-                        var blockResult = await Task.WhenAll(importTasks)
-                            .ConfigureAwait(false);
+                        var blockResult = await Task.WhenAll(importTasks).ConfigureAwait(false);
 
                         if (blockResult.Any())
                         {
-                            _messenger.Publish(
-                                blockResult.Where(x => x != null)
-                                    .ToArray());
+                            _messenger.Publish(blockResult.Where(x => x != null).ToArray());
                         }
 
                         return true;
@@ -184,44 +203,26 @@ namespace Remembrance.Core.Exchange
             {
                 if (translationInfo == null)
                 {
-                    var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(
-                            translationEntry.Id,
-                            translationEntry.Key.Text,
-                            translationEntry.Key.SourceLanguage,
-                            translationEntry.Key.TargetLanguage,
-                            translationEntry.ManualTranslations,
-                            cancellationToken)
-                        .ConfigureAwait(false);
+                    var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, cancellationToken).ConfigureAwait(false);
                     translationInfo = new TranslationInfo(translationEntry, translationDetails);
                 }
 
                 var importedPriorityWordsCount = ImportPriority(priorityTranslations, translationInfo);
                 if (importedPriorityWordsCount != 0)
                 {
-                    _logger.Trace($"Imported {importedPriorityWordsCount} priority words for {translationInfo}");
+                    _logger.InfoFormat("Imported {0} priority words for {1}", importedPriorityWordsCount, translationInfo);
                     return true;
                 }
 
-                _logger.Trace($"No priority words were imported for {translationInfo}");
+                _logger.TraceFormat("No priority words were imported for {0}", translationInfo);
                 return false;
             }
 
             return false;
         }
 
-        private bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
-        {
-            var learningInfoChanged = SetLearningInfo(exchangeEntry, translationEntry);
-            if (learningInfoChanged)
-            {
-                _translationEntryRepository.Update(translationEntry);
-            }
-
-            return learningInfoChanged;
-        }
-
         [ItemNotNull]
-        protected abstract Task<TranslationEntryKey> GetKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
+        protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
 
         [CanBeNull]
         protected virtual ManualTranslation[] GetManualTranslations([NotNull] T exchangeEntry)
@@ -237,8 +238,7 @@ namespace Remembrance.Core.Exchange
         private int ImportPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] TranslationInfo translationInfo)
         {
             var result = 0;
-            foreach (var partOfSpeechTranslation in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations)
-            foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+            foreach (var translationVariant in translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
             {
                 if (MarkPriority(priorityTranslations, translationVariant, translationInfo.TranslationEntry.Id))
                 {
@@ -256,16 +256,16 @@ namespace Remembrance.Core.Exchange
             return result;
         }
 
-        private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] IWord word, [NotNull] object translationEntryId)
+        private bool MarkPriority([NotNull] ICollection<ExchangeWord> priorityTranslations, [NotNull] IWord word, [NotNull] TranslationEntryKey translationEntryKey)
         {
-            var wordKey = new WordKey(translationEntryId, word);
+            var wordKey = new WordKey(translationEntryKey, word);
             if (!priorityTranslations.Contains(word, _wordsEqualityComparer) || _wordPriorityRepository.Check(wordKey))
             {
                 return false;
             }
 
             _wordPriorityRepository.Insert(new WordPriority(wordKey));
-            var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntryId, word));
+            var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntryKey, word));
             _messenger.Publish(priorityWordKey);
             return true;
         }
@@ -311,9 +311,7 @@ namespace Remembrance.Core.Exchange
 
             for (var index = 0; index < num; ++index)
             {
-                var array = objArray.Skip(index * maxBlockSize)
-                    .Take(maxBlockSize)
-                    .ToArray();
+                var array = objArray.Skip(index * maxBlockSize).Take(maxBlockSize).ToArray();
                 if (array.Length == 0 || !await action(array, index, num))
                 {
                     break;

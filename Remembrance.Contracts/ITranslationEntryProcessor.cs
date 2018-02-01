@@ -5,19 +5,16 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Remembrance.Contracts
 {
-    public interface IWordsProcessor
+    public interface ITranslationEntryProcessor
     {
         [ItemNotNull]
-        Task<TranslationInfo> AddOrChangeWordAsync(
-            [CanBeNull] string text,
+        Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
+            [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            [CanBeNull] string sourceLanguage = null,
-            [CanBeNull] string targetLanguage = null,
             [CanBeNull] IWindow ownerWindow = null,
             bool needPostProcess = true,
-            [CanBeNull] object id = null,
             [CanBeNull] ManualTranslation[] manualTranslations = null);
 
         [ItemNotNull]
@@ -25,16 +22,15 @@ namespace Remembrance.Contracts.CardManagement
 
         [ItemNotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
-            [NotNull] object id,
-            [NotNull] string text,
-            [NotNull] string sourceLanguage,
-            [NotNull] string targetLanguage,
+            [NotNull] TranslationEntryKey translationEntryKey,
             [CanBeNull] ManualTranslation[] manualTranslations,
             CancellationToken cancellationToken,
             [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
 
+        void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey);
+
         [ItemNotNull]
-        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] object id, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
+        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
 
         //TODO: remove notnull on tasks everywhere (leave only itemnotnull)
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
@@ -18,7 +18,7 @@ namespace Remembrance.Contracts.DAL.Model
         public TranslationDetails TranslationDetails { get; set; }
 
         [NotNull]
-        public TranslationEntryKey Key => TranslationEntry.Key;
+        public TranslationEntryKey TranslationEntryKey => TranslationEntry.Id;
 
         public override string ToString()
         {

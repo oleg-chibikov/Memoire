@@ -10,9 +10,10 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
+using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Settings.Data;
@@ -33,6 +34,9 @@ namespace Remembrance.ViewModel.Settings
         private readonly ICardsExchanger _cardsExchanger;
 
         [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
@@ -46,16 +50,23 @@ namespace Remembrance.ViewModel.Settings
 
         private Language _uiLanguage;
 
-        public SettingsViewModel([NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger, [NotNull] IMessageHub messenger, [NotNull] ICardsExchanger cardsExchanger)
+        public SettingsViewModel(
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILog logger,
+            [NotNull] IMessageHub messenger,
+            [NotNull] ICardsExchanger cardsExchanger)
         {
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
 
             var settings = settingsRepository.Get();
+            var localSettings = localSettingsRepository.Get();
             TtsSpeaker = settings.TtsSpeaker;
-            UiLanguage = AvailableUiLanguages.Single(x => x.Code == settings.UiLanguage);
+            UiLanguage = AvailableUiLanguages.Single(x => x.Code == localSettings.UiLanguage);
             TtsVoiceEmotion = settings.TtsVoiceEmotion;
             ReverseTranslation = settings.ReverseTranslation;
             RandomTranslation = settings.RandomTranslation;
@@ -75,14 +86,10 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [NotNull]
-        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker))
-            .Cast<Speaker>()
-            .ToDictionary(x => x, x => x.ToString());
+        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
-        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion))
-            .Cast<VoiceEmotion>()
-            .ToDictionary(x => x, x => x.ToString());
+        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
         public Language[] AvailableUiLanguages { get; } =
@@ -189,14 +196,12 @@ namespace Remembrance.ViewModel.Settings
 
         private void Export()
         {
-            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token)
-                .ConfigureAwait(false);
+            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private void Import()
         {
-            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token)
-                .ConfigureAwait(false);
+            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private static void OpenSettingsFolder()
@@ -214,6 +219,7 @@ namespace Remembrance.ViewModel.Settings
             _logger.Trace("Saving settings...");
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
             var settings = _settingsRepository.Get();
+            var localSettings = _localSettingsRepository.Get();
             var prevFreq = settings.CardShowFrequency;
             settings.CardShowFrequency = freq;
             settings.AssessmentSuccessCloseTimeout = TimeSpan.FromSeconds(AssessmentSuccessCloseTimeout);
@@ -223,8 +229,9 @@ namespace Remembrance.ViewModel.Settings
             settings.TtsVoiceEmotion = TtsVoiceEmotion;
             settings.ReverseTranslation = ReverseTranslation;
             settings.RandomTranslation = RandomTranslation;
-            settings.UiLanguage = UiLanguage.Code;
+            localSettings.UiLanguage = UiLanguage.Code;
             _settingsRepository.UpdateOrInsert(settings);
+            _localSettingsRepository.UpdateOrInsert(localSettings);
             if (prevFreq != freq)
             {
                 _messenger.Publish(settings.CardShowFrequency);

@@ -3,7 +3,7 @@ using System.Windows;
 using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
@@ -17,16 +17,16 @@ namespace Remembrance.Core.CardManagement
         protected readonly ILifetimeScope LifetimeScope;
 
         [NotNull]
-        protected readonly ILog Logger;
+        protected readonly ILocalSettingsRepository LocalSettingsRepository;
 
         [NotNull]
-        protected readonly ISettingsRepository SettingsRepository;
+        protected readonly ILog Logger;
 
-        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
+        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             LifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
-            SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            LocalSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
         }
 
         public void ShowCard(TranslationInfo translationInfo, IWindow ownerWindow)
@@ -42,9 +42,7 @@ namespace Remembrance.Core.CardManagement
                         return;
                     }
 
-                    CultureUtilities.ChangeCulture(
-                        SettingsRepository.Get()
-                            .UiLanguage);
+                    CultureUtilities.ChangeCulture(LocalSettingsRepository.Get().UiLanguage);
                     window.Draggable = false;
                     window.WindowStartupLocation = WindowStartupLocation.Manual;
                     if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)

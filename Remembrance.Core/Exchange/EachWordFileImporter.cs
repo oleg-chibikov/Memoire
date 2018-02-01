@@ -7,9 +7,8 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
@@ -33,23 +32,21 @@ namespace Remembrance.Core.Exchange
         public EachWordFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
-        protected override async Task<TranslationEntryKey> GetKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
+        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken)
-                .ConfigureAwait(false);
+            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
             var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
-            var targetLanguage = await WordsProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken)
-                .ConfigureAwait(false);
+            var targetLanguage = await TranslationEntryProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
@@ -59,7 +56,7 @@ namespace Remembrance.Core.Exchange
                 .Select(
                     x => new ExchangeWord
                     {
-                        Text = x
+                        WordText = x
                     })
                 .ToArray();
         }

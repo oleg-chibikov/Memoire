@@ -88,6 +88,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you&apos;d like to delete the translation {0}?.
+        /// </summary>
+        public static string AreYouSureDelete {
+            get {
+                return ResourceManager.GetString("AreYouSureDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assessment failure.
         /// </summary>
         public static string AssessmentFailureCloseTimeout {
@@ -165,6 +174,15 @@ namespace Remembrance.Resources {
         public static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         
@@ -268,15 +286,6 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export failed.
-        /// </summary>
-        public static string ExportFailed {
-            get {
-                return ResourceManager.GetString("ExportFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Export succeeded.
         /// </summary>
         public static string ExportSucceeded {
@@ -327,24 +336,6 @@ namespace Remembrance.Resources {
         public static string Import {
             get {
                 return ResourceManager.GetString("Import", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The following words were not imported.
-        /// </summary>
-        public static string ImportErrors {
-            get {
-                return ResourceManager.GetString("ImportErrors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Import failed.
-        /// </summary>
-        public static string ImportFailed {
-            get {
-                return ResourceManager.GetString("ImportFailed", resourceCulture);
             }
         }
         

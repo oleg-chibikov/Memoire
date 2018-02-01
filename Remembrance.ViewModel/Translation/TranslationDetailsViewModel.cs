@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -14,17 +15,14 @@ namespace Remembrance.ViewModel.Translation
         }
 
         [DoNotNotify]
-        public object Id { get; set; }
-
-        [DoNotNotify]
-        public object TranslationEntryId { get; set; }
+        public TranslationEntryKey TranslationEntryKey { get; set; }
 
         [NotNull]
         public TranslationResultViewModel TranslationResult { get; set; }
 
         public override string ToString()
         {
-            return $"Translation details for {TranslationEntryId}";
+            return $"Translation details for {TranslationEntryKey}";
         }
     }
 }

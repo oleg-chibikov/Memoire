@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
@@ -7,18 +7,17 @@ using Scar.Common.WPF.Converters;
 
 namespace Remembrance.View.Converters
 {
-    [ValueConversion(typeof(IWithText[]), typeof(string))]
+    [ValueConversion(typeof(IWord[]), typeof(string))]
     public sealed class WordConcatConverter : ArrayConcatConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is IWithText[] words))
+            if (!(value is IWord[] words))
             {
                 return null;
             }
 
-            var texts = words.Select(x => x.Text)
-                .ToArray();
+            var texts = words.Select(x => x.WordText).ToArray();
             return base.Convert(texts, targetType, parameter, culture);
         }
     }

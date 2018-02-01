@@ -115,18 +115,40 @@
         BasedOn="{StaticResource {x:Type TextBox}}" />
 
     <Style
-        TargetType="xcdg:DataCell">
+        TargetType="xcdg:Cell">
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource SmallFontSize}" />
         <Setter
             Property="FontFamily"
             Value="./#Web Serveroff" />
     </Style>
 
+    <DataTemplate
+        x:Key="CellTemplate">
+        <TextBlock
+            Style="{StaticResource {x:Type TextBlock}}"
+            Text="{Binding Mode=OneTime}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="CellEditorTemplate">
+        <TextBox
+            Style="{StaticResource {x:Type TextBox}}"
+            Text="{xcdg:CellEditorBinding}" />
+    </DataTemplate>
+
+    <xcdg:CellEditor
+        x:Key="CellEditor"
+        EditTemplate="{StaticResource CellEditorTemplate}" />
+
     <Style
-        TargetType="xcdg:ColumnManagerCell">
-        <Setter
-            Property="FontFamily"
-            Value="./#Web Serveroff" />
-    </Style>
+        BasedOn="{StaticResource {x:Type xcdg:Cell}}"
+        TargetType="xcdg:DataCell" />
+
+    <Style
+        BasedOn="{StaticResource {x:Type xcdg:Cell}}"
+        TargetType="xcdg:ColumnManagerCell" />
 
     <commonConverters:NotNullToVisibilityConverter
         x:Key="NotNullToVisibilityConverter" />

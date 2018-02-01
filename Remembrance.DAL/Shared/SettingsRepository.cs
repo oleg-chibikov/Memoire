@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 
@@ -12,6 +12,11 @@ namespace Remembrance.DAL.Shared
     {
         public SettingsRepository([CanBeNull] string directoryPath, [CanBeNull] string fileName = null, bool shrink = true)
             : base(directoryPath ?? Paths.SharedDataPath, fileName, shrink)
+        {
+        }
+
+        public SettingsRepository([CanBeNull] string directoryPath = null, bool shrink = true)
+            : base(directoryPath ?? Paths.SharedDataPath, null, shrink)
         {
         }
 
@@ -31,11 +36,6 @@ namespace Remembrance.DAL.Shared
             {
                 Insert(settings);
             }
-        }
-
-        public SettingsRepository([CanBeNull] string directoryPath = null, bool shrink = true)
-            : base(directoryPath ?? Paths.SharedDataPath, null, shrink)
-        {
         }
     }
 }

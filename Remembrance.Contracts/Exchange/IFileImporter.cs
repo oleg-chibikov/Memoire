@@ -5,12 +5,12 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Scar.Common.Events;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Remembrance.Contracts.Exchange
 {
-    public interface IFileExporter
+    public interface IFileImporter
     {
         [ItemNotNull]
-        Task<ExchangeResult> ExportAsync([NotNull] string fileName, CancellationToken cancellationToken);
+        Task<ExchangeResult> ImportAsync([NotNull] string fileName, CancellationToken cancellationToken);
 
         event EventHandler<ProgressEventArgs> Progress;
     }

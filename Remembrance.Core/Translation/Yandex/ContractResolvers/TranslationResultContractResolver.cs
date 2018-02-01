@@ -20,7 +20,7 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
             { nameof(Word.NounAnimacy), "anm" },
             { nameof(Word.NounGender), "gen" },
             { nameof(Word.PartOfSpeech), "pos" },
-            { nameof(Word.Text), "text" },
+            { nameof(Word.WordText), "text" },
             { nameof(Word.VerbType), "asp" }
         };
 

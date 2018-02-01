@@ -6,9 +6,8 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 
 namespace Remembrance.ViewModel.Card
 {
@@ -25,7 +24,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IWordsProcessor wordsProcessor)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor)
             : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
         {
             if (settingsRepository == null)

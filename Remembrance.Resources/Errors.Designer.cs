@@ -19,7 +19,7 @@ namespace Remembrance.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Errors {
@@ -88,7 +88,70 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot translate word &apos;{0}&apos; from {1} to {2}..
+        ///   Looks up a localized string similar to Cannot download image..
+        /// </summary>
+        public static string CannotDownloadImage {
+            get {
+                return ResourceManager.GetString("CannotDownloadImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot get Qwant image search results..
+        /// </summary>
+        public static string CannotGetQwantResults {
+            get {
+                return ResourceManager.GetString("CannotGetQwantResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import {0}..
+        /// </summary>
+        public static string CannotImportWord {
+            get {
+                return ResourceManager.GetString("CannotImportWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot list languages..
+        /// </summary>
+        public static string CannotListLanguages {
+            get {
+                return ResourceManager.GetString("CannotListLanguages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot predict possible options..
+        /// </summary>
+        public static string CannotPredict {
+            get {
+                return ResourceManager.GetString("CannotPredict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot speak the word..
+        /// </summary>
+        public static string CannotSpeak {
+            get {
+                return ResourceManager.GetString("CannotSpeak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot synchronize {0} in {1}..
+        /// </summary>
+        public static string CannotSynchronize {
+            get {
+                return ResourceManager.GetString("CannotSynchronize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot translate word &apos;{0}&apos;..
         /// </summary>
         public static string CannotTranslate {
             get {
@@ -102,6 +165,33 @@ namespace Remembrance.Resources {
         public static string DefaultError {
             get {
                 return ResourceManager.GetString("DefaultError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export failed.
+        /// </summary>
+        public static string ExportFailed {
+            get {
+                return ResourceManager.GetString("ExportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following words were not imported.
+        /// </summary>
+        public static string ImportErrors {
+            get {
+                return ResourceManager.GetString("ImportErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import failed.
+        /// </summary>
+        public static string ImportFailed {
+            get {
+                return ResourceManager.GetString("ImportFailed", resourceCulture);
             }
         }
         

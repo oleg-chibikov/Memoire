@@ -50,20 +50,19 @@ namespace Remembrance.Core.Translation.Yandex
                 throw new ArgumentNullException(nameof(ui));
             }
 
-            // falgs morpho(4) //|family(1)
+            // flags morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
-            var response = await _httpClient.GetAsync(uriPart, cancellationToken)
-                .ConfigureAwait(false);
+
+            var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
-                return new TranslationResult
+                if (!response.IsSuccessStatusCode)
                 {
-                    PartOfSpeechTranslations = new PartOfSpeechTranslation[0]
-                };
+                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                }
             }
 
-            var result = await response.Content.ReadAsStringAsync()
-                .ConfigureAwait(false);
+            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
         }
 

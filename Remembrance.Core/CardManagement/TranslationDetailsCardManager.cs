@@ -1,10 +1,12 @@
+using System;
 using System.Windows;
 using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
@@ -14,9 +16,13 @@ namespace Remembrance.Core.CardManagement
     [UsedImplicitly]
     internal sealed class TranslationDetailsCardManager : BaseCardManager, ITranslationDetailsCardManager
     {
-        public TranslationDetailsCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ISettingsRepository settingsRepository, [NotNull] ILog logger)
-            : base(lifetimeScope, settingsRepository, logger)
+        [NotNull]
+        private readonly ISettingsRepository _settingsRepository;
+
+        public TranslationDetailsCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository)
+            : base(lifetimeScope, localSettingsRepository, logger)
         {
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }
 
         [NotNull]
@@ -29,8 +35,7 @@ namespace Remembrance.Core.CardManagement
                 new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel),
                 new TypedParameter(typeof(Window), ownerWindow));
             translationDetailsCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
-            translationDetailsCardWindow.AutoCloseTimeout = SettingsRepository.Get()
-                .TranslationCloseTimeout;
+            translationDetailsCardWindow.AutoCloseTimeout = _settingsRepository.Get().TranslationCloseTimeout;
             translationDetailsCardWindow.AssociateDisposable(nestedLifeTimeScope);
             return translationDetailsCardWindow;
         }

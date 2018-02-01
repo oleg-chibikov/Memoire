@@ -8,9 +8,8 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -33,7 +32,7 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IWordsProcessor wordsProcessor)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor)
             : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
         {
             if (settingsRepository == null)
@@ -71,8 +70,8 @@ namespace Remembrance.ViewModel.Card
                 foreach (var acceptedAnswer in AcceptedAnswers)
                 {
                     // 20% of the word could be errors
-                    var maxDistance = acceptedAnswer.Text.Length / 5;
-                    var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.Text);
+                    var maxDistance = acceptedAnswer.WordText.Length / 5;
+                    var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.WordText);
                     if (distance < 0 || distance > maxDistance)
                     {
                         continue;

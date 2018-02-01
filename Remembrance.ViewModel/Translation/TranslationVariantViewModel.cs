@@ -4,8 +4,8 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Card;
@@ -18,12 +18,12 @@ namespace Remembrance.ViewModel.Translation
     {
         public TranslationVariantViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] ILog logger,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
             [NotNull] ILifetimeScope lifetimeScope)
-            : base(textToSpeechPlayer, messenger, wordsProcessor, logger, wordPriorityRepository)
+            : base(textToSpeechPlayer, messenger, translationEntryProcessor, logger, wordPriorityRepository)
         {
             if (lifetimeScope == null)
             {

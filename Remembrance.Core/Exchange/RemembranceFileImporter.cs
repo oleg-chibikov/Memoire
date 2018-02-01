@@ -5,9 +5,8 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
@@ -18,18 +17,17 @@ namespace Remembrance.Core.Exchange
         public RemembranceFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IWordPriorityRepository wordPriorityRepository)
-            : base(translationEntryRepository, logger, wordsProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
         {
         }
 
-        protected override async Task<TranslationEntryKey> GetKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
+        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(exchangeEntry.TranslationEntry.Key)
-                .ConfigureAwait(false);
+            return await Task.FromResult(exchangeEntry.TranslationEntry.Id).ConfigureAwait(false);
         }
 
         protected override ManualTranslation[] GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
@@ -44,7 +42,7 @@ namespace Remembrance.Core.Exchange
 
         protected override bool SetLearningInfo(RemembranceExchangeEntry exchangeEntry, TranslationEntry translationEntry)
         {
-            //TODO: Class LearningInfo. Pass it to WordProcessor.AddOrChangeWord
+            //TODO: Class LearningInfo. Pass it to TranslationEntryProcessor.AddOrChangeWord
             var changed = translationEntry.IsFavorited != exchangeEntry.TranslationEntry.IsFavorited
                           || translationEntry.RepeatType != exchangeEntry.TranslationEntry.RepeatType
                           || translationEntry.LastCardShowTime != exchangeEntry.TranslationEntry.LastCardShowTime

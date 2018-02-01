@@ -288,17 +288,8 @@
   <data name="ImportSucceeded" xml:space="preserve">
     <value>Импорт завершился успешно. {0} слов импортировано</value>
   </data>
-  <data name="ImportFailed" xml:space="preserve">
-    <value>Импорт завершился с ошибкой</value>
-  </data>
   <data name="ExportSucceeded" xml:space="preserve">
     <value>Экспорт завершился успешно</value>
-  </data>
-  <data name="ExportFailed" xml:space="preserve">
-    <value>Экспорт завершился с ошибкой</value>
-  </data>
-  <data name="ImportErrors" xml:space="preserve">
-    <value>Некоторые слова не были импортированы</value>
   </data>
   <data name="OpenSettingsFolder" xml:space="preserve">
     <value>Открыть папку настроек</value>
@@ -326,5 +317,11 @@
   </data>
   <data name="PartOfSpeech" xml:space="preserve">
     <value>Часть речи</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердите действие</value>
+  </data>
+  <data name="AreYouSureDelete" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить перевод {0}?</value>
   </data>
 </root>

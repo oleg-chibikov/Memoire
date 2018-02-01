@@ -1,13 +1,13 @@
 using JetBrains.Annotations;
-using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts;
 using Remembrance.Contracts.Translate;
 
 namespace Remembrance.ViewModel.Translation
 {
     public sealed class PartOfSpeechTranslationViewModel : WordViewModel
     {
-        public PartOfSpeechTranslationViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
-            : base(textToSpeechPlayer, wordsProcessor)
+        public PartOfSpeechTranslationViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryProcessor translationEntryProcessor)
+            : base(textToSpeechPlayer, translationEntryProcessor)
         {
             CanLearnWord = false;
         }

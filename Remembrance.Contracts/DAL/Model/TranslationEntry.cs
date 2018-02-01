@@ -5,7 +5,7 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationEntry : TrackedEntity
+    public sealed class TranslationEntry : TrackedEntity<TranslationEntryKey>
     {
         [NotNull]
         private LinkedListNode<RepeatType> _current;
@@ -21,14 +21,11 @@ namespace Remembrance.Contracts.DAL.Model
 
         public TranslationEntry([NotNull] TranslationEntryKey key)
         {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Id = key;
             LastCardShowTime = DateTime.Now;
             RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             _current = RepeatTypeSettings.RepeatTypes.First;
         }
-
-        [NotNull]
-        public TranslationEntryKey Key { get; set; }
 
         [CanBeNull]
         public ManualTranslation[] ManualTranslations { get; set; }
@@ -91,7 +88,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{Id}: {Key}";
+            return $"{Id}";
         }
     }
 }

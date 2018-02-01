@@ -13,8 +13,8 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
@@ -84,7 +84,7 @@ namespace Remembrance.ViewModel.Card
             logger.Trace("Pausing showing cards...");
             messenger.Publish(IntervalModificator.Pause);
 
-            LanguagePair = $"{TranslationInfo.Key.SourceLanguage} -> {TranslationInfo.Key.TargetLanguage}";
+            LanguagePair = $"{TranslationInfo.TranslationEntryKey.SourceLanguage} -> {TranslationInfo.TranslationEntryKey.TargetLanguage}";
 
             var translationDetailsViewModel = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
             var translationResult = translationDetailsViewModel.TranslationResult;
@@ -205,8 +205,7 @@ namespace Remembrance.ViewModel.Card
             Logger.TraceFormat("There are {0} accepted words groups", acceptedWordGroups.Length);
             FilterAcceptedWordsGroupsByPriority(ref acceptedWordGroups);
 
-            return acceptedWordGroups.Select(x => new KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>(x.Key, ViewModelAdapter.Adapt<WordViewModel[]>(x.Value)))
-                .ToArray();
+            return acceptedWordGroups.Select(x => new KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>(x.Key, ViewModelAdapter.Adapt<WordViewModel[]>(x.Value))).ToArray();
         }
 
         /// <summary>
@@ -302,8 +301,7 @@ namespace Remembrance.ViewModel.Card
         {
             Logger.Trace("Getting straight assessment info...");
             var accept = new HashSet<WordViewModel>(acceptedWordGroups.SelectMany(x => x.Value), _wordsEqualityComparer);
-            var word = acceptedWordGroups.First()
-                .Key;
+            var word = acceptedWordGroups.First().Key;
             var correct = accept.First();
             return new AssessmentInfo(accept, word, correct);
         }
@@ -342,8 +340,7 @@ namespace Remembrance.ViewModel.Card
         private IGrouping<PartOfSpeech, PartOfSpeechTranslationViewModel> SelectSinglePartOfSpeechGroup([NotNull] Contracts.DAL.Model.Settings settings, [NotNull] TranslationResultViewModel translationResult)
         {
             Logger.Trace("Selecting single part of speech group...");
-            var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech)
-                .ToArray();
+            var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
             var partOfSpeechGroup = settings.RandomTranslation
                 ? GetRandomPartOfSpeechGroup(partOfSpeechGroups)
                 : partOfSpeechGroups.First();

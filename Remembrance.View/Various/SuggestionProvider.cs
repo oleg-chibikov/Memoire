@@ -27,9 +27,8 @@ namespace Remembrance.View.Various
                 throw new ArgumentNullException(nameof(textPattern));
             }
 
-            var variants = await _predictor.PredictAsync(textPattern, 5, cancellationToken)
-                .ConfigureAwait(false);
-            return variants.Position < 0
+            var variants = await _predictor.PredictAsync(textPattern, 5, cancellationToken).ConfigureAwait(false);
+            return variants?.Position < 0
                 ? variants.PredictionVariants
                 : null;
         }

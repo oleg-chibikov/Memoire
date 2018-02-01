@@ -16,5 +16,10 @@ namespace Remembrance.Contracts.CardManagement.Data
 
         [NotNull]
         public WordKey WordKey { get; }
+
+        public override string ToString()
+        {
+            return $"{WordKey}: {IsPriority}";
+        }
     }
 }

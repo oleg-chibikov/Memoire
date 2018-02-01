@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Remembrance.Contracts.DAL.Model;
 
-namespace Remembrance.Core.CardManagement
+namespace Remembrance.Core.Exchange
 {
     internal sealed class TranslationEntryContractResolver : DefaultContractResolver
     {

@@ -2,9 +2,9 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.DAL;
 
-namespace Remembrance.Contracts.DAL
+namespace Remembrance.Contracts.DAL.Shared
 {
-    public interface ISettingsRepository : ITrackedRepository<Settings, int>
+    public interface ISettingsRepository : ITrackedRepository<Settings, int>, ISharedRepository
     {
         [NotNull]
         Settings Get();

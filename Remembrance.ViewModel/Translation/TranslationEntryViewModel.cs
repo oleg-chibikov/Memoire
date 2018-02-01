@@ -4,22 +4,32 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Logging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
-using Scar.Common;
 using Scar.Common.Notification;
 
 namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
+    public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable, IDisposable
     {
+        [NotNull]
+        private readonly ILog _logger;
+
+        [NotNull]
+        private readonly IMessageHub _messenger;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
         [NotNull]
         private readonly IViewModelAdapter _viewModelAdapter;
 
@@ -29,46 +39,33 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
 
-        private string _text;
-
         public TranslationEntryViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IWordsProcessor wordsProcessor,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer)
-            : base(textToSpeechPlayer, wordsProcessor)
+            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
+            [NotNull] IMessageHub messenger,
+            [NotNull] ILog logger,
+            [NotNull] TranslationEntryKey translationEntryKey)
+            : base(textToSpeechPlayer, translationEntryProcessor)
         {
+            Id = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
+            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             CanLearnWord = false;
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
+
+            ReloadTranslationsAsync().ConfigureAwait(false);
         }
 
         [DoNotNotify]
-        public object Id { get; set; }
+        public TranslationEntryKey Id { get; }
 
-        public override string Text
-        {
-            get => _text ?? string.Empty;
-            set
-            {
-                var newValue = value.Capitalize();
-                if (newValue == _text)
-                {
-                    return;
-                }
-
-                // For the new item this event should not be fired
-                if (_text != null && !NotificationIsSupressed)
-                {
-                    var handler = Volatile.Read(ref TextChanged);
-                    handler?.Invoke(this, new TextChangedEventArgs(newValue, _text));
-                }
-
-                _text = newValue;
-            }
-        }
+        public override string WordText => Id.Text;
 
         [CanBeNull]
         public ManualTranslation[] ManualTranslations { get; set; }
@@ -79,10 +76,10 @@ namespace Remembrance.ViewModel.Translation
         public int ShowCount { get; set; }
 
         [NotNull]
-        public override string Language { get; set; }
+        public override string Language => Id.SourceLanguage;
 
         [NotNull]
-        public string TargetLanguage { get; set; }
+        public string TargetLanguage => Id.TargetLanguage;
 
         public RepeatType RepeatType { get; set; }
 
@@ -92,6 +89,14 @@ namespace Remembrance.ViewModel.Translation
 
         public bool IsFavorited { get; set; }
 
+        public void Dispose()
+        {
+            foreach (var subscriptionToken in _subscriptionTokens)
+            {
+                _messenger.UnSubscribe(subscriptionToken);
+            }
+        }
+
         public bool NotificationIsSupressed { get; set; }
 
         [NotNull]
@@ -100,11 +105,94 @@ namespace Remembrance.ViewModel.Translation
             return new NotificationSupresser(this);
         }
 
-        public async Task ReloadNonPriorityAsync()
+        private async Task ProcessNonPriorityAsync([NotNull] WordKey wordKey)
         {
-            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None)
-                .ConfigureAwait(false);
-            Reload(translationDetails.TranslationResult.GetDefaultWords(), false);
+            var translations = Translations;
+            _logger.TraceFormat("Removing non-priority word {1} from the list for {0}...", this, wordKey);
+            for (var i = 0; i < translations.Count; i++)
+            {
+                var translation = translations[i];
+
+                if (_wordsEqualityComparer.Equals(translation, wordKey))
+                {
+                    _logger.TraceFormat("Removing {0} from the list...", wordKey);
+                    translations.RemoveAt(i--);
+                }
+            }
+
+            if (!translations.Any())
+            {
+                _logger.Trace("No more translations left in the list. Restoring default...");
+                await ReloadNonPriorityAsync().ConfigureAwait(false);
+            }
+        }
+
+        private void ProcessPriority([NotNull] WordKey wordKey)
+        {
+            var translations = Translations;
+            _logger.TraceFormat("Removing all non-priority translations for {0} except {1}...", this, wordKey);
+            var found = false;
+            for (var i = 0; i < translations.Count; i++)
+            {
+                var translation = translations[i];
+                if (_wordsEqualityComparer.Equals(translation, wordKey))
+                {
+                    if (!translation.IsPriority)
+                    {
+                        _logger.TraceFormat("Found {0} in the list. Marking as priority...", wordKey);
+                        translation.IsPriority = true;
+                    }
+                    else
+                    {
+                        _logger.TraceFormat("Found {0} in the list but it is already priority", wordKey);
+                    }
+
+                    found = true;
+                }
+
+                if (!translation.IsPriority)
+                {
+                    translations.RemoveAt(i--);
+                }
+            }
+
+            if (!found)
+            {
+                _logger.TraceFormat("Not found {0} in the list. Adding...", wordKey);
+                var copy = _viewModelAdapter.Adapt<PriorityWordViewModel>(wordKey);
+                copy.SetTranslationEntryKey(wordKey);
+                translations.Add(copy);
+            }
+        }
+
+        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
+        {
+            _logger.TraceFormat("Changing priority for {0} in the list...", priorityWordKey);
+            if (priorityWordKey == null)
+            {
+                throw new ArgumentNullException(nameof(priorityWordKey));
+            }
+
+            var wordKey = priorityWordKey.WordKey;
+            if (!wordKey.Equals(Id))
+            {
+                return;
+            }
+
+            if (priorityWordKey.IsPriority)
+            {
+                ProcessPriority(wordKey);
+            }
+            else
+            {
+                await ProcessNonPriorityAsync(wordKey).ConfigureAwait(false);
+            }
+        }
+
+        private async Task ReloadNonPriorityAsync()
+        {
+            var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(Id, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            ReloadTranslations(translationDetails.TranslationResult.GetDefaultWords());
         }
 
         public async Task ReloadTranslationsAsync()
@@ -113,22 +201,18 @@ namespace Remembrance.ViewModel.Translation
             var priorityWords = _wordPriorityRepository.GetPriorityWordsForTranslationEntry(Id);
             if (priorityWords.Any())
             {
-                await ReloadPriorityAsync(priorityWords)
-                    .ConfigureAwait(false);
+                await ReloadPriorityAsync(priorityWords).ConfigureAwait(false);
             }
             //otherwise load default words
             else
             {
-                await ReloadNonPriorityAsync()
-                    .ConfigureAwait(false);
+                await ReloadNonPriorityAsync().ConfigureAwait(false);
             }
         }
 
-        public event TextChangedEventHandler TextChanged;
-
         public override string ToString()
         {
-            return $"{Id}: {Text} [{Language}->{TargetLanguage}]";
+            return $"{Id}";
         }
 
         private IEnumerable<IWord> GetPriorityWordsInTranslationDetails(IWord[] priorityWords, [NotNull] TranslationDetails translationDetails)
@@ -154,18 +238,17 @@ namespace Remembrance.ViewModel.Translation
 
         private async Task ReloadPriorityAsync([NotNull] IWord[] priorityWords)
         {
-            var translationDetails = await WordsProcessor.ReloadTranslationDetailsIfNeededAsync(Id, Text, Language, TargetLanguage, ManualTranslations, CancellationToken.None)
-                .ConfigureAwait(false);
+            var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(Id, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
             var priorityWordsDetails = GetPriorityWordsInTranslationDetails(priorityWords, translationDetails);
-            Reload(priorityWordsDetails, true);
+            ReloadTranslations(priorityWordsDetails);
         }
 
-        private void Reload([NotNull] IEnumerable<IWord> words, bool isPriority)
+        private void ReloadTranslations([NotNull] IEnumerable<IWord> words)
         {
             var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(words);
             foreach (var translation in translations)
             {
-                translation.SetIsPriority(isPriority);
+                translation.SetTranslationEntryKey(Id);
             }
 
             Translations = new ObservableCollection<PriorityWordViewModel>(translations);

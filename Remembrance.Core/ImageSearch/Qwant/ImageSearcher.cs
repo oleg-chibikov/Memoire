@@ -65,8 +65,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try
             {
-                var response = await _httpClient.GetAsync(uriPart, cancellationToken)
-                    .ConfigureAwait(false);
+                var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     if ((int)response.StatusCode == 429)
@@ -84,6 +83,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                 }
                             }
                         }
+
                         return null;
                     }
 
@@ -98,16 +98,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
                     }
                 }
 
-                var result = await response.Content.ReadAsStringAsync()
-                    .ConfigureAwait(false);
+                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var deserialized = JsonConvert.DeserializeObject<QwantResponse>(result, SerializerSettings);
                 return deserialized.Data.Result.Items;
             }
             catch (Exception ex)
             {
-                const string message = "Cannot get Qwant image search results";
-                _logger.Error(message, ex);
-                _messenger.Publish($"{message}: {ex.Message}".ToError(ex));
+                _messenger.Publish(Errors.CannotGetQwantResults.ToError(ex));
                 return null;
             }
         }

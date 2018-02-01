@@ -89,6 +89,7 @@
     <Compile Include="CardManagement\AssessmentCardManager.cs" />
     <Compile Include="CardManagement\BaseCardManager.cs" />
     <Compile Include="CardManagement\Data\ExchangeWord.cs" />
+    <Compile Include="DialogService.cs" />
     <Compile Include="Exchange\CardsExchanger.cs" />
     <Compile Include="CardManagement\Data\IExchangeEntry.cs" />
     <Compile Include="CardManagement\Data\EachWordExchangeEntry.cs" />
@@ -104,10 +105,11 @@
     <Compile Include="ImageSearch\Qwant\JsonConverters\UrlConverter.cs" />
     <Compile Include="NamedInstancesFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CardManagement\TranslationEntryContractResolver.cs" />
+    <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
-    <Compile Include="CardManagement\WordsProcessor.cs" />
+    <Compile Include="TranslationEntryProcessor.cs" />
     <Compile Include="CustomContractResolver.cs" />
+    <Compile Include="Sync\RepositorySynhronizer.cs" />
     <Compile Include="Sync\SynchronizationManager.cs" />
     <Compile Include="Translation\Yandex\ContractResolvers\DetectionResultContractResolver.cs" />
     <Compile Include="Translation\Yandex\ContractResolvers\ListResultContractResolver.cs" />

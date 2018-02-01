@@ -12,9 +12,7 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         [NotNull]
         public IList<Word> GetDefaultWords()
         {
-            return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First())
-                .Cast<Word>()
-                .ToList();
+            return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First()).Cast<Word>().ToList();
         }
     }
 }

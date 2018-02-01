@@ -11,7 +11,6 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:settings="clr-namespace:Remembrance.View.Settings"
-    xmlns:view1="clr-namespace:Remembrance.View"
     mc:Ignorable="d"
     PreviewLostKeyboardFocus="EditManualTranslationsDialog_OnPreviewLostKeyboardFocus"
     Width="800"
@@ -64,12 +63,15 @@
                 </xcdg:TableflowView>
             </xcdg:DataGridControl.View>
             <xceed:XceedAutoFitColumnGrid.Columns>
+                <!--TODO: First cell sometimes loses style-->
                 <xcdg:Column
                     Width="*"
                     IsMainColumn="True"
                     CellVerticalContentAlignment="Center"
                     ReadOnly="False"
-                    FieldName="Text"
+                    FieldName="WordText"
+                    CellContentTemplate="{StaticResource CellTemplate}"
+                    CellEditor="{StaticResource CellEditor}"
                     Title="{lex:Loc Remembrance.Resources:Texts:Translation}" />
                 <xcdg:Column
                     CellVerticalContentAlignment="Center"
@@ -80,6 +82,8 @@
                     CellVerticalContentAlignment="Center"
                     ReadOnly="False"
                     FieldName="Meaning"
+                    CellContentTemplate="{StaticResource CellTemplate}"
+                    CellEditor="{StaticResource CellEditor}"
                     Title="{lex:Loc Remembrance.Resources:Texts:Meaning}" />
                 <xcdg:Column
                     CellVerticalContentAlignment="Center"

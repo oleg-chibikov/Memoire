@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>, IWithText
+    public class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
         [UsedImplicitly]
         public TranslationEntryKey()
@@ -23,9 +23,11 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public string TargetLanguage { get; set; }
 
+        public string Text { get; set; }
+
         public bool Equals(TranslationEntryKey other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }
@@ -38,8 +40,21 @@ namespace Remembrance.Contracts.DAL.Model
             return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
-        [NotNull]
-        public string Text { get; set; }
+        public static bool operator ==([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
+        {
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1?.Equals(obj2) == true;
+        }
+
+        // this is second one '!='
+        public static bool operator !=([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
+        {
+            return !(obj1 == obj2);
+        }
 
         public override bool Equals(object obj)
         {

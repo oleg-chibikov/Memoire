@@ -10,7 +10,7 @@ namespace Remembrance.Core.CardManagement.Data
     {
         public ExchangeWord([NotNull] IWord word)
         {
-            Text = word?.Text ?? throw new ArgumentNullException(nameof(word));
+            WordText = word?.WordText ?? throw new ArgumentNullException(nameof(word));
             PartOfSpeech = word.PartOfSpeech;
         }
 
@@ -19,7 +19,7 @@ namespace Remembrance.Core.CardManagement.Data
         }
 
         [JsonProperty("Text", Required = Required.Always)]
-        public string Text { get; set; }
+        public string WordText { get; set; }
 
         [JsonProperty("PartOfSpeech", Required = Required.Always)]
         public PartOfSpeech PartOfSpeech { get; set; }

@@ -8,10 +8,12 @@ using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
@@ -34,10 +36,10 @@ namespace Remembrance.Core.CardManagement
         private readonly Guid _onCardShowFrequencyChangedToken;
 
         [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
         [NotNull]
-        private readonly IWordsProcessor _wordsProcessor;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         private bool _hasOpenWindows;
 
@@ -48,24 +50,31 @@ namespace Remembrance.Core.CardManagement
 
         public AssessmentCardManager(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessageHub messenger,
-            [NotNull] IWordsProcessor wordsProcessor)
-            : base(lifetimeScope, settingsRepository, logger)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] ISettingsRepository settingsRepository)
+            : base(lifetimeScope, localSettingsRepository, logger)
         {
+            if (settingsRepository == null)
+            {
+                throw new ArgumentNullException(nameof(settingsRepository));
+            }
+
             logger.Info("Starting showing cards...");
             _interval = Disposable.Empty; //just to assign the field in the costructor
-            _wordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _initTime = DateTime.Now;
+            var localSettings = localSettingsRepository.Get();
             var settings = settingsRepository.Get();
-            IsPaused = !settings.IsActive;
+            IsPaused = !localSettings.IsActive;
             CardShowFrequency = settings.CardShowFrequency;
-            LastCardShowTime = settings.LastCardShowTime;
-            _pausedTime = settings.PausedTime;
+            LastCardShowTime = localSettings.LastCardShowTime;
+            _pausedTime = localSettings.PausedTime;
             if (!IsPaused)
             {
                 CreateInterval();
@@ -140,18 +149,18 @@ namespace Remembrance.Core.CardManagement
                         {
                             Logger.Trace("Trying to show next card...");
                             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                            var settings = SettingsRepository.Get();
+                            var settings = LocalSettingsRepository.Get();
                             settings.PausedTime = _pausedTime = TimeSpan.Zero;
 
                             if (!settings.IsActive)
                             {
                                 Logger.Trace("Skipped showing card due to inactivity");
-                                SettingsRepository.UpdateOrInsert(settings);
+                                LocalSettingsRepository.UpdateOrInsert(settings);
                                 return;
                             }
 
                             settings.LastCardShowTime = LastCardShowTime = DateTime.Now;
-                            SettingsRepository.UpdateOrInsert(settings);
+                            LocalSettingsRepository.UpdateOrInsert(settings);
                             var translationEntry = _translationEntryRepository.GetCurrent();
                             if (translationEntry == null)
                             {
@@ -159,13 +168,7 @@ namespace Remembrance.Core.CardManagement
                                 return;
                             }
 
-                            var translationDetails = await _wordsProcessor.ReloadTranslationDetailsIfNeededAsync(
-                                    translationEntry.Id,
-                                    translationEntry.Key.Text,
-                                    translationEntry.Key.SourceLanguage,
-                                    translationEntry.Key.TargetLanguage,
-                                    translationEntry.ManualTranslations,
-                                    CancellationToken.None)
+                            var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
                                 .ConfigureAwait(false);
                             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
                             Logger.Trace($"Trying to show {translationInfo}...");
@@ -225,10 +228,10 @@ namespace Remembrance.Core.CardManagement
             }
 
             IsPaused = false;
-            var settings = SettingsRepository.Get();
+            var settings = LocalSettingsRepository.Get();
             settings.PausedTime = _pausedTime += DateTime.Now - LastPausedTime;
             Logger.Trace($"Paused time is {PausedTime}...");
-            SettingsRepository.UpdateOrInsert(settings);
+            LocalSettingsRepository.UpdateOrInsert(settings);
         }
 
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)

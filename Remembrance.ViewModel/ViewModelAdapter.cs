@@ -1,13 +1,11 @@
 using System;
 using Autofac;
-using Easy.MessageHub;
 using JetBrains.Annotations;
 using Mapster;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Translation;
-using Scar.Common.Messages;
 
 namespace Remembrance.ViewModel
 {
@@ -29,61 +27,37 @@ namespace Remembrance.ViewModel
                 .ConstructUsing(
                     translationEntryViewModel => new TranslationEntry
                     {
-                        Key = new TranslationEntryKey(translationEntryViewModel.Text, translationEntryViewModel.Language, translationEntryViewModel.TargetLanguage)
+                        Id = translationEntryViewModel.Id
                     })
                 .Compile();
-            _config.NewConfig<IWord, WordViewModel>()
-                .ConstructUsing(word => lifetimeScope.Resolve<WordViewModel>())
-                .Compile();
+            _config.NewConfig<IWord, WordViewModel>().ConstructUsing(word => lifetimeScope.Resolve<WordViewModel>()).Compile();
             _config.NewConfig<IWord, PriorityWordViewModel>()
                 .ConstructUsing(word => lifetimeScope.Resolve<PriorityWordViewModel>())
-                .Map(priorityWordViewModel => priorityWordViewModel.Text, word => word.Text) //This is unexpected, but still needed
+                .Map(priorityWordViewModel => priorityWordViewModel.WordText, word => word.WordText) //This is unexpected, but still needed
                 .Compile();
-            _config.NewConfig<TranslationVariant, TranslationVariantViewModel>()
-                .ConstructUsing(translationVariant => lifetimeScope.Resolve<TranslationVariantViewModel>())
-                .Compile();
-            _config.NewConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>()
-                .ConstructUsing(partOfSpeechTranslation => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>())
-                .Compile();
+            _config.NewConfig<TranslationVariant, TranslationVariantViewModel>().ConstructUsing(translationVariant => lifetimeScope.Resolve<TranslationVariantViewModel>()).Compile();
+            _config.NewConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>().ConstructUsing(partOfSpeechTranslation => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>()).Compile();
             _config.NewConfig<TranslationEntry, TranslationEntryViewModel>()
-                .ConstructUsing(translationEntry => lifetimeScope.Resolve<TranslationEntryViewModel>())
-                .Map(translationEntryViewModel => translationEntryViewModel.Text, translationEntry => translationEntry.Key.Text)
-                .Map(translationEntryViewModel => translationEntryViewModel.Language, translationEntry => translationEntry.Key.SourceLanguage)
-                .Map(translationEntryViewModel => translationEntryViewModel.TargetLanguage, translationEntry => translationEntry.Key.TargetLanguage)
-                .AfterMapping(
-                    async (translationEntry, translationEntryViewModel) =>
-                    {
-                        try
-                        {
-                            await translationEntryViewModel.ReloadTranslationsAsync()
-                                .ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            lifetimeScope.Resolve<IMessageHub>()
-                                .Publish(ex.ToMessage());
-                        }
-                    })
+                .ConstructUsing(translationEntry => lifetimeScope.Resolve<TranslationEntryViewModel>(new TypedParameter(typeof(TranslationEntryKey), translationEntry.Id)))
                 .Compile();
             _config.NewConfig<TranslationInfo, TranslationDetailsViewModel>()
                 .ConstructUsing(translationInfo => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
                 .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationResult, translationInfo => translationInfo.TranslationDetails.TranslationResult)
-                .Map(translationDetailsViewModel => translationDetailsViewModel.Id, translationInfo => translationInfo.TranslationDetails.Id)
-                .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationEntryId, translationInfo => translationInfo.TranslationDetails.Id)
+                .Map(translationDetailsViewModel => translationDetailsViewModel.TranslationEntryKey, translationInfo => translationInfo.TranslationDetails.Id)
                 .AfterMapping(
                     (translationInfo, translationDetailsViewModel) =>
                     {
                         foreach (var partOfSpeechTranslationViewModel in translationDetailsViewModel.TranslationResult.PartOfSpeechTranslations)
                         {
-                            partOfSpeechTranslationViewModel.Language = translationInfo.Key.SourceLanguage;
+                            partOfSpeechTranslationViewModel.Language = translationInfo.TranslationEntryKey.SourceLanguage;
                             foreach (var translationVariantViewModel in partOfSpeechTranslationViewModel.TranslationVariants)
                             {
-                                SetPriorityWordProperties(translationVariantViewModel, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId, partOfSpeechTranslationViewModel.Text);
+                                SetPriorityWordProperties(translationVariantViewModel, translationDetailsViewModel.TranslationEntryKey, partOfSpeechTranslationViewModel.WordText);
                                 if (translationVariantViewModel.Synonyms != null)
                                 {
                                     foreach (var synonym in translationVariantViewModel.Synonyms)
                                     {
-                                        SetPriorityWordProperties(synonym, translationInfo.Key.TargetLanguage, translationDetailsViewModel.TranslationEntryId, partOfSpeechTranslationViewModel.Text);
+                                        SetPriorityWordProperties(synonym, translationDetailsViewModel.TranslationEntryKey, partOfSpeechTranslationViewModel.WordText);
                                     }
                                 }
 
@@ -94,7 +68,7 @@ namespace Remembrance.ViewModel
 
                                 foreach (var meaning in translationVariantViewModel.Meanings)
                                 {
-                                    meaning.Language = translationInfo.Key.SourceLanguage;
+                                    meaning.Language = translationInfo.TranslationEntryKey.SourceLanguage;
                                 }
                             }
                         }
@@ -127,13 +101,10 @@ namespace Remembrance.ViewModel
             return source.Adapt(destination, _config);
         }
 
-        private static void SetPriorityWordProperties(
-            [NotNull] PriorityWordViewModel priorityWordViewModel,
-            [NotNull] string targetLanguage,
-            [NotNull] object translationEntryId,
-            [NotNull] string partOfSpeechTranslationText)
+        private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] TranslationEntryKey translationEntryKey, [NotNull] string partOfSpeechTranslationText)
         {
-            priorityWordViewModel.SetProperties(new PriorityWordViewModelMainProperties(translationEntryId, targetLanguage, partOfSpeechTranslationText));
+            priorityWordViewModel.SetTranslationEntryKey(translationEntryKey);
+            priorityWordViewModel.SetParentText(partOfSpeechTranslationText);
         }
     }
 }

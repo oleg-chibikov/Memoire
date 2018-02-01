@@ -18,7 +18,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public ManualTranslation([NotNull] string text, [NotNull] string example = "", [NotNull] string meaning = "", PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            WordText = text ?? throw new ArgumentNullException(nameof(text));
             Example = example;
             Meaning = meaning;
             PartOfSpeech = partOfSpeech;
@@ -38,7 +38,7 @@ namespace Remembrance.Contracts.DAL.Model
             set => _meaning = value ?? "";
         }
 
-        public string Text
+        public string WordText
         {
             get => _text;
             set => _text = value.Capitalize();
@@ -48,7 +48,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{Text} ({PartOfSpeech})";
+            return $"{WordText} ({PartOfSpeech})";
         }
     }
 }

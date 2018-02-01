@@ -5,7 +5,7 @@ using System.Windows.Input;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Commands;
@@ -14,18 +14,18 @@ namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel : TextEntry, IWord
+    public class WordViewModel : WordTextEntry, IWord
     {
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        protected readonly IWordsProcessor WordsProcessor;
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
-        public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] IWordsProcessor wordsProcessor)
+        public WordViewModel([NotNull] ITextToSpeechPlayer textToSpeechPlayer, [NotNull] ITranslationEntryProcessor translationEntryProcessor)
         {
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            WordsProcessor = wordsProcessor ?? throw new ArgumentNullException(nameof(wordsProcessor));
+            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             PlayTtsCommand = new CorrelationCommand(PlayTtsAsync);
             LearnWordCommand = new CorrelationCommand(LearnWordAsync, () => CanLearnWord);
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
@@ -63,16 +63,17 @@ namespace Remembrance.ViewModel.Translation
         public string NounGender { get; set; }
 
         [CanBeNull]
-        public string WordInfo => VerbType == null && NounAnimacy == null && NounGender == null
-            ? null
-            : string.Join(
-                ", ",
-                new[]
-                {
-                    VerbType,
-                    NounAnimacy,
-                    NounGender
-                }.Where(x => x != null));
+        public string WordInfo =>
+            VerbType == null && NounAnimacy == null && NounGender == null
+                ? null
+                : string.Join(
+                    ", ",
+                    new[]
+                    {
+                        VerbType,
+                        NounAnimacy,
+                        NounGender
+                    }.Where(x => x != null));
 
         public ICommand PlayTtsCommand { get; }
 
@@ -83,14 +84,12 @@ namespace Remembrance.ViewModel.Translation
 
         private async void LearnWordAsync()
         {
-            await WordsProcessor.AddOrChangeWordAsync(Text, CancellationToken.None, Language)
-                .ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(WordText, Language), CancellationToken.None).ConfigureAwait(false);
         }
 
         private async void PlayTtsAsync()
         {
-            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None)
-                .ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(WordText, Language, CancellationToken.None).ConfigureAwait(false);
         }
 
         public void ReRender()
@@ -104,7 +103,7 @@ namespace Remembrance.ViewModel.Translation
 
         public override string ToString()
         {
-            return $"{Text} [{Language}]";
+            return $"{WordText} [{Language}]";
         }
     }
 }

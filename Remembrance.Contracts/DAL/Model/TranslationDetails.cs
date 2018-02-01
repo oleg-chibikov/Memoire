@@ -5,16 +5,17 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class TranslationDetails : Entity
+    public sealed class TranslationDetails : Entity<TranslationEntryKey>
     {
         [UsedImplicitly]
         public TranslationDetails()
         {
         }
 
-        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] object translationEntryId)
+        //TODO: Combine with TranslationResult
+        public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] TranslationEntryKey translationEntryKey)
         {
-            Id = translationEntryId ?? throw new ArgumentNullException(nameof(translationEntryId));
+            Id = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             TranslationResult = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
         }
 

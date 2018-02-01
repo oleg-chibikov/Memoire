@@ -13,7 +13,7 @@ namespace Remembrance.Core
         {
             return x != null
                    && y != null
-                   && x.Text.Equals(y.Text, StringComparison.InvariantCultureIgnoreCase)
+                   && x.WordText.Equals(y.WordText, StringComparison.InvariantCultureIgnoreCase)
                    && (x.PartOfSpeech == y.PartOfSpeech || x.PartOfSpeech == PartOfSpeech.Unknown || y.PartOfSpeech == PartOfSpeech.Unknown);
         }
 
@@ -21,8 +21,7 @@ namespace Remembrance.Core
         {
             unchecked
             {
-                var hashCode = obj.Text.ToLowerInvariant()
-                    .GetHashCode();
+                var hashCode = obj.WordText.ToLowerInvariant().GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.PartOfSpeech.GetHashCode();
                 return hashCode;
             }

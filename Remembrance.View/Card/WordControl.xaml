@@ -11,7 +11,6 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
-    xmlns:view1="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -89,7 +88,7 @@
                 </Style>
             </Border.Style>
             <TextBlock
-                Text="{Binding Text, Mode=OneWay}"
+                Text="{Binding WordText, Mode=OneWay}"
                 FontSize="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 FontWeight="{Binding FontWeight, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <TextBlock.InputBindings>
