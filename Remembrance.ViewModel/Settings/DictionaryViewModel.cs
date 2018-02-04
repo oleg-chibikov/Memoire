@@ -60,7 +60,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
-        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
         private readonly DispatcherTimer _timer;
@@ -77,9 +77,6 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly IViewModelAdapter _viewModelAdapter;
 
-        [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
-
         private int _count;
         private bool _filterChanged;
         private int _lastRecordedCount;
@@ -92,18 +89,18 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessageHub messenger,
             [NotNull] EditManualTranslationsViewModel editManualTranslationsViewModel,
-            [NotNull] IDialogService dialogService)
+            [NotNull] IDialogService dialogService,
+            [NotNull] SynchronizationContext synchronizationContext)
             : base(localSettingsRepository, languageDetector, translationEntryProcessor, logger)
         {
             EditManualTranslationsViewModel = editManualTranslationsViewModel ?? throw new ArgumentNullException(nameof(editManualTranslationsViewModel));
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
-            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
@@ -296,13 +293,13 @@ namespace Remembrance.ViewModel.Settings
                     existing.ReloadTranslationsAsync().ConfigureAwait(false);
                 }
 
-                _syncContext.Post(x => View.MoveCurrentTo(existing), null);
+                _synchronizationContext.Post(x => View.MoveCurrentTo(existing), null);
                 Logger.Trace($"{existing} has been updated in the list");
             }
             else
             {
                 Logger.Trace($"Adding {translationEntryViewModel} to the list...");
-                _syncContext.Post(
+                _synchronizationContext.Post(
                     x =>
                     {
                         lock (_lockObject)
@@ -386,7 +383,7 @@ namespace Remembrance.ViewModel.Settings
             }
             else
             {
-                View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel)o).WordText.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
+                View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel)o).Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
             }
 
             _filterChanged = true;

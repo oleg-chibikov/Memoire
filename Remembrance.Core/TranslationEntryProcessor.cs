@@ -64,12 +64,6 @@ namespace Remembrance.Core
         private readonly IWordImagesInfoRepository _wordImagesInfoRepository;
 
         [NotNull]
-        private readonly IWordPriorityRepository _wordPriorityRepository;
-
-        [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
-
-        [NotNull]
         private readonly IWordsTranslator _wordsTranslator;
 
         public TranslationEntryProcessor(
@@ -81,17 +75,13 @@ namespace Remembrance.Core
             [NotNull] IWordsTranslator wordsTranslator,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILanguageDetector languageDetector,
-            [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] IWordImagesInfoRepository wordImagesInfoRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository)
         {
-            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _wordImagesInfoRepository = wordImagesInfoRepository ?? throw new ArgumentNullException(nameof(wordImagesInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
-            _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
@@ -133,7 +123,6 @@ namespace Remembrance.Core
             _prepositionsInfoRepository.Delete(translationEntryKey);
             _translationDetailsRepository.Delete(translationEntryKey);
             _wordImagesInfoRepository.ClearForTranslationEntry(translationEntryKey);
-            _wordPriorityRepository.ClearForTranslationEntry(translationEntryKey);
             _translationEntryRepository.Delete(translationEntryKey);
         }
 
@@ -161,7 +150,7 @@ namespace Remembrance.Core
             var translationResult = await TranslateAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
 
             // replace the original text with the corrected one
-            translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().WordText;
+            translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().Text;
 
             var translationEntry = new TranslationEntry(translationEntryKey)
             {
@@ -175,7 +164,7 @@ namespace Remembrance.Core
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
             if (needPostProcess)
             {
-                PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken);
+                PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
             }
 
             _logger.InfoFormat("Processing finished for word {0}", translationEntryKey);
@@ -230,7 +219,7 @@ namespace Remembrance.Core
                         _translationDetailsRepository.Update(td);
                     })
                 .ConfigureAwait(false);
-            DeleteFromPriority(translationEntryKey, manualTranslations, translationDetails);
+            DeleteFromPriority(translationEntry, manualTranslations, translationDetails);
             return new TranslationInfo(translationEntry, translationDetails);
         }
 
@@ -246,11 +235,11 @@ namespace Remembrance.Core
                 {
                     IsManual = true,
                     PartOfSpeech = group.Key,
-                    WordText = text,
+                    Text = text,
                     TranslationVariants = group.Select(
                             manualTranslation => new TranslationVariant
                             {
-                                WordText = manualTranslation.WordText,
+                                Text = manualTranslation.Text,
                                 PartOfSpeech = manualTranslation.PartOfSpeech,
                                 Examples = string.IsNullOrWhiteSpace(manualTranslation.Example)
                                     ? null
@@ -267,7 +256,7 @@ namespace Remembrance.Core
                                     {
                                         new Word
                                         {
-                                            WordText = manualTranslation.Meaning
+                                            Text = manualTranslation.Meaning
                                         }
                                     }
                             })
@@ -276,20 +265,31 @@ namespace Remembrance.Core
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
-        private void DeleteFromPriority([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, [NotNull] TranslationDetails translationDetails)
+        private void DeleteFromPriority([NotNull] TranslationEntry translationEntry, [CanBeNull] ManualTranslation[] manualTranslations, [NotNull] TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
                 .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants)
-                .Cast<IWord>();
+                .Cast<BaseWord>();
             var deletedManualTranslations = remainingManualTranslations;
             if (manualTranslations != null)
             {
-                deletedManualTranslations = deletedManualTranslations.Except(manualTranslations, _wordsEqualityComparer);
+                deletedManualTranslations = deletedManualTranslations.Except(manualTranslations);
             }
 
+            if (translationEntry.PriorityWords == null)
+            {
+                return;
+            }
+            var deleted = false;
             foreach (var word in deletedManualTranslations)
             {
-                _wordPriorityRepository.Delete(new WordKey(translationEntryKey, word));
+                translationEntry.PriorityWords.Remove(word);
+                deleted = true;
+            }
+
+            if (deleted)
+            {
+                _translationEntryRepository.Update(translationEntry);
             }
         }
 

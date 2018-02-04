@@ -77,7 +77,6 @@
     <Compile Include="Local\TranslationDetailsRepository.cs" />
     <Compile Include="Shared\TranslationEntryRepository.cs" />
     <Compile Include="Local\WordImagesInfoRepository.cs" />
-    <Compile Include="Shared\WordPriorityRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">

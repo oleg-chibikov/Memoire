@@ -18,5 +18,10 @@ namespace Remembrance.Core.CardManagement.Data
 
         [JsonProperty("Word", Required = Required.Always)]
         public string Text { get; }
+
+        public override string ToString()
+        {
+            return $"{Text} -> {Translation}";
+        }
     }
 }

@@ -25,6 +25,8 @@ namespace Remembrance.Contracts.DAL.Model
 
         public string Text { get; set; }
 
+        #region Equality
+
         public bool Equals(TranslationEntryKey other)
         {
             if (other is null)
@@ -71,6 +73,8 @@ namespace Remembrance.Contracts.DAL.Model
                 return hashCode;
             }
         }
+
+        #endregion
 
         public override string ToString()
         {

@@ -13,8 +13,8 @@ namespace Remembrance.DAL.Local
             : base(Paths.SettingsPath)
         {
             Collection.EnsureIndex(x => x.Id);
-            Collection.EnsureIndex(x => x.Id.WordText);
-            Collection.EnsureIndex(x => x.Id.PartOfSpeech);
+            Collection.EnsureIndex(x => x.Id.Word.Text);
+            Collection.EnsureIndex(x => x.Id.Word.PartOfSpeech);
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);
             Collection.EnsureIndex(x => x.Id.TargetLanguage);

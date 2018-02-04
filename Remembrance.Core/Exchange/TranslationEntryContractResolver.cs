@@ -16,7 +16,6 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         private static readonly string[] ExcludedProperties =
         {
-            nameof(TranslationEntry.Id)
         };
 
         [NotNull]

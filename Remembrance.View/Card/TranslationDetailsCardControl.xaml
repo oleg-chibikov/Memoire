@@ -9,7 +9,6 @@
              xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
              xmlns:view="clr-namespace:Remembrance.View.Card"
              xmlns:various="clr-namespace:Remembrance.View.Various"
-             xmlns:view1="clr-namespace:Remembrance.View"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}">
     <UserControl.Resources>

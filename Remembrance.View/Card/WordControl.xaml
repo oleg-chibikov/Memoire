@@ -88,7 +88,7 @@
                 </Style>
             </Border.Style>
             <TextBlock
-                Text="{Binding WordText, Mode=OneWay}"
+                Text="{Binding Text, Mode=OneWay}"
                 FontSize="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 FontWeight="{Binding FontWeight, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <TextBlock.InputBindings>

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Threading;
 using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
@@ -21,11 +21,11 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessageHub messenger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor)
-            : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] SynchronizationContext synchronizationContext)
+            : base(translationInfo, settingsRepository, viewModelAdapter, messenger, logger, lifetimeScope, synchronizationContext)
         {
             if (settingsRepository == null)
             {

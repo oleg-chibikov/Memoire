@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows;
 using Autofac;
 using Common.Logging;
@@ -22,18 +23,21 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         protected readonly ILog Logger;
 
-        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger)
+        [NotNull]
+        private readonly SynchronizationContext _synchronizationContext;
+
+        protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] SynchronizationContext synchronizationContext)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             LifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
             LocalSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
         }
 
         public void ShowCard(TranslationInfo translationInfo, IWindow ownerWindow)
         {
-            //TODO: Sync context?
-            Application.Current.Dispatcher.Invoke(
-                () =>
+            _synchronizationContext.Send(
+                x =>
                 {
                     var window = TryCreateWindow(translationInfo, ownerWindow);
                     if (window == null)
@@ -54,7 +58,7 @@ namespace Remembrance.Core.CardManagement
                     window.ShowActivated = false;
                     window.Topmost = true;
                     window.Restore();
-                });
+                }, null);
         }
 
         [CanBeNull]

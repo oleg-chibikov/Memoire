@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
@@ -53,12 +54,10 @@ namespace Remembrance
 
             builder.RegisterType<INamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
             RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
-            RegisterNamed<WordPriorityRepository, IWordPriorityRepository>(builder);
             RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
 
             builder.RegisterType(typeof(RepositorySynhronizer<Settings, int, ISettingsRepository>)).AsImplementedInterfaces();
             builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<WordPriority, WordKey, IWordPriorityRepository>)).AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();

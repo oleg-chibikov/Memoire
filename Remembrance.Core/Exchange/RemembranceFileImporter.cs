@@ -18,10 +18,8 @@ namespace Remembrance.Core.Exchange
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository)
-            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
+            [NotNull] IMessageHub messenger)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger)
         {
         }
 
@@ -35,9 +33,9 @@ namespace Remembrance.Core.Exchange
             return exchangeEntry.TranslationEntry.ManualTranslations;
         }
 
-        protected override ICollection<ExchangeWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override ICollection<BaseWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
-            return exchangeEntry.PriorityTranslations;
+            return exchangeEntry.TranslationEntry.PriorityWords;
         }
 
         protected override bool SetLearningInfo(RemembranceExchangeEntry exchangeEntry, TranslationEntry translationEntry)

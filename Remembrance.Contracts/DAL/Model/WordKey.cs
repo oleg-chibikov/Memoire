@@ -1,22 +1,24 @@
 using System;
 using JetBrains.Annotations;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordKey : TranslationEntryKey, IEquatable<WordKey>, IWord
+    public sealed class WordKey : TranslationEntryKey, IEquatable<WordKey>
     {
         [UsedImplicitly]
         public WordKey()
         {
         }
 
-        public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] IWord word)
+        public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] BaseWord word)
             : base(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage)
         {
-            WordText = word?.WordText ?? throw new ArgumentNullException(nameof(word));
-            PartOfSpeech = word.PartOfSpeech;
+            Word = word ?? throw new ArgumentNullException(nameof(word));
         }
+
+        public BaseWord Word { get; set; }
+
+        #region Equality
 
         public bool Equals(WordKey other)
         {
@@ -30,12 +32,8 @@ namespace Remembrance.Contracts.DAL.Model
                 return true;
             }
 
-            return WordText == other.WordText && PartOfSpeech == other.PartOfSpeech && base.Equals(other);
+            return Word.Equals(other.Word) && base.Equals(other);
         }
-
-        public string WordText { get; set; }
-
-        public PartOfSpeech PartOfSpeech { get; set; }
 
         public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
         {
@@ -63,15 +61,16 @@ namespace Remembrance.Contracts.DAL.Model
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode * 397) ^ WordText.GetHashCode();
-                hashCode = (hashCode * 397) ^ PartOfSpeech.GetHashCode();
+                hashCode = (hashCode * 397) ^ Word.GetHashCode();
                 return hashCode;
             }
         }
 
+        #endregion
+
         public override string ToString()
         {
-            return $"{base.ToString()} - {WordText} ({PartOfSpeech})";
+            return $"{base.ToString()} - {Word}";
         }
     }
 }

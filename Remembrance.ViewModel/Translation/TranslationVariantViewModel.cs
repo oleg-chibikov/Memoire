@@ -21,9 +21,9 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
             [NotNull] ILog logger,
-            [NotNull] IWordPriorityRepository wordPriorityRepository,
-            [NotNull] ILifetimeScope lifetimeScope)
-            : base(textToSpeechPlayer, messenger, translationEntryProcessor, logger, wordPriorityRepository)
+            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] ITranslationEntryRepository translationEntryRepository)
+            : base(textToSpeechPlayer, messenger, translationEntryProcessor, logger, translationEntryRepository)
         {
             if (lifetimeScope == null)
             {

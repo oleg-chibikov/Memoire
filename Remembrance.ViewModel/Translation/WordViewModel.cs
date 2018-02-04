@@ -14,7 +14,7 @@ namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel : WordTextEntry, IWord
+    public class WordViewModel : BaseWord
     {
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
@@ -42,6 +42,7 @@ namespace Remembrance.ViewModel.Translation
         [DoNotNotify]
         public bool CanLearnWord { get; set; } = true;
 
+        [DoNotNotify]
         public virtual bool CanEdit => CanLearnWord;
 
         /// <summary>
@@ -49,6 +50,9 @@ namespace Remembrance.ViewModel.Translation
         /// </summary>
         [AlsoNotifyFor(nameof(PartOfSpeech))]
         private bool ReRenderSwitch { get; set; }
+
+        [DoNotNotify]
+        public override PartOfSpeech PartOfSpeech { get; set; }
 
         [CanBeNull]
         [DoNotNotify]
@@ -79,17 +83,14 @@ namespace Remembrance.ViewModel.Translation
 
         public ICommand LearnWordCommand { get; }
 
-        [DoNotNotify]
-        public PartOfSpeech PartOfSpeech { get; set; }
-
         private async void LearnWordAsync()
         {
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(WordText, Language), CancellationToken.None).ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Text, Language), CancellationToken.None).ConfigureAwait(false);
         }
 
         private async void PlayTtsAsync()
         {
-            await _textToSpeechPlayer.PlayTtsAsync(WordText, Language, CancellationToken.None).ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
         }
 
         public void ReRender()
@@ -103,7 +104,7 @@ namespace Remembrance.ViewModel.Translation
 
         public override string ToString()
         {
-            return $"{WordText} [{Language}]";
+            return $"{base.ToString()} [{Language}]";
         }
     }
 }

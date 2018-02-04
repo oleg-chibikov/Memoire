@@ -80,7 +80,7 @@ namespace Remembrance.ViewModel.Settings
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
             _logger.Trace($"Adding {ManualTranslationText}...");
             ManualTranslationText = null;
-            if (ManualTranslations.Any(x => x.WordText.Equals(newManualTranslation.WordText, StringComparison.InvariantCultureIgnoreCase)))
+            if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new LocalizableException(Errors.TranslationIsPresent);
             }

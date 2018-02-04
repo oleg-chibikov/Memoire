@@ -159,7 +159,7 @@ namespace Remembrance.Core.Exchange
         {
             _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
             return _saveFileDialog.ShowDialog() == true
-                ? _openFileDialog.FileName
+                ? _saveFileDialog.FileName
                 : null;
         }
 

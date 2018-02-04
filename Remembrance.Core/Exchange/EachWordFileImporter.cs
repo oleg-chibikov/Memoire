@@ -34,10 +34,8 @@ namespace Remembrance.Core.Exchange
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
-            [NotNull] ILanguageDetector languageDetector,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
-            [NotNull] IWordPriorityRepository wordPriorityRepository)
-            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, wordsEqualityComparer, wordPriorityRepository)
+            [NotNull] ILanguageDetector languageDetector)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
@@ -50,13 +48,13 @@ namespace Remembrance.Core.Exchange
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
-        protected override ICollection<ExchangeWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
+        protected override ICollection<BaseWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
         {
             return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(
-                    x => new ExchangeWord
+                    text => new BaseWord
                     {
-                        WordText = x
+                        Text = text
                     })
                 .ToArray();
         }

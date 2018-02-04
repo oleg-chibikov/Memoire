@@ -37,10 +37,7 @@ namespace Remembrance.ViewModel.Card
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
-        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
-
-        [NotNull]
-        private readonly IEqualityComparer<IWord> _wordsEqualityComparer;
+        private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
         protected readonly HashSet<WordViewModel> AcceptedAnswers;
@@ -66,9 +63,9 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessageHub messenger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope)
+            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] SynchronizationContext synchronizationContext)
         {
             if (settingsRepository == null)
             {
@@ -79,7 +76,7 @@ namespace Remembrance.ViewModel.Card
             Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _wordsEqualityComparer = wordsEqualityComparer ?? throw new ArgumentNullException(nameof(wordsEqualityComparer));
+            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
 
             logger.Trace("Pausing showing cards...");
             messenger.Publish(IntervalModificator.Pause);
@@ -264,7 +261,7 @@ namespace Remembrance.ViewModel.Card
             var translation = acceptedWordGroup.Value.First();
             var correct = acceptedWordGroup.Key;
             return new AssessmentInfo(
-                new HashSet<WordViewModel>(_wordsEqualityComparer)
+                new HashSet<WordViewModel>
                 {
                     correct
                 },
@@ -285,7 +282,7 @@ namespace Remembrance.ViewModel.Card
             var randomTranslation = randomAcceptedWordGroup.Value[randomTranslationIndex];
             var correct = randomAcceptedWordGroup.Key;
             return new AssessmentInfo(
-                new HashSet<WordViewModel>(_wordsEqualityComparer)
+                new HashSet<WordViewModel>
                 {
                     correct
                 },
@@ -300,7 +297,7 @@ namespace Remembrance.ViewModel.Card
         private AssessmentInfo GetStraightAssessmentInfo([NotNull] KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>[] acceptedWordGroups)
         {
             Logger.Trace("Getting straight assessment info...");
-            var accept = new HashSet<WordViewModel>(acceptedWordGroups.SelectMany(x => x.Value), _wordsEqualityComparer);
+            var accept = new HashSet<WordViewModel>(acceptedWordGroups.SelectMany(x => x.Value));
             var word = acceptedWordGroups.First().Key;
             var correct = accept.First();
             return new AssessmentInfo(accept, word, correct);
@@ -359,7 +356,7 @@ namespace Remembrance.ViewModel.Card
                 () =>
                 {
                     Logger.Trace("Window is closing...");
-                    _syncContext.Post(x => RequestClose?.Invoke(null, null), null);
+                    _synchronizationContext.Post(x => RequestClose?.Invoke(null, null), null);
                 },
                 closeTimeout);
         }

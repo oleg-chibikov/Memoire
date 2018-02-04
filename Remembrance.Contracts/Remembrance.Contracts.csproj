@@ -93,7 +93,6 @@
     <Compile Include="DAL\Shared\ITranslationEntryRepository.cs" />
     <Compile Include="DAL\Local\IPrepositionsInfoRepository.cs" />
     <Compile Include="DAL\Local\IWordImagesInfoRepository.cs" />
-    <Compile Include="DAL\Shared\IWordPriorityRepository.cs" />
     <Compile Include="DAL\Model\PrepositionsInfo.cs" />
     <Compile Include="DAL\Model\LocalSettings.cs" />
     <Compile Include="DAL\Model\TranslationEntryAdditionInfo.cs" />
@@ -109,12 +108,11 @@
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
     <Compile Include="DAL\Model\TranslationInfo.cs" />
     <Compile Include="DAL\Model\WordImageInfo.cs" />
-    <Compile Include="DAL\Model\WordPriority.cs" />
+    <Compile Include="DAL\Model\BaseWord.cs" />
     <Compile Include="ImageSearch\Data\ImageInfo.cs" />
     <Compile Include="ImageSearch\IImageDownloader.cs" />
     <Compile Include="ImageSearch\IImageSearcher.cs" />
     <Compile Include="IViewModelAdapter.cs" />
-    <Compile Include="IWord.cs" />
     <Compile Include="Sync\IRepositorySynhronizer.cs" />
     <Compile Include="Sync\ISynchronizationManager.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
@@ -126,6 +124,7 @@
     <Compile Include="Translate\Data\WordsTranslator\Example.cs" />
     <Compile Include="Translate\Data\WordsTranslator\PartOfSpeech.cs" />
     <Compile Include="Translate\Data\WordsTranslator\PartOfSpeechTranslation.cs" />
+    <Compile Include="Translate\Data\WordsTranslator\TextEntry.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TranslationResult.cs" />
     <Compile Include="Translate\Data\WordsTranslator\TranslationVariant.cs" />
     <Compile Include="Translate\Data\WordsTranslator\Word.cs" />

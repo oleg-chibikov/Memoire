@@ -60,7 +60,7 @@ namespace Remembrance.ViewModel.Card
             _cancellationTokenSourceProvider = cancellationTokenSourceProvider ?? throw new ArgumentNullException(nameof(cancellationTokenSourceProvider));
             _imageDownloader = imageDownloader ?? throw new ArgumentNullException(nameof(imageDownloader));
             _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
-            _word.TranslationEntryKeySet += WordTranslationEntryKeySet;
+            _word.WordKeySet += WordWordKeySet;
             _word.ParentTextSet += Word_ParentTextSet;
             SetNextImageCommand = new CorrelationCommand(SetNextImage);
             SetPreviousImageCommand = new CorrelationCommand(SetPreviousImage);
@@ -81,7 +81,7 @@ namespace Remembrance.ViewModel.Card
         public bool IsLoading { get; private set; } = true;
 
         [NotNull]
-        private string SearchText => _word.WordText + " " + _parentText;
+        private string SearchText => _word.Text + " " + _parentText;
 
         [CanBeNull]
         public BitmapSource Image { get; private set; }
@@ -94,13 +94,13 @@ namespace Remembrance.ViewModel.Card
 
         public void Dispose()
         {
-            _word.TranslationEntryKeySet -= WordTranslationEntryKeySet;
+            _word.WordKeySet -= WordWordKeySet;
             _word.ParentTextSet -= Word_ParentTextSet;
         }
 
-        private async void WordTranslationEntryKeySet(object sender, [NotNull] EventArgs<TranslationEntryKey> e)
+        private async void WordWordKeySet(object sender, [NotNull] EventArgs<WordKey> e)
         {
-            _wordKey = new WordKey(e.Parameter, _word);
+            _wordKey = e.Parameter;
 
             var wordImageInfo = _wordImagesInfoRepository.TryGetById(_wordKey);
             if (wordImageInfo != null)

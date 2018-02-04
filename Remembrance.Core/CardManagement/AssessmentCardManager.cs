@@ -55,8 +55,8 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessageHub messenger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ISettingsRepository settingsRepository)
-            : base(lifetimeScope, localSettingsRepository, logger)
+            [NotNull] ISettingsRepository settingsRepository, [NotNull] SynchronizationContext synchronizationContext)
+            : base(lifetimeScope, localSettingsRepository, logger, synchronizationContext)
         {
             if (settingsRepository == null)
             {
@@ -128,6 +128,7 @@ namespace Remembrance.Core.CardManagement
                 _interval.Dispose();
             }
 
+            //TODO: When closing _messenger is already disposed here!
             _messenger.UnSubscribe(_onCardShowFrequencyChangedToken);
             _messenger.UnSubscribe(_intervalModifiedToken);
 

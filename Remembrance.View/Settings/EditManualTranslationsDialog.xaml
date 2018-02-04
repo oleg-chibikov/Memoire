@@ -69,7 +69,7 @@
                     IsMainColumn="True"
                     CellVerticalContentAlignment="Center"
                     ReadOnly="False"
-                    FieldName="WordText"
+                    FieldName="Text"
                     CellContentTemplate="{StaticResource CellTemplate}"
                     CellEditor="{StaticResource CellEditor}"
                     Title="{lex:Loc Remembrance.Resources:Texts:Translation}" />

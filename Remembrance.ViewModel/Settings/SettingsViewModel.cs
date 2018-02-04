@@ -46,7 +46,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
-        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext _synchronizationContext;
 
         private Language _uiLanguage;
 
@@ -55,13 +55,15 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
             [NotNull] IMessageHub messenger,
-            [NotNull] ICardsExchanger cardsExchanger)
+            [NotNull] ICardsExchanger cardsExchanger,
+            [NotNull] SynchronizationContext synchronizationContext)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
+            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
 
             var settings = settingsRepository.Get();
             var localSettings = localSettingsRepository.Get();
@@ -170,7 +172,7 @@ namespace Remembrance.ViewModel.Settings
 
         private void CardsExchanger_Progress([NotNull] object sender, [NotNull] ProgressEventArgs e)
         {
-            _syncContext.Send(
+            _synchronizationContext.Send(
                 x =>
                 {
                     Progress = e.Percentage;

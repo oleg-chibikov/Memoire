@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Autofac;
 using Common.Logging;
@@ -29,11 +29,11 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] IMessageHub messenger,
-            [NotNull] IEqualityComparer<IWord> wordsEqualityComparer,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor)
-            : base(translationInfo, settingsRepository, viewModelAdapter, messenger, wordsEqualityComparer, logger, lifetimeScope)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] SynchronizationContext synchronizationContext)
+            : base(translationInfo, settingsRepository, viewModelAdapter, messenger, logger, lifetimeScope, synchronizationContext)
         {
             if (settingsRepository == null)
             {
@@ -70,8 +70,8 @@ namespace Remembrance.ViewModel.Card
                 foreach (var acceptedAnswer in AcceptedAnswers)
                 {
                     // 20% of the word could be errors
-                    var maxDistance = acceptedAnswer.WordText.Length / 5;
-                    var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.WordText);
+                    var maxDistance = acceptedAnswer.Text.Length / 5;
+                    var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.Text);
                     if (distance < 0 || distance > maxDistance)
                     {
                         continue;

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows;
 using Autofac;
 using Common.Logging;
@@ -19,8 +20,8 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TranslationDetailsCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository)
-            : base(lifetimeScope, localSettingsRepository, logger)
+        public TranslationDetailsCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] SynchronizationContext synchronizationContext)
+            : base(lifetimeScope, localSettingsRepository, logger, synchronizationContext)
         {
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         }

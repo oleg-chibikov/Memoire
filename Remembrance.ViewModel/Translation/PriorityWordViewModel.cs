@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -26,29 +27,33 @@ namespace Remembrance.ViewModel.Translation
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
-        private readonly IWordPriorityRepository _wordPriorityRepository;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         public PriorityWordViewModel(
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] IMessageHub messenger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
-            [NotNull] IWordPriorityRepository wordPriorityRepository)
+            [NotNull] ITranslationEntryRepository translationEntryRepository)
             : base(textToSpeechPlayer, translationEntryProcessor)
         {
-            _wordPriorityRepository = wordPriorityRepository ?? throw new ArgumentNullException(nameof(wordPriorityRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChanged));
         }
 
+        [DoNotNotify]
         public override bool CanEdit { get; } = true;
 
         [NotNull]
-        public WordKey WordKey { get; private set; }
+        private WordKey _wordKey;
 
         [NotNull]
-        public override string Language => WordKey.TargetLanguage;
+        private TranslationEntryKey _translationEntryKey;
+
+        [NotNull][DoNotNotify]
+        public override string Language => _translationEntryKey.TargetLanguage;
 
         public void Dispose()
         {
@@ -66,7 +71,7 @@ namespace Remembrance.ViewModel.Translation
             }
 
             var wordKey = priorityWordKey.WordKey;
-            if (!wordKey.Equals(WordKey))
+            if (!wordKey.Equals(_wordKey))
             {
                 return;
             }
@@ -75,7 +80,7 @@ namespace Remembrance.ViewModel.Translation
             _logger.InfoFormat("Priority changed for {0}", priorityWordKey);
         }
 
-        public event EventHandler<EventArgs<TranslationEntryKey>> TranslationEntryKeySet;
+        public event EventHandler<EventArgs<WordKey>> WordKeySet;
         public event EventHandler<EventArgs<string>> ParentTextSet;
 
         public void SetTranslationEntryKey([NotNull] TranslationEntryKey translationEntryKey)
@@ -86,9 +91,15 @@ namespace Remembrance.ViewModel.Translation
             }
 
             //This function should be considered as a part of constructor. It cannot be a part of it because of using Mapster
-            WordKey = new WordKey(translationEntryKey, this) ?? throw new ArgumentNullException(nameof(translationEntryKey));
-            TranslationEntryKeySet?.Invoke(this, new EventArgs<TranslationEntryKey>(translationEntryKey));
-            IsPriority = _wordPriorityRepository.Check(new WordKey(translationEntryKey, this));
+            _translationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
+            _wordKey = new WordKey(translationEntryKey, new BaseWord(this));
+            WordKeySet?.Invoke(this, new EventArgs<WordKey>(_wordKey));
+        }
+
+        public void SetIsPriority(bool isPriority)
+        {
+            //This function should be considered as a part of constructor. It cannot be a part of it because of using Mapster
+            IsPriority = isPriority;
         }
 
         public void SetParentText([NotNull] string parentText)
@@ -103,19 +114,36 @@ namespace Remembrance.ViewModel.Translation
 
         protected override void TogglePriority()
         {
-            var isPriority = IsPriority;
-            _logger.TraceFormat("Changing priority for {0} to {1}...", this, !isPriority);
-
+            var isPriority = !IsPriority;
+            _logger.TraceFormat("Changing priority for {0} to {1}...", _wordKey.Word, isPriority);
+            var translationEntry = _translationEntryRepository.GetById(_translationEntryKey);
             if (isPriority)
             {
-                _wordPriorityRepository.Delete(WordKey);
+                if (translationEntry.PriorityWords == null)
+                {
+                    translationEntry.PriorityWords = new HashSet<BaseWord>{_wordKey.Word};
+                }
+                else
+                {
+                    translationEntry.PriorityWords.Add(_wordKey.Word);
+                }
             }
             else
             {
-                _wordPriorityRepository.Insert(new WordPriority(WordKey));
+                if (translationEntry.PriorityWords == null)
+                {
+                    throw new InvalidOperationException("PriorityWords should not be null when deleting");
+                }
+                translationEntry.PriorityWords.Remove(_wordKey.Word);
+                if (!translationEntry.PriorityWords.Any())
+                {
+                    translationEntry.PriorityWords = null;
+                }
             }
 
-            var priorityWordKey = new PriorityWordKey(!isPriority, WordKey);
+            _translationEntryRepository.Update(translationEntry);
+
+            var priorityWordKey = new PriorityWordKey(isPriority, _wordKey);
             _messenger.Publish(priorityWordKey);
         }
     }
