@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public class TranslationEntryKey : IEquatable<TranslationEntryKey>
+    public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
         [UsedImplicitly]
         public TranslationEntryKey()

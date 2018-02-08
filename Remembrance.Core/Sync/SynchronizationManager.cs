@@ -46,37 +46,28 @@ namespace Remembrance.Core.Sync
                 InternalBufferSize = 64 * 1024,
                 Filter = "*.db"
             };
-            _fileSystemWatcher.Created += _fileSystemWatcher_Changed;
-            _fileSystemWatcher.Changed += _fileSystemWatcher_Changed;
+            _fileSystemWatcher.Created += FileSystemWatcher_Changed;
+            _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
         public void Dispose()
         {
-            _fileSystemWatcher.Created -= _fileSystemWatcher_Changed;
-            _fileSystemWatcher.Changed -= _fileSystemWatcher_Changed;
+            _fileSystemWatcher.Created -= FileSystemWatcher_Changed;
+            _fileSystemWatcher.Changed -= FileSystemWatcher_Changed;
             _fileSystemWatcher.Dispose();
         }
 
         private void SynchronizeExistingRepositories([NotNull] string rootDirectoryPath)
         {
-            foreach (var directoryPath in Directory.GetDirectories(rootDirectoryPath))
+            foreach (var filePath in Directory.GetDirectories(rootDirectoryPath).Where(directoryPath => directoryPath != Paths.SharedDataPath).SelectMany(Directory.GetFiles))
             {
-                if (directoryPath == Paths.SharedDataPath)
-                {
-                    continue;
-                }
-
-                foreach (var filePath in Directory.GetFiles(directoryPath))
-                {
-                    _logger.TraceFormat("Processing file {0}", filePath);
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-                    SynchronizeFile(directoryPath, fileName);
-                }
+                _logger.TraceFormat("Processing file {0}...", filePath);
+                SynchronizeFile(filePath);
             }
         }
 
-        private void _fileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
+        private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
@@ -84,25 +75,34 @@ namespace Remembrance.Core.Sync
             {
                 return;
             }
-
-            var fileName = Path.GetFileNameWithoutExtension(e.Name);
-
             _logger.InfoFormat("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
-            SynchronizeFile(directoryPath, fileName);
+            SynchronizeFile(e.FullPath);
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void SynchronizeFile([NotNull] string directoryPath, [NotNull] string fileName)
+        private void SynchronizeFile([NotNull] string fullPath)
         {
+            var fileName = Path.GetFileNameWithoutExtension(fullPath);
+            var extension = Path.GetExtension(fullPath);
             //TODO: Handle deleted entities (separate repository for them)
-            //TODO: What if the same entity was updated here and remotely? Merge conflict?
-            //TODO: Treat item renaming as deletion and then insertion?
+
             if (!_synchronizers.ContainsKey(fileName))
             {
                 throw new NotSupportedException($"Unknown type of repository: {fileName}");
             }
 
-            _synchronizers[fileName].SyncRepository(directoryPath);
+            //Copy is needed because LiteDB changes the remote file when creation a repository over it and it could lead to the conflicts.
+            var newDirectoryPath = Path.GetTempPath();
+            var newFileName = Path.Combine(newDirectoryPath, fileName + extension);
+            if (File.Exists(newFileName))
+            {
+                File.Delete(newFileName);
+            }
+            File.Copy(fullPath, newFileName);
+
+            _synchronizers[fileName].SyncRepository(newDirectoryPath);
+
+            File.Delete(newFileName);
         }
     }
 }

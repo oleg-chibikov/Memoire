@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using JetBrains.Annotations;
@@ -104,7 +105,7 @@ namespace Remembrance.ViewModel.Settings
             }
 
             _selectedSourceLanguage = sourceLanguage;
-            logger.Trace("Languages have been loaded");
+            logger.Debug("Languages have been loaded");
         }
 
         [NotNull]
@@ -150,16 +151,14 @@ namespace Remembrance.ViewModel.Settings
         [CanBeNull]
         public string ManualTranslation { get; set; }
 
-        [CanBeNull]
-        protected abstract IWindow Window { get; }
-
         public void Dispose()
         {
-            Logger.Trace("Disposing...");
             CancellationTokenSource.Cancel();
             Cleanup();
-            Logger.Trace("Disposed");
         }
+
+        [ItemCanBeNull]
+        protected abstract Task<IWindow> GetWindowAsync();
 
         protected virtual void Cleanup()
         {
@@ -182,7 +181,8 @@ namespace Remembrance.ViewModel.Settings
             Text = null;
             ManualTranslation = null;
 
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, Window, manualTranslations: manualTranslation).ConfigureAwait(false);
+            var window = await GetWindowAsync().ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, window, manualTranslations: manualTranslation).ConfigureAwait(false);
         }
     }
 }

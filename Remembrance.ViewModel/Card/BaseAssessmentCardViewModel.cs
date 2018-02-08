@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Autofac;
 using Common.Logging;
@@ -104,7 +105,7 @@ namespace Remembrance.ViewModel.Card
             CorrectAnswer = assessmentInfo.CorrectAnswer;
             WindowClosedCommand = new CorrelationCommand(WindowClosed);
 
-            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
         }
 
         [NotNull]
@@ -152,11 +153,11 @@ namespace Remembrance.ViewModel.Card
 
             if (tmp.Any())
             {
-                Logger.TraceFormat("There are {0} groups that contain priority translations. Filtering was applied", tmp.Count);
+                Logger.DebugFormat("There are {0} groups that contain priority translations. Filtering was applied", tmp.Count);
                 acceptedWordGroups = tmp.ToArray();
             }
 
-            Logger.Trace("There are no groups that contain priority translations. Filtering was not applied");
+            Logger.Debug("There are no groups that contain priority translations. Filtering was not applied");
         }
 
         /// <summary>
@@ -173,12 +174,12 @@ namespace Remembrance.ViewModel.Card
             var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
             if (hasPriorityItems)
             {
-                Logger.TraceFormat("There are {0} priority translations. Filtering was applied", priorityPartOfSpeechTranslations.Count);
+                Logger.DebugFormat("There are {0} priority translations. Filtering was applied", priorityPartOfSpeechTranslations.Count);
                 translationResult.PartOfSpeechTranslations = priorityPartOfSpeechTranslations.ToArray();
             }
             else
             {
-                Logger.Trace("There are no priority translations. Filtering was not applied");
+                Logger.Debug("There are no priority translations. Filtering was not applied");
             }
 
             return hasPriorityItems;
@@ -196,10 +197,10 @@ namespace Remembrance.ViewModel.Card
                 .ToArray();
             if (!acceptedWordGroups.Any())
             {
-                throw new LocalizableException(Errors.NoTranslations);
+                throw new LocalizableException(Errors.NoTranslations, "No translations found");
             }
 
-            Logger.TraceFormat("There are {0} accepted words groups", acceptedWordGroups.Length);
+            Logger.DebugFormat("There are {0} accepted words groups", acceptedWordGroups.Length);
             FilterAcceptedWordsGroupsByPriority(ref acceptedWordGroups);
 
             return acceptedWordGroups.Select(x => new KeyValuePair<PartOfSpeechTranslationViewModel, WordViewModel[]>(x.Key, ViewModelAdapter.Adapt<WordViewModel[]>(x.Value))).ToArray();
@@ -317,17 +318,22 @@ namespace Remembrance.ViewModel.Card
             return isReverse;
         }
 
-        private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            //TODO: Change all logs to Format
-            Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
             if (cultureInfo == null)
             {
                 throw new ArgumentNullException(nameof(cultureInfo));
             }
 
-            CultureUtilities.ChangeCulture(cultureInfo);
-            Word.ReRender();
+            Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
+
+            await Task.Run(
+                () =>
+                {
+                    CultureUtilities.ChangeCulture(cultureInfo);
+                    Word.ReRender();
+                },
+                CancellationToken.None);
         }
 
         /// <summary>
@@ -343,7 +349,7 @@ namespace Remembrance.ViewModel.Card
                 : partOfSpeechGroups.First();
             if (partOfSpeechGroup == null)
             {
-                throw new LocalizableException(Errors.NoTranslations);
+                throw new LocalizableException(Errors.NoTranslations, "No translations found");
             }
 
             return partOfSpeechGroup;

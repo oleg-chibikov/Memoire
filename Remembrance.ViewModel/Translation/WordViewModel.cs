@@ -34,7 +34,7 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public ICommand TogglePriorityCommand { get; }
 
-        public bool IsPriority { get; set; }
+        public bool IsPriority { get; protected set; }
 
         [DoNotNotify]
         public virtual string Language { get; set; }

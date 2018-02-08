@@ -37,9 +37,10 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(viewModelAdapter));
             }
 
-            Logger.Info($"Showing view-only card. Increasing repeat type for {TranslationInfo}...");
+            Logger.Trace("Showing view-only card...");
             TranslationInfo.TranslationEntry.IncreaseRepeatType();
             translationEntryRepository.Update(TranslationInfo.TranslationEntry);
+            Logger.InfoFormat("Increased repeat type for {0}", TranslationInfo);
             Messenger.Publish(TranslationInfo);
         }
     }

@@ -49,7 +49,6 @@
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
             <TextBlock
-                FontSize="{StaticResource MediumFontSize}"
                 Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"
@@ -93,7 +92,6 @@
                 FontSize="{StaticResource MediumFontSize}" />
         </DockPanel>
         <StackPanel
-            TextBlock.FontSize="{StaticResource MediumFontSize}"
             Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
             Grid.Row="1">
             <TextBlock

@@ -103,8 +103,8 @@
     <Reference Include="Scar.Common.Logging, Version=1.0.24.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Logging.1.0.24\lib\net47\Scar.Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.5\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.6611.32789, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.6611.32789\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.6\lib\net47\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
@@ -112,14 +112,14 @@
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6607.31824, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6607.31824\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6610.43088, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6610.43088\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.13\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6612.29740, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6612.29740\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -280,9 +280,9 @@ foreach (var item in filesToCleanup)
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.2.3.22\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.3.22\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.2.3.25\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.3.25\build\Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\Fody.2.3.22\build\Fody.targets" Condition="Exists('..\packages\Fody.2.3.22\build\Fody.targets')" />
+  <Import Project="..\packages\Fody.2.3.25\build\Fody.targets" Condition="Exists('..\packages\Fody.2.3.25\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

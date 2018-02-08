@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Autofac;
 using JetBrains.Annotations;
 using Mapster;
@@ -24,13 +23,6 @@ namespace Remembrance.ViewModel
 
             _config = new TypeAdapterConfig();
 
-            _config.NewConfig<TranslationEntryViewModel, TranslationEntry>()
-                .ConstructUsing(
-                    translationEntryViewModel => new TranslationEntry
-                    {
-                        Id = translationEntryViewModel.Id
-                    })
-                .Compile();
             _config.NewConfig<BaseWord, WordViewModel>().ConstructUsing(word => lifetimeScope.Resolve<WordViewModel>()).Compile();
             _config.NewConfig<BaseWord, PriorityWordViewModel>()
                 .ConstructUsing(word => lifetimeScope.Resolve<PriorityWordViewModel>())
@@ -39,10 +31,8 @@ namespace Remembrance.ViewModel
             _config.NewConfig<TranslationVariant, TranslationVariantViewModel>().ConstructUsing(translationVariant => lifetimeScope.Resolve<TranslationVariantViewModel>()).Compile();
             _config.NewConfig<PartOfSpeechTranslation, PartOfSpeechTranslationViewModel>().ConstructUsing(partOfSpeechTranslation => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>()).Compile();
             _config.NewConfig<TranslationEntry, TranslationEntryViewModel>()
-                .ConstructUsing(
-                    translationEntry => lifetimeScope.Resolve<TranslationEntryViewModel>(
-                        new TypedParameter(typeof(TranslationEntryKey), translationEntry.Id),
-                        new TypedParameter(typeof(HashSet<BaseWord>), translationEntry.PriorityWords)))
+                .ConstructUsing(translationEntry => lifetimeScope.Resolve<TranslationEntryViewModel>(new TypedParameter(typeof(TranslationEntryKey), translationEntry.Id)))
+                .AfterMapping((translationEntry, translationEntryViewModel) => translationEntryViewModel.ReloadTranslationsAsync(translationEntry).ConfigureAwait(false))
                 .Compile();
             _config.NewConfig<TranslationInfo, TranslationDetailsViewModel>()
                 .ConstructUsing(translationInfo => new TranslationDetailsViewModel(lifetimeScope.Resolve<TranslationResultViewModel>()))
@@ -107,8 +97,7 @@ namespace Remembrance.ViewModel
 
         private static void SetPriorityWordProperties([NotNull] PriorityWordViewModel priorityWordViewModel, [NotNull] TranslationEntry translationEntry, [NotNull] string partOfSpeechTranslationText)
         {
-            priorityWordViewModel.SetTranslationEntryKey(translationEntry.Id);
-            priorityWordViewModel.SetParentText(partOfSpeechTranslationText);
+            priorityWordViewModel.SetTranslationEntryKey(translationEntry.Id, partOfSpeechTranslationText);
             priorityWordViewModel.SetIsPriority(translationEntry.PriorityWords?.Contains(priorityWordViewModel) == true);
         }
     }

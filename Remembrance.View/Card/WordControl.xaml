@@ -39,7 +39,7 @@
         view:MarginSetter.Orientation="Horizontal">
         <TextBlock
             Visibility="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
-            Text="{Binding PartOfSpeech, Mode=OneWay, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
+            Text="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
             Foreground="DarkGreen"
             FontSize="{StaticResource SmallFontSize}"
             Cursor="Arrow" />
@@ -51,7 +51,7 @@
                     TargetType="Border">
                     <Style.Triggers>
                         <DataTrigger
-                            Binding="{Binding Mode=OneWay, Converter={StaticResource PriorityWordViewModelToBooleanConverter}}"
+                            Binding="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToBooleanConverter}}"
                             Value="True">
                             <Setter
                                 Property="Cursor"
@@ -88,7 +88,7 @@
                 </Style>
             </Border.Style>
             <TextBlock
-                Text="{Binding Text, Mode=OneWay}"
+                Text="{Binding Text, Mode=OneTime}"
                 FontSize="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 FontWeight="{Binding FontWeight, Mode=OneTime, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <TextBlock.InputBindings>
@@ -113,7 +113,7 @@
         </Border>
         <TextBlock
             Visibility="{Binding WordInfo, Mode=OneTime, Converter={StaticResource NotNullToVisibilityConverter}}"
-            Text="{Binding WordInfo, Mode=OneWay}"
+            Text="{Binding WordInfo, Mode=OneTime}"
             Foreground="DimGray"
             FontSize="{StaticResource SmallFontSize}" />
         <Button

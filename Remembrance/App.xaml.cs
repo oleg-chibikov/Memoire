@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
@@ -86,7 +85,7 @@ namespace Remembrance
                 .AsSelf()
                 .SingleInstance();
             //Including ViewModelAdapter
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Except<ViewModelAdapter>().AsSelf().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Except<ViewModelAdapter>().AsSelf().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<ViewModelAdapter>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();

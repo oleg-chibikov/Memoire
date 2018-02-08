@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using Scar.Common.DAL.Model;
 
@@ -29,10 +28,10 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [CanBeNull]
-        public ManualTranslation[] ManualTranslations { get; set; }
+        public ICollection<ManualTranslation> ManualTranslations { get; set; }
 
         [CanBeNull]
-        public HashSet<BaseWord> PriorityWords { get; set; }
+        public ICollection<BaseWord> PriorityWords { get; set; }
 
         public RepeatType RepeatType
         {

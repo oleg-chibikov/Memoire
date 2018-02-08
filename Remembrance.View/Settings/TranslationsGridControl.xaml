@@ -108,20 +108,19 @@
                             Cursor="Hand">
                             <DockPanel.InputBindings>
                                 <MouseBinding
-                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                    Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
+                                    CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                    Command="{Binding DataContext.OpenDetailsCommand,Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
                                     MouseAction="LeftDoubleClick" />
                             </DockPanel.InputBindings>
                             <view:WordsControl
-                                ItemsSource="{Binding}"
-                                FontSize="{StaticResource SmallFontSize}"
+                                ItemsSource="{Binding Mode=OneWay}"
                                 MaxWidth="Infinity" />
                             <Button
                                 Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc OpenDetails}"
                                 HorizontalAlignment="Right"
-                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.OpenDetailsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="FileDocument" />
                             </Button>

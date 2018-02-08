@@ -27,8 +27,7 @@
             <TextBlock FontSize="{StaticResource HugeFontSize}"
                        FontWeight="Bold"
                        Text="{Binding Word, Mode=OneTime}" />
-            <TextBlock FontSize="{StaticResource MediumFontSize}"
-                       Foreground="DimGray"
+            <TextBlock Foreground="DimGray"
                        Text="{Binding PrepositionsCollection, Mode=OneWay}" />
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -70,10 +69,8 @@
                                                     <TextBlock FontSize="{StaticResource BigFontSize}"
                                                                Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
                                                     <view:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
-                                                    <view:WordControl FontSize="{StaticResource MediumFontSize}"
-                                                                      DataContext="{Binding Mode=OneTime}" />
+                                                    <view:WordControl DataContext="{Binding Mode=OneTime}" />
                                                     <view:WordsControl ItemsSource="{Binding Synonyms, Mode=OneTime}"
-                                                                       FontSize="{StaticResource MediumFontSize}"
                                                                        MaxWidth="{StaticResource WordsWidth}" />
                                                 </StackPanel>
                                                 <view:WordsControl Foreground="IndianRed"

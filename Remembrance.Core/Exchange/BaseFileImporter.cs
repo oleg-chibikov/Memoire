@@ -92,7 +92,7 @@ namespace Remembrance.Core.Exchange
                             async exchangeEntry =>
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
-                                _logger.TraceFormat("Importing from {0}...", exchangeEntry.Text);
+                                _logger.TraceFormat("Importing {0}...", exchangeEntry.Text);
                                 try
                                 {
                                     var changed = false;
@@ -137,7 +137,7 @@ namespace Remembrance.Core.Exchange
                                     changed |= manualTranslationsUpdated;
                                     changed |= learningInfoUpdated;
                                     changed |= priorityTranslationsUpdated;
-                                    _logger.InfoFormat("Imported from {0}", exchangeEntry.Text);
+                                    _logger.InfoFormat("Imported {0}", exchangeEntry.Text);
                                     if (changed)
                                     {
                                         _translationEntryRepository.Update(translationEntry);
@@ -224,7 +224,7 @@ namespace Remembrance.Core.Exchange
         protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
 
         [CanBeNull]
-        protected virtual ManualTranslation[] GetManualTranslations([NotNull] T exchangeEntry)
+        protected virtual ICollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
         {
             return null;
         }

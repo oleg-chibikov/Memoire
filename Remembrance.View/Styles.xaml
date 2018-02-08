@@ -9,7 +9,8 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
-    xmlns:converters="clr-namespace:Remembrance.View.Converters">
+    xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:card="clr-namespace:Remembrance.View.Card">
 
     <system:Double
         x:Key="CommonMargin">
@@ -29,7 +30,7 @@
     </system:Double>
     <system:Double
         x:Key="MediumFontSize">
-        18
+        16
     </system:Double>
     <system:Double
         x:Key="SmallFontSize">
@@ -97,6 +98,24 @@
         <Setter
             Property="FontFamily"
             Value="./#Web Serveroff" />
+
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
+    </Style>
+
+    <Style
+        TargetType="card:WordControl">
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
+    </Style>
+
+    <Style
+        TargetType="card:WordsControl">
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
@@ -108,6 +127,9 @@
         <Setter
             Property="FontFamily"
             Value="./#Web Serveroff" />
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
@@ -117,11 +139,11 @@
     <Style
         TargetType="xcdg:Cell">
         <Setter
-            Property="FontSize"
-            Value="{StaticResource SmallFontSize}" />
-        <Setter
             Property="FontFamily"
             Value="./#Web Serveroff" />
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <DataTemplate

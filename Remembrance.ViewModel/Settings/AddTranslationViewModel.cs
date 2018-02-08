@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
@@ -29,6 +31,9 @@ namespace Remembrance.ViewModel.Settings
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
         }
 
-        protected override IWindow Window => _addTranslationWindowFactory.GetWindowIfExists();
+        protected override async Task<IWindow> GetWindowAsync()
+        {
+            return await _addTranslationWindowFactory.GetWindowIfExistsAsync(CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

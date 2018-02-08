@@ -196,6 +196,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image cannot be found for the word {0}..
+        /// </summary>
+        public static string NoMoreImages {
+            get {
+                return ResourceManager.GetString("NoMoreImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No translations were found for the word..
         /// </summary>
         public static string NoTranslations {

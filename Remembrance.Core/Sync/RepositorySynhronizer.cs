@@ -35,18 +35,23 @@ namespace Remembrance.Core.Sync
         [NotNull]
         private readonly TRepository _ownRepository;
 
+        [CanBeNull]
+        private readonly ISyncPostProcessor<T> _syncPostProcessor;
+
         public RepositorySynhronizer(
             [NotNull] INamedInstancesFactory namedInstancesFactory,
             [NotNull] ILog logger,
             [NotNull] TRepository ownRepository,
             [NotNull] IMessageHub messenger,
-            [NotNull] ILocalSettingsRepository localSettingsRepository)
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [CanBeNull] ISyncPostProcessor<T> syncPostProcessor = null)
         {
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _namedInstancesFactory = namedInstancesFactory ?? throw new ArgumentNullException(nameof(namedInstancesFactory));
+            _syncPostProcessor = syncPostProcessor;
         }
 
         public string FileName => _ownRepository.DbFileName;
@@ -83,7 +88,7 @@ namespace Remembrance.Core.Sync
                         {
                             if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
                             {
-                                _logger.TraceFormat("existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
+                                _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
                                 continue;
                             }
 
@@ -95,6 +100,8 @@ namespace Remembrance.Core.Sync
                             _ownRepository.Insert(remoteEntity);
                             _logger.InfoFormat("{0} inserted", remoteEntity);
                         }
+
+                        _syncPostProcessor?.OnEntityChanged(existingEntity, remoteEntity);
 
                         localSettings.SyncTimes[FileName] = DateTimeOffset.UtcNow;
                         _localSettingsRepository.UpdateOrInsert(localSettings);

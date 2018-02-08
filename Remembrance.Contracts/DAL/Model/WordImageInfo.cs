@@ -12,12 +12,19 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public WordImageInfo([NotNull] WordKey wordKey, int searchIndex, [CanBeNull] ImageInfoWithBitmap image)
+        public WordImageInfo([NotNull] WordKey wordKey, int searchIndex, [CanBeNull] ImageInfoWithBitmap image, bool isReverse, int?[] nonAvailableIndexes)
         {
             Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             SearchIndex = searchIndex;
             Image = image;
+            IsReverse = isReverse;
+            NonAvailableIndexes = nonAvailableIndexes;
         }
+
+        public bool IsReverse { get; set; }
+
+        [CanBeNull]
+        public int?[] NonAvailableIndexes { get; set; }
 
         public int SearchIndex { get; set; }
 

@@ -1,6 +1,7 @@
 //TODO: Set all bindings mode manually
 
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -69,9 +70,9 @@ namespace Remembrance.ViewModel.Settings
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            AddTranslationCommand = new CorrelationCommand(AddTranslation);
-            ShowSettingsCommand = new CorrelationCommand(ShowSettings);
-            ShowDictionaryCommand = new CorrelationCommand(ShowDictionary);
+            AddTranslationCommand = new CorrelationCommand(AddTranslationAsync);
+            ShowSettingsCommand = new CorrelationCommand(ShowSettingsAsync);
+            ShowDictionaryCommand = new CorrelationCommand(ShowDictionaryAsync);
             ToggleActiveCommand = new CorrelationCommand(ToggleActive);
             ToolTipOpenCommand = new CorrelationCommand(ToolTipOpen);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
@@ -143,28 +144,28 @@ namespace Remembrance.ViewModel.Settings
                 : null;
         }
 
-        private void AddTranslation()
+        private async void AddTranslationAsync()
         {
-            _logger.Info("Showing Add Translation window...");
-            _addTranslationWindowFactory.ShowWindow();
+            _logger.Trace("Showing Add Translation window...");
+            await _addTranslationWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         private void Exit()
         {
-            _logger.Info("Exitting application...");
+            _logger.Trace("Exitting application...");
             Application.Current.Shutdown();
         }
 
-        private void ShowDictionary()
+        private async void ShowDictionaryAsync()
         {
-            _logger.Info("Showing dictionary...");
-            _dictionaryWindowFactory.ShowWindow(_splashScreenWindowFactory);
+            _logger.Trace("Showing dictionary...");
+            await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void ShowSettings()
+        private async void ShowSettingsAsync()
         {
-            _logger.Info("Showing settings...");
-            _settingsWindowFactory.ShowWindow();
+            _logger.Trace("Showing settings...");
+            await _settingsWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         private void ToolTipClose()
@@ -179,12 +180,12 @@ namespace Remembrance.ViewModel.Settings
 
         private void ToggleActive()
         {
-            _logger.Info("Toggling state...");
+            _logger.Trace("Toggling state...");
             IsActive = !IsActive;
             var settings = _localSettingsRepository.Get();
             settings.IsActive = IsActive;
             _localSettingsRepository.UpdateOrInsert(settings);
-            _logger.Info($"New state is {IsActive}");
+            _logger.InfoFormat("New state is {0}", IsActive);
             if (IsActive)
             {
                 _logger.Trace("Resuming showing cards...");

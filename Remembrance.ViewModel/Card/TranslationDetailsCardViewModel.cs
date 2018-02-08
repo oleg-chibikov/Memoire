@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,6 +10,7 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -74,9 +76,10 @@ namespace Remembrance.ViewModel.Card
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = _translationEntry.IsFavorited;
             Word = translationInfo.TranslationEntryKey.Text;
-            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
+            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None).ConfigureAwait(false);
 
-            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
+            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChanged));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
@@ -102,6 +105,46 @@ namespace Remembrance.ViewModel.Card
             }
         }
 
+        private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
+        {
+            if (priorityWordKey == null)
+            {
+                throw new ArgumentNullException(nameof(priorityWordKey));
+            }
+
+            if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntry.Id))
+            {
+                return;
+            }
+
+            Task.Run(
+                () =>
+                {
+                    foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                    {
+                        if (translationVariant.Equals(priorityWordKey.WordKey.Word))
+                        {
+                            _logger.TraceFormat("Setting priority: {0} in translations details for translation variant...", priorityWordKey);
+                            translationVariant.SetIsPriority(priorityWordKey.IsPriority);
+                            return;
+                        }
+
+                        if (translationVariant.Synonyms == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.Equals(priorityWordKey.WordKey.Word)))
+                        {
+                            _logger.TraceFormat("Setting priority: {0} in translations details for synonym...", priorityWordKey);
+                            synonym.SetIsPriority(priorityWordKey.IsPriority);
+                            return;
+                        }
+                    }
+                },
+                CancellationToken.None);
+        }
+
         [ItemCanBeNull]
         private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
         {
@@ -125,7 +168,7 @@ namespace Remembrance.ViewModel.Card
             var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
             if (prepositionsInfo == null)
             {
-                _logger.Info($"Reloading preposition for {translationDetails.Id}...");
+                _logger.TraceFormat("Reloading preposition for {0}...", translationDetails.Id);
                 var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
                 if (prepositions == null)
                 {
@@ -139,47 +182,55 @@ namespace Remembrance.ViewModel.Card
             PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
-        private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
             if (cultureInfo == null)
             {
                 throw new ArgumentNullException(nameof(cultureInfo));
             }
 
-            CultureUtilities.ChangeCulture(cultureInfo);
+            _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
-            foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
-            {
-                partOfSpeechTranslation.ReRender();
-                foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
+            await Task.Run(
+                () =>
                 {
-                    translationVariant.ReRender();
-                    if (translationVariant.Synonyms != null)
-                    {
-                        foreach (var synonym in translationVariant.Synonyms)
-                        {
-                            synonym.ReRender();
-                        }
-                    }
+                    CultureUtilities.ChangeCulture(cultureInfo);
 
-                    if (translationVariant.Meanings != null)
+                    foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
                     {
-                        foreach (var meaning in translationVariant.Meanings)
+                        partOfSpeechTranslation.ReRender();
+                        foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                         {
-                            meaning.ReRender();
+                            translationVariant.ReRender();
+                            if (translationVariant.Synonyms != null)
+                            {
+                                foreach (var synonym in translationVariant.Synonyms)
+                                {
+                                    synonym.ReRender();
+                                }
+                            }
+
+                            if (translationVariant.Meanings != null)
+                            {
+                                foreach (var meaning in translationVariant.Meanings)
+                                {
+                                    meaning.ReRender();
+                                }
+                            }
                         }
                     }
-                }
-            }
+                },
+                CancellationToken.None);
         }
 
         private void Favorite()
         {
-            var text = IsFavorited
-                ? "Unfavoriting"
-                : "Favoriting";
-            _logger.TraceFormat("{0} {1}...", text, TranslationDetails);
+            _logger.TraceFormat(
+                "{0} {1}...",
+                IsFavorited
+                    ? "Unfavoriting"
+                    : "Favoriting",
+                TranslationDetails);
             _translationEntry.IsFavorited = IsFavorited = !IsFavorited;
             _translationEntryRepository.Update(_translationEntry);
         }

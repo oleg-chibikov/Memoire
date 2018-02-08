@@ -236,11 +236,11 @@ namespace Remembrance.ViewModel.Settings
             _localSettingsRepository.UpdateOrInsert(localSettings);
             if (prevFreq != freq)
             {
-                _messenger.Publish(settings.CardShowFrequency);
+                _messenger.Publish(freq);
             }
 
             RequestClose?.Invoke(null, null);
-            _logger.Trace("Settings has been saved");
+            _logger.Info("Settings has been saved");
         }
 
         private static void ViewLogs()

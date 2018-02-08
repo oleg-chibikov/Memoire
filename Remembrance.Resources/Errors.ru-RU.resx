@@ -120,6 +120,9 @@
   <data name="AlreadyRunning" xml:space="preserve">
     <value>Remembrance уже запущен.</value>
   </data>
+  <data name="NoMoreImages" xml:space="preserve">
+    <value>Изображение не найдено для слова {0}.</value>
+  </data>
   <data name="CannotSynchronize" xml:space="preserve">
     <value>Не получилось синхнизировать {0} в {1}.</value>
   </data>
@@ -148,10 +151,10 @@
     <value>Не получилось перевести слово '{0}'.</value>
   </data>
   <data name="CannotGetQwantResults" xml:space="preserve">
-    <value>Не удалось получить результаты поиска картинки Qwant.</value>
+    <value>Не удалось получить результаты поиска изображения Qwant.</value>
   </data>
   <data name="CannotDownloadImage" xml:space="preserve">
-    <value>Не удалось скачать картинку.</value>
+    <value>Не удалось скачать изображение.</value>
   </data>
   <data name="DefaultError" xml:space="preserve">
     <value>Простите, что-то пошло не так.</value>

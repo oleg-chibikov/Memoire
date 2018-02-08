@@ -21,7 +21,7 @@ namespace Remembrance.ViewModel.Settings
             }
 
             Message = message ?? throw new ArgumentNullException(nameof(message));
-            logger.Trace($"Showing message {message} and closing window in {CloseTimeout}...");
+            logger.TraceFormat("Showing message {0} and closing window in {1}...", message, CloseTimeout);
         }
 
         [NotNull]

@@ -42,7 +42,7 @@ namespace Remembrance.Core.CardManagement
                     var window = TryCreateWindow(translationInfo, ownerWindow);
                     if (window == null)
                     {
-                        Logger.Trace($"No window to show for {translationInfo}");
+                        Logger.DebugFormat("No window to show for {0}", translationInfo);
                         return;
                     }
 
@@ -54,11 +54,13 @@ namespace Remembrance.Core.CardManagement
                         window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
                     }
 
-                    Logger.Info($"Showing {translationInfo}...");
+                    Logger.TraceFormat("Showing {0}...", translationInfo);
                     window.ShowActivated = false;
                     window.Topmost = true;
                     window.Restore();
-                }, null);
+                    Logger.InfoFormat("Window for {0} has been opened", translationInfo);
+                },
+                null);
         }
 
         [CanBeNull]

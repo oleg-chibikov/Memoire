@@ -28,7 +28,7 @@ namespace Remembrance.Core.Exchange
             return await Task.FromResult(exchangeEntry.TranslationEntry.Id).ConfigureAwait(false);
         }
 
-        protected override ManualTranslation[] GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override ICollection<ManualTranslation> GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.ManualTranslations;
         }

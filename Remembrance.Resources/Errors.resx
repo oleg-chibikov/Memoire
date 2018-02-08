@@ -132,6 +132,9 @@
   <data name="CannotDeleteManual" xml:space="preserve">
     <value>Cannot delete the manual translation because it will lead to the abscence of translations.</value>
   </data>
+  <data name="NoMoreImages" xml:space="preserve">
+    <value>Image cannot be found for the word {0}.</value>
+  </data>
   <data name="DefaultError" xml:space="preserve">
     <value>An error has occured.</value>
   </data>

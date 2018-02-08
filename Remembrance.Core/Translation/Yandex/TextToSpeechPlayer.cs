@@ -54,7 +54,7 @@ namespace Remembrance.Core.Translation.Yandex
                 throw new ArgumentNullException(nameof(lang));
             }
 
-            _logger.Trace($"Starting speaking {text}...");
+            _logger.TraceFormat("Starting speaking {0}...", text);
             var settings = _settingsRepository.Get();
             var reset = new AutoResetEvent(false);
             var uriPart =
@@ -87,7 +87,7 @@ namespace Remembrance.Core.Translation.Yandex
                     reset.WaitOne(TimeSpan.FromSeconds(5));
                 }
 
-                _logger.Trace($"Finished speaking {text}");
+                _logger.DebugFormat("Finished speaking {0}", text);
                 return true;
             }
             catch (Exception ex)

@@ -94,10 +94,14 @@ namespace Remembrance.Core
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             TranslationEntryKey translationEntryKey,
-            ManualTranslation[] manualTranslations,
+            ICollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken,
             Action<TranslationDetails> processNonReloaded)
         {
+            if (!manualTranslations?.Any() == true)
+            {
+                manualTranslations = null;
+            }
             var translationDetails = _translationDetailsRepository.TryGetById(translationEntryKey);
             if (translationDetails != null)
             {
@@ -131,16 +135,20 @@ namespace Remembrance.Core
             CancellationToken cancellationToken,
             IWindow ownerWindow,
             bool needPostProcess,
-            ManualTranslation[] manualTranslations)
+            ICollection<ManualTranslation> manualTranslations)
         {
+            _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
             if (translationEntryAdditionInfo == null)
             {
                 throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             }
 
-            // This method replaces translation with the actual one
-            _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
+            if (!manualTranslations?.Any() == true)
+            {
+                manualTranslations = null;
+            }
 
+            // This method replaces translation with the actual one
             var translationEntryKey = await GetTranslationKeyAsync(translationEntryAdditionInfo, cancellationToken).ConfigureAwait(false);
             if (translationEntryKey.Text == null)
             {
@@ -164,6 +172,7 @@ namespace Remembrance.Core
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
             if (needPostProcess)
             {
+                //no await here
                 PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
             }
 
@@ -195,11 +204,17 @@ namespace Remembrance.Core
             return await Task.FromResult(targetLanguage).ConfigureAwait(false);
         }
 
-        public async Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
+        public async Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken)
         {
+            _logger.TraceFormat("Updating manual translations for {0}...", translationEntryKey);
             if (translationEntryKey == null)
             {
                 throw new ArgumentNullException(nameof(translationEntryKey));
+            }
+
+            if (!manualTranslations?.Any() == true)
+            {
+                manualTranslations = null;
             }
 
             var translationEntry = _translationEntryRepository.GetById(translationEntryKey);
@@ -226,7 +241,7 @@ namespace Remembrance.Core
         [NotNull]
         private static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
             [NotNull] string text,
-            [NotNull] ManualTranslation[] manualTranslations,
+            [NotNull] ICollection<ManualTranslation> manualTranslations,
             [NotNull] IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             var groups = manualTranslations.GroupBy(x => x.PartOfSpeech);
@@ -265,7 +280,7 @@ namespace Remembrance.Core
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
-        private void DeleteFromPriority([NotNull] TranslationEntry translationEntry, [CanBeNull] ManualTranslation[] manualTranslations, [NotNull] TranslationDetails translationDetails)
+        private void DeleteFromPriority([NotNull] TranslationEntry translationEntry, [CanBeNull] ICollection<ManualTranslation> manualTranslations, [NotNull] TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
                 .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants)
@@ -306,7 +321,7 @@ namespace Remembrance.Core
             var targetLanguage = translationEntryAdditionInfo.TargetLanguage;
             if (string.IsNullOrWhiteSpace(text))
             {
-                throw new LocalizableException("Text is empty", Errors.WordIsMissing);
+                throw new LocalizableException(Errors.WordIsMissing, "Text is empty");
             }
 
             if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
@@ -318,7 +333,7 @@ namespace Remembrance.Core
 
             if (sourceLanguage == null)
             {
-                throw new LocalizableException($"Cannot detect language for '{text}'", Errors.CannotDetectLanguage);
+                throw new LocalizableException(Errors.CannotDetectLanguage, $"Cannot detect language for '{text}'");
             }
 
             if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
@@ -339,7 +354,7 @@ namespace Remembrance.Core
         }
 
         [ItemNotNull]
-        private async Task<TranslationResult> TranslateAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken)
+        private async Task<TranslationResult> TranslateAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken)
         {
             try
             {
@@ -361,7 +376,7 @@ namespace Remembrance.Core
 
                     if (manualTranslations == null)
                     {
-                        throw new LocalizableException($"No translations found for {translationEntryKey}", string.Format(Errors.CannotTranslate, translationEntryKey));
+                        throw new InvalidOperationException("No translations and manual translations are not set");
                     }
                 }
 
@@ -374,7 +389,7 @@ namespace Remembrance.Core
             }
             catch (Exception ex)
             {
-                throw new LocalizableException($"Cannot translate {translationEntryKey}", ex, string.Format(Errors.CannotTranslate, translationEntryKey));
+                throw new LocalizableException(string.Format(Errors.CannotTranslate, translationEntryKey), ex, $"Cannot translate {translationEntryKey}");
             }
         }
     }

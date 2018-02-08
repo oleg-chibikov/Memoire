@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
@@ -30,9 +31,20 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        public EditManualTranslationsViewModel([NotNull] ILog logger, [NotNull] ITranslationEntryProcessor translationEntryProcessor, [NotNull] IMessageHub messenger)
+        [NotNull]
+        private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
+        private TranslationEntry _translationEntry;
+
+        public EditManualTranslationsViewModel(
+            [NotNull] ILog logger,
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] IMessageHub messenger,
+            [NotNull] ITranslationEntryRepository translationEntryRepository)
         {
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             EditManualTranslationsCommand = new CorrelationCommand<TranslationEntryViewModel>(EditManualTranslations);
@@ -44,8 +56,6 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         public static PartOfSpeech[] AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
-
-        private TranslationEntryViewModel TranslationEntryViewModel { get; set; }
 
         public bool IsManualTranslationsDialogOpen { get; private set; }
 
@@ -74,15 +84,15 @@ namespace Remembrance.ViewModel.Settings
         {
             if (string.IsNullOrWhiteSpace(ManualTranslationText))
             {
-                throw new LocalizableException(Errors.WordIsMissing);
+                throw new LocalizableException(Errors.WordIsMissing, "Word is not specified");
             }
 
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
-            _logger.Trace($"Adding {ManualTranslationText}...");
+            _logger.TraceFormat("Adding {0}...", ManualTranslationText);
             ManualTranslationText = null;
             if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.InvariantCultureIgnoreCase)))
             {
-                throw new LocalizableException(Errors.TranslationIsPresent);
+                throw new LocalizableException(Errors.TranslationIsPresent, "Translations is already present in the dictionary");
             }
 
             ManualTranslations.Add(newManualTranslation);
@@ -101,15 +111,14 @@ namespace Remembrance.ViewModel.Settings
                 throw new ArgumentNullException(nameof(manualTranslation));
             }
 
-            _logger.Trace($"Deleting manual translation {manualTranslation}...");
+            _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
-                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryViewModel.Id, TranslationEntryViewModel.ManualTranslations, CancellationToken.None)
-                    .ConfigureAwait(false);
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(_translationEntry.Id, _translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
                 //if non manual translations not exist
                 if (translationDetails.TranslationResult.PartOfSpeechTranslations.All(t => t.IsManual))
                 {
-                    throw new LocalizableException(Errors.CannotDeleteManual);
+                    throw new LocalizableException(Errors.CannotDeleteManual, "Cannot delete manual translation");
                 }
             }
 
@@ -118,11 +127,14 @@ namespace Remembrance.ViewModel.Settings
 
         private void EditManualTranslations([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            TranslationEntryViewModel = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
-            ManualTranslations = translationEntryViewModel.ManualTranslations != null
-                ? new ObservableCollection<ManualTranslation>(translationEntryViewModel.ManualTranslations)
-                : new ObservableCollection<ManualTranslation>();
-            _logger.Trace($"Editing manual translation for {translationEntryViewModel}...");
+            _logger.TraceFormat("Editing manual translation for {0}...", translationEntryViewModel);
+            if (translationEntryViewModel == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntryViewModel));
+            }
+
+            _translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);
+            ManualTranslations = new ObservableCollection<ManualTranslation>(_translationEntry.ManualTranslations ?? new ManualTranslation[0]);
             IsManualTranslationsDialogOpen = true;
             ManualTranslationText = null;
         }
@@ -130,11 +142,8 @@ namespace Remembrance.ViewModel.Settings
         private async void SaveAsync()
         {
             _logger.Trace("Saving...");
-            TranslationEntryViewModel.ManualTranslations = ManualTranslations.Any()
-                ? ManualTranslations.ToArray()
-                : null;
             IsManualTranslationsDialogOpen = false;
-            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(TranslationEntryViewModel.Id, TranslationEntryViewModel.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(_translationEntry.Id, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
             _messenger.Publish(translationInfo);
         }
     }

@@ -48,11 +48,9 @@
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
             <TextBlock
-                FontSize="{StaticResource MediumFontSize}"
                 Foreground="DimGray"
                 Text="{Binding TranslationDetailsCardViewModel.PrepositionsCollection, Mode=OneWay}" />
             <TextBlock
-                FontSize="{StaticResource MediumFontSize}"
                 Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"

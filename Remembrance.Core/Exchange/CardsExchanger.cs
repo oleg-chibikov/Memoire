@@ -67,7 +67,7 @@ namespace Remembrance.Core.Exchange
                 return;
             }
 
-            _logger.Info($"Performing export to {fileName}...");
+            _logger.TraceFormat("Performing export to {0}...", fileName);
             ExchangeResult exchangeResult = null;
             OnProgress(0, 1);
             try
@@ -81,13 +81,13 @@ namespace Remembrance.Core.Exchange
 
             if (exchangeResult.Success)
             {
-                _logger.Info($"Export to {fileName} has been performed");
+                _logger.InfoFormat("Export to {0} has been performed", fileName);
                 _messenger.Publish(Texts.ExportSucceeded.ToMessage());
                 Process.Start(fileName);
             }
             else
             {
-                _logger.Warn($"Export to {fileName} failed");
+                _logger.WarnFormat("Export to {0} failed", fileName);
                 _messenger.Publish(Errors.ExportFailed.ToError());
             }
         }
@@ -108,12 +108,12 @@ namespace Remembrance.Core.Exchange
                         {
                             foreach (var importer in _importers)
                             {
-                                _logger.Info($"Performing import from {fileName} with {importer.GetType().Name}...");
+                                _logger.TraceFormat("Performing import from {0} with {1}...", fileName, importer.GetType().Name);
                                 var exchangeResult = await importer.ImportAsync(fileName, cancellationToken).ConfigureAwait(false);
 
                                 if (exchangeResult.Success)
                                 {
-                                    _logger.Info($"ImportAsync from {fileName} has been performed");
+                                    _logger.InfoFormat("Import from {0} has been performed", fileName);
                                     var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
                                     _messenger.Publish(
                                         exchangeResult.Errors != null
@@ -122,7 +122,7 @@ namespace Remembrance.Core.Exchange
                                     return;
                                 }
 
-                                _logger.Warn($"ImportAsync from {fileName} failed");
+                                _logger.WarnFormat("ImportAsync from {0} failed", fileName);
                             }
 
                             _messenger.Publish(Errors.ImportFailed.ToError());

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -15,7 +16,7 @@ namespace Remembrance.Contracts
             CancellationToken cancellationToken,
             [CanBeNull] IWindow ownerWindow = null,
             bool needPostProcess = true,
-            [CanBeNull] ManualTranslation[] manualTranslations = null);
+            [CanBeNull] ICollection<ManualTranslation> manualTranslations = null);
 
         [ItemNotNull]
         Task<string> GetDefaultTargetLanguageAsync([NotNull] string sourceLanguage, CancellationToken cancellationToken);
@@ -23,14 +24,14 @@ namespace Remembrance.Contracts
         [ItemNotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] ManualTranslation[] manualTranslations,
+            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken,
             [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
 
         void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey);
 
         [ItemNotNull]
-        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ManualTranslation[] manualTranslations, CancellationToken cancellationToken);
+        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken);
 
         //TODO: remove notnull on tasks everywhere (leave only itemnotnull)
     }

@@ -29,7 +29,7 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
         {
-            Logger.Trace($"Creating window for {translationInfo}...");
+            Logger.TraceFormat("Creating window for {0}...", translationInfo);
             var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
             var translationDetailsCardViewModel = nestedLifeTimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             var translationDetailsCardWindow = nestedLifeTimeScope.Resolve<ITranslationDetailsCardWindow>(

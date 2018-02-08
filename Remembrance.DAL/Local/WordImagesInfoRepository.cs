@@ -12,17 +12,16 @@ namespace Remembrance.DAL.Local
         public WordImagesInfoRepository()
             : base(Paths.SettingsPath)
         {
-            Collection.EnsureIndex(x => x.Id);
             Collection.EnsureIndex(x => x.Id.Word.Text);
             Collection.EnsureIndex(x => x.Id.Word.PartOfSpeech);
-            Collection.EnsureIndex(x => x.Id.Text);
-            Collection.EnsureIndex(x => x.Id.SourceLanguage);
-            Collection.EnsureIndex(x => x.Id.TargetLanguage);
+            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.Text);
+            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.SourceLanguage);
+            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.TargetLanguage);
         }
 
         public void ClearForTranslationEntry(TranslationEntryKey translationEntryKey)
         {
-            Collection.Delete(x => x.Id.Text == translationEntryKey.Text && x.Id.SourceLanguage == translationEntryKey.SourceLanguage && x.Id.TargetLanguage == translationEntryKey.TargetLanguage);
+            Collection.Delete(x => x.Id.TranslationEntryKey.Text == translationEntryKey.Text && x.Id.TranslationEntryKey.SourceLanguage == translationEntryKey.SourceLanguage && x.Id.TranslationEntryKey.TargetLanguage == translationEntryKey.TargetLanguage);
         }
     }
 }

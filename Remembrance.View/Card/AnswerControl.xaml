@@ -23,12 +23,12 @@
         Orientation="Horizontal"
         view:MarginSetter.Margin="{StaticResource CommonMargin}">
         <TextBlock
-            Name="AnswerTextBox"
             Text="{lex:Loc EnterTheAnswer}"
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             ToolTip="{lex:Loc MistakesTooltip}" />
         <controls:CompletableTextBox
+            Name="AnswerTextBox"
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
             Width="200"
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"

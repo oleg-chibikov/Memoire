@@ -79,14 +79,14 @@
     <Reference Include="Scar.Common.Installer.UI, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Installer.UI.1.0.25\lib\net47\Scar.Common.Installer.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.5\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6612.29405, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6612.29405\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.7\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.34\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View, Version=1.0.6611.32227, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.6611.32227\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6591.29489, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.29\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>

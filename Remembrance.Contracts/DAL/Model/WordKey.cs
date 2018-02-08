@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public sealed class WordKey : TranslationEntryKey, IEquatable<WordKey>
+    public sealed class WordKey : IEquatable<WordKey>
     {
         [UsedImplicitly]
         public WordKey()
@@ -11,11 +11,15 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] BaseWord word)
-            : base(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage)
         {
             Word = word ?? throw new ArgumentNullException(nameof(word));
+            TranslationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
         }
 
+        [NotNull]
+        public TranslationEntryKey TranslationEntryKey { get; set; }
+
+        [NotNull]
         public BaseWord Word { get; set; }
 
         #region Equality
@@ -32,7 +36,7 @@ namespace Remembrance.Contracts.DAL.Model
                 return true;
             }
 
-            return Word.Equals(other.Word) && base.Equals(other);
+            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
         }
 
         public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
@@ -60,7 +64,7 @@ namespace Remembrance.Contracts.DAL.Model
         {
             unchecked
             {
-                var hashCode = base.GetHashCode();
+                var hashCode = TranslationEntryKey.GetHashCode();
                 hashCode = (hashCode * 397) ^ Word.GetHashCode();
                 return hashCode;
             }
@@ -70,7 +74,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{base.ToString()} - {Word}";
+            return $"{TranslationEntryKey} - {Word}";
         }
     }
 }

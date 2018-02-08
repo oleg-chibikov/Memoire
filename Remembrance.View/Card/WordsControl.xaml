@@ -16,12 +16,12 @@
             <card:WordControl
                 x:Name="WordControl"
                 Margin="5 0 0 0"
-                FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=card:WordsControl}}"
-                FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=card:WordsControl}}"
-                DataContext="{Binding}" />
+                FontSize="{Binding FontSize, Mode=OneTime, ElementName=Control}"
+                FontWeight="{Binding FontWeight, Mode=OneTime, ElementName=Control}"
+                DataContext="{Binding Mode=OneTime}" />
             <DataTemplate.Triggers>
                 <DataTrigger
-                    Binding="{Binding RelativeSource={RelativeSource PreviousData}}"
+                    Binding="{Binding Mode=OneTime, RelativeSource={RelativeSource PreviousData}}"
                     Value="{x:Null}">
                     <Setter
                         TargetName="WordControl"
@@ -42,13 +42,13 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Orientation="Horizontal"
-                            MaxWidth="{Binding MaxWidth, ElementName=Control}" />
+                            MaxWidth="{Binding MaxWidth, Mode=OneTime, ElementName=Control}" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding MaxWidth, ElementName=Control}"
+                    Binding="{Binding MaxWidth, Mode=OneTime, ElementName=Control}"
                     Value="Infinity">
                     <Setter
                         Property="ItemsPanel">

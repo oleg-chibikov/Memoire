@@ -35,7 +35,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
         };
 
-        private readonly object _locker = new object();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         [NotNull]
         private readonly ILog _logger;
@@ -72,16 +72,16 @@ namespace Remembrance.Core.ImageSearch.Qwant
                     {
                         if (!_captchaPassing)
                         {
-                            lock (_locker)
+                            await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+                            if (!_captchaPassing)
                             {
-                                if (!_captchaPassing)
-                                {
-                                    _logger.InfoFormat("Opening browser at Qwant.com to solve the captcha...");
-                                    Process.Start($"https://www.qwant.com/?q={text}&t=images");
-                                    _messenger.Publish(Texts.BrowserWasOpened.ToWarning());
-                                    _captchaPassing = true;
-                                }
+                                _logger.TraceFormat("Opening browser at Qwant.com to solve the captcha...");
+                                Process.Start($"https://www.qwant.com/?q={text}&t=images");
+                                _messenger.Publish(Texts.BrowserWasOpened.ToWarning());
+                                _captchaPassing = true;
                             }
+
+                            _semaphore.Release();
                         }
 
                         return null;
@@ -92,10 +92,9 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
                 if (_captchaPassing)
                 {
-                    lock (_locker)
-                    {
-                        _captchaPassing = false;
-                    }
+                    await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    _captchaPassing = false;
+                    _semaphore.Release();
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

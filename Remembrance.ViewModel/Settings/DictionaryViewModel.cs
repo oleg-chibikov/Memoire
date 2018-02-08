@@ -17,6 +17,7 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -39,7 +40,7 @@ namespace Remembrance.ViewModel.Settings
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
         //TODO: config
-        private const int PageSize = 20;
+        private const int PageSize = 50;
 
         [NotNull]
         private readonly IDialogService _dialogService;
@@ -51,10 +52,10 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILifetimeScope _lifetimeScope;
 
         [NotNull]
-        private readonly object _lockObject = new object();
+        private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
@@ -107,18 +108,16 @@ namespace Remembrance.ViewModel.Settings
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
 
             FavoriteCommand = new CorrelationCommand<TranslationEntryViewModel>(Favorite);
-            DeleteCommand = new CorrelationCommand<TranslationEntryViewModel>(Delete);
+            DeleteCommand = new CorrelationCommand<TranslationEntryViewModel>(DeleteAsync);
             OpenDetailsCommand = new CorrelationCommand<TranslationEntryViewModel>(OpenDetailsAsync);
-            OpenSettingsCommand = new CorrelationCommand(OpenSettings);
+            OpenSettingsCommand = new CorrelationCommand(OpenSettingsAsync);
             SearchCommand = new CorrelationCommand<string>(Search);
 
-            Logger.Info("Starting...");
+            Logger.Trace("Starting...");
 
             _translationList = new ObservableCollection<TranslationEntryViewModel>();
             _translationList.CollectionChanged += TranslationList_CollectionChanged;
             View = CollectionViewSource.GetDefaultView(_translationList);
-
-            BindingOperations.EnableCollectionSynchronization(_translationList, _lockObject);
 
             Logger.Trace("Creating NextCardShowTime update timer...");
 
@@ -131,21 +130,18 @@ namespace Remembrance.ViewModel.Settings
 
             Logger.Trace("Subscribing to the events...");
 
-            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo>(OnTranslationInfoReceived));
-            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo[]>(OnTranslationInfosBatchReceived));
-            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChanged));
-
-            Logger.Trace("Receiving translations...");
+            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo>(OnTranslationInfoReceivedAsync));
+            _subscriptionTokens.Add(messenger.Subscribe<TranslationInfo[]>(OnTranslationInfosBatchReceivedAsync));
+            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
 
             LoadTranslationsAsync();
 
-            Logger.Info("Started");
+            Logger.Debug("Started");
         }
 
         [NotNull]
         public EditManualTranslationsViewModel EditManualTranslationsViewModel { get; }
-
-        protected override IWindow Window => _dictionaryWindowFactory.GetWindowIfExists();
 
         [NotNull]
         public ICollectionView View { get; }
@@ -170,6 +166,39 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public ICommand SearchCommand { get; }
 
+        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
+        {
+            if (priorityWordKey == null)
+            {
+                throw new ArgumentNullException(nameof(priorityWordKey));
+            }
+
+            Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
+
+            await Task.Run(
+                    async () =>
+                    {
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(priorityWordKey.WordKey.TranslationEntryKey));
+                        _semaphore.Release();
+
+                        if (translationEntryViewModel == null)
+                        {
+                            Logger.WarnFormat("Cannot find {0} in translations list", priorityWordKey.WordKey);
+                            return;
+                        }
+
+                        translationEntryViewModel.ProcessPriority(priorityWordKey);
+                    },
+                    CancellationTokenSource.Token)
+                .ConfigureAwait(false);
+        }
+
+        protected override async Task<IWindow> GetWindowAsync()
+        {
+            return await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
         protected override void Cleanup()
         {
             _translationList.CollectionChanged -= TranslationList_CollectionChanged;
@@ -181,43 +210,45 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        private void Delete([NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private async void DeleteAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            if (!_dialogService.ConfirmDialog(string.Format(Texts.AreYouSureDelete, translationEntryViewModel)))
-            {
-                return;
-            }
-
-            Logger.Trace($"Deleting {translationEntryViewModel} from the list...");
             if (translationEntryViewModel == null)
             {
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
             }
 
-            bool deleted;
-            lock (_lockObject)
+            if (!_dialogService.ConfirmDialog(string.Format(Texts.AreYouSureDelete, translationEntryViewModel)))
             {
-                deleted = _translationList.Remove(translationEntryViewModel);
+                return;
             }
+
+            Logger.TraceFormat("Deleting {0} from the list...", translationEntryViewModel);
+
+            await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+            var deleted = _translationList.Remove(translationEntryViewModel);
+            _semaphore.Release();
 
             if (!deleted)
             {
-                Logger.Warn($"{translationEntryViewModel} is not deleted from the list");
+                Logger.WarnFormat("{0} is not deleted from the list", translationEntryViewModel);
             }
             else
             {
-                Logger.Trace($"{translationEntryViewModel} has been deleted from the list");
+                Logger.DebugFormat("{0} has been deleted from the list", translationEntryViewModel);
             }
         }
 
         private void Favorite([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            var text = translationEntryViewModel.IsFavorited
-                ? "Unfavoriting"
-                : "Favoriting";
-            Logger.Trace($"{text} {translationEntryViewModel}...");
+            Logger.TraceFormat(
+                "{0} {1}...",
+                translationEntryViewModel.IsFavorited
+                    ? "Unfavoriting"
+                    : "Favoriting",
+                translationEntryViewModel);
             translationEntryViewModel.IsFavorited = !translationEntryViewModel.IsFavorited;
-            var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(translationEntryViewModel);
+            var translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);
+            translationEntry.IsFavorited = translationEntryViewModel.IsFavorited;
             _translationEntryRepository.Update(translationEntry);
         }
 
@@ -237,125 +268,153 @@ namespace Remembrance.ViewModel.Settings
         private async Task<bool> LoadTranslationsPageAsync(int pageNumber)
         {
             return await Task.Run(
-                    () =>
+                    async () =>
                     {
                         if (CancellationTokenSource.IsCancellationRequested)
                         {
                             return false;
                         }
 
-                        Logger.Trace($"Receiving translations page {pageNumber}...");
-                        var translationEntryViewModels = _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize, null, SortOrder.Descending));
+                        Logger.TraceFormat("Receiving translations page {0}...", pageNumber);
+                        var translationEntryViewModels =
+                            _viewModelAdapter.Adapt<TranslationEntryViewModel[]>(_translationEntryRepository.GetPage(pageNumber, PageSize, nameof(TranslationEntry.ModifiedDate), SortOrder.Descending));
                         if (!translationEntryViewModels.Any())
                         {
                             return false;
                         }
 
-                        lock (_lockObject)
-                        {
-                            foreach (var translationEntryViewModel in translationEntryViewModels)
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        _synchronizationContext.Send(
+                            x =>
                             {
-                                _translationList.Add(translationEntryViewModel);
-                            }
-                        }
+                                foreach (var translationEntryViewModel in translationEntryViewModels)
+                                {
+                                    _translationList.Add(translationEntryViewModel);
+                                }
 
-                        Logger.Trace($"{translationEntryViewModels.Length} translations have been received");
+                                Logger.DebugFormat("{0} translations have been received", translationEntryViewModels.Length);
+                            },
+                            null);
+                        _semaphore.Release();
+
                         return true;
                     },
                     CancellationTokenSource.Token)
                 .ConfigureAwait(false);
         }
 
-        private void OnTranslationInfoReceived([NotNull] TranslationInfo translationInfo)
+        private async void OnTranslationInfoReceivedAsync([NotNull] TranslationInfo translationInfo)
         {
             if (translationInfo == null)
             {
                 throw new ArgumentNullException(nameof(translationInfo));
             }
 
-            Logger.Trace($"Received {translationInfo} from external source...");
+            Logger.DebugFormat("Received {0} from external source", translationInfo);
+
+            await Task.Run(async () => await ProcessNewTranslationAsync(translationInfo).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        private async Task ProcessNewTranslationAsync([NotNull] TranslationInfo translationInfo)
+        {
             var translationEntryViewModel = _viewModelAdapter.Adapt<TranslationEntryViewModel>(translationInfo.TranslationEntry);
 
-            TranslationEntryViewModel existing;
-            lock (_lockObject)
-            {
-                existing = _translationList.SingleOrDefault(x => x.Id.Equals(translationInfo.TranslationEntry.Id));
-            }
+            await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+            var existing = _translationList.SingleOrDefault(x => x.Id.Equals(translationInfo.TranslationEntry.Id));
+            _semaphore.Release();
 
             if (existing != null)
             {
-                Logger.Trace($"Updating {existing} in the list...");
+                Logger.TraceFormat("Updating {0} in the list...", existing);
 
                 // Prevent text change to fire
                 using (existing.SupressNotification())
                 {
                     _viewModelAdapter.Adapt(translationInfo.TranslationEntry, existing);
-                    existing.ReloadTranslationsAsync().ConfigureAwait(false);
                 }
 
                 _synchronizationContext.Post(x => View.MoveCurrentTo(existing), null);
-                Logger.Trace($"{existing} has been updated in the list");
+                Logger.DebugFormat("{0} has been updated in the list", existing);
             }
             else
             {
-                Logger.Trace($"Adding {translationEntryViewModel} to the list...");
-                _synchronizationContext.Post(
+                Logger.TraceFormat("Adding {0} to the list...", translationEntryViewModel);
+                await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                _synchronizationContext.Send(
                     x =>
                     {
-                        lock (_lockObject)
-                        {
-                            _translationList.Insert(0, translationEntryViewModel);
-                        }
+                        _translationList.Insert(0, translationEntryViewModel);
+                        _semaphore.Release();
 
-                        View.MoveCurrentTo(translationEntryViewModel);
+                        Logger.DebugFormat("{0} has been added to the list...", translationEntryViewModel);
                     },
                     null);
-                Logger.Trace($"{translationEntryViewModel} has been added to the list...");
+                View.MoveCurrentTo(translationEntryViewModel);
             }
         }
 
-        private void OnTranslationInfosBatchReceived([NotNull] TranslationInfo[] translationInfos)
+        private async void OnTranslationInfosBatchReceivedAsync([NotNull] TranslationInfo[] translationInfos)
         {
-            Logger.Trace($"Received a batch of translations ({translationInfos.Length} items) from external source...");
-            foreach (var translationInfo in translationInfos)
+            if (translationInfos == null)
             {
-                OnTranslationInfoReceived(translationInfo);
+                throw new ArgumentNullException(nameof(translationInfos));
             }
+
+            Logger.DebugFormat("Received a batch of translations ({0} items) from the external source...", translationInfos.Length);
+
+            await Task.Run(
+                    async () =>
+                    {
+                        foreach (var translationInfo in translationInfos)
+                        {
+                            await ProcessNewTranslationAsync(translationInfo).ConfigureAwait(false);
+                        }
+                    },
+                    CancellationTokenSource.Token)
+                .ConfigureAwait(false);
         }
 
-        private void OnUiLanguageChanged([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            Logger.Trace($"Changing UI language to {cultureInfo}...");
             if (cultureInfo == null)
             {
                 throw new ArgumentNullException(nameof(cultureInfo));
             }
 
-            CultureUtilities.ChangeCulture(cultureInfo);
+            Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
-            lock (_lockObject)
-            {
-                foreach (var translation in _translationList.SelectMany(translationEntryViewModel => translationEntryViewModel.Translations))
-                {
-                    translation.ReRender();
-                }
-            }
+            await Task.Run(
+                    async () =>
+                    {
+                        CultureUtilities.ChangeCulture(cultureInfo);
+
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        foreach (var translation in _translationList.SelectMany(translationEntryViewModel => translationEntryViewModel.Translations))
+                        {
+                            translation.ReRender();
+                        }
+
+                        _semaphore.Release();
+                    },
+                    CancellationTokenSource.Token)
+                .ConfigureAwait(false);
         }
 
         private async void OpenDetailsAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            Logger.Trace($"Opening details for {translationEntryViewModel}...");
             if (translationEntryViewModel == null)
             {
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
             }
 
-            var translationEntry = _viewModelAdapter.Adapt<TranslationEntry>(translationEntryViewModel);
+            Logger.TraceFormat("Opening details for {0}...", translationEntryViewModel);
+
+            var translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);
             var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationTokenSource.Token).ConfigureAwait(false);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails);
             var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
             var translationDetailsCardViewModel = nestedLifeTimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var dictionaryWindow = nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
+            var dictionaryWindow = await nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             var detailsWindow = nestedLifeTimeScope.Resolve<ITranslationDetailsCardWindow>(
                 new TypedParameter(typeof(Window), dictionaryWindow),
                 new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel));
@@ -363,20 +422,22 @@ namespace Remembrance.ViewModel.Settings
             detailsWindow.Show();
         }
 
-        private void OpenSettings()
+        private async void OpenSettingsAsync()
         {
             Logger.Trace("Opening settings...");
+
             var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
-            var dictionaryWindow = nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindow();
+            var dictionaryWindow = await nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             dictionaryWindow.AssociateDisposable(nestedLifeTimeScope);
             var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
             var windowFactory = nestedLifeTimeScope.Resolve<WindowFactory<ISettingsWindow>>();
-            windowFactory.ShowWindow(dictionaryWindowParameter);
+            await windowFactory.ShowWindowAsync(CancellationTokenSource.Token, dictionaryWindowParameter).ConfigureAwait(false);
         }
 
         private void Search([CanBeNull] string text)
         {
-            Logger.Trace($"Searching for {text}...");
+            Logger.TraceFormat("Searching for {0}...", text);
+
             if (string.IsNullOrWhiteSpace(text))
             {
                 View.Filter = null;

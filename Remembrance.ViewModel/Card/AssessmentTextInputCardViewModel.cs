@@ -48,7 +48,7 @@ namespace Remembrance.ViewModel.Card
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
             ProvideAnswerCommand = new CorrelationCommand(ProvideAnswer);
-            logger.Trace("Card is initialized");
+            logger.DebugFormat("Card for {0} is initialized", translationInfo);
         }
 
         [NotNull]
@@ -62,7 +62,7 @@ namespace Remembrance.ViewModel.Card
 
         private void ProvideAnswer()
         {
-            Logger.Info($"Providing answer {ProvidedAnswer}...");
+            Logger.TraceFormat("Providing answer {0}...", ProvidedAnswer);
             var mostSuitable = AcceptedAnswers.First();
             var currentMinDistance = int.MaxValue;
             if (!string.IsNullOrWhiteSpace(ProvidedAnswer))
@@ -97,7 +97,7 @@ namespace Remembrance.ViewModel.Card
 
             if (Accepted == true)
             {
-                Logger.Info($"Answer is correct. Most suitable accepted word was {mostSuitable} with distance {currentMinDistance}. Increasing repeat type for {TranslationInfo}...");
+                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, TranslationInfo);
                 TranslationInfo.TranslationEntry.IncreaseRepeatType();
 
                 // The inputed answer can differ from the first one
@@ -106,7 +106,7 @@ namespace Remembrance.ViewModel.Card
             }
             else
             {
-                Logger.Info($"Answer is not correct. Decreasing repeat type for {TranslationInfo}...");
+                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", TranslationInfo);
                 Accepted = false;
                 TranslationInfo.TranslationEntry.DecreaseRepeatType();
                 closeTimeout = FailureCloseTimeout;
