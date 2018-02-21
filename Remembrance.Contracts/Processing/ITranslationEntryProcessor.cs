@@ -4,9 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Processing.Data;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Contracts
+namespace Remembrance.Contracts.Processing
 {
     public interface ITranslationEntryProcessor
     {

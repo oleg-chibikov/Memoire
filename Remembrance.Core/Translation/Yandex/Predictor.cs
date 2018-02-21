@@ -32,12 +32,12 @@ namespace Remembrance.Core.Translation.Yandex
         private readonly ILanguageDetector _languageDetector;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
-        public Predictor([NotNull] ILanguageDetector languageDetector, [NotNull] IMessageHub messenger)
+        public Predictor([NotNull] ILanguageDetector languageDetector, [NotNull] IMessageHub messageHub)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
         public async Task<PredictionResult> PredictAsync(string text, int limit, CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
             catch (Exception ex)
             {
-                _messenger.Publish(Errors.CannotPredict.ToError(ex));
+                _messageHub.Publish(Errors.CannotPredict.ToError(ex));
                 return null;
             }
         }

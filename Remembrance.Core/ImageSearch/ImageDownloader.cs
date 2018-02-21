@@ -22,12 +22,12 @@ namespace Remembrance.Core.ImageSearch
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
-        public ImageDownloader([NotNull] ILog logger, [NotNull] IMessageHub messenger)
+        public ImageDownloader([NotNull] ILog logger, [NotNull] IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
@@ -46,7 +46,7 @@ namespace Remembrance.Core.ImageSearch
             }
             catch (Exception ex)
             {
-                _messenger.Publish(Errors.CannotDownloadImage.ToError(ex));
+                _messageHub.Publish(Errors.CannotDownloadImage.ToError(ex));
                 return null;
             }
         }

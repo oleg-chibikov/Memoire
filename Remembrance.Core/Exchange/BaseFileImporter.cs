@@ -8,13 +8,15 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Exchange;
+using Remembrance.Contracts.Exchange.Data;
+using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
+using Scar.Common;
 using Scar.Common.Events;
 using Scar.Common.Messages;
 
@@ -25,6 +27,9 @@ namespace Remembrance.Core.Exchange
         where T : IExchangeEntry
     {
         private const int MaxBlockSize = 25;
+
+        [NotNull]
+        private readonly ILearningInfoRepository _learningInfoRepository;
 
         [NotNull]
         private readonly ILog _logger;
@@ -42,12 +47,14 @@ namespace Remembrance.Core.Exchange
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger)
+            [NotNull] IMessageHub messenger,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -98,18 +105,18 @@ namespace Remembrance.Core.Exchange
                                     var changed = false;
                                     var translationEntryKey = await GetTranslationEntryKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
                                     TranslationEntry translationEntry = null;
-                                    TranslationInfo translationInfo = null;
                                     if (existingTranslationEntries.ContainsKey(translationEntryKey))
                                     {
                                         translationEntry = existingTranslationEntries[translationEntryKey];
                                     }
 
                                     var manualTranslationsUpdated = false;
+                                    LearningInfo learningInfo;
 
                                     var manualTranslations = GetManualTranslations(exchangeEntry);
                                     if (translationEntry == null)
                                     {
-                                        translationInfo = await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
+                                        var translationInfo = await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                                                 new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
                                                 cancellationToken,
                                                 null,
@@ -118,9 +125,11 @@ namespace Remembrance.Core.Exchange
                                             .ConfigureAwait(false);
                                         translationEntry = translationInfo.TranslationEntry;
                                         changed = true;
+                                        learningInfo = translationInfo.LearningInfo;
                                     }
                                     else
                                     {
+                                        learningInfo = _learningInfoRepository.GetOrInsert(translationEntryKey);
                                         if (manualTranslations != null)
                                         {
                                             if (translationEntry.ManualTranslations?.SequenceEqual(manualTranslations) != true)
@@ -131,19 +140,24 @@ namespace Remembrance.Core.Exchange
                                         }
                                     }
 
-                                    //TODO: See inside
-                                    var learningInfoUpdated = SetLearningInfo(exchangeEntry, translationEntry);
+                                    var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, learningInfo);
                                     var priorityTranslationsUpdated = UpdatePrioirityTranslationsAsync(exchangeEntry, translationEntry);
                                     changed |= manualTranslationsUpdated;
-                                    changed |= learningInfoUpdated;
                                     changed |= priorityTranslationsUpdated;
                                     _logger.InfoFormat("Imported {0}", exchangeEntry.Text);
                                     if (changed)
                                     {
                                         _translationEntryRepository.Update(translationEntry);
                                     }
+
+                                    if (learningInfoUpdated)
+                                    {
+                                        _learningInfoRepository.Update(learningInfo);
+                                    }
+
+                                    changed |= learningInfoUpdated;
                                     return changed
-                                        ? translationInfo
+                                        ? translationEntry
                                         : null;
                                 }
                                 catch (Exception ex)
@@ -180,9 +194,7 @@ namespace Remembrance.Core.Exchange
                 count);
         }
 
-        private bool UpdatePrioirityTranslationsAsync(
-            [NotNull] T exchangeEntry,
-            [NotNull] TranslationEntry translationEntry)
+        private bool UpdatePrioirityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
             if (priorityTranslations?.Any() != true)
@@ -198,6 +210,7 @@ namespace Remembrance.Core.Exchange
                 {
                     PublishPriorityWord(translationEntry, priorityTranslation);
                 }
+
                 result = true;
             }
             else
@@ -232,55 +245,11 @@ namespace Remembrance.Core.Exchange
         [CanBeNull]
         protected abstract ICollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
 
-        protected abstract bool SetLearningInfo([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry);
+        protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
 
         private void OnProgress(int current, int total)
         {
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
-        }
-    }
-
-    public static class EnumerableExtensions
-    {
-        //TODO: Common lib
-
-        public static async Task RunByBlocksAsync<T>([NotNull] this IEnumerable<T> items, int maxBlockSize, [NotNull] Func<T[], int, int, Task<bool>> action)
-        {
-            if (items == null)
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            var objArray = items as T[] ?? items.ToArray();
-            if (objArray.Length == 0)
-            {
-                return;
-            }
-
-            if (maxBlockSize <= 0)
-            {
-                maxBlockSize = 100;
-            }
-
-            var num = objArray.Length / maxBlockSize;
-            if (objArray.Length % maxBlockSize > 0)
-            {
-                ++num;
-            }
-
-            for (var index = 0; index < num; ++index)
-            {
-                var array = objArray.Skip(index * maxBlockSize).Take(maxBlockSize).ToArray();
-                if (array.Length == 0 || !await action(array, index, num))
-                {
-                    break;
-                }
-            }
         }
     }
 }

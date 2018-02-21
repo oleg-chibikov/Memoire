@@ -1,4 +1,6 @@
-﻿namespace Remembrance.Contracts.Translate.Data.Predictor
+using System.Collections.Generic;
+
+namespace Remembrance.Contracts.Translate.Data.Predictor
 {
     public class PredictionResult
     {
@@ -6,6 +8,6 @@
 
         public int Position { get; set; }
 
-        public string[] PredictionVariants { get; set; }
+        public ICollection<string> PredictionVariants { get; set; }
     }
 }

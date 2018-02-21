@@ -10,12 +10,11 @@ namespace Remembrance.ViewModel.Settings.Data
             DisplayName = displayName;
         }
 
-        // TODO: Readonly?
         [NotNull]
-        public string Code { get; set; }
+        public string Code { get; }
 
         [NotNull]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; }
 
         public override bool Equals(object obj)
         {

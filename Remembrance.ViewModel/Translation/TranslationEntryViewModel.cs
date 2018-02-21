@@ -1,23 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
-using Scar.Common.Notification;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationEntryViewModel : WordViewModel, INotificationSupressable
+    public sealed class TranslationEntryViewModel : WordViewModel
     {
         [NotNull]
         private readonly ILog _logger;
@@ -28,26 +30,42 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        [NotNull]
-        private readonly IViewModelAdapter _viewModelAdapter;
-
         public TranslationEntryViewModel(
+            [NotNull] TranslationEntry translationEntry,
+            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILog logger,
-            [NotNull] TranslationEntryKey translationEntryKey,
             [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ITranslationEntryRepository translationEntryRepository)
-            : base(textToSpeechPlayer, translationEntryProcessor)
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
+            : base(
+                new Word
+                {
+                    Text = translationEntry.Id.Text
+                },
+                translationEntry.Id.SourceLanguage,
+                lifetimeScope,
+                textToSpeechPlayer,
+                translationEntryProcessor)
         {
-            Id = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
+            if (translationEntry == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntry));
+            }
+
+            Id = translationEntry.Id;
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _viewModelAdapter = viewModelAdapter ?? throw new ArgumentNullException(nameof(viewModelAdapter));
             CanLearnWord = false;
+            var learningInfo = learningInfoRepository.GetOrInsert(Id);
+            //no await here
+            ConstructionTask = UpdateAsync(translationEntry, learningInfo);
         }
+
+        [NotNull]
+        internal Task ConstructionTask { get; }
 
         [DoNotNotify]
         public TranslationEntryKey Id { get; }
@@ -73,15 +91,22 @@ namespace Remembrance.ViewModel.Translation
 
         public bool IsFavorited { get; set; }
 
-        public bool NotificationIsSupressed { get; set; }
-
-        [NotNull]
-        public NotificationSupresser SupressNotification()
+        public async Task UpdateAsync([NotNull] TranslationEntry translationEntry, [NotNull] LearningInfo learningInfo)
         {
-            return new NotificationSupresser(this);
+            if (translationEntry == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntry));
+            }
+
+            IsFavorited = learningInfo.IsFavorited;
+            LastCardShowTime = learningInfo.LastCardShowTime;
+            NextCardShowTime = learningInfo.NextCardShowTime;
+            RepeatType = learningInfo.RepeatType;
+            ShowCount = learningInfo.ShowCount;
+            await ReloadTranslationsAsync(translationEntry).ConfigureAwait(false);
         }
 
-        public void ProcessPriority([NotNull] PriorityWordKey priorityWordKey)
+        public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
         {
             if (priorityWordKey == null)
             {
@@ -117,7 +142,8 @@ namespace Remembrance.ViewModel.Translation
             {
                 _logger.Debug("No more translations left in the list. Restoring default...");
                 var translationEntry = _translationEntryRepository.GetById(Id);
-                ReloadTranslationsAsync(translationEntry).ConfigureAwait(false);
+                //no await here
+                ReloadTranslationsAsync(translationEntry);
             }
         }
 
@@ -153,16 +179,23 @@ namespace Remembrance.ViewModel.Translation
             if (!found)
             {
                 _logger.TraceFormat("Not found {0} in the list. Adding...", wordKey);
-                var copy = _viewModelAdapter.Adapt<PriorityWordViewModel>(wordKey.Word);
-                copy.SetTranslationEntryKey(wordKey.TranslationEntryKey);
+
                 var translationEntry = _translationEntryRepository.GetById(wordKey.TranslationEntryKey);
-                copy.SetIsPriority(translationEntry.PriorityWords?.Contains(wordKey.Word) == true);
-                _synchronizationContext.Send(x => Translations.Add(copy), null);
+                var priorityWordViewModel = LifetimeScope.Resolve<PriorityWordViewModel>(
+                    new TypedParameter(
+                        typeof(Word),
+                        new Word
+                        {
+                            Text = wordKey.Word.Text,
+                            PartOfSpeech = wordKey.Word.PartOfSpeech
+                        }),
+                    new TypedParameter(typeof(TranslationEntry), translationEntry));
+                _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);
                 _logger.DebugFormat("{0} has been added to the list", wordKey);
             }
         }
 
-        public async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
+        private async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
         {
             if (translationEntry == null)
             {
@@ -170,16 +203,23 @@ namespace Remembrance.ViewModel.Translation
             }
 
             var isPriority = translationEntry.PriorityWords?.Any() == true;
-            var words = isPriority
-                ? translationEntry.PriorityWords
-                : (await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false)).TranslationResult.GetDefaultWords()
-                .Cast<BaseWord>();
-            var translations = _viewModelAdapter.Adapt<PriorityWordViewModel[]>(words);
-            foreach (var translation in translations)
+            IEnumerable<Word> words;
+            if (isPriority)
             {
-                translation.SetTranslationEntryKey(Id);
-                translation.SetIsPriority(isPriority);
+                words = translationEntry.PriorityWords.Select(
+                    baseWord => new Word
+                    {
+                        Text = baseWord.Text,
+                        PartOfSpeech = baseWord.PartOfSpeech
+                    });
             }
+            else
+            {
+                var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+                words = translationDetails.TranslationResult.GetDefaultWords();
+            }
+
+            var translations = words.Select(word => LifetimeScope.Resolve<PriorityWordViewModel>(new TypedParameter(typeof(Word), word), new TypedParameter(typeof(TranslationEntry), translationEntry)));
 
             Translations = new ObservableCollection<PriorityWordViewModel>(translations);
         }

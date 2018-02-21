@@ -1,5 +1,6 @@
 <UserControl
     x:Class="Remembrance.View.Settings.AddManualTranslationControl"
+    x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,7 +21,6 @@
     <UserControl.Resources>
         <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
-    <!--TODO Bindings-->
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
         view:MarginSetter.Orientation="Horizontal">
@@ -39,7 +39,7 @@
 
         <controls:CompletableTextBox
             Grid.Column="1"
-            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             HorizontalAlignment="Stretch"
             Text="{Binding ManualTranslationText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{StaticResource SuggestionProvider}">

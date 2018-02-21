@@ -28,8 +28,7 @@
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             ToolTip="{lex:Loc MistakesTooltip}" />
         <controls:CompletableTextBox
-            Name="AnswerTextBox"
-            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             Width="200"
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
@@ -37,15 +36,14 @@
             DataProvider="{StaticResource SuggestionProvider}">
             <controls:CompletableTextBox.InputBindings>
                 <KeyBinding
-                    Command="{Binding ProvideAnswerCommand}"
+                    Command="{Binding ProvideAnswerCommand, Mode=OneTime}"
                     Key="Enter" />
             </controls:CompletableTextBox.InputBindings>
         </controls:CompletableTextBox>
         <Button
             Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Answer}"
-            Command="{Binding ProvideAnswerCommand}"
-            CommandParameter="{Binding Text, ElementName=AnswerTextBox}">
+            Command="{Binding ProvideAnswerCommand, Mode=OneTime}">
             <materialDesign:PackIcon
                 Kind="CheckboxMarkedCircleOutline" />
         </Button>

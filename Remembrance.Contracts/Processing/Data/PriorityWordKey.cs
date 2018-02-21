@@ -2,7 +2,7 @@ using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 
-namespace Remembrance.Contracts.CardManagement.Data
+namespace Remembrance.Contracts.Processing.Data
 {
     public sealed class PriorityWordKey
     {

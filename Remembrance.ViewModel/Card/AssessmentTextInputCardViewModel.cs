@@ -7,9 +7,9 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -21,31 +21,20 @@ namespace Remembrance.ViewModel.Card
     public sealed class AssessmentTextInputCardViewModel : BaseAssessmentCardViewModel
     {
         [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        private readonly ILearningInfoRepository _learningInfoRepository;
 
         public AssessmentTextInputCardViewModel(
             [NotNull] TranslationInfo translationInfo,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] SynchronizationContext synchronizationContext)
-            : base(translationInfo, settingsRepository, viewModelAdapter, messenger, logger, lifetimeScope, synchronizationContext)
+            [NotNull] SynchronizationContext synchronizationContext,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
+            : base(translationInfo, settingsRepository, messageHub, logger, lifetimeScope, synchronizationContext)
         {
-            if (settingsRepository == null)
-            {
-                throw new ArgumentNullException(nameof(settingsRepository));
-            }
-
-            if (viewModelAdapter == null)
-            {
-                throw new ArgumentNullException(nameof(viewModelAdapter));
-            }
-
-            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
             ProvideAnswerCommand = new CorrelationCommand(ProvideAnswer);
             logger.DebugFormat("Card for {0} is initialized", translationInfo);
@@ -94,11 +83,12 @@ namespace Remembrance.ViewModel.Card
         private TimeSpan ChangeRepeatType(WordViewModel mostSuitable, int currentMinDistance)
         {
             TimeSpan closeTimeout;
+            var learningInfo = _learningInfoRepository.GetById(TranslationInfo.TranslationEntryKey);
 
             if (Accepted == true)
             {
-                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, TranslationInfo);
-                TranslationInfo.TranslationEntry.IncreaseRepeatType();
+                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
+                learningInfo.IncreaseRepeatType();
 
                 // The inputed answer can differ from the first one
                 CorrectAnswer = mostSuitable;
@@ -106,14 +96,14 @@ namespace Remembrance.ViewModel.Card
             }
             else
             {
-                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", TranslationInfo);
+                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
                 Accepted = false;
-                TranslationInfo.TranslationEntry.DecreaseRepeatType();
+                learningInfo.DecreaseRepeatType();
                 closeTimeout = FailureCloseTimeout;
             }
 
-            _translationEntryRepository.Update(TranslationInfo.TranslationEntry);
-            Messenger.Publish(TranslationInfo);
+            _learningInfoRepository.Update(learningInfo);
+            MessageHub.Publish(TranslationInfo.TranslationEntry);
             return closeTimeout;
         }
     }

@@ -516,7 +516,7 @@
                                     Visibility="Hidden" />
                             </Canvas>
                             <Label
-                                Content="{Binding Path=Text}"
+                                Content="{Binding Path=Text, Mode=OneWay}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center" />
                         </Grid>

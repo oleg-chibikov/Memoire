@@ -30,16 +30,16 @@ namespace Remembrance.Core.Translation.Yandex
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] IMessageHub messenger)
+        public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
@@ -92,7 +92,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
             catch (Exception ex)
             {
-                _messenger.Publish(Errors.CannotSpeak.ToError(ex));
+                _messageHub.Publish(Errors.CannotSpeak.ToError(ex));
                 return false;
             }
         }

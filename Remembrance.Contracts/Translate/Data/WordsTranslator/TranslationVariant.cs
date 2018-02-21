@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
@@ -5,12 +6,12 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
     public sealed class TranslationVariant : Word
     {
         [CanBeNull]
-        public Word[] Synonyms { get; set; }
+        public ICollection<Word> Synonyms { get; set; }
 
         [CanBeNull]
-        public Word[] Meanings { get; set; }
+        public ICollection<Word> Meanings { get; set; }
 
         [CanBeNull]
-        public Example[] Examples { get; set; }
+        public ICollection<Example> Examples { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Scar.Common.Exceptions;
 using Scar.Common.Messages;
 
@@ -14,20 +15,20 @@ namespace Remembrance.WebApi.Controllers
     public sealed class WordsController : ApiController
     {
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        public WordsController([NotNull] ITranslationEntryProcessor translationEntryProcessor, [NotNull] IMessageHub messenger)
+        public WordsController([NotNull] ITranslationEntryProcessor translationEntryProcessor, [NotNull] IMessageHub messageHub)
         {
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
         }
 
         [HttpPut]
         [UsedImplicitly]
-        public async void PutAsync([NotNull] [FromBody] string word)
+        public async Task PutAsync([NotNull] [FromBody] string word)
         {
             if (word == null)
             {
@@ -40,7 +41,7 @@ namespace Remembrance.WebApi.Controllers
             }
             catch (LocalizableException ex)
             {
-                _messenger.Publish(ex.ToMessage());
+                _messageHub.Publish(ex.ToMessage());
             }
         }
     }

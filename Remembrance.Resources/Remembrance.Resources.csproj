@@ -42,10 +42,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.7\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6617.27638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6617.27638\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>

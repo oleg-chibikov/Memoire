@@ -1,15 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
@@ -26,7 +28,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
@@ -40,22 +42,22 @@ namespace Remembrance.ViewModel.Settings
         public EditManualTranslationsViewModel(
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ITranslationEntryRepository translationEntryRepository)
         {
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             EditManualTranslationsCommand = new CorrelationCommand<TranslationEntryViewModel>(EditManualTranslations);
-            DeleteCommand = new CorrelationCommand<ManualTranslation>(DeleteAsync);
+            DeleteCommand = new AsyncCorrelationCommand<ManualTranslation>(DeleteAsync);
             CancelCommand = new CorrelationCommand(Cancel);
             AddTranslationCommand = new CorrelationCommand(AddTranslation);
-            SaveCommand = new CorrelationCommand(SaveAsync);
+            SaveCommand = new AsyncCorrelationCommand(SaveAsync);
         }
 
         [NotNull]
-        public static PartOfSpeech[] AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
+        public static ICollection<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
 
         public bool IsManualTranslationsDialogOpen { get; private set; }
 
@@ -104,7 +106,7 @@ namespace Remembrance.ViewModel.Settings
             IsManualTranslationsDialogOpen = false;
         }
 
-        private async void DeleteAsync([NotNull] ManualTranslation manualTranslation)
+        private async Task DeleteAsync([NotNull] ManualTranslation manualTranslation)
         {
             if (manualTranslation == null)
             {
@@ -139,12 +141,12 @@ namespace Remembrance.ViewModel.Settings
             ManualTranslationText = null;
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             _logger.Trace("Saving...");
             IsManualTranslationsDialogOpen = false;
             var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(_translationEntry.Id, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
-            _messenger.Publish(translationInfo);
+            _messageHub.Publish(translationInfo.TranslationEntry);
         }
     }
 }

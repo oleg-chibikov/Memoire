@@ -21,7 +21,10 @@ namespace Remembrance.DAL.Local
 
         public void ClearForTranslationEntry(TranslationEntryKey translationEntryKey)
         {
-            Collection.Delete(x => x.Id.TranslationEntryKey.Text == translationEntryKey.Text && x.Id.TranslationEntryKey.SourceLanguage == translationEntryKey.SourceLanguage && x.Id.TranslationEntryKey.TargetLanguage == translationEntryKey.TargetLanguage);
+            Collection.Delete(
+                x => x.Id.TranslationEntryKey.Text == translationEntryKey.Text
+                     && x.Id.TranslationEntryKey.SourceLanguage == translationEntryKey.SourceLanguage
+                     && x.Id.TranslationEntryKey.TargetLanguage == translationEntryKey.TargetLanguage);
         }
     }
 }

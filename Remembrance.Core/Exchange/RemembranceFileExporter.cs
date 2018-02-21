@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Exchange;
+using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Core.CardManagement.Data;
 using Scar.Common.Events;
 
@@ -25,6 +27,9 @@ namespace Remembrance.Core.Exchange
         };
 
         [NotNull]
+        private readonly ILearningInfoRepository _learningInfoRepository;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
@@ -33,10 +38,12 @@ namespace Remembrance.Core.Exchange
         public RemembranceFileExporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] ILog logger)
+            [NotNull] ILog logger,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
         }
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -49,12 +56,14 @@ namespace Remembrance.Core.Exchange
             }
 
             var translationEntries = _translationEntryRepository.GetAll();
+            var learningInfos = _learningInfoRepository.GetAll().ToDictionary(x => x.Id, x => x);
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
             var totalCount = translationEntries.Length;
             var count = 0;
             foreach (var translationEntry in translationEntries)
             {
-                exportEntries.Add(new RemembranceExchangeEntry(translationEntry));
+                learningInfos.TryGetValue(translationEntry.Id, out var learningInfo);
+                exportEntries.Add(new RemembranceExchangeEntry(translationEntry, learningInfo ?? new LearningInfo()));
                 OnProgress(Interlocked.Increment(ref count), totalCount);
             }
 

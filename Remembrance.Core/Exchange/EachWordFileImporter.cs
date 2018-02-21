@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate;
 using Remembrance.Core.CardManagement.Data;
 using Remembrance.Resources;
@@ -34,8 +34,9 @@ namespace Remembrance.Core.Exchange
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
-            [NotNull] ILanguageDetector languageDetector)
-            : base(translationEntryRepository, logger, translationEntryProcessor, messenger)
+            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
@@ -59,7 +60,7 @@ namespace Remembrance.Core.Exchange
                 .ToArray();
         }
 
-        protected override bool SetLearningInfo(EachWordExchangeEntry exchangeEntry, TranslationEntry translationEntry)
+        protected override bool UpdateLearningInfo(EachWordExchangeEntry exchangeEntry, LearningInfo learningInfo)
         {
             return false;
         }

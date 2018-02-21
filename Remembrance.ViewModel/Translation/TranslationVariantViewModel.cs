@@ -1,11 +1,13 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.ViewModel.Card;
@@ -17,30 +19,40 @@ namespace Remembrance.ViewModel.Translation
     public sealed class TranslationVariantViewModel : PriorityWordViewModel
     {
         public TranslationVariantViewModel(
+            [NotNull] TranslationEntry translationEntry,
+            [NotNull] TranslationVariant translationVariant,
+            [NotNull] string parentText,
+            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITranslationEntryRepository translationEntryRepository)
-            : base(textToSpeechPlayer, messenger, translationEntryProcessor, logger, translationEntryRepository)
+            : base(translationEntry, translationVariant, lifetimeScope, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, translationEntryRepository)
         {
-            if (lifetimeScope == null)
-            {
-                throw new ArgumentNullException(nameof(lifetimeScope));
-            }
+            Synonyms = translationVariant.Synonyms
+                ?.Select(synonym => lifetimeScope.Resolve<PriorityWordViewModel>(new TypedParameter(typeof(Word), synonym), new TypedParameter(typeof(TranslationEntry), translationEntry)))
+                .ToArray();
 
-            WordImageViewerViewModel = lifetimeScope.Resolve<WordImageViewerViewModel>(new TypedParameter(typeof(PriorityWordViewModel), this));
+            Meanings = translationVariant.Meanings
+                ?.Select(meaning => lifetimeScope.Resolve<WordViewModel>(new TypedParameter(typeof(Word), meaning), new TypedParameter(typeof(string), translationEntry.Id.SourceLanguage)))
+                .ToArray();
+
+            Examples = translationVariant.Examples;
+
+            WordImageViewerViewModel = lifetimeScope.Resolve<WordImageViewerViewModel>(
+                new TypedParameter(typeof(WordKey), new WordKey(translationEntry.Id, new BaseWord(this))),
+                new TypedParameter(typeof(string), parentText));
         }
 
         [CanBeNull]
-        public PriorityWordViewModel[] Synonyms { get; set; }
+        public ICollection<PriorityWordViewModel> Synonyms { get; }
 
         [CanBeNull]
-        public WordViewModel[] Meanings { get; set; }
+        public ICollection<WordViewModel> Meanings { get; }
 
         [CanBeNull]
-        public Example[] Examples { get; set; }
+        public ICollection<Example> Examples { get; }
 
         [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }

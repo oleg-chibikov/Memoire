@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Common.Logging;
@@ -27,7 +28,7 @@ namespace Remembrance.Core.Sync
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly INamedInstancesFactory _namedInstancesFactory;
@@ -42,13 +43,13 @@ namespace Remembrance.Core.Sync
             [NotNull] INamedInstancesFactory namedInstancesFactory,
             [NotNull] ILog logger,
             [NotNull] TRepository ownRepository,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [CanBeNull] ISyncPostProcessor<T> syncPostProcessor = null)
         {
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _namedInstancesFactory = namedInstancesFactory ?? throw new ArgumentNullException(nameof(namedInstancesFactory));
             _syncPostProcessor = syncPostProcessor;
@@ -78,39 +79,44 @@ namespace Remembrance.Core.Sync
                 }
 
                 var changed = remoteRepository.GetModifiedAfter(lastSyncTime);
-                foreach (var remoteEntity in changed)
-                {
-                    try
+                Parallel.ForEach(
+                    changed,
+                    async remoteEntity =>
                     {
-                        _logger.TraceFormat("Processing {0}...", remoteEntity);
-                        var existingEntity = _ownRepository.TryGetById(remoteEntity.Id);
-                        if (!Equals(existingEntity, default(T)))
+                        try
                         {
-                            if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
+                            _logger.TraceFormat("Processing {0}...", remoteEntity);
+                            var existingEntity = _ownRepository.TryGetById(remoteEntity.Id);
+                            if (!Equals(existingEntity, default(T)))
                             {
-                                _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
-                                continue;
+                                if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
+                                {
+                                    _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
+                                    return;
+                                }
+
+                                _ownRepository.Update(remoteEntity);
+                                _logger.InfoFormat("{0} updated", remoteEntity);
+                            }
+                            else
+                            {
+                                _ownRepository.Insert(remoteEntity);
+                                _logger.InfoFormat("{0} inserted", remoteEntity);
                             }
 
-                            _ownRepository.Update(remoteEntity);
-                            _logger.InfoFormat("{0} updated", remoteEntity);
+                            if (_syncPostProcessor != null)
+                            {
+                                await _syncPostProcessor.OnEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(false);
+                            }
+
+                            localSettings.SyncTimes[FileName] = DateTimeOffset.UtcNow;
+                            _localSettingsRepository.UpdateOrInsert(localSettings);
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            _ownRepository.Insert(remoteEntity);
-                            _logger.InfoFormat("{0} inserted", remoteEntity);
+                            _messageHub.Publish(string.Format(Errors.CannotSynchronize, remoteEntity, filePath).ToError(ex));
                         }
-
-                        _syncPostProcessor?.OnEntityChanged(existingEntity, remoteEntity);
-
-                        localSettings.SyncTimes[FileName] = DateTimeOffset.UtcNow;
-                        _localSettingsRepository.UpdateOrInsert(localSettings);
-                    }
-                    catch (Exception ex)
-                    {
-                        _messenger.Publish(string.Format(Errors.CannotSynchronize, remoteEntity, filePath).ToError(ex));
-                    }
-                }
+                    });
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
@@ -35,23 +36,23 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
         };
 
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
         [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
+
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         private bool _captchaPassing;
 
-        public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messenger)
+        public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messageHub)
         {
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ImageInfo[]> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
+        public async Task<ICollection<ImageInfo>> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
         {
             if (text == null)
             {
@@ -77,7 +78,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                             {
                                 _logger.TraceFormat("Opening browser at Qwant.com to solve the captcha...");
                                 Process.Start($"https://www.qwant.com/?q={text}&t=images");
-                                _messenger.Publish(Texts.BrowserWasOpened.ToWarning());
+                                _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
                                 _captchaPassing = true;
                             }
 
@@ -103,7 +104,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
             catch (Exception ex)
             {
-                _messenger.Publish(Errors.CannotGetQwantResults.ToError(ex));
+                _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex));
                 return null;
             }
         }

@@ -39,11 +39,11 @@ namespace Remembrance.Core.Translation.Yandex
         };
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
-        public LanguageDetector([NotNull] IMessageHub messenger)
+        public LanguageDetector([NotNull] IMessageHub messageHub)
         {
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
         public async Task<DetectionResult> DetectLanguageAsync(string text, CancellationToken cancellationToken)
@@ -55,7 +55,13 @@ namespace Remembrance.Core.Translation.Yandex
 
             try
             {
-                var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&hint=en,{CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName}&options=1";
+                var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&options=1";
+                var currentCulture = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
+                if (currentCulture != Constants.EnLanguageTwoLetters)
+                {
+                    uriPart += $"&hint={currentCulture}";
+                }
+
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -67,7 +73,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
             catch (Exception ex)
             {
-                _messenger.Publish(Errors.CannotDetectLanguage.ToError(ex));
+                _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex));
                 return new DetectionResult
                 {
                     Code = Constants.EnLanguageTwoLetters,
@@ -101,7 +107,7 @@ namespace Remembrance.Core.Translation.Yandex
                         }
                         catch (Exception ex)
                         {
-                            _messenger.Publish(Errors.CannotListLanguages.ToError(ex));
+                            _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
                             return new ListResult
                             {
                                 Languages =

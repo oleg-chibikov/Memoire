@@ -79,7 +79,7 @@
                                                                    ItemsSource="{Binding Meanings, Mode=OneTime}"
                                                                    MaxWidth="{StaticResource WordsWidth}" />
                                                 <ItemsControl ItemsSource="{Binding Examples, Mode=OneTime}"
-                                                              Visibility="{Binding Examples, Mode=OneTime, Converter={StaticResource ArrayToVisibilityConverter}}">
+                                                              Visibility="{Binding Examples, Mode=OneTime, Converter={StaticResource CollectionToVisibilityConverter}}">
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
                                                             <StackPanel Orientation="Horizontal">

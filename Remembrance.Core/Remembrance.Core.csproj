@@ -53,7 +53,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
@@ -107,7 +107,8 @@
     <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
     <Compile Include="Sync\SettingsSyncPostProcessor.cs" />
-    <Compile Include="TranslationEntryProcessor.cs" />
+    <Compile Include="Sync\TranslationEntrySyncPostProcessor.cs" />
+    <Compile Include="Processing\TranslationEntryProcessor.cs" />
     <Compile Include="CustomContractResolver.cs" />
     <Compile Include="Sync\RepositorySynhronizer.cs" />
     <Compile Include="Sync\SynchronizationManager.cs" />

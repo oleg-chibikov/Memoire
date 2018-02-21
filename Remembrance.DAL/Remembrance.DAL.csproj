@@ -75,6 +75,7 @@
     <Compile Include="Local\LocalSettingsRepository.cs" />
     <Compile Include="Shared\SettingsRepository.cs" />
     <Compile Include="Local\TranslationDetailsRepository.cs" />
+    <Compile Include="Shared\LearningInfoRepository.cs" />
     <Compile Include="Shared\TranslationEntryRepository.cs" />
     <Compile Include="Local\WordImagesInfoRepository.cs" />
   </ItemGroup>

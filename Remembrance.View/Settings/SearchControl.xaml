@@ -26,23 +26,22 @@
 
         <controls:CompletableTextBox
             x:Name="SearchTextBox"
-            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{StaticResource SuggestionProvider}">
             <controls:CompletableTextBox.InputBindings>
                 <KeyBinding
-                    Command="{Binding SearchCommand}"
+                    Command="{Binding SearchCommand, Mode=OneTime}"
                     Key="Enter"
-                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+                    CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}, Mode=OneWay}" />
             </controls:CompletableTextBox.InputBindings>
         </controls:CompletableTextBox>
 
         <Button
             Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Search}"
-            Command="{Binding SearchCommand}"
-            CommandParameter="{Binding Text, ElementName=SearchTextBox}">
+            Command="{Binding SearchCommand, Mode=OneTime}"
+            CommandParameter="{Binding Text, ElementName=SearchTextBox, Mode=OneWay}">
             <materialDesign:PackIcon
                 Kind="FileFind" />
         </Button>

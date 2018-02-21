@@ -37,26 +37,26 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <xceed:XceedAutoFitColumnGrid
-        ItemsSource="{Binding View}"
+        ItemsSource="{Binding View, Mode=OneTime}"
         AutoScrollCurrentItem="All"
         AutoCreateColumns="False"
         IsFixedHeadersHost="True"
         SynchronizeCurrent="True">
         <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="CellEditEnded">
-                    <settings:CommandAction Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=InvokeParameter}"/>
+                    <settings:CommandAction Command="{Binding SaveCommand, Mode=OneTime}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=InvokeParameter}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>-->
         <xceed:XceedAutoFitColumnGrid.Resources>
             <DataTemplate
                 DataType="{x:Type system:DateTime}">
                 <TextBlock
-                    Text="{Binding StringFormat=dd MMM HH:mm}" />
+                    Text="{Binding StringFormat=dd MMM HH:mm, Mode=OneWay}" />
             </DataTemplate>
             <DataTemplate
                 DataType="{x:Type contracts:RepeatType}">
                 <TextBlock
-                    Text="{Binding Converter={StaticResource RepeatTypeConverter}}" />
+                    Text="{Binding Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
             </DataTemplate>
         </xceed:XceedAutoFitColumnGrid.Resources>
         <xceed:XceedAutoFitColumnGrid.Columns>
@@ -159,8 +159,8 @@
                     <DataTemplate>
                         <TextBlock
                             VerticalAlignment="Center"
-                            Text="{Binding StringFormat=dd MMM HH:mm}"
-                            Foreground="{Binding Converter={StaticResource DateTimeToBrushConverter}}" />
+                            Text="{Binding StringFormat=dd MMM HH:mm, Mode=OneWay}"
+                            Foreground="{Binding Converter={StaticResource DateTimeToBrushConverter}, Mode=OneWay}" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -182,8 +182,8 @@
                             <Button
                                 Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc EditManualTranslations}"
-                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="TooltipEdit" />
                             </Button>
@@ -191,8 +191,8 @@
                                 Style="{StaticResource ImageButton}"
                                 Background="OrangeRed"
                                 ToolTip="{lex:Loc DeleteTranslation}"
-                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="Delete" />
                             </Button>

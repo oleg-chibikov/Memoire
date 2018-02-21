@@ -4,7 +4,7 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    public class BaseWord: TextEntry, IEquatable<BaseWord>
+    public class BaseWord : TextEntry, IEquatable<BaseWord>
     {
         public BaseWord([NotNull] BaseWord word)
         {
@@ -22,12 +22,12 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
+        public virtual PartOfSpeech PartOfSpeech { get; set; }
+
         public override string ToString()
         {
             return $"{Text} ({PartOfSpeech}))";
         }
-
-        public virtual PartOfSpeech PartOfSpeech { get; set; }
 
         #region Equality
 

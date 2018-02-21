@@ -63,7 +63,6 @@
                 </xcdg:TableflowView>
             </xcdg:DataGridControl.View>
             <xceed:XceedAutoFitColumnGrid.Columns>
-                <!--TODO: First cell sometimes loses style-->
                 <xcdg:Column
                     Width="*"
                     IsMainColumn="True"
@@ -128,7 +127,7 @@
                                 Style="{StaticResource ImageButton}"
                                 Background="OrangeRed"
                                 ToolTip="{lex:Loc DeleteTranslation}"
-                                CommandParameter="{Binding DataContext, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                                 Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="Delete" />

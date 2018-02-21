@@ -9,14 +9,19 @@ namespace Remembrance.Core.CardManagement.Data
     [UsedImplicitly]
     internal sealed class RemembranceExchangeEntry : IExchangeEntry
     {
-        public RemembranceExchangeEntry([NotNull] TranslationEntry translationEntry)
+        public RemembranceExchangeEntry([NotNull] TranslationEntry translationEntry, [NotNull] LearningInfo learningInfo)
         {
             TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
+            LearningInfo = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
         }
 
         [NotNull]
         [JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
+
+        [NotNull]
+        [JsonProperty("LearningInfo", Required = Required.Always)]
+        public LearningInfo LearningInfo { get; }
 
         [JsonIgnore]
         public string Text => TranslationEntry.Id.Text;

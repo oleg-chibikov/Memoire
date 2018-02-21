@@ -41,7 +41,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
@@ -74,17 +74,19 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CardManagement\Data\ExchangeResult.cs" />
     <Compile Include="CardManagement\Data\IntervalModificator.cs" />
-    <Compile Include="CardManagement\Data\PriorityWordKey.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
+    <Compile Include="DAL\Model\LearningInfo.cs" />
+    <Compile Include="DAL\Shared\ILearningInfoRepository.cs" />
+    <Compile Include="Exchange\Data\ExchangeResult.cs" />
     <Compile Include="Exchange\ICardsExchanger.cs" />
     <Compile Include="Exchange\IFileExporter.cs" />
     <Compile Include="Exchange\IFileImporter.cs" />
     <Compile Include="CardManagement\ICardShowTimeProvider.cs" />
     <Compile Include="CardManagement\ITranslationDetailsCardManager.cs" />
     <Compile Include="IDialogService.cs" />
-    <Compile Include="ITranslationEntryProcessor.cs" />
+    <Compile Include="Processing\Data\PriorityWordKey.cs" />
+    <Compile Include="Processing\ITranslationEntryProcessor.cs" />
     <Compile Include="DAL\INamedInstancesFactory.cs" />
     <Compile Include="DAL\Local\ILocalSettingsRepository.cs" />
     <Compile Include="DAL\Shared\ISettingsRepository.cs" />
@@ -95,7 +97,7 @@
     <Compile Include="DAL\Local\IWordImagesInfoRepository.cs" />
     <Compile Include="DAL\Model\PrepositionsInfo.cs" />
     <Compile Include="DAL\Model\LocalSettings.cs" />
-    <Compile Include="DAL\Model\TranslationEntryAdditionInfo.cs" />
+    <Compile Include="Processing\Data\TranslationEntryAdditionInfo.cs" />
     <Compile Include="DAL\Model\WordKey.cs" />
     <Compile Include="ImageSearch\Data\ImageInfoWithBitmap.cs" />
     <Compile Include="DAL\Model\ManualTranslation.cs" />
@@ -112,7 +114,6 @@
     <Compile Include="ImageSearch\Data\ImageInfo.cs" />
     <Compile Include="ImageSearch\IImageDownloader.cs" />
     <Compile Include="ImageSearch\IImageSearcher.cs" />
-    <Compile Include="IViewModelAdapter.cs" />
     <Compile Include="Sync\IRepositorySynhronizer.cs" />
     <Compile Include="Sync\ISynchronizationManager.cs" />
     <Compile Include="Sync\ISyncPostProcessor.cs" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

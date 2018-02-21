@@ -5,15 +5,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.WPF.Commands;
@@ -26,10 +26,13 @@ namespace Remembrance.ViewModel.Card
     public sealed class TranslationDetailsCardViewModel : IDisposable
     {
         [NotNull]
+        private readonly ILearningInfoRepository _learningInfoRepository;
+
+        [NotNull]
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly IPredictor _predictor;
@@ -47,39 +50,43 @@ namespace Remembrance.ViewModel.Card
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         public TranslationDetailsCardViewModel(
+            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] TranslationInfo translationInfo,
-            [NotNull] IViewModelAdapter viewModelAdapter,
             [NotNull] ILog logger,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] IPredictor predictor)
+            [NotNull] IPredictor predictor,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
         {
+            if (lifetimeScope == null)
+            {
+                throw new ArgumentNullException(nameof(lifetimeScope));
+            }
+
             if (translationInfo == null)
             {
                 throw new ArgumentNullException(nameof(translationInfo));
             }
 
-            if (viewModelAdapter == null)
-            {
-                throw new ArgumentNullException(nameof(viewModelAdapter));
-            }
-
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            TranslationDetails = viewModelAdapter.Adapt<TranslationDetailsViewModel>(translationInfo);
-            _translationEntry = translationInfo.TranslationEntry;
-            IsFavorited = _translationEntry.IsFavorited;
-            Word = translationInfo.TranslationEntryKey.Text;
-            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None).ConfigureAwait(false);
 
-            _subscriptionTokens.Add(messenger.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
-            _subscriptionTokens.Add(messenger.Subscribe<PriorityWordKey>(OnPriorityChanged));
+            TranslationDetails = lifetimeScope.Resolve<TranslationDetailsViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+            _translationEntry = translationInfo.TranslationEntry;
+            IsFavorited = translationInfo.LearningInfo.IsFavorited;
+            Word = translationInfo.TranslationEntryKey.Text;
+            //no await here
+            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
+
+            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChanged));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
@@ -101,7 +108,7 @@ namespace Remembrance.ViewModel.Card
         {
             foreach (var subscriptionToken in _subscriptionTokens)
             {
-                _messenger.UnSubscribe(subscriptionToken);
+                _messageHub.UnSubscribe(subscriptionToken);
             }
         }
 
@@ -231,8 +238,9 @@ namespace Remembrance.ViewModel.Card
                     ? "Unfavoriting"
                     : "Favoriting",
                 TranslationDetails);
-            _translationEntry.IsFavorited = IsFavorited = !IsFavorited;
-            _translationEntryRepository.Update(_translationEntry);
+            var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntry.Id);
+            learningInfo.IsFavorited = IsFavorited = !IsFavorited;
+            _learningInfoRepository.Update(learningInfo);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -9,12 +10,12 @@ using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
@@ -27,14 +28,16 @@ namespace Remembrance.Core.CardManagement
         private readonly DateTime _initTime;
 
         [NotNull]
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-        private readonly Guid _intervalModifiedToken;
+        private readonly ILearningInfoRepository _learningInfoRepository;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
-        private readonly Guid _onCardShowFrequencyChangedToken;
+        [NotNull]
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
@@ -54,10 +57,11 @@ namespace Remembrance.Core.CardManagement
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
             [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] SynchronizationContext synchronizationContext)
+            [NotNull] SynchronizationContext synchronizationContext,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
             : base(lifetimeScope, localSettingsRepository, logger, synchronizationContext)
         {
             if (settingsRepository == null)
@@ -68,8 +72,9 @@ namespace Remembrance.Core.CardManagement
             logger.Trace("Starting showing cards...");
             _interval = Disposable.Empty; //just to assign the field in the costructor
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _initTime = DateTime.Now;
             var localSettings = localSettingsRepository.Get();
             var settings = settingsRepository.Get();
@@ -79,15 +84,16 @@ namespace Remembrance.Core.CardManagement
             _pausedTime = localSettings.PausedTime;
             if (!IsPaused)
             {
-                CreateIntervalAsync().ConfigureAwait(false);
+                //no await here
+                CreateIntervalAsync();
             }
             else
             {
                 LastPausedTime = DateTime.Now;
             }
 
-            _onCardShowFrequencyChangedToken = messenger.Subscribe<TimeSpan>(OnCardShowFrequencyChangedAsync);
-            _intervalModifiedToken = messenger.Subscribe<IntervalModificator>(OnIntervalModifiedAsync);
+            _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(OnCardShowFrequencyChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<IntervalModificator>(OnIntervalModifiedAsync));
             logger.Debug("Started showing cards");
         }
 
@@ -96,6 +102,8 @@ namespace Remembrance.Core.CardManagement
         public TimeSpan CardShowFrequency { get; private set; }
 
         public DateTime? LastCardShowTime { get; private set; }
+
+        public DateTime NextCardShowTime => DateTime.Now + TimeLeftToShowCard;
 
         public DateTime LastPausedTime { get; private set; } = DateTime.MinValue;
 
@@ -126,13 +134,14 @@ namespace Remembrance.Core.CardManagement
 
         public async void Dispose()
         {
+            foreach (var subscriptionToken in _subscriptionTokens)
+            {
+                _messageHub.UnSubscribe(subscriptionToken);
+            }
+
             await _semaphore.WaitAsync().ConfigureAwait(false);
             _interval.Dispose();
             _semaphore.Release();
-
-            //TODO: When closing _messenger is already disposed here!
-            _messenger.UnSubscribe(_onCardShowFrequencyChangedToken);
-            _messenger.UnSubscribe(_intervalModifiedToken);
 
             RecordPausedTime();
 
@@ -164,16 +173,18 @@ namespace Remembrance.Core.CardManagement
 
                         settings.LastCardShowTime = LastCardShowTime = DateTime.Now;
                         LocalSettingsRepository.UpdateOrInsert(settings);
-                        var translationEntry = _translationEntryRepository.GetCurrent();
-                        if (translationEntry == null)
+                        var mostSuitableLearningInfo = _learningInfoRepository.GetMostSuitable();
+                        if (mostSuitableLearningInfo == null)
                         {
                             Logger.Debug("Skipped showing card due to absence of suitable cards");
                             return;
                         }
 
+                        var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
+
                         var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
                             .ConfigureAwait(false);
-                        var translationInfo = new TranslationInfo(translationEntry, translationDetails);
+                        var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
                         Logger.TraceFormat("Trying to show {0}...", translationInfo);
                         ShowCard(translationInfo, null);
                     });
@@ -205,13 +216,11 @@ namespace Remembrance.Core.CardManagement
             await Task.Run(
                     async () =>
                     {
-
                         switch (intervalModificator)
                         {
                             case IntervalModificator.Pause:
                                 if (!IsPaused)
                                 {
-
                                     await _semaphore.WaitAsync().ConfigureAwait(false);
                                     _interval.Dispose();
                                     _semaphore.Release();
@@ -258,14 +267,15 @@ namespace Remembrance.Core.CardManagement
             }
 
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
-            translationInfo.TranslationEntry.ShowCount++; // single place to update show count - no need to synchronize
-            translationInfo.TranslationEntry.LastCardShowTime = DateTime.Now;
-            _translationEntryRepository.Update(translationInfo.TranslationEntry);
-            _messenger.Publish(translationInfo);
+            var learningInfo = _learningInfoRepository.GetById(translationInfo.TranslationEntryKey);
+            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
+            learningInfo.LastCardShowTime = DateTime.Now;
+            _learningInfoRepository.Update(learningInfo);
+            _messageHub.Publish(translationInfo.TranslationEntry);
             IWindow window;
 
             var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
-            switch (translationInfo.TranslationEntry.RepeatType)
+            switch (learningInfo.RepeatType)
             {
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:

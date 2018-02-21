@@ -186,8 +186,8 @@
         x:Key="StringToVisibilityConverter" />
     <commonConverters:AddValueConverter
         x:Key="AddValueConverter" />
-    <commonConverters:ArrayToVisibilityConverter
-        x:Key="ArrayToVisibilityConverter" />
+    <commonConverters:CollectionToVisibilityConverter
+        x:Key="CollectionToVisibilityConverter" />
     <commonConverters:PercentageIntToDoubleConverter
         x:Key="PercentageIntToDoubleConverter" />
     <commonConverters:DoubleToTextTimeSpanConverter

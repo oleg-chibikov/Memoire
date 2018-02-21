@@ -10,9 +10,7 @@
     xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:view1="clr-namespace:Remembrance.View"
     mc:Ignorable="d"
     WindowState="Minimized"
     SizeToContent="WidthAndHeight"
@@ -25,7 +23,8 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     Icon="../IconAlt.ico">
     <Window.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
@@ -145,17 +144,48 @@
                     CornerRadius="4"
                     Padding="15">
                     <StackPanel
-                        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+                        view:MarginSetter.Margin="15">
+                        <StackPanel.Resources>
+                            <Style
+                                TargetType="TextBlock"
+                                BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter
+                                    Property="FontSize"
+                                    Value="{StaticResource SmallFontSize}" />
+                                <Setter
+                                    Property="Foreground"
+                                    Value="DimGray" />
+                            </Style>
+                        </StackPanel.Resources>
                         <TextBlock
                             Foreground="Black"
+                            FontWeight="Bold"
+                            FontSize="{StaticResource BigFontSize}"
                             Text="{lex:Loc Remembrance.Resources:Texts:Title}" />
-                        <TextBlock
-                            Foreground="Black"
-                            Text="{Binding CardShowTimeInfo, Mode=OneWay}" />
-                        <TextBlock
-                            Visibility="{Binding CardShowPauseInfo, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
-                            Foreground="Black"
-                            Text="{Binding CardShowPauseInfo, Mode=OneWay}" />
+                        <StackPanel
+                            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+                            <TextBlock
+                                Foreground="Black"
+                                FontWeight="Bold"
+                                Text="{Binding TimeLeftToShowCard, Mode=OneWay}" />
+                            <TextBlock
+                                Text="{Binding CardShowFrequency, Mode=OneWay}" />
+                            <TextBlock
+                                Text="{Binding NextCardShowTime, Mode=OneWay}" />
+                            <TextBlock
+                                Visibility="{Binding LastCardShowTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                Text="{Binding LastCardShowTime, Mode=OneWay}" />
+                            <TextBlock
+                                Visibility="{Binding PausedAt, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                Text="{Binding PausedAt, Mode=OneWay}" />
+                            <TextBlock
+                                Visibility="{Binding PausedTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                Text="{Binding PausedTime, Mode=OneWay}" />
+                            <Separator />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                Text="{Binding CurrentTime, Mode=OneWay, StringFormat=HH:mm:ss}" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </tb:TaskbarIcon.TrayToolTip>

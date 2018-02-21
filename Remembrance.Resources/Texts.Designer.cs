@@ -142,33 +142,6 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paused at {0}.
-        /// </summary>
-        public static string CardShowIsPausedInfo {
-            get {
-                return ResourceManager.GetString("CardShowIsPausedInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to , paused time {0}.
-        /// </summary>
-        public static string CardShowPauseTimeInfo {
-            get {
-                return ResourceManager.GetString("CardShowPauseTimeInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Next card show in {0} (last show at {1} (now is {4}), frequency {2}{3}).
-        /// </summary>
-        public static string CardShowTimeInfo {
-            get {
-                return ResourceManager.GetString("CardShowTimeInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -358,7 +331,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last ShowTime.
+        ///   Looks up a localized string similar to Last card show time.
         /// </summary>
         public static string LastCardShowTime {
             get {
@@ -412,7 +385,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next ShowTime.
+        ///   Looks up a localized string similar to Next card show time.
         /// </summary>
         public static string NextCardShowTime {
             get {
@@ -462,6 +435,24 @@ namespace Remembrance.Resources {
         public static string PartOfSpeech {
             get {
                 return ResourceManager.GetString("PartOfSpeech", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paused at.
+        /// </summary>
+        public static string PausedAt {
+            get {
+                return ResourceManager.GetString("PausedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paused time.
+        /// </summary>
+        public static string PausedTime {
+            get {
+                return ResourceManager.GetString("PausedTime", resourceCulture);
             }
         }
         
@@ -552,6 +543,15 @@ namespace Remembrance.Resources {
         public static string Speak {
             get {
                 return ResourceManager.GetString("Speak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time left to show card.
+        /// </summary>
+        public static string TimeToShow {
+            get {
+                return ResourceManager.GetString("TimeToShow", resourceCulture);
             }
         }
         

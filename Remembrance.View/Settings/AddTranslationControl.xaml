@@ -1,5 +1,6 @@
 <UserControl
     x:Class="Remembrance.View.Settings.AddTranslationControl"
+    x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,7 +12,6 @@
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
-    xmlns:view1="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -21,7 +21,6 @@
     <UserControl.Resources>
         <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
     </UserControl.Resources>
-    <!--TODO Bindings-->
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
         view:MarginSetter.Orientation="Horizontal">
@@ -40,7 +39,7 @@
 
         <controls:CompletableTextBox
             Grid.Column="1"
-            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}}"
+            behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             Text="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{StaticResource SuggestionProvider}">
             <controls:CompletableTextBox.InputBindings>
@@ -73,8 +72,8 @@
                 IsSynchronizedWithCurrentItem="True"
                 DisplayMemberPath="DisplayName"
                 SelectedValuePath="Code"
-                ItemsSource="{Binding AvailableSourceLanguages}"
-                SelectedItem="{Binding SelectedSourceLanguage}" />
+                ItemsSource="{Binding AvailableSourceLanguages, Mode=OneTime}"
+                SelectedItem="{Binding SelectedSourceLanguage, Mode=TwoWay}" />
 
             <TextBlock
                 Text="{lex:Loc To}" />
@@ -82,8 +81,8 @@
                 IsSynchronizedWithCurrentItem="True"
                 DisplayMemberPath="DisplayName"
                 SelectedValuePath="Code"
-                ItemsSource="{Binding AvailableTargetLanguages}"
-                SelectedItem="{Binding SelectedTargetLanguage}" />
+                ItemsSource="{Binding AvailableTargetLanguages, Mode=OneTime}"
+                SelectedItem="{Binding SelectedTargetLanguage, Mode=TwoWay}" />
             <Button
                 Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc AddTranslation}"

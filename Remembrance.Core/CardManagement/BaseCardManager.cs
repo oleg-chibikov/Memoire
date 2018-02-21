@@ -15,6 +15,9 @@ namespace Remembrance.Core.CardManagement
     internal abstract class BaseCardManager
     {
         [NotNull]
+        private readonly SynchronizationContext _synchronizationContext;
+
+        [NotNull]
         protected readonly ILifetimeScope LifetimeScope;
 
         [NotNull]
@@ -22,9 +25,6 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         protected readonly ILog Logger;
-
-        [NotNull]
-        private readonly SynchronizationContext _synchronizationContext;
 
         protected BaseCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] SynchronizationContext synchronizationContext)
         {

@@ -20,7 +20,12 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TranslationDetailsCardManager([NotNull] ILifetimeScope lifetimeScope, [NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] SynchronizationContext synchronizationContext)
+        public TranslationDetailsCardManager(
+            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [NotNull] ILog logger,
+            [NotNull] ISettingsRepository settingsRepository,
+            [NotNull] SynchronizationContext synchronizationContext)
             : base(lifetimeScope, localSettingsRepository, logger, synchronizationContext)
         {
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));

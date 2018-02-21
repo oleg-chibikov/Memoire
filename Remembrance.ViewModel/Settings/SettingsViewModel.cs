@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Shell;
 using Common.Logging;
@@ -40,7 +41,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly ISettingsRepository _settingsRepository;
@@ -54,14 +55,14 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] ILog logger,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] ICardsExchanger cardsExchanger,
             [NotNull] SynchronizationContext synchronizationContext)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
 
@@ -81,8 +82,8 @@ namespace Remembrance.ViewModel.Settings
             SaveCommand = new CorrelationCommand(Save);
             SaveCommand = new CorrelationCommand(Save);
             ViewLogsCommand = new CorrelationCommand(ViewLogs);
-            ExportCommand = new CorrelationCommand(Export);
-            ImportCommand = new CorrelationCommand(Import);
+            ExportCommand = new AsyncCorrelationCommand(ExportAsync);
+            ImportCommand = new AsyncCorrelationCommand(ImportAsync);
             WindowClosingCommand = new CorrelationCommand(WindowClosing);
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
@@ -94,7 +95,7 @@ namespace Remembrance.ViewModel.Settings
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
-        public Language[] AvailableUiLanguages { get; } =
+        public ICollection<Language> AvailableUiLanguages { get; } = new[]
         {
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")
@@ -134,7 +135,7 @@ namespace Remembrance.ViewModel.Settings
             set
             {
                 _uiLanguage = value;
-                _messenger.Publish(CultureInfo.GetCultureInfo(value.Code));
+                _messageHub.Publish(CultureInfo.GetCultureInfo(value.Code));
             }
         }
 
@@ -165,7 +166,7 @@ namespace Remembrance.ViewModel.Settings
         {
             ProgressState = TaskbarItemProgressState.Normal;
             _logger.Trace("Pausing showing cards...");
-            _messenger.Publish(IntervalModificator.Pause);
+            _messageHub.Publish(IntervalModificator.Pause);
             ProgressDescription = "Caclulating...";
             Progress = 0;
         }
@@ -193,17 +194,17 @@ namespace Remembrance.ViewModel.Settings
         {
             ProgressState = TaskbarItemProgressState.None;
             _logger.Trace("Resuming showing cards...");
-            _messenger.Publish(IntervalModificator.Resume);
+            _messageHub.Publish(IntervalModificator.Resume);
         }
 
-        private void Export()
+        private async Task ExportAsync()
         {
-            _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+            await _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        private void Import()
+        private async Task ImportAsync()
         {
-            _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
+            await _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private static void OpenSettingsFolder()
@@ -236,7 +237,7 @@ namespace Remembrance.ViewModel.Settings
             _localSettingsRepository.UpdateOrInsert(localSettings);
             if (prevFreq != freq)
             {
-                _messenger.Publish(freq);
+                _messageHub.Publish(freq);
             }
 
             RequestClose?.Invoke(null, null);

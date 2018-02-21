@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing;
 using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
@@ -18,8 +18,9 @@ namespace Remembrance.Core.Exchange
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger)
-            : base(translationEntryRepository, logger, translationEntryProcessor, messenger)
+            [NotNull] IMessageHub messenger,
+            [NotNull] ILearningInfoRepository learningInfoRepository)
+            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
         }
 
@@ -38,19 +39,18 @@ namespace Remembrance.Core.Exchange
             return exchangeEntry.TranslationEntry.PriorityWords;
         }
 
-        protected override bool SetLearningInfo(RemembranceExchangeEntry exchangeEntry, TranslationEntry translationEntry)
+        protected override bool UpdateLearningInfo(RemembranceExchangeEntry exchangeEntry, LearningInfo learningInfo)
         {
-            //TODO: Class LearningInfo. Pass it to TranslationEntryProcessor.AddOrChangeWord
-            var changed = translationEntry.IsFavorited != exchangeEntry.TranslationEntry.IsFavorited
-                          || translationEntry.RepeatType != exchangeEntry.TranslationEntry.RepeatType
-                          || translationEntry.LastCardShowTime != exchangeEntry.TranslationEntry.LastCardShowTime
-                          || translationEntry.NextCardShowTime != exchangeEntry.TranslationEntry.NextCardShowTime
-                          || translationEntry.ShowCount != exchangeEntry.TranslationEntry.ShowCount;
-            translationEntry.IsFavorited = exchangeEntry.TranslationEntry.IsFavorited;
-            translationEntry.RepeatType = exchangeEntry.TranslationEntry.RepeatType;
-            translationEntry.LastCardShowTime = exchangeEntry.TranslationEntry.LastCardShowTime;
-            translationEntry.NextCardShowTime = exchangeEntry.TranslationEntry.NextCardShowTime;
-            translationEntry.ShowCount = exchangeEntry.TranslationEntry.ShowCount;
+            var changed = learningInfo.IsFavorited != exchangeEntry.LearningInfo.IsFavorited
+                          || learningInfo.RepeatType != exchangeEntry.LearningInfo.RepeatType
+                          || learningInfo.LastCardShowTime != exchangeEntry.LearningInfo.LastCardShowTime
+                          || learningInfo.NextCardShowTime != exchangeEntry.LearningInfo.NextCardShowTime
+                          || learningInfo.ShowCount != exchangeEntry.LearningInfo.ShowCount;
+            learningInfo.IsFavorited = exchangeEntry.LearningInfo.IsFavorited;
+            learningInfo.RepeatType = exchangeEntry.LearningInfo.RepeatType;
+            learningInfo.LastCardShowTime = exchangeEntry.LearningInfo.LastCardShowTime;
+            learningInfo.NextCardShowTime = exchangeEntry.LearningInfo.NextCardShowTime;
+            learningInfo.ShowCount = exchangeEntry.LearningInfo.ShowCount;
             return changed;
         }
     }

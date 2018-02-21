@@ -6,8 +6,8 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Microsoft.Win32;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.Exchange;
+using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Resources;
 using Scar.Common.Events;
 using Scar.Common.Messages;
@@ -27,7 +27,7 @@ namespace Remembrance.Core.Exchange
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
         private readonly OpenFileDialog _openFileDialog;
@@ -39,7 +39,7 @@ namespace Remembrance.Core.Exchange
             [NotNull] ILog logger,
             [NotNull] IFileExporter exporter,
             [NotNull] IFileImporter[] importers,
-            [NotNull] IMessageHub messenger,
+            [NotNull] IMessageHub messageHub,
             [NotNull] OpenFileDialog openFileDialog,
             [NotNull] SaveFileDialog saveFileDialog)
         {
@@ -48,7 +48,7 @@ namespace Remembrance.Core.Exchange
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _exporter = exporter ?? throw new ArgumentNullException(nameof(exporter));
             _importers = importers ?? throw new ArgumentNullException(nameof(importers));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             foreach (var importer in importers)
             {
                 importer.Progress += ImporterExporter_Progress;
@@ -82,13 +82,13 @@ namespace Remembrance.Core.Exchange
             if (exchangeResult.Success)
             {
                 _logger.InfoFormat("Export to {0} has been performed", fileName);
-                _messenger.Publish(Texts.ExportSucceeded.ToMessage());
+                _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
                 Process.Start(fileName);
             }
             else
             {
                 _logger.WarnFormat("Export to {0} failed", fileName);
-                _messenger.Publish(Errors.ExportFailed.ToError());
+                _messageHub.Publish(Errors.ExportFailed.ToError());
             }
         }
 
@@ -115,7 +115,7 @@ namespace Remembrance.Core.Exchange
                                 {
                                     _logger.InfoFormat("Import from {0} has been performed", fileName);
                                     var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
-                                    _messenger.Publish(
+                                    _messageHub.Publish(
                                         exchangeResult.Errors != null
                                             ? $"[{importer.GetType().Name}] {mainMessage}. {Errors.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}".ToWarning()
                                             : $"[{importer.GetType().Name}] {mainMessage}".ToMessage());
@@ -125,7 +125,7 @@ namespace Remembrance.Core.Exchange
                                 _logger.WarnFormat("ImportAsync from {0} failed", fileName);
                             }
 
-                            _messenger.Publish(Errors.ImportFailed.ToError());
+                            _messageHub.Publish(Errors.ImportFailed.ToError());
                         },
                         cancellationToken)
                     .ConfigureAwait(false);

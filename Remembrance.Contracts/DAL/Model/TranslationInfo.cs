@@ -5,11 +5,15 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class TranslationInfo
     {
-        public TranslationInfo([NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails)
+        public TranslationInfo([NotNull] TranslationEntry translationEntry, [NotNull] TranslationDetails translationDetails, [NotNull] LearningInfo learningInfo)
         {
             TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetails));
+            LearningInfo = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
         }
+
+        [NotNull]
+        public LearningInfo LearningInfo { get; set; }
 
         [NotNull]
         public TranslationEntry TranslationEntry { get; set; }

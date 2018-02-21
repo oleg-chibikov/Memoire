@@ -8,30 +8,24 @@ using Remembrance.Contracts.Sync;
 namespace Remembrance.Core.Sync
 {
     [UsedImplicitly]
-    internal sealed class SettingsSyncPostProcessor : ISyncPostProcessor<Settings>
+    internal sealed class TranslationEntrySyncPostProcessor : ISyncPostProcessor<TranslationEntry>
     {
         [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public SettingsSyncPostProcessor([NotNull] IMessageHub messageHub)
+        public TranslationEntrySyncPostProcessor([NotNull] IMessageHub messageHub)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task OnEntityChangedAsync(Settings oldValue, Settings newValue)
+        public async Task OnEntityChangedAsync(TranslationEntry oldValue, TranslationEntry newValue)
         {
             if (newValue == null)
             {
                 throw new ArgumentNullException(nameof(newValue));
             }
 
-            var prevFreq = oldValue?.CardShowFrequency;
-            var newFreq = newValue.CardShowFrequency;
-
-            if (prevFreq != newFreq)
-            {
-                _messageHub.Publish(newFreq);
-            }
+            _messageHub.Publish(newValue);
         }
     }
 }

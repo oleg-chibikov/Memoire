@@ -12,9 +12,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Resources;
-using Remembrance.ViewModel.Translation;
 using Scar.Common.Async;
-using Scar.Common.Events;
 using Scar.Common.Messages;
 using Scar.Common.WPF.Commands;
 
@@ -22,9 +20,9 @@ namespace Remembrance.ViewModel.Card
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class WordImageViewerViewModel : IDisposable
+    public sealed class WordImageViewerViewModel
     {
-        internal const string SearchTemplate = "{0} {1}";
+        internal const string DefaultSearchTextTemplate = "{0} {1}";
 
         [NotNull]
         private readonly ICancellationTokenSourceProvider _cancellationTokenSourceProvider;
@@ -39,48 +37,56 @@ namespace Remembrance.ViewModel.Card
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly IMessageHub _messenger;
+        private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly IWordPropertiesReveivable _word;
+        private readonly string _searchText;
 
         [NotNull]
         private readonly IWordImagesInfoRepository _wordImagesInfoRepository;
 
-        private bool _isInitialized;
-
-        private bool _isReverse;
+        [NotNull]
+        private readonly WordKey _wordKey;
 
         private int?[] _nonAvailableIndexes = new int?[2];
 
-        [NotNull]
-        private string _searchText;
-
-        [NotNull]
-        private WordKey _wordKey;
+        private bool _shoudRepeat;
 
         public WordImageViewerViewModel(
+            [NotNull] WordKey wordKey,
+            [NotNull] string parentText,
             [NotNull] ILog logger,
-            [NotNull] IWordPropertiesReveivable word,
             [NotNull] IWordImagesInfoRepository wordImagesInfoRepository,
             [NotNull] ICancellationTokenSourceProvider cancellationTokenSourceProvider,
             [NotNull] IImageDownloader imageDownloader,
             [NotNull] IImageSearcher imageSearcher,
-            [NotNull] IMessageHub messenger)
+            [NotNull] IMessageHub messageHub)
         {
+            _wordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _word = word ?? throw new ArgumentNullException(nameof(word));
             _wordImagesInfoRepository = wordImagesInfoRepository ?? throw new ArgumentNullException(nameof(wordImagesInfoRepository));
             _cancellationTokenSourceProvider = cancellationTokenSourceProvider ?? throw new ArgumentNullException(nameof(cancellationTokenSourceProvider));
             _imageDownloader = imageDownloader ?? throw new ArgumentNullException(nameof(imageDownloader));
             _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
-            _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-            _word.WordKeySet += Word_WordKeySet;
-            _word.ParentTextSet += Word_ParentTextSet;
-            SetNextImageCommand = new CorrelationCommand(SetNextImage);
-            SetPreviousImageCommand = new CorrelationCommand(SetPreviousImage);
-            _searchText = _word.Text;
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            SetNextImageCommand = new AsyncCorrelationCommand(SetNextImageAsync);
+            SetPreviousImageCommand = new AsyncCorrelationCommand(SetPreviousImageAsync);
+
+            _searchText = string.Format(DefaultSearchTextTemplate, wordKey.Word.Text, parentText);
+
+            var wordImageInfo = _wordImagesInfoRepository.TryGetById(_wordKey);
+            if (wordImageInfo != null)
+            {
+                ConstructionTask = UpdateImageViewAsync(wordImageInfo);
+            }
+            else
+            {
+                _shoudRepeat = true;
+                ConstructionTask = SetNextOrPreviousImageAsync(true);
+            }
         }
+
+        public bool IsReverse { get; private set; }
 
         public int SearchIndex { get; private set; }
 
@@ -105,31 +111,7 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         public ICommand SetNextImageCommand { get; }
 
-        public void Dispose()
-        {
-            _word.WordKeySet -= Word_WordKeySet;
-            _word.ParentTextSet -= Word_ParentTextSet;
-        }
-
-        private async void Word_WordKeySet(object sender, [NotNull] EventArgs<WordKey> e)
-        {
-            _wordKey = e.Parameter;
-
-            var wordImageInfo = _wordImagesInfoRepository.TryGetById(_wordKey);
-            if (wordImageInfo != null)
-            {
-                await UpdateImageViewAsync(wordImageInfo).ConfigureAwait(false);
-            }
-            else
-            {
-                await SetNextImageAsync(true).ConfigureAwait(false);
-            }
-        }
-
-        private void Word_ParentTextSet(object sender, [NotNull] EventArgs<string> e)
-        {
-            _searchText = string.Format(SearchTemplate, _word.Text, e.Parameter);
-        }
+        internal Task ConstructionTask { get; }
 
         private async Task SetWordImageAsync(int index, string searchText)
         {
@@ -144,10 +126,15 @@ namespace Remembrance.ViewModel.Card
                             //Null means error - just displaying Error instead of image. Message is already shown to client;
                             _logger.WarnFormat("Cannot search images for {0}", _wordKey);
                             IsLoading = false;
-                            _isInitialized = false;
+                            _shoudRepeat = true;
                         }
                         else
                         {
+                            if (imagesUrls.Count > 1)
+                            {
+                                throw new InvalidOperationException("Search should return only one image");
+                            }
+
                             ImageInfoWithBitmap imageInfoWithBitmap = null;
                             if (imagesUrls.Any())
                             {
@@ -166,13 +153,13 @@ namespace Remembrance.ViewModel.Card
                             }
                             else
                             {
-                                var position = _isReverse
+                                var position = IsReverse
                                     ? 1
                                     : 0;
                                 _nonAvailableIndexes[position] = index;
                             }
 
-                            wordImageInfo = new WordImageInfo(_wordKey, index, imageInfoWithBitmap, _isReverse, _nonAvailableIndexes);
+                            wordImageInfo = new WordImageInfo(_wordKey, index, imageInfoWithBitmap, IsReverse, _nonAvailableIndexes);
                             _wordImagesInfoRepository.Upsert(wordImageInfo);
                             _logger.DebugFormat("Image for {0} at search index {1} was saved", _wordKey, index);
 
@@ -185,13 +172,13 @@ namespace Remembrance.ViewModel.Card
         private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo)
         {
             SearchIndex = wordImageInfo.SearchIndex;
-            _isReverse = wordImageInfo.IsReverse;
+            IsReverse = wordImageInfo.IsReverse;
             _nonAvailableIndexes = wordImageInfo.NonAvailableIndexes;
             var imageBytes = wordImageInfo.Image?.ThumbnailBitmap;
             if (imageBytes == null || imageBytes.Length == 0)
             {
                 //Try to search next image if the current image is not available, but has metadata
-                await SetNextImageAsync(true).ConfigureAwait(false);
+                await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
                 return;
             }
 
@@ -201,29 +188,32 @@ namespace Remembrance.ViewModel.Card
             IsLoading = false;
         }
 
-        private async void SetPreviousImage()
+        internal async Task SetPreviousImageAsync()
         {
-            await SetNextImageAsync(false).ConfigureAwait(false);
+            await SetNextOrPreviousImageAsync(false).ConfigureAwait(false);
         }
 
         //todo: disable prev image if curindex =0
         //todo: show empty image
         //TODO: reload unloaded image button
-        //todo:cancellationtolen for next prev (like in PhotoReviewer)
-        //TODO: separate image processor
-        private async void SetNextImage()
+        internal async Task SetNextImageAsync()
         {
-            await SetNextImageAsync(true).ConfigureAwait(false);
+            await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
         }
 
         /// <remarks>
         /// This function swaps searchText every next time until one of the texts stops to give results
         /// </remarks>
-        private async Task SetNextImageAsync(bool increase)
+        private async Task SetNextOrPreviousImageAsync(bool increase)
         {
+            if (SearchIndex == 0 && !IsReverse && !increase)
+            {
+                return;
+            }
+
             IsLoading = true;
             var searchIndex = SearchIndex;
-            if (_isInitialized)
+            if (!_shoudRepeat)
             {
                 _logger.TraceFormat(
                     "Setting {1} image for {0}...",
@@ -231,10 +221,10 @@ namespace Remembrance.ViewModel.Card
                     increase
                         ? "next"
                         : "previous");
-                var swappedPosition = _isReverse
+                var swappedPosition = IsReverse
                     ? 0
                     : 1;
-                var position = _isReverse
+                var position = IsReverse
                     ? 1
                     : 0;
 
@@ -246,14 +236,14 @@ namespace Remembrance.ViewModel.Card
                 var noSwap = false;
                 if (nonAvailableIndexForSwapped == null || nextPossibleIndex < nonAvailableIndexForSwapped)
                 {
-                    _isReverse = !_isReverse;
+                    IsReverse = !IsReverse;
                 }
                 else
                 {
                     noSwap = true;
                     if (nonAvailableIndex != null && nextPossibleIndex >= nonAvailableIndex)
                     {
-                        _messenger.Publish(string.Format(Errors.NoMoreImages, _wordKey).ToWarning());
+                        _messageHub.Publish(string.Format(Errors.NoMoreImages, _wordKey).ToWarning());
                         IsLoading = false;
                         return;
                     }
@@ -261,30 +251,25 @@ namespace Remembrance.ViewModel.Card
 
                 if (increase)
                 {
-                    if (noSwap || !_isReverse)
+                    if (noSwap || !IsReverse)
                     {
                         searchIndex++;
                     }
                 }
                 else
                 {
-                    if (noSwap || _isReverse)
+                    if (noSwap || IsReverse)
                     {
-                        if (searchIndex != 0)
-                        {
-                            searchIndex--;
-                        }
+                        searchIndex--;
                     }
                 }
             }
-            else
-            {
-                _isInitialized = true;
-            }
+
+            _shoudRepeat = false;
 
             //after getting isReverse
-            var searchText = _isReverse
-                ? _word.Text
+            var searchText = IsReverse
+                ? _wordKey.Word.Text
                 : _searchText;
             await SetWordImageAsync(searchIndex, searchText).ConfigureAwait(false);
             IsLoading = false;
@@ -292,7 +277,8 @@ namespace Remembrance.ViewModel.Card
 
         public override string ToString()
         {
-            return _word.ToString();
+            //TODO:
+            return _wordKey.Word.ToString();
         }
     }
 }

@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
 
-namespace Remembrance.Contracts.DAL.Model
+namespace Remembrance.Contracts.Processing.Data
 {
-    public class TranslationEntryAdditionInfo
+    public sealed class TranslationEntryAdditionInfo
     {
         public TranslationEntryAdditionInfo([CanBeNull] string text, [CanBeNull] string sourceLanguage = null, [CanBeNull] string targetLanguage = null)
         {
@@ -12,13 +12,13 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [CanBeNull]
-        public string Text { get; set; }
+        public string Text { get; }
 
         [CanBeNull]
-        public string SourceLanguage { get; set; }
+        public string SourceLanguage { get; }
 
         [CanBeNull]
-        public string TargetLanguage { get; set; }
+        public string TargetLanguage { get; }
 
         public override string ToString()
         {

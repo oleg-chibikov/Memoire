@@ -13,13 +13,14 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Settings"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     MinWidth="1200"
     MinHeight="300"
     Width="1200"
-    Height="600"
+    Height="400"
     SizeToContent="Manual"
     ResizeMode="CanResize"
-    WindowState="Maximized"
+    WindowState="Normal"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -35,6 +36,13 @@
             CaptionHeight="0"
             ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
+    <i:Interaction.Triggers>
+        <i:EventTrigger
+            EventName="ContentRenderAnimationFinished">
+            <i:InvokeCommandAction
+                Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <materialDesign:DialogHost
         IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
@@ -74,14 +82,14 @@
                 <Button
                     Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc EditSettings}"
-                    Command="{Binding OpenSettingsCommand}">
+                    Command="{Binding OpenSettingsCommand, Mode=OneTime}">
                     <materialDesign:PackIcon
                         Kind="Settings" />
                 </Button>
                 <TextBlock
                     Text="{lex:Loc Total}" />
                 <TextBlock
-                    Text="{Binding Count}" />
+                    Text="{Binding Count, Mode=OneWay}" />
                 <view:AddTranslationControl
                     Width="800"
                     DockPanel.Dock="Right"

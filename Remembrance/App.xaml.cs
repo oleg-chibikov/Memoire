@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
@@ -14,7 +15,6 @@ using Remembrance.DAL.Shared;
 using Remembrance.Resources;
 using Remembrance.View.Card;
 using Remembrance.View.Various;
-using Remembrance.ViewModel;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
@@ -40,11 +40,17 @@ namespace Remembrance
 
             Current.Resources.MergedDictionaries.Add(myResourceDictionary);
             Container.Resolve<ITrayWindow>().ShowDialog();
-            Container.Resolve<IAssessmentCardManager>();
-            // Need to create first instance of this class in the UI thread (for proper SyncContext)
-            Container.Resolve<ITranslationDetailsCardManager>();
-            Container.Resolve<ApiHoster>();
-            Container.Resolve<ISynchronizationManager>();
+            //no await here
+            ResolveInSeparateTaskAsync<ISynchronizationManager>();
+            //no await here
+            ResolveInSeparateTaskAsync<ApiHoster>();
+            //no await here
+            ResolveInSeparateTaskAsync<IAssessmentCardManager>();
+        }
+
+        private async Task<T> ResolveInSeparateTaskAsync<T>()
+        {
+            return await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
@@ -53,9 +59,11 @@ namespace Remembrance
 
             builder.RegisterType<INamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
             RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
+            RegisterNamed<LearningInfoRepository, ILearningInfoRepository>(builder);
             RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
 
             builder.RegisterType(typeof(RepositorySynhronizer<Settings, int, ISettingsRepository>)).AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository>)).AsImplementedInterfaces();
             builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
@@ -84,9 +92,7 @@ namespace Remembrance
                     })
                 .AsSelf()
                 .SingleInstance();
-            //Including ViewModelAdapter
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Except<ViewModelAdapter>().AsSelf().AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<ViewModelAdapter>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
         }

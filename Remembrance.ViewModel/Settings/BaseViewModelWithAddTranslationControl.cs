@@ -1,6 +1,5 @@
-// TODO: Feature: Custom translation
-
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,9 +7,10 @@ using System.Windows.Input;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Settings.Data;
@@ -56,7 +56,7 @@ namespace Remembrance.ViewModel.Settings
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
-            SaveCommand = new CorrelationCommand(SaveAsync);
+            SaveCommand = new AsyncCorrelationCommand(SaveAsync);
 
             logger.Trace("Loading languages...");
             var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationTokenSource.Token).Result;
@@ -109,10 +109,10 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [NotNull]
-        public Language[] AvailableTargetLanguages { get; }
+        public ICollection<Language> AvailableTargetLanguages { get; }
 
         [NotNull]
-        public Language[] AvailableSourceLanguages { get; }
+        public ICollection<Language> AvailableSourceLanguages { get; }
 
         [NotNull]
         public ICommand SaveCommand { get; }
@@ -164,7 +164,7 @@ namespace Remembrance.ViewModel.Settings
         {
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             var text = Text;
             var manualTranslation = string.IsNullOrWhiteSpace(ManualTranslation)

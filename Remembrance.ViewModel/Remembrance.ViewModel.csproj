@@ -45,9 +45,6 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Mapster, Version=3.1.8.0, Culture=neutral, PublicKeyToken=2f39883af23c29a8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mapster.3.1.8\lib\net45\Mapster.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -55,7 +52,7 @@
       <HintPath>..\packages\PropertyChanged.Fody.2.2.5\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.34\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.1\lib\net47\Scar.Common.Async.dll</HintPath>
@@ -63,11 +60,8 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Notification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Notification.1.0.5\lib\net47\Scar.Common.Notification.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6612.29405, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6612.29405\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6616.21909, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6616.21909\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
@@ -83,15 +77,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WPFLocalizeExtension.3.1.0\lib\net35\WPFLocalizeExtension.dll</HintPath>
@@ -110,7 +96,6 @@
     <Compile Include="Settings\EditManualTranslationsViewModel.cs" />
     <Compile Include="Settings\MessageViewModel.cs" />
     <Compile Include="Card\WordImageViewerViewModel.cs" />
-    <Compile Include="Translation\IWordPropertiesReveivable.cs" />
     <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
     <Compile Include="Translation\PriorityWordViewModel.cs" />
     <Compile Include="Settings\AddTranslationViewModel.cs" />
@@ -127,7 +112,6 @@
     <Compile Include="Translation\WordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Card\TranslationDetailsCardViewModel.cs" />
-    <Compile Include="ViewModelAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">

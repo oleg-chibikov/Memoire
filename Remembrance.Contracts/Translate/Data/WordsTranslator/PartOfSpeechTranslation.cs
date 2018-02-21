@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
@@ -8,7 +9,7 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         public string Transcription { get; set; }
 
         [NotNull]
-        public TranslationVariant[] TranslationVariants { get; set; }
+        public ICollection<TranslationVariant> TranslationVariants { get; set; }
 
         public bool IsManual { get; set; }
     }

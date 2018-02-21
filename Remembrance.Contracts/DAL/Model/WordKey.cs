@@ -22,6 +22,11 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public BaseWord Word { get; set; }
 
+        public override string ToString()
+        {
+            return $"{TranslationEntryKey} - {Word}";
+        }
+
         #region Equality
 
         public bool Equals(WordKey other)
@@ -71,10 +76,5 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            return $"{TranslationEntryKey} - {Word}";
-        }
     }
 }

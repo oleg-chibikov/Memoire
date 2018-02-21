@@ -123,14 +123,14 @@
   <data name="Translate" xml:space="preserve">
     <value>Перевести</value>
   </data>
-  <data name="CardShowTimeInfo" xml:space="preserve">
-    <value>Следующий показ карточки в {0} (прошлый был в {1} (сейчас {4}), частота показа {2}{3})</value>
+  <data name="TimeToShow" xml:space="preserve">
+    <value>До следующего показа осталось</value>
   </data>
-  <data name="CardShowPauseTimeInfo" xml:space="preserve">
-    <value>, время на паузе {0}</value>
+  <data name="PausedTime" xml:space="preserve">
+    <value>Время на паузе</value>
   </data>
-  <data name="CardShowIsPausedInfo" xml:space="preserve">
-    <value>Поставлено на паузу в {0}</value>
+  <data name="PausedAt" xml:space="preserve">
+    <value>Поставлено на паузу</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>Добавить в избранное</value>

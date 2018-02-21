@@ -23,7 +23,13 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public string TargetLanguage { get; set; }
 
+        [NotNull]
         public string Text { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
+        }
 
         #region Equality
 
@@ -75,10 +81,5 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
-        }
     }
 }

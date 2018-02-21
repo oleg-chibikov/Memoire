@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
@@ -24,12 +24,7 @@ namespace Remembrance.Core.Sync
         [NotNull]
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
-        public SynchronizationManager(
-            [NotNull] ILog logger,
-            [NotNull] INamedInstancesFactory namedInstancesFactory,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] IViewModelAdapter viewModelAdapter,
-            [NotNull] IRepositorySynhronizer[] synhronizers)
+        public SynchronizationManager([NotNull] ILog logger, [NotNull] INamedInstancesFactory namedInstancesFactory, [NotNull] IMessageHub messageHub, [NotNull] ICollection<IRepositorySynhronizer> synhronizers)
         {
             if (synhronizers == null)
             {
@@ -60,11 +55,14 @@ namespace Remembrance.Core.Sync
 
         private void SynchronizeExistingRepositories([NotNull] string rootDirectoryPath)
         {
-            foreach (var filePath in Directory.GetDirectories(rootDirectoryPath).Where(directoryPath => directoryPath != Paths.SharedDataPath).SelectMany(Directory.GetFiles))
-            {
-                _logger.TraceFormat("Processing file {0}...", filePath);
-                SynchronizeFile(filePath);
-            }
+            var paths = Directory.GetDirectories(rootDirectoryPath).Where(directoryPath => directoryPath != Paths.SharedDataPath).SelectMany(Directory.GetFiles);
+            Parallel.ForEach(
+                paths,
+                filePath =>
+                {
+                    _logger.TraceFormat("Processing file {0}...", filePath);
+                    SynchronizeFile(filePath);
+                });
         }
 
         private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
@@ -75,6 +73,7 @@ namespace Remembrance.Core.Sync
             {
                 return;
             }
+
             _logger.InfoFormat("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
             SynchronizeFile(e.FullPath);
             _fileSystemWatcher.EnableRaisingEvents = true;
@@ -98,6 +97,7 @@ namespace Remembrance.Core.Sync
             {
                 File.Delete(newFileName);
             }
+
             File.Copy(fullPath, newFileName);
 
             _synchronizers[fileName].SyncRepository(newDirectoryPath);

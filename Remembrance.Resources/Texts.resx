@@ -123,14 +123,14 @@
   <data name="Translate" xml:space="preserve">
     <value>Translate</value>
   </data>
-  <data name="CardShowTimeInfo" xml:space="preserve">
-    <value>Next card show in {0} (last show at {1} (now is {4}), frequency {2}{3})</value>
+  <data name="TimeToShow" xml:space="preserve">
+    <value>Time left to show card</value>
   </data>
-  <data name="CardShowPauseTimeInfo" xml:space="preserve">
-    <value>, paused time {0}</value>
+  <data name="PausedTime" xml:space="preserve">
+    <value>Paused time</value>
   </data>
-  <data name="CardShowIsPausedInfo" xml:space="preserve">
-    <value>Paused at {0}</value>
+  <data name="PausedAt" xml:space="preserve">
+    <value>Paused at</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>Favorite</value>
@@ -184,10 +184,10 @@
     <value>Drag columns here for grouping</value>
   </data>
   <data name="LastCardShowTime" xml:space="preserve">
-    <value>Last ShowTime</value>
+    <value>Last card show time</value>
   </data>
   <data name="NextCardShowTime" xml:space="preserve">
-    <value>Next ShowTime</value>
+    <value>Next card show time</value>
   </data>
   <data name="Repeat" xml:space="preserve">
     <value>Repeat</value>

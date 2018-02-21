@@ -12,7 +12,6 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
-    xmlns:view="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -105,7 +104,7 @@
                     <Button
                         Style="{StaticResource ImageButton}"
                         ToolTip="{lex:Loc OpenSharedFolder}"
-                        Command="{Binding OpenSharedFolderCommand}">
+                        Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
                         <materialDesign:PackIcon
                             Kind="Dropbox" />
                     </Button>
@@ -204,7 +203,7 @@
                 Ticks="0.08333,0.5,1,2,5,10,15,20,30,60,90,120"
                 Value="{Binding CardShowFrequency, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
-                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}}" />
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
             <TextBlock
                 Grid.Row="5"
@@ -221,7 +220,7 @@
                 IsSnapToTickEnabled="True"
                 Value="{Binding TranslationCloseTimeout, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
-                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
             <TextBlock
                 Grid.Row="6"
@@ -238,7 +237,7 @@
                 IsSnapToTickEnabled="True"
                 Value="{Binding AssessmentSuccessCloseTimeout, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
-                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
             <TextBlock
                 Grid.Row="7"
@@ -255,7 +254,7 @@
                 IsSnapToTickEnabled="True"
                 Value="{Binding AssessmentFailureCloseTimeout, Mode=TwoWay}"
                 AutoToolTipPlacement="None"
-                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}}" />
+                ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Seconds}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
             <Button
                 Grid.Row="8"
