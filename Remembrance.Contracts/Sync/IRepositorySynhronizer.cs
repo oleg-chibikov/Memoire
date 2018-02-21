@@ -6,6 +6,6 @@ namespace Remembrance.Contracts.Sync
     {
         string FileName { get; }
 
-        void SyncRepository([NotNull] string directoryPath);
+        void SyncRepository([NotNull] string filePath);
     }
 }

@@ -4,7 +4,7 @@ using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL.Shared
 {
-    public interface ILearningInfoRepository : ITrackedRepository<LearningInfo, TranslationEntryKey>, ISharedRepository
+    public interface ILearningInfoRepository : ITrackedRepository<LearningInfo, TranslationEntryKey>
     {
         [CanBeNull]
         LearningInfo GetMostSuitable();

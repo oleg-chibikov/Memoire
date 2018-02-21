@@ -107,6 +107,9 @@
     <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
     <Compile Include="Sync\SettingsSyncPostProcessor.cs" />
+    <Compile Include="Sync\SharedRepositoryPathsProvider.cs" />
+    <Compile Include="Sync\DeletionEventsSyncExtender.cs" />
+    <Compile Include="Sync\TranslationEntryDeletionSyncPreProcessor.cs" />
     <Compile Include="Sync\TranslationEntrySyncPostProcessor.cs" />
     <Compile Include="Processing\TranslationEntryProcessor.cs" />
     <Compile Include="CustomContractResolver.cs" />

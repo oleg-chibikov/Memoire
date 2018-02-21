@@ -18,7 +18,7 @@ namespace Remembrance.Core.Sync
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task OnEntityChangedAsync(Settings oldValue, Settings newValue)
+        public async Task AfterEntityChangedAsync(Settings oldValue, Settings newValue)
         {
             if (newValue == null)
             {

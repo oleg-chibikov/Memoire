@@ -77,7 +77,9 @@
     <Compile Include="CardManagement\Data\IntervalModificator.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
     <Compile Include="DAL\Model\LearningInfo.cs" />
+    <Compile Include="DAL\Model\TranslationEntryDeletion.cs" />
     <Compile Include="DAL\Shared\ILearningInfoRepository.cs" />
+    <Compile Include="DAL\Shared\ITranslationEntryDeletionRepository.cs" />
     <Compile Include="Exchange\Data\ExchangeResult.cs" />
     <Compile Include="Exchange\ICardsExchanger.cs" />
     <Compile Include="Exchange\IFileExporter.cs" />
@@ -90,7 +92,6 @@
     <Compile Include="DAL\INamedInstancesFactory.cs" />
     <Compile Include="DAL\Local\ILocalSettingsRepository.cs" />
     <Compile Include="DAL\Shared\ISettingsRepository.cs" />
-    <Compile Include="DAL\Shared\ISharedRepository.cs" />
     <Compile Include="DAL\Local\ITranslationDetailsRepository.cs" />
     <Compile Include="DAL\Shared\ITranslationEntryRepository.cs" />
     <Compile Include="DAL\Local\IPrepositionsInfoRepository.cs" />
@@ -115,8 +116,11 @@
     <Compile Include="ImageSearch\IImageDownloader.cs" />
     <Compile Include="ImageSearch\IImageSearcher.cs" />
     <Compile Include="Sync\IRepositorySynhronizer.cs" />
+    <Compile Include="Sync\ISharedRepositoryPathsProvider.cs" />
+    <Compile Include="Sync\ISyncExtender.cs" />
     <Compile Include="Sync\ISynchronizationManager.cs" />
     <Compile Include="Sync\ISyncPostProcessor.cs" />
+    <Compile Include="Sync\ISyncPreProcessor.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
     <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
     <Compile Include="Translate\Data\Predictor\PredictionResult.cs" />

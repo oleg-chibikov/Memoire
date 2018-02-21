@@ -62,6 +62,9 @@ namespace Remembrance.Core.Processing
         private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
         [NotNull]
+        private readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
+
+        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
@@ -82,12 +85,14 @@ namespace Remembrance.Core.Processing
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] IWordImagesInfoRepository wordImagesInfoRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            [NotNull] ILearningInfoRepository learningInfoRepository,
+            [NotNull] ITranslationEntryDeletionRepository translationEntryDeletionRepository)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _wordImagesInfoRepository = wordImagesInfoRepository ?? throw new ArgumentNullException(nameof(wordImagesInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
+            _translationEntryDeletionRepository = translationEntryDeletionRepository ?? throw new ArgumentNullException(nameof(translationEntryDeletionRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
@@ -124,18 +129,30 @@ namespace Remembrance.Core.Processing
             return translationDetails;
         }
 
-        public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey)
+        public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord)
         {
             if (translationEntryKey == null)
             {
                 throw new ArgumentNullException(nameof(translationEntryKey));
             }
 
+            _logger.TraceFormat(
+                "Deleting {0}{1}...",
+                translationEntryKey,
+                needDeletionRecord
+                    ? " with creating deletion event"
+                    : null);
             _prepositionsInfoRepository.Delete(translationEntryKey);
             _translationDetailsRepository.Delete(translationEntryKey);
             _wordImagesInfoRepository.ClearForTranslationEntry(translationEntryKey);
             _translationEntryRepository.Delete(translationEntryKey);
             _learningInfoRepository.Delete(translationEntryKey);
+            if (needDeletionRecord)
+            {
+                _translationEntryDeletionRepository.Upsert(new TranslationEntryDeletion(translationEntryKey));
+            }
+
+            _logger.InfoFormat("Deleted {0}", translationEntryKey);
         }
 
         public async Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(

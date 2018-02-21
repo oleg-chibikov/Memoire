@@ -29,7 +29,7 @@ namespace Remembrance.Contracts.Processing
             CancellationToken cancellationToken,
             [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
 
-        void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey);
+        void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
 
         [ItemNotNull]
         Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken);

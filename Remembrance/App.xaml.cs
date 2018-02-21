@@ -61,10 +61,15 @@ namespace Remembrance
             RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
             RegisterNamed<LearningInfoRepository, ILearningInfoRepository>(builder);
             RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
+            RegisterNamed<TranslationEntryDeletionRepository, ITranslationEntryDeletionRepository>(builder);
 
-            builder.RegisterType(typeof(RepositorySynhronizer<Settings, int, ISettingsRepository>)).AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository>)).AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<Settings, int, ISettingsRepository>)).SingleInstance().AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository>)).SingleInstance().AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).SingleInstance().AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository>)).SingleInstance().AsImplementedInterfaces();
+            builder.RegisterType(typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository, ITranslationEntryDeletionRepository>))
+                .SingleInstance()
+                .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();

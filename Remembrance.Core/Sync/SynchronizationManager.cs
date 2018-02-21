@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Logging;
-using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
 
@@ -22,24 +20,41 @@ namespace Remembrance.Core.Sync
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly ISharedRepositoryPathsProvider _sharedRepositoryPathsProvider;
+
+        [NotNull]
+        private readonly ICollection<ISyncExtender> _syncExtenders;
+
+        [NotNull]
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
-        public SynchronizationManager([NotNull] ILog logger, [NotNull] INamedInstancesFactory namedInstancesFactory, [NotNull] IMessageHub messageHub, [NotNull] ICollection<IRepositorySynhronizer> synhronizers)
+        public SynchronizationManager(
+            [NotNull] ILog logger,
+            [NotNull] ICollection<IRepositorySynhronizer> synchronizers,
+            [NotNull] ISharedRepositoryPathsProvider sharedRepositoryPathsProvider,
+            [NotNull] ICollection<ISyncExtender> syncExtenders)
         {
-            if (synhronizers == null)
+            if (synchronizers == null)
             {
-                throw new ArgumentNullException(nameof(synhronizers));
+                throw new ArgumentNullException(nameof(synchronizers));
             }
 
-            _synchronizers = synhronizers.ToDictionary(x => x.FileName, x => x);
+            if (!synchronizers.Any())
+            {
+                logger.Warn("No configured repository synchronizers");
+                return;
+            }
+
+            _synchronizers = synchronizers.ToDictionary(x => x.FileName, x => x);
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            var commonSharedFolder = Directory.GetParent(Paths.SharedDataPath);
-            SynchronizeExistingRepositories(commonSharedFolder.FullName);
-            _fileSystemWatcher = new FileSystemWatcher(commonSharedFolder.FullName)
+            _sharedRepositoryPathsProvider = sharedRepositoryPathsProvider ?? throw new ArgumentNullException(nameof(sharedRepositoryPathsProvider));
+            _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
+            SynchronizeExistingRepositories();
+            _fileSystemWatcher = new FileSystemWatcher(sharedRepositoryPathsProvider.BaseDirectoryPath)
             {
                 IncludeSubdirectories = true,
                 InternalBufferSize = 64 * 1024,
-                Filter = "*.db"
+                NotifyFilter = NotifyFilters.FileName
             };
             _fileSystemWatcher.Created += FileSystemWatcher_Changed;
             _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
@@ -53,9 +68,9 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.Dispose();
         }
 
-        private void SynchronizeExistingRepositories([NotNull] string rootDirectoryPath)
+        private void SynchronizeExistingRepositories()
         {
-            var paths = Directory.GetDirectories(rootDirectoryPath).Where(directoryPath => directoryPath != Paths.SharedDataPath).SelectMany(Directory.GetFiles);
+            var paths = _sharedRepositoryPathsProvider.GetSharedRepositoriesPaths();
             Parallel.ForEach(
                 paths,
                 filePath =>
@@ -63,6 +78,10 @@ namespace Remembrance.Core.Sync
                     _logger.TraceFormat("Processing file {0}...", filePath);
                     SynchronizeFile(filePath);
                 });
+            foreach (var syncExtender in _syncExtenders)
+            {
+                syncExtender.OnSynchronizationFinished();
+            }
         }
 
         private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
@@ -79,30 +98,16 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void SynchronizeFile([NotNull] string fullPath)
+        private void SynchronizeFile([NotNull] string filePath)
         {
-            var fileName = Path.GetFileNameWithoutExtension(fullPath);
-            var extension = Path.GetExtension(fullPath);
-            //TODO: Handle deleted entities (separate repository for them)
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
 
             if (!_synchronizers.ContainsKey(fileName))
             {
-                throw new NotSupportedException($"Unknown type of repository: {fileName}");
+                throw new NotSupportedException($"Unknown type of repository: {filePath}");
             }
 
-            //Copy is needed because LiteDB changes the remote file when creation a repository over it and it could lead to the conflicts.
-            var newDirectoryPath = Path.GetTempPath();
-            var newFileName = Path.Combine(newDirectoryPath, fileName + extension);
-            if (File.Exists(newFileName))
-            {
-                File.Delete(newFileName);
-            }
-
-            File.Copy(fullPath, newFileName);
-
-            _synchronizers[fileName].SyncRepository(newDirectoryPath);
-
-            File.Delete(newFileName);
+            _synchronizers[fileName].SyncRepository(filePath);
         }
     }
 }
