@@ -4,9 +4,9 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 
 namespace Remembrance.ViewModel.Card
 {
@@ -26,10 +26,11 @@ namespace Remembrance.ViewModel.Card
             : base(translationInfo, settingsRepository, messageHub, logger, lifetimeScope, synchronizationContext)
         {
             Logger.Trace("Showing view-only card...");
-            TranslationInfo.LearningInfo.IncreaseRepeatType();
-            learningInfoRepository.Update(TranslationInfo.LearningInfo);
-            Logger.InfoFormat("Increased repeat type for {0}", TranslationInfo);
-            MessageHub.Publish(TranslationInfo.TranslationEntry);
+            var learningInfo = TranslationInfo.LearningInfo;
+            learningInfo.IncreaseRepeatType();
+            learningInfoRepository.Update(learningInfo);
+            Logger.InfoFormat("Increased repeat type for {0}", learningInfo);
+            MessageHub.Publish(learningInfo);
         }
     }
 }

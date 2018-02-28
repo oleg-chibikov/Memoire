@@ -1,6 +1,9 @@
-﻿namespace Remembrance.View.Card
+namespace Remembrance.View.Card
 {
-    public sealed partial class WordsControl
+    /// <summary>
+    /// The words control.
+    /// </summary>
+    internal sealed partial class WordsControl
     {
         public WordsControl()
         {

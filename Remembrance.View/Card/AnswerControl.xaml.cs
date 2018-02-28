@@ -1,6 +1,9 @@
-﻿namespace Remembrance.View.Card
+namespace Remembrance.View.Card
 {
-    public sealed partial class AnswerControl
+    /// <summary>
+    /// The answer control.
+    /// </summary>
+    internal sealed partial class AnswerControl
     {
         public AnswerControl()
         {

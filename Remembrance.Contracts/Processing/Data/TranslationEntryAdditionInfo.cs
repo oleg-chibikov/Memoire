@@ -12,13 +12,13 @@ namespace Remembrance.Contracts.Processing.Data
         }
 
         [CanBeNull]
-        public string Text { get; }
-
-        [CanBeNull]
         public string SourceLanguage { get; }
 
         [CanBeNull]
         public string TargetLanguage { get; }
+
+        [CanBeNull]
+        public string Text { get; }
 
         public override string ToString()
         {

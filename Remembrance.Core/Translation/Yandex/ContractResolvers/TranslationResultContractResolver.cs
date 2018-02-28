@@ -8,6 +8,11 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal sealed class TranslationResultContractResolver : CustomContractResolver
     {
+        protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
+        {
+            { typeof(PartOfSpeech), new PartOfSpeechConverter() }
+        };
+
         protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {
             { nameof(TranslationResult.PartOfSpeechTranslations), "def" },
@@ -22,11 +27,6 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
             { nameof(Word.PartOfSpeech), "pos" },
             { nameof(Word.Text), "text" },
             { nameof(Word.VerbType), "asp" }
-        };
-
-        protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
-        {
-            { typeof(PartOfSpeech), new PartOfSpeechConverter() }
         };
     }
 }

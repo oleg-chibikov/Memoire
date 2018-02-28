@@ -15,9 +15,10 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance card:AssessmentTextInputCardViewModel}">
+    d:DataContext="{d:DesignInstance card:AssessmentTextInputCardViewModel}" x:ClassModifier="internal">
     <UserControl.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </UserControl.Resources>
     <StackPanel
         Orientation="Horizontal"
@@ -27,6 +28,7 @@
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             ToolTip="{lex:Loc MistakesTooltip}" />
+        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <controls:CompletableTextBox
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             Width="200"

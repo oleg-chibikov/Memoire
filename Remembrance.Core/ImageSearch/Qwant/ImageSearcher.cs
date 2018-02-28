@@ -59,9 +59,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 throw new ArgumentNullException(nameof(text));
             }
 
-            language = language != null
-                ? $"&lang={language}_{language}"
-                : null;
+            language = language != null ? $"&lang={language}_{language}" : null;
             var uriPart = $"images?count={count}&offset={skip}&q={text}{language}";
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try

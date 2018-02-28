@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL;
@@ -14,7 +15,6 @@ using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
 using Remembrance.Resources;
 using Remembrance.View.Card;
-using Remembrance.View.Various;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
@@ -24,36 +24,44 @@ using Scar.Common.WPF.View;
 
 namespace Remembrance
 {
-    public sealed partial class App
+    /// <summary>
+    /// The app.
+    /// </summary>
+    internal sealed partial class App
     {
+        [NotNull]
         private const string JsonFilesFilter = "Json files (*.json)|*.json;";
+
+        [NotNull]
         private static readonly string DefaultFilePattern = $"{nameof(Remembrance)}.json";
-        protected override string AppGuid { get; } = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+
         protected override string AlreadyRunningMessage { get; } = Errors.AlreadyRunning;
+
+        protected override string AppGuid { get; } = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
 
         protected override void OnStartup()
         {
-            var myResourceDictionary = new ResourceDictionary
-            {
-                { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
-            };
-
-            Current.Resources.MergedDictionaries.Add(myResourceDictionary);
+            Current.Resources.MergedDictionaries.Add(
+                new ResourceDictionary
+                {
+                    { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
+                });
             Container.Resolve<ITrayWindow>().ShowDialog();
-            //no await here
-            ResolveInSeparateTaskAsync<ISynchronizationManager>();
-            //no await here
-            ResolveInSeparateTaskAsync<ApiHoster>();
-            //no await here
-            ResolveInSeparateTaskAsync<IAssessmentCardManager>();
+
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = ResolveInSeparateTaskAsync<ISynchronizationManager>();
+
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = ResolveInSeparateTaskAsync<ApiHoster>();
+
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = ResolveInSeparateTaskAsync<IAssessmentCardManager>();
         }
 
-        private async Task<T> ResolveInSeparateTaskAsync<T>()
-        {
-            return await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
-        }
-
-        protected override void RegisterDependencies(ContainerBuilder builder)
+        protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
         {
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsSelf().SingleInstance();
 
@@ -74,8 +82,9 @@ namespace Remembrance
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
-            //TODO: move autocomplete to library and nuget
-            builder.RegisterType<SuggestionProvider>().AsImplementedInterfaces().SingleInstance();
+
+            // TODO: move autocomplete to library and nuget
+            // builder.RegisterType<SuggestionProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterInstance(
                     new OpenFileDialog
                     {
@@ -102,12 +111,6 @@ namespace Remembrance
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
         }
 
-        private static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
-            where T : TInterface
-        {
-            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).AsImplementedInterfaces().InstancePerDependency();
-        }
-
         protected override void ShowMessage(Message message)
         {
             var nestedLifeTimeScope = Container.BeginLifetimeScope();
@@ -120,6 +123,19 @@ namespace Remembrance
                     window.Restore();
                 },
                 null);
+        }
+
+        private static void RegisterNamed<T, TInterface>([NotNull] ContainerBuilder builder)
+            where T : TInterface
+        {
+            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).AsImplementedInterfaces().InstancePerDependency();
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        private async Task<T> ResolveInSeparateTaskAsync<T>()
+        {
+            return await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
         }
     }
 }

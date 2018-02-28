@@ -3,6 +3,7 @@ using Scar.Common;
 
 namespace Remembrance.Contracts.Translate.Data.WordsTranslator
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public class TextEntry
     {
         private string _text;

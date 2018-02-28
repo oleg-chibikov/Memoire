@@ -26,6 +26,9 @@ namespace Remembrance.Core.Exchange
     internal abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
+        [NotNull]
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+
         private const int MaxBlockSize = 25;
 
         [NotNull]
@@ -39,9 +42,6 @@ namespace Remembrance.Core.Exchange
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
-
-        [NotNull]
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -59,8 +59,10 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs> Progress;
 
+        [NotNull]
         public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken cancellationToken)
         {
+            // TODO: Split into sub methods
             if (fileName == null)
             {
                 throw new ArgumentNullException(nameof(fileName));
@@ -117,12 +119,12 @@ namespace Remembrance.Core.Exchange
                                     if (translationEntry == null)
                                     {
                                         var translationInfo = await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
-                                                new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
-                                                cancellationToken,
-                                                null,
-                                                false,
-                                                manualTranslations)
-                                            .ConfigureAwait(false);
+                                                                      new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
+                                                                      cancellationToken,
+                                                                      null,
+                                                                      false,
+                                                                      manualTranslations)
+                                                                  .ConfigureAwait(false);
                                         translationEntry = translationInfo.TranslationEntry;
                                         changed = true;
                                         learningInfo = translationInfo.LearningInfo;
@@ -156,9 +158,7 @@ namespace Remembrance.Core.Exchange
                                     }
 
                                     changed |= learningInfoUpdated;
-                                    return changed
-                                        ? translationEntry
-                                        : null;
+                                    return changed ? translationEntry : null;
                                 }
                                 catch (Exception ex)
                                 {
@@ -186,12 +186,34 @@ namespace Remembrance.Core.Exchange
                     })
                 .ConfigureAwait(false);
 
-            return new ExchangeResult(
-                true,
-                errorsList.Any()
-                    ? errorsList.ToArray()
-                    : null,
-                count);
+            return new ExchangeResult(true, errorsList.Any() ? errorsList.ToArray() : null, count);
+        }
+
+        [CanBeNull]
+        protected virtual ICollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
+        {
+            return null;
+        }
+
+        [CanBeNull]
+        protected abstract ICollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
+
+        [ItemNotNull]
+        [NotNull]
+        protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
+
+        protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
+
+        private void OnProgress(int current, int total)
+        {
+            Progress?.Invoke(this, new ProgressEventArgs(current, total));
+        }
+
+        private void PublishPriorityWord([NotNull] TranslationEntry translationEntry, [NotNull] BaseWord priorityTranslation)
+        {
+            _logger.InfoFormat("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
+            var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
+            _messenger.Publish(priorityWordKey);
         }
 
         private bool UpdatePrioirityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
@@ -224,32 +246,6 @@ namespace Remembrance.Core.Exchange
             }
 
             return result;
-        }
-
-        private void PublishPriorityWord([NotNull] TranslationEntry translationEntry, [NotNull] BaseWord priorityTranslation)
-        {
-            _logger.InfoFormat("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
-            var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
-            _messenger.Publish(priorityWordKey);
-        }
-
-        [ItemNotNull]
-        protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
-
-        [CanBeNull]
-        protected virtual ICollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
-        {
-            return null;
-        }
-
-        [CanBeNull]
-        protected abstract ICollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
-
-        protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
-
-        private void OnProgress(int current, int total)
-        {
-            Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
     }
 }

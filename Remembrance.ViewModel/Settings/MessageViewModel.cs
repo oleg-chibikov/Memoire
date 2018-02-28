@@ -10,7 +10,7 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel
     {
-        //TODO: Configure
+        // TODO: Configure
         private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(3);
 
         public MessageViewModel([NotNull] Message message, [NotNull] ILog logger)

@@ -13,6 +13,7 @@ using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Commands;
 
+// ReSharper disable VirtualMemberCallInConstructor
 namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
@@ -20,13 +21,13 @@ namespace Remembrance.ViewModel.Translation
     public class WordViewModel : BaseWord
     {
         [NotNull]
-        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
-
-        [NotNull]
         protected readonly ILifetimeScope LifetimeScope;
 
         [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+
+        [NotNull]
+        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         public WordViewModel(
             [NotNull] Word word,
@@ -66,32 +67,19 @@ namespace Remembrance.ViewModel.Translation
             TogglePriorityCommand = new CorrelationCommand(TogglePriority);
         }
 
-        [NotNull]
-        public ICommand TogglePriorityCommand { get; }
+        [DoNotNotify]
+        public virtual bool CanEdit => CanLearnWord;
+
+        [DoNotNotify]
+        public bool CanLearnWord { get; set; } = true;
 
         public bool IsPriority { get; protected set; }
 
         [DoNotNotify]
         public virtual string Language { get; set; }
 
-        [DoNotNotify]
-        public bool CanLearnWord { get; set; } = true;
-
-        [DoNotNotify]
-        public virtual bool CanEdit => CanLearnWord;
-
-        /// <summary>
-        /// A hack to raise NotifyPropertyChanged for other properties
-        /// </summary>
-        [AlsoNotifyFor(nameof(PartOfSpeech))]
-        private bool ReRenderSwitch { get; set; }
-
-        [DoNotNotify]
-        public override PartOfSpeech PartOfSpeech { get; set; }
-
-        [CanBeNull]
-        [DoNotNotify]
-        public string VerbType { get; }
+        [NotNull]
+        public ICommand LearnWordCommand { get; }
 
         [CanBeNull]
         [DoNotNotify]
@@ -100,6 +88,19 @@ namespace Remembrance.ViewModel.Translation
         [CanBeNull]
         [DoNotNotify]
         public string NounGender { get; }
+
+        [DoNotNotify]
+        public override PartOfSpeech PartOfSpeech { get; set; }
+
+        [NotNull]
+        public ICommand PlayTtsCommand { get; }
+
+        [NotNull]
+        public ICommand TogglePriorityCommand { get; }
+
+        [CanBeNull]
+        [DoNotNotify]
+        public string VerbType { get; }
 
         [CanBeNull]
         public string WordInfo =>
@@ -114,32 +115,34 @@ namespace Remembrance.ViewModel.Translation
                         NounGender
                     }.Where(x => x != null));
 
-        public ICommand PlayTtsCommand { get; }
-
-        public ICommand LearnWordCommand { get; }
-
-        private async Task LearnWordAsync()
-        {
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Text, Language), CancellationToken.None).ConfigureAwait(false);
-        }
-
-        private async Task PlayTtsAsync()
-        {
-            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
-        }
+        // A hack to raise NotifyPropertyChanged for other properties
+        [AlsoNotifyFor(nameof(PartOfSpeech))]
+        private bool ReRenderSwitch { get; set; }
 
         public void ReRender()
         {
             ReRenderSwitch = !ReRenderSwitch;
         }
 
+        public override string ToString()
+        {
+            return $"{base.ToString()} [{Language}]";
+        }
+
         protected virtual void TogglePriority()
         {
         }
 
-        public override string ToString()
+        [NotNull]
+        private async Task LearnWordAsync()
         {
-            return $"{base.ToString()} [{Language}]";
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Text, Language), CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [NotNull]
+        private async Task PlayTtsAsync()
+        {
+            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

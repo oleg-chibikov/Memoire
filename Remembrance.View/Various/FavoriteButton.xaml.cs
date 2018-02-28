@@ -2,7 +2,10 @@ using System.Windows;
 
 namespace Remembrance.View.Various
 {
-    public sealed partial class FavoriteButton
+    /// <summary>
+    /// The favorite button.
+    /// </summary>
+    internal sealed partial class FavoriteButton
     {
         public static readonly DependencyProperty IsFavoritedProperty = DependencyProperty.Register(nameof(IsFavorited), typeof(bool), typeof(FavoriteButton), new PropertyMetadata(null));
 

@@ -46,15 +46,11 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         private readonly TranslationEntry _translationEntry;
 
-        [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
-
         public TranslationDetailsCardViewModel(
             [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] TranslationInfo translationInfo,
             [NotNull] ILog logger,
             [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
             [NotNull] IPredictor predictor,
             [NotNull] ILearningInfoRepository learningInfoRepository)
@@ -69,7 +65,6 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(translationInfo));
             }
 
-            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
@@ -82,19 +77,23 @@ namespace Remembrance.ViewModel.Card
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = translationInfo.LearningInfo.IsFavorited;
             Word = translationInfo.TranslationEntryKey.Text;
-            //no await here
-            LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
+
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChanged));
             FavoriteCommand = new CorrelationCommand(Favorite);
         }
 
-        [CanBeNull]
-        public PrepositionsCollection PrepositionsCollection { get; private set; }
-
         [NotNull]
         public ICommand FavoriteCommand { get; }
+
+        public bool IsFavorited { get; private set; }
+
+        [CanBeNull]
+        public PrepositionsCollection PrepositionsCollection { get; private set; }
 
         [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
@@ -102,14 +101,57 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         public string Word { get; }
 
-        public bool IsFavorited { get; private set; }
-
         public void Dispose()
         {
             foreach (var subscriptionToken in _subscriptionTokens)
             {
                 _messageHub.UnSubscribe(subscriptionToken);
             }
+        }
+
+        private void Favorite()
+        {
+            _logger.TraceFormat("{0} {1}...", IsFavorited ? "Unfavoriting" : "Favoriting", TranslationDetails);
+            var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntry.Id);
+            learningInfo.IsFavorited = IsFavorited = !IsFavorited;
+            _learningInfoRepository.Update(learningInfo);
+        }
+
+        [ItemCanBeNull]
+        [NotNull]
+        private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
+        {
+            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
+            if (predictionResult == null)
+            {
+                return null;
+            }
+
+            var prepositionsCollection = new PrepositionsCollection
+            {
+                Texts = predictionResult.Position > 0 ? predictionResult.PredictionVariants : null
+            };
+            return prepositionsCollection;
+        }
+
+        [NotNull]
+        private async Task LoadPrepositionsIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        {
+            var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
+            if (prepositionsInfo == null)
+            {
+                _logger.TraceFormat("Reloading preposition for {0}...", translationDetails.Id);
+                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
+                if (prepositions == null)
+                {
+                    return;
+                }
+
+                prepositionsInfo = new PrepositionsInfo(translationDetails.Id, prepositions);
+                _prepositionsInfoRepository.Insert(prepositionsInfo);
+            }
+
+            PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
         private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
@@ -152,43 +194,6 @@ namespace Remembrance.ViewModel.Card
                 CancellationToken.None);
         }
 
-        [ItemCanBeNull]
-        private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
-        {
-            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
-            if (predictionResult == null)
-            {
-                return null;
-            }
-
-            var prepositionsCollection = new PrepositionsCollection
-            {
-                Texts = predictionResult.Position > 0
-                    ? predictionResult.PredictionVariants
-                    : null
-            };
-            return prepositionsCollection;
-        }
-
-        private async Task LoadPrepositionsIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
-        {
-            var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
-            if (prepositionsInfo == null)
-            {
-                _logger.TraceFormat("Reloading preposition for {0}...", translationDetails.Id);
-                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
-                if (prepositions == null)
-                {
-                    return;
-                }
-
-                prepositionsInfo = new PrepositionsInfo(translationDetails.Id, prepositions);
-                _prepositionsInfoRepository.Insert(prepositionsInfo);
-            }
-
-            PrepositionsCollection = prepositionsInfo.Prepositions;
-        }
-
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
             if (cultureInfo == null)
@@ -199,48 +204,36 @@ namespace Remembrance.ViewModel.Card
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(
-                () =>
-                {
-                    CultureUtilities.ChangeCulture(cultureInfo);
-
-                    foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
+                    () =>
                     {
-                        partOfSpeechTranslation.ReRender();
-                        foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
-                        {
-                            translationVariant.ReRender();
-                            if (translationVariant.Synonyms != null)
-                            {
-                                foreach (var synonym in translationVariant.Synonyms)
-                                {
-                                    synonym.ReRender();
-                                }
-                            }
+                        CultureUtilities.ChangeCulture(cultureInfo);
 
-                            if (translationVariant.Meanings != null)
+                        foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
+                        {
+                            partOfSpeechTranslation.ReRender();
+                            foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                             {
-                                foreach (var meaning in translationVariant.Meanings)
+                                translationVariant.ReRender();
+                                if (translationVariant.Synonyms != null)
                                 {
-                                    meaning.ReRender();
+                                    foreach (var synonym in translationVariant.Synonyms)
+                                    {
+                                        synonym.ReRender();
+                                    }
+                                }
+
+                                if (translationVariant.Meanings != null)
+                                {
+                                    foreach (var meaning in translationVariant.Meanings)
+                                    {
+                                        meaning.ReRender();
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-                CancellationToken.None);
-        }
-
-        private void Favorite()
-        {
-            _logger.TraceFormat(
-                "{0} {1}...",
-                IsFavorited
-                    ? "Unfavoriting"
-                    : "Favoriting",
-                TranslationDetails);
-            var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntry.Id);
-            learningInfo.IsFavorited = IsFavorited = !IsFavorited;
-            _learningInfoRepository.Update(learningInfo);
+                    },
+                    CancellationToken.None)
+                .ConfigureAwait(false);
         }
     }
 }

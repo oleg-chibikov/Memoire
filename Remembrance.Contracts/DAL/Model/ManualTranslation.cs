@@ -2,13 +2,12 @@ using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
+// ReSharper disable NotNullMemberIsNotInitialized
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class ManualTranslation : BaseWord
     {
-        private string _example;
-        private string _meaning;
-
         [UsedImplicitly]
         public ManualTranslation()
         {
@@ -23,17 +22,9 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [NotNull]
-        public string Example
-        {
-            get => _example;
-            set => _example = value ?? "";
-        }
+        public string Example { get; set; }
 
         [NotNull]
-        public string Meaning
-        {
-            get => _meaning;
-            set => _meaning = value ?? "";
-        }
+        public string Meaning { get; set; }
     }
 }

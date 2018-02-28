@@ -18,7 +18,7 @@ namespace Remembrance.Core.Sync
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task AfterEntityChangedAsync(Settings oldValue, Settings newValue)
+        public Task AfterEntityChangedAsync(Settings oldValue, Settings newValue)
         {
             if (newValue == null)
             {
@@ -32,6 +32,8 @@ namespace Remembrance.Core.Sync
             {
                 _messageHub.Publish(newFreq);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

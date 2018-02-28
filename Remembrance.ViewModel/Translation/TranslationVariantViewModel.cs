@@ -46,13 +46,13 @@ namespace Remembrance.ViewModel.Translation
         }
 
         [CanBeNull]
-        public ICollection<PriorityWordViewModel> Synonyms { get; }
+        public ICollection<Example> Examples { get; }
 
         [CanBeNull]
         public ICollection<WordViewModel> Meanings { get; }
 
         [CanBeNull]
-        public ICollection<Example> Examples { get; }
+        public ICollection<PriorityWordViewModel> Synonyms { get; }
 
         [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }

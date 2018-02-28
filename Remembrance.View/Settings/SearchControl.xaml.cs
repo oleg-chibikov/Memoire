@@ -1,7 +1,9 @@
-﻿namespace Remembrance.View.Settings
+namespace Remembrance.View.Settings
 {
-    //TODO:Internal
-    public sealed partial class SearchControl
+    /// <summary>
+    /// The search control.
+    /// </summary>
+    internal sealed partial class SearchControl
     {
         public SearchControl()
         {

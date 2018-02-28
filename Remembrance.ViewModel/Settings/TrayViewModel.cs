@@ -1,5 +1,3 @@
-//TODO: Set all bindings mode manually
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,33 +86,42 @@ namespace Remembrance.ViewModel.Settings
             _timer.Tick += Timer_Tick;
         }
 
-        public bool IsActive { get; private set; }
+        [NotNull]
+        public ICommand AddTranslationCommand { get; }
 
         [NotNull]
-        public string TimeLeftToShowCard { get; private set; }
+        public string CardShowFrequency { get; private set; } = string.Empty;
+
+        public DateTime CurrentTime { get; private set; }
+
+        [NotNull]
+        public ICommand ExitCommand { get; }
+
+        public bool IsActive { get; private set; }
 
         [CanBeNull]
         public string LastCardShowTime { get; private set; }
 
         [NotNull]
-        public string NextCardShowTime { get; private set; }
-
-        [NotNull]
-        public string CardShowFrequency { get; private set; }
-
-        public DateTime CurrentTime { get; private set; }
-
-        [CanBeNull]
-        public string PausedTime { get; private set; }
+        public string NextCardShowTime { get; private set; } = string.Empty;
 
         [CanBeNull]
         public string PausedAt { get; private set; }
 
-        [NotNull]
-        public ICommand AddTranslationCommand { get; }
+        [CanBeNull]
+        public string PausedTime { get; private set; }
 
         [NotNull]
         public ICommand ShowDictionaryCommand { get; }
+
+        [NotNull]
+        public ICommand ShowSettingsCommand { get; }
+
+        [NotNull]
+        public string TimeLeftToShowCard { get; private set; } = string.Empty;
+
+        [NotNull]
+        public ICommand ToggleActiveCommand { get; }
 
         [NotNull]
         public ICommand ToolTipCloseCommand { get; }
@@ -122,51 +129,13 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public ICommand ToolTipOpenCommand { get; }
 
-        [NotNull]
-        public ICommand ShowSettingsCommand { get; }
-
-        [NotNull]
-        public ICommand ToggleActiveCommand { get; }
-
-        [NotNull]
-        public ICommand ExitCommand { get; }
-
         public void Dispose()
         {
             _timer.Tick -= Timer_Tick;
             _timer.Stop();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            if (!_isToolTipOpened)
-            {
-                return;
-            }
-
-            SetTimesInfo();
-        }
-
-        private void SetTimesInfo()
-        {
-            const string dateTimeFormat = @"HH\:mm\:ss";
-            const string timeSpanFormat = @"hh\:mm\:ss";
-
-            TimeLeftToShowCard = Texts.TimeToShow + ": " + _cardShowTimeProvider.TimeLeftToShowCard.ToString(timeSpanFormat);
-            LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null
-                ? null
-                : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToString(dateTimeFormat);
-            NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToString(dateTimeFormat);
-            CardShowFrequency = Texts.CardShowFrequency + ": " + _cardShowTimeProvider.CardShowFrequency.ToString(timeSpanFormat);
-            PausedTime = _cardShowTimeProvider.PausedTime == TimeSpan.Zero
-                ? null
-                : Texts.PausedTime + ": " + _cardShowTimeProvider.PausedTime.ToString(timeSpanFormat);
-            PausedAt = !_cardShowTimeProvider.IsPaused
-                ? null
-                : Texts.PausedAt + ": " + _cardShowTimeProvider.LastPausedTime.ToString(dateTimeFormat);
-            CurrentTime = DateTime.Now;
-        }
-
+        [NotNull]
         private async Task AddTranslationAsync()
         {
             _logger.Trace("Showing Add Translation window...");
@@ -179,26 +148,42 @@ namespace Remembrance.ViewModel.Settings
             Application.Current.Shutdown();
         }
 
+        private void SetTimesInfo()
+        {
+            const string DateTimeFormat = @"HH\:mm\:ss";
+            const string TimeSpanFormat = @"hh\:mm\:ss";
+
+            TimeLeftToShowCard = Texts.TimeToShow + ": " + _cardShowTimeProvider.TimeLeftToShowCard.ToString(TimeSpanFormat);
+            LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToString(DateTimeFormat);
+            NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToString(DateTimeFormat);
+            CardShowFrequency = Texts.CardShowFrequency + ": " + _cardShowTimeProvider.CardShowFrequency.ToString(TimeSpanFormat);
+            PausedTime = _cardShowTimeProvider.PausedTime == TimeSpan.Zero ? null : Texts.PausedTime + ": " + _cardShowTimeProvider.PausedTime.ToString(TimeSpanFormat);
+            PausedAt = !_cardShowTimeProvider.IsPaused ? null : Texts.PausedAt + ": " + _cardShowTimeProvider.LastPausedTime.ToString(DateTimeFormat);
+            CurrentTime = DateTime.Now;
+        }
+
+        [NotNull]
         private async Task ShowDictionaryAsync()
         {
             _logger.Trace("Showing dictionary...");
             await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
         }
 
+        [NotNull]
         private async Task ShowSettingsAsync()
         {
             _logger.Trace("Showing settings...");
             await _settingsWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void ToolTipClose()
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            _isToolTipOpened = false;
-        }
+            if (!_isToolTipOpened)
+            {
+                return;
+            }
 
-        private void ToolTipOpen()
-        {
-            _isToolTipOpened = true;
+            SetTimesInfo();
         }
 
         private void ToggleActive()
@@ -219,6 +204,16 @@ namespace Remembrance.ViewModel.Settings
                 _logger.Trace("Pausing showing cards...");
                 _messageHub.Publish(IntervalModificator.Pause);
             }
+        }
+
+        private void ToolTipClose()
+        {
+            _isToolTipOpened = false;
+        }
+
+        private void ToolTipOpen()
+        {
+            _isToolTipOpened = true;
         }
     }
 }

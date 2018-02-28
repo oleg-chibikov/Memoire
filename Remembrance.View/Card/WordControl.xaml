@@ -1,5 +1,6 @@
 <UserControl
     x:Class="Remembrance.View.Card.WordControl"
+    x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     MaxWidth="1000"
@@ -23,7 +24,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <view:DesignTimeResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+                        <ResourceDictionary
+                            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </view:DesignTimeResourceDictionary>
                 <ResourceDictionary>

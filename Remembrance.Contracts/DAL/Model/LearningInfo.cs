@@ -22,20 +22,7 @@ namespace Remembrance.Contracts.DAL.Model
             _current = RepeatTypeSettings.RepeatTypes.First;
         }
 
-        public RepeatType RepeatType
-        {
-            get => _repeatType;
-            set
-            {
-                _repeatType = value;
-                _current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First;
-                SetNextCardShowTime();
-            }
-        }
-
         public bool IsFavorited { get; set; }
-
-        public int ShowCount { get; set; }
 
         public DateTime LastCardShowTime
         {
@@ -49,22 +36,18 @@ namespace Remembrance.Contracts.DAL.Model
 
         public DateTime NextCardShowTime { get; set; }
 
-        public void IncreaseRepeatType()
+        public RepeatType RepeatType
         {
-            var next = _current.Next;
-            if (next == null)
+            get => _repeatType;
+            set
             {
-                return;
+                _repeatType = value;
+                _current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First;
+                SetNextCardShowTime();
             }
-
-            RepeatType = next.Value;
-            _current = next;
         }
 
-        private void SetNextCardShowTime()
-        {
-            NextCardShowTime = _lastCardShowTime.Add(RepeatTypeSettings.RepeatTimes[_repeatType]);
-        }
+        public int ShowCount { get; set; }
 
         public void DecreaseRepeatType()
         {
@@ -78,9 +61,26 @@ namespace Remembrance.Contracts.DAL.Model
             _current = prev;
         }
 
+        public void IncreaseRepeatType()
+        {
+            var next = _current.Next;
+            if (next == null)
+            {
+                return;
+            }
+
+            RepeatType = next.Value;
+            _current = next;
+        }
+
         public override string ToString()
         {
             return $"Learning info for {Id}";
+        }
+
+        private void SetNextCardShowTime()
+        {
+            NextCardShowTime = _lastCardShowTime.Add(RepeatTypeSettings.RepeatTimes[_repeatType]);
         }
     }
 }

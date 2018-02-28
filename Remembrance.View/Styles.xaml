@@ -71,6 +71,7 @@
             Value="0" />
     </Style>
 
+    <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
     <Style
         TargetType="Button"
         x:Key="ImageButton"

@@ -88,11 +88,14 @@ namespace Remembrance.ViewModel.Settings
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
-        [NotNull]
-        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
+        public event EventHandler RequestClose;
+
+        public double AssessmentFailureCloseTimeout { get; set; }
+
+        public double AssessmentSuccessCloseTimeout { get; set; }
 
         [NotNull]
-        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
+        public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
         public ICollection<Language> AvailableUiLanguages { get; } = new[]
@@ -102,16 +105,9 @@ namespace Remembrance.ViewModel.Settings
         };
 
         [NotNull]
-        public ICommand SaveCommand { get; }
+        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
-        [NotNull]
-        public ICommand ViewLogsCommand { get; }
-
-        [NotNull]
-        public ICommand OpenSharedFolderCommand { get; }
-
-        [NotNull]
-        public ICommand OpenSettingsFolderCommand { get; }
+        public double CardShowFrequency { get; set; }
 
         [NotNull]
         public ICommand ExportCommand { get; }
@@ -120,7 +116,10 @@ namespace Remembrance.ViewModel.Settings
         public ICommand ImportCommand { get; }
 
         [NotNull]
-        public ICommand WindowClosingCommand { get; }
+        public ICommand OpenSettingsFolderCommand { get; }
+
+        [NotNull]
+        public ICommand OpenSharedFolderCommand { get; }
 
         public int Progress { get; private set; }
 
@@ -128,6 +127,19 @@ namespace Remembrance.ViewModel.Settings
         public string ProgressDescription { get; private set; }
 
         public TaskbarItemProgressState ProgressState { get; private set; }
+
+        public bool RandomTranslation { get; set; }
+
+        public bool ReverseTranslation { get; set; }
+
+        [NotNull]
+        public ICommand SaveCommand { get; }
+
+        public double TranslationCloseTimeout { get; set; }
+
+        public Speaker TtsSpeaker { get; set; }
+
+        public VoiceEmotion TtsVoiceEmotion { get; set; }
 
         public Language UiLanguage
         {
@@ -139,28 +151,31 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        public double CardShowFrequency { get; set; }
+        [NotNull]
+        public ICommand ViewLogsCommand { get; }
 
-        public double TranslationCloseTimeout { get; set; }
-
-        public double AssessmentSuccessCloseTimeout { get; set; }
-
-        public double AssessmentFailureCloseTimeout { get; set; }
-
-        public Speaker TtsSpeaker { get; set; }
-
-        public VoiceEmotion TtsVoiceEmotion { get; set; }
-
-        public bool ReverseTranslation { get; set; }
-
-        public bool RandomTranslation { get; set; }
+        [NotNull]
+        public ICommand WindowClosingCommand { get; }
 
         public void Dispose()
         {
             _cardsExchanger.Progress -= CardsExchanger_Progress;
         }
 
-        public event EventHandler RequestClose;
+        private static void OpenSettingsFolder()
+        {
+            Process.Start($@"{Paths.SettingsPath}");
+        }
+
+        private static void OpenSharedFolder()
+        {
+            Process.Start($@"{Paths.SharedDataPath}");
+        }
+
+        private static void ViewLogs()
+        {
+            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
+        }
 
         private void BeginProgress()
         {
@@ -197,24 +212,16 @@ namespace Remembrance.ViewModel.Settings
             _messageHub.Publish(IntervalModificator.Resume);
         }
 
+        [NotNull]
         private async Task ExportAsync()
         {
             await _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
+        [NotNull]
         private async Task ImportAsync()
         {
             await _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
-        }
-
-        private static void OpenSettingsFolder()
-        {
-            Process.Start($@"{Paths.SettingsPath}");
-        }
-
-        private static void OpenSharedFolder()
-        {
-            Process.Start($@"{Paths.SharedDataPath}");
         }
 
         private void Save()
@@ -242,11 +249,6 @@ namespace Remembrance.ViewModel.Settings
 
             RequestClose?.Invoke(null, null);
             _logger.Info("Settings has been saved");
-        }
-
-        private static void ViewLogs()
-        {
-            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
         }
 
         private void WindowClosing()

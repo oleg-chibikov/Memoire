@@ -16,6 +16,7 @@ namespace Remembrance.Core.Sync
         where TDeletionEventRepository : class, ITrackedRepository<TDeletionEntity, TId>
     {
         private readonly object _locker = new object();
+
         private readonly IList<TId> _ownDeletionEventsToClear;
 
         [NotNull]
@@ -26,8 +27,19 @@ namespace Remembrance.Core.Sync
         public DeletionEventsSyncExtender([NotNull] TDeletionEventRepository ownRepository)
         {
             _ownRepository = ownRepository ?? throw new ArgumentNullException(nameof(ownRepository));
-            //TODO:GetAllIds
             _ownDeletionEventsToClear = new List<TId>(_ownRepository.GetAll().Select(x => x.Id));
+        }
+
+        public void OnSynchronizationFinished()
+        {
+            lock (_locker)
+            {
+                _collectInfo = false;
+                if (_ownDeletionEventsToClear.Any())
+                {
+                    _ownRepository.Delete(_ownDeletionEventsToClear);
+                }
+            }
         }
 
         public void OnSynchronizing(TRepository remoteRepository)
@@ -44,19 +56,11 @@ namespace Remembrance.Core.Sync
                     return;
                 }
 
-                foreach (var translationEntryKey in _ownDeletionEventsToClear.Where(remoteRepository.Check))
+                var existInRemoteRepository = _ownDeletionEventsToClear.Where(remoteRepository.Check).ToArray();
+                foreach (var translationEntryKey in existInRemoteRepository)
                 {
                     _ownDeletionEventsToClear.Remove(translationEntryKey);
                 }
-            }
-        }
-
-        public void OnSynchronizationFinished()
-        {
-            lock (_locker)
-            {
-                _collectInfo = false;
-                _ownRepository.Delete(_ownDeletionEventsToClear);
             }
         }
     }

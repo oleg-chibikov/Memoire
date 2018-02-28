@@ -4,17 +4,17 @@ namespace Remembrance.ViewModel.Settings.Data
 {
     public sealed class Language
     {
-        public Language([NotNull] string code, [NotNull] string displayName)
+        internal Language([NotNull] string code, [NotNull] string displayName)
         {
             Code = code;
             DisplayName = displayName;
         }
 
         [NotNull]
-        public string Code { get; }
+        internal string Code { get; }
 
         [NotNull]
-        public string DisplayName { get; }
+        internal string DisplayName { get; }
 
         public override bool Equals(object obj)
         {
@@ -24,11 +24,6 @@ namespace Remembrance.ViewModel.Settings.Data
             }
 
             return obj is Language cast && Equals(cast);
-        }
-
-        private bool Equals([NotNull] Language other)
-        {
-            return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
         }
 
         public override int GetHashCode()
@@ -42,6 +37,11 @@ namespace Remembrance.ViewModel.Settings.Data
         public override string ToString()
         {
             return Code;
+        }
+
+        private bool Equals([NotNull] Language other)
+        {
+            return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
         }
     }
 }

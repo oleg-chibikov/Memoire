@@ -55,8 +55,8 @@
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6599.39492, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6599.39492\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6627.19410, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6627.19410\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Notification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Notification.1.0.5\lib\net47\Scar.Common.Notification.dll</HintPath>
@@ -100,6 +100,8 @@
     <Compile Include="ImageSearch\Qwant\ContractResolvers\ImageSearchResultContractResolver.cs" />
     <Compile Include="ImageSearch\Qwant\Data\QwantData.cs" />
     <Compile Include="ImageSearch\ImageDownloader.cs" />
+    <Compile Include="ImageSearch\Qwant\Data\QwantResponse.cs" />
+    <Compile Include="ImageSearch\Qwant\Data\QwantResult.cs" />
     <Compile Include="ImageSearch\Qwant\ImageSearcher.cs" />
     <Compile Include="ImageSearch\Qwant\JsonConverters\UrlConverter.cs" />
     <Compile Include="NamedInstancesFactory.cs" />

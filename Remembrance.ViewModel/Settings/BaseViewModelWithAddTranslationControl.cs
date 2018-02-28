@@ -24,9 +24,6 @@ namespace Remembrance.ViewModel.Settings
     public abstract class BaseViewModelWithAddTranslationControl : IDisposable
     {
         [NotNull]
-        private readonly ILocalSettingsRepository _localSettingsRepository;
-
-        [NotNull]
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
         [NotNull]
@@ -34,6 +31,9 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+
+        [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
         private Language _selectedSourceLanguage;
@@ -109,27 +109,16 @@ namespace Remembrance.ViewModel.Settings
         }
 
         [NotNull]
-        public ICollection<Language> AvailableTargetLanguages { get; }
-
-        [NotNull]
         public ICollection<Language> AvailableSourceLanguages { get; }
 
         [NotNull]
-        public ICommand SaveCommand { get; }
+        public ICollection<Language> AvailableTargetLanguages { get; }
+
+        [CanBeNull]
+        public string ManualTranslation { get; set; }
 
         [NotNull]
-        public Language SelectedTargetLanguage
-        {
-            get => _selectedTargetLanguage;
-            set
-            {
-                // TODO: Transactions?
-                _selectedTargetLanguage = value;
-                var settings = _localSettingsRepository.Get();
-                settings.LastUsedTargetLanguage = value.Code;
-                _localSettingsRepository.UpdateOrInsert(settings);
-            }
-        }
+        public ICommand SaveCommand { get; }
 
         [NotNull]
         public Language SelectedSourceLanguage
@@ -145,11 +134,22 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
-        [CanBeNull]
-        public string Text { get; set; }
+        [NotNull]
+        public Language SelectedTargetLanguage
+        {
+            get => _selectedTargetLanguage;
+            set
+            {
+                // TODO: Transactions?
+                _selectedTargetLanguage = value;
+                var settings = _localSettingsRepository.Get();
+                settings.LastUsedTargetLanguage = value.Code;
+                _localSettingsRepository.UpdateOrInsert(settings);
+            }
+        }
 
         [CanBeNull]
-        public string ManualTranslation { get; set; }
+        public string Text { get; set; }
 
         public void Dispose()
         {
@@ -157,26 +157,26 @@ namespace Remembrance.ViewModel.Settings
             Cleanup();
         }
 
-        [ItemCanBeNull]
-        protected abstract Task<IWindow> GetWindowAsync();
-
         protected virtual void Cleanup()
         {
         }
 
+        [ItemCanBeNull]
+        [NotNull]
+        protected abstract Task<IWindow> GetWindowAsync();
+
+        [NotNull]
         private async Task SaveAsync()
         {
             var text = Text;
             var manualTranslation = string.IsNullOrWhiteSpace(ManualTranslation)
-                ? null
-                : new[]
-                {
-                    new ManualTranslation(ManualTranslation)
-                };
+                                        ? null
+                                        : new[]
+                                        {
+                                            new ManualTranslation(ManualTranslation)
+                                        };
             var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage.Code, SelectedTargetLanguage.Code);
-            var addition = manualTranslation == null
-                ? null
-                : $" with manual translation {ManualTranslation}";
+            var addition = manualTranslation == null ? null : $" with manual translation {ManualTranslation}";
             Logger.Info($"Adding translation for {translationEntryAdditionInfo}{addition}...");
             Text = null;
             ManualTranslation = null;

@@ -1,6 +1,8 @@
 namespace Remembrance.View.Settings
 {
-    //TODO:Internal
+    /// <summary>
+    /// The add translation control.
+    /// </summary>
     internal sealed partial class AddTranslationControl
     {
         public AddTranslationControl()

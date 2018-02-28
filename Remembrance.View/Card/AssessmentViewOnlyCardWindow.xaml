@@ -11,7 +11,6 @@
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:view="clr-namespace:Remembrance.View.Card"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:view1="clr-namespace:Remembrance.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -22,7 +21,8 @@
     SizeToContent="WidthAndHeight"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <commonView:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </window:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger

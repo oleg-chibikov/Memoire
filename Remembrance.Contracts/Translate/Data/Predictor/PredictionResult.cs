@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.Translate.Data.Predictor
 {
-    public class PredictionResult
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
+    public sealed class PredictionResult
     {
         public bool EndOfWord { get; set; }
 

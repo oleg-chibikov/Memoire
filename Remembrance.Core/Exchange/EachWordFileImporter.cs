@@ -41,14 +41,6 @@ namespace Remembrance.Core.Exchange
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
         }
 
-        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
-        {
-            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
-            var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
-            var targetLanguage = await TranslationEntryProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
-            return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
-        }
-
         protected override ICollection<BaseWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
         {
             return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
@@ -58,6 +50,14 @@ namespace Remembrance.Core.Exchange
                         Text = text
                     })
                 .ToArray();
+        }
+
+        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
+        {
+            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
+            var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
+            var targetLanguage = await TranslationEntryProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
+            return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 
         protected override bool UpdateLearningInfo(EachWordExchangeEntry exchangeEntry, LearningInfo learningInfo)

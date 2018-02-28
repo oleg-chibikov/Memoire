@@ -16,22 +16,19 @@ namespace Remembrance.Core.CardManagement.Data
         }
 
         [NotNull]
-        [JsonProperty("TranslationEntry", Required = Required.Always)]
-        public TranslationEntry TranslationEntry { get; }
-
-        [NotNull]
         [JsonProperty("LearningInfo", Required = Required.Always)]
         public LearningInfo LearningInfo { get; }
 
         [JsonIgnore]
         public string Text => TranslationEntry.Id.Text;
 
+        [NotNull]
+        [JsonProperty("TranslationEntry", Required = Required.Always)]
+        public TranslationEntry TranslationEntry { get; }
+
         public override string ToString()
         {
-            return TranslationEntry
-                   + (TranslationEntry.ManualTranslations != null
-                       ? $" [{string.Join(", ", TranslationEntry.ManualTranslations.Select(x => x.Text))}]"
-                       : null);
+            return TranslationEntry + (TranslationEntry.ManualTranslations != null ? $" [{string.Join(", ", TranslationEntry.ManualTranslations.Select(x => x.Text))}]" : null);
         }
     }
 }

@@ -41,8 +41,7 @@ namespace Remembrance.Core.Sync
 
             if (!synchronizers.Any())
             {
-                logger.Warn("No configured repository synchronizers");
-                return;
+                throw new ArgumentNullException(nameof(synchronizers));
             }
 
             _synchronizers = synchronizers.ToDictionary(x => x.FileName, x => x);
@@ -68,6 +67,20 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.Dispose();
         }
 
+        private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
+        {
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            var directoryPath = Path.GetDirectoryName(e.FullPath);
+            if (directoryPath == null || directoryPath == Paths.SharedDataPath)
+            {
+                return;
+            }
+
+            _logger.InfoFormat("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
+            SynchronizeFile(e.FullPath);
+            _fileSystemWatcher.EnableRaisingEvents = true;
+        }
+
         private void SynchronizeExistingRepositories()
         {
             var paths = _sharedRepositoryPathsProvider.GetSharedRepositoriesPaths();
@@ -82,20 +95,6 @@ namespace Remembrance.Core.Sync
             {
                 syncExtender.OnSynchronizationFinished();
             }
-        }
-
-        private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
-        {
-            _fileSystemWatcher.EnableRaisingEvents = false;
-            var directoryPath = Path.GetDirectoryName(e.FullPath);
-            if (directoryPath == null || directoryPath == Paths.SharedDataPath)
-            {
-                return;
-            }
-
-            _logger.InfoFormat("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
-            SynchronizeFile(e.FullPath);
-            _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
         private void SynchronizeFile([NotNull] string filePath)

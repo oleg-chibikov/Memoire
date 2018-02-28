@@ -10,8 +10,6 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:converters="clr-namespace:Remembrance.View.Converters"
-    xmlns:view="clr-namespace:Remembrance.View"
     xmlns:view1="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
@@ -29,7 +27,8 @@
     AutoCloseTimeout="00:00:03"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
-        <view1:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view1:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </window:AnimatedWindow.Resources>
     <Border
         BorderThickness="2"

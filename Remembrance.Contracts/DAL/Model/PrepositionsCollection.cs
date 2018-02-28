@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class PrepositionsCollection
     {
         [CanBeNull]
@@ -10,9 +11,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return Texts != null
-                ? string.Join("/", Texts)
-                : "";
+            return Texts != null ? string.Join("/", Texts) : string.Empty;
         }
     }
 }

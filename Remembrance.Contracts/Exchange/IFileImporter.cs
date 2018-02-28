@@ -9,9 +9,9 @@ namespace Remembrance.Contracts.Exchange
 {
     public interface IFileImporter
     {
+        event EventHandler<ProgressEventArgs> Progress;
+
         [ItemNotNull]
         Task<ExchangeResult> ImportAsync([NotNull] string fileName, CancellationToken cancellationToken);
-
-        event EventHandler<ProgressEventArgs> Progress;
     }
 }

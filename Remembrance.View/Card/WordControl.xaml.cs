@@ -1,8 +1,11 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace Remembrance.View.Card
 {
-    public sealed partial class WordControl
+    /// <summary>
+    /// The word control.
+    /// </summary>
+    internal sealed partial class WordControl
     {
         public static readonly DependencyProperty SpeakerAlignmentProperty = DependencyProperty.Register(nameof(SpeakerAlignment), typeof(HorizontalAlignment), typeof(WordControl), new PropertyMetadata(null));
 

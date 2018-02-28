@@ -1,7 +1,9 @@
-﻿namespace Remembrance.View.Settings
+namespace Remembrance.View.Settings
 {
-    //TODO:Internal
-    public sealed partial class TranslationsGridControl
+    /// <summary>
+    /// The translations grid control.
+    /// </summary>
+    internal sealed partial class TranslationsGridControl
     {
         public TranslationsGridControl()
         {

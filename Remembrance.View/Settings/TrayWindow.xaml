@@ -24,7 +24,7 @@
     Icon="../IconAlt.ico">
     <Window.Resources>
         <view:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
@@ -162,12 +162,12 @@
                             FontWeight="Bold"
                             FontSize="{StaticResource BigFontSize}"
                             Text="{lex:Loc Remembrance.Resources:Texts:Title}" />
+                        <TextBlock
+                            Foreground="Black"
+                            FontWeight="Bold"
+                            Text="{Binding TimeLeftToShowCard, Mode=OneWay}" />
                         <StackPanel
                             view:MarginSetter.Margin="{StaticResource CommonMargin}">
-                            <TextBlock
-                                Foreground="Black"
-                                FontWeight="Bold"
-                                Text="{Binding TimeLeftToShowCard, Mode=OneWay}" />
                             <TextBlock
                                 Text="{Binding CardShowFrequency, Mode=OneWay}" />
                             <TextBlock
@@ -181,6 +181,9 @@
                             <TextBlock
                                 Visibility="{Binding PausedTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
                                 Text="{Binding PausedTime, Mode=OneWay}" />
+                        </StackPanel>
+                        <StackPanel
+                            view:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <Separator />
                             <TextBlock
                                 HorizontalAlignment="Right"

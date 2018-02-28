@@ -24,11 +24,6 @@ namespace Remembrance.Core.Exchange
         {
         }
 
-        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
-        {
-            return await Task.FromResult(exchangeEntry.TranslationEntry.Id).ConfigureAwait(false);
-        }
-
         protected override ICollection<ManualTranslation> GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.ManualTranslations;
@@ -37,6 +32,11 @@ namespace Remembrance.Core.Exchange
         protected override ICollection<BaseWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.PriorityWords;
+        }
+
+        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(exchangeEntry.TranslationEntry.Id).ConfigureAwait(false);
         }
 
         protected override bool UpdateLearningInfo(RemembranceExchangeEntry exchangeEntry, LearningInfo learningInfo)

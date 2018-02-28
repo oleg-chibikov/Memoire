@@ -9,6 +9,11 @@ namespace Remembrance.Core.ImageSearch.Qwant.ContractResolvers
 {
     internal sealed class ImageSearchResultContractResolver : CustomContractResolver
     {
+        protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
+        {
+            { typeof(string), new UrlConverter() }
+        };
+
         protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {
             { nameof(ImageInfo.Name), "title" },
@@ -17,11 +22,6 @@ namespace Remembrance.Core.ImageSearch.Qwant.ContractResolvers
             { nameof(QwantResponse.Data), "data" },
             { nameof(QwantData.Result), "result" },
             { nameof(QwantResult.Items), "items" }
-        };
-
-        protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
-        {
-            { typeof(string), new UrlConverter() }
         };
     }
 }

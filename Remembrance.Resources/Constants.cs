@@ -11,10 +11,10 @@ namespace Remembrance.Resources
         public const string EnLanguage = "en-US";
 
         [NotNull]
-        public const string RuLanguage = "ru-RU";
+        public const string EnLanguageTwoLetters = "en";
 
         [NotNull]
-        public const string EnLanguageTwoLetters = "en";
+        public const string RuLanguage = "ru-RU";
 
         [NotNull]
         public const string RuLanguageTwoLetters = "ru";

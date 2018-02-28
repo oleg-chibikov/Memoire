@@ -28,6 +28,7 @@ namespace Remembrance.WebApi.Controllers
 
         [HttpPut]
         [UsedImplicitly]
+        [NotNull]
         public async Task PutAsync([NotNull] [FromBody] string word)
         {
             if (word == null)

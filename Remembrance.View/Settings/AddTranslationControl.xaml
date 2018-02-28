@@ -19,7 +19,8 @@
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
     <UserControl.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </UserControl.Resources>
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -37,6 +38,7 @@
             Grid.Column="0"
             Text="{lex:Loc Translate}" />
 
+        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <controls:CompletableTextBox
             Grid.Column="1"
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
@@ -56,6 +58,7 @@
             <TextBlock
                 Text="{lex:Loc WithCustomTranslation}" />
 
+            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
             <controls:CompletableTextBox
                 Width="200"
                 Text="{Binding ManualTranslation, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

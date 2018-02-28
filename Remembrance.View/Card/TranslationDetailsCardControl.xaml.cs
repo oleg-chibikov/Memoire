@@ -1,6 +1,9 @@
-﻿namespace Remembrance.View.Card
+namespace Remembrance.View.Card
 {
-    public sealed partial class TranslationDetailsCardControl
+    /// <summary>
+    /// The translation details card control.
+    /// </summary>
+    internal sealed partial class TranslationDetailsCardControl
     {
         public TranslationDetailsCardControl()
         {

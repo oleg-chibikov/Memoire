@@ -4,6 +4,7 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class TranslationEntry : TrackedEntity<TranslationEntryKey>
     {
         [UsedImplicitly]

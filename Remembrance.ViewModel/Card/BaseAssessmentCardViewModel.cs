@@ -13,8 +13,8 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
@@ -26,19 +26,10 @@ using Scar.Common.WPF.ViewModel;
 
 namespace Remembrance.ViewModel.Card
 {
-    //TODO: Test delete file then save or smth
+    // TODO: Test delete file then save or smth
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseAssessmentCardViewModel : IRequestCloseViewModel, IDisposable
     {
-        [NotNull]
-        private static readonly Random Random = new Random();
-
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
-        [NotNull]
-        private readonly SynchronizationContext _synchronizationContext;
-
         [NotNull]
         protected readonly HashSet<WordViewModel> AcceptedAnswers;
 
@@ -54,6 +45,15 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         protected readonly TranslationInfo TranslationInfo;
+
+        [NotNull]
+        private static readonly Random Random = new Random();
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
+        [NotNull]
+        private readonly SynchronizationContext _synchronizationContext;
 
         protected BaseAssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
@@ -94,9 +94,7 @@ namespace Remembrance.ViewModel.Card
             var partOfSpeechGroup = SelectSinglePartOfSpeechGroup(settings, translationResult);
             var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup);
             var needRandom = hasPriorityItems || settings.RandomTranslation;
-            var assessmentInfo = IsReverse(settings)
-                ? GetReverseAssessmentInfo(needRandom, acceptedWordGroups)
-                : GetStraightAssessmentInfo(acceptedWordGroups);
+            var assessmentInfo = IsReverse(settings) ? GetReverseAssessmentInfo(needRandom, acceptedWordGroups) : GetStraightAssessmentInfo(acceptedWordGroups);
             TranslationDetailsCardViewModel = lifetimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), TranslationInfo));
             AcceptedAnswers = assessmentInfo.AcceptedAnswers;
             assessmentInfo.Word.CanLearnWord = false;
@@ -107,6 +105,14 @@ namespace Remembrance.ViewModel.Card
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
         }
 
+        public event EventHandler RequestClose;
+
+        [NotNull]
+        public WordViewModel CorrectAnswer { get; protected set; }
+
+        [NotNull]
+        public string LanguagePair { get; }
+
         [NotNull]
         public TranslationDetailsCardViewModel TranslationDetailsCardViewModel { get; }
 
@@ -116,12 +122,6 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         public WordViewModel Word { get; }
 
-        [NotNull]
-        public string LanguagePair { get; }
-
-        [NotNull]
-        public WordViewModel CorrectAnswer { get; protected set; }
-
         public void Dispose()
         {
             foreach (var subscriptionToken in _subscriptionTokens)
@@ -130,7 +130,31 @@ namespace Remembrance.ViewModel.Card
             }
         }
 
-        public event EventHandler RequestClose;
+        protected void CloseWindowWithTimeout(TimeSpan closeTimeout)
+        {
+            Logger.TraceFormat("Closing window in {0}...", closeTimeout);
+            ActionExtensions.DoAfterAsync(
+                () =>
+                {
+                    Logger.Trace("Window is closing...");
+                    _synchronizationContext.Post(x => RequestClose?.Invoke(null, null), null);
+                },
+                closeTimeout);
+        }
+
+        /// <summary>
+        /// Decide whether reverse translation is needed
+        /// </summary>
+        private static bool IsReverse([NotNull] Contracts.DAL.Model.Settings settings)
+        {
+            var isReverse = false;
+            if (settings.ReverseTranslation)
+            {
+                isReverse = Random.Next(2) == 1;
+            }
+
+            return isReverse;
+        }
 
         /// <summary>
         /// If there are any priority translations - leave only them, otherwise leave all.
@@ -205,7 +229,7 @@ namespace Remembrance.ViewModel.Card
             Logger.DebugFormat("There are {0} accepted words groups", acceptedWordGroups.Count);
             acceptedWordGroups = FilterAcceptedWordsGroupsByPriority(acceptedWordGroups);
 
-            //Converting to base so that these words are displayed as non-priority (e.g. user cannot change priority)
+            // Converting to base so that these words are displayed as non-priority (e.g. user cannot change priority)
             return acceptedWordGroups.Select(
                     acceptedWordGroup => new KeyValuePair<PartOfSpeechTranslationViewModel, ICollection<WordViewModel>>(acceptedWordGroup.Key, acceptedWordGroup.Value.Select(x => x.ConvertToBase()).ToArray()))
                 .ToArray();
@@ -250,9 +274,7 @@ namespace Remembrance.ViewModel.Card
         private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] ICollection<KeyValuePair<PartOfSpeechTranslationViewModel, ICollection<WordViewModel>>> acceptedWordGroups)
         {
             Logger.Trace("Getting reverse assessment info...");
-            return needRandom
-                ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups)
-                : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
+            return needRandom ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups) : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
         }
 
         /// <summary>
@@ -308,20 +330,6 @@ namespace Remembrance.ViewModel.Card
             return new AssessmentInfo(accept, word, correct);
         }
 
-        /// <summary>
-        /// Decide whether reverse translation is needed
-        /// </summary>
-        private static bool IsReverse([NotNull] Contracts.DAL.Model.Settings settings)
-        {
-            var isReverse = false;
-            if (settings.ReverseTranslation)
-            {
-                isReverse = Random.Next(2) == 1;
-            }
-
-            return isReverse;
-        }
-
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
             if (cultureInfo == null)
@@ -349,27 +357,13 @@ namespace Remembrance.ViewModel.Card
         {
             Logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = translationResult.PartOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
-            var partOfSpeechGroup = settings.RandomTranslation
-                ? GetRandomPartOfSpeechGroup(partOfSpeechGroups)
-                : partOfSpeechGroups.First();
+            var partOfSpeechGroup = settings.RandomTranslation ? GetRandomPartOfSpeechGroup(partOfSpeechGroups) : partOfSpeechGroups.First();
             if (partOfSpeechGroup == null)
             {
                 throw new LocalizableException(Errors.NoTranslations, "No translations found");
             }
 
             return partOfSpeechGroup;
-        }
-
-        protected void CloseWindowWithTimeout(TimeSpan closeTimeout)
-        {
-            Logger.TraceFormat("Closing window in {0}...", closeTimeout);
-            ActionExtensions.DoAfterAsync(
-                () =>
-                {
-                    Logger.Trace("Window is closing...");
-                    _synchronizationContext.Post(x => RequestClose?.Invoke(null, null), null);
-                },
-                closeTimeout);
         }
 
         private void WindowClosed()
@@ -391,10 +385,10 @@ namespace Remembrance.ViewModel.Card
             public HashSet<WordViewModel> AcceptedAnswers { get; }
 
             [NotNull]
-            public WordViewModel Word { get; }
+            public WordViewModel CorrectAnswer { get; }
 
             [NotNull]
-            public WordViewModel CorrectAnswer { get; }
+            public WordViewModel Word { get; }
         }
     }
 }

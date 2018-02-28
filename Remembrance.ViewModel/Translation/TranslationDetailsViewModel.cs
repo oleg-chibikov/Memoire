@@ -3,6 +3,7 @@ using Autofac;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.ViewModel.Translation

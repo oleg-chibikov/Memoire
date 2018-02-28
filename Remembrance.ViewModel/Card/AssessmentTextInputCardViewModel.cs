@@ -7,9 +7,9 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -40,14 +40,41 @@ namespace Remembrance.ViewModel.Card
             logger.DebugFormat("Card for {0} is initialized", translationInfo);
         }
 
+        [CanBeNull]
+        public bool? Accepted { get; private set; }
+
         [NotNull]
         public ICommand ProvideAnswerCommand { get; }
 
         [CanBeNull]
-        public bool? Accepted { get; private set; }
-
-        [CanBeNull]
         public string ProvidedAnswer { get; set; }
+
+        private TimeSpan ChangeRepeatType(WordViewModel mostSuitable, int currentMinDistance)
+        {
+            TimeSpan closeTimeout;
+            var learningInfo = _learningInfoRepository.GetById(TranslationInfo.TranslationEntryKey);
+
+            if (Accepted == true)
+            {
+                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
+                learningInfo.IncreaseRepeatType();
+
+                // The inputed answer can differ from the first one
+                CorrectAnswer = mostSuitable;
+                closeTimeout = SuccessCloseTimeout;
+            }
+            else
+            {
+                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
+                Accepted = false;
+                learningInfo.DecreaseRepeatType();
+                closeTimeout = FailureCloseTimeout;
+            }
+
+            _learningInfoRepository.Update(learningInfo);
+            MessageHub.Publish(learningInfo);
+            return closeTimeout;
+        }
 
         private void ProvideAnswer()
         {
@@ -78,33 +105,6 @@ namespace Remembrance.ViewModel.Card
 
             var closeTimeout = ChangeRepeatType(mostSuitable, currentMinDistance);
             CloseWindowWithTimeout(closeTimeout);
-        }
-
-        private TimeSpan ChangeRepeatType(WordViewModel mostSuitable, int currentMinDistance)
-        {
-            TimeSpan closeTimeout;
-            var learningInfo = _learningInfoRepository.GetById(TranslationInfo.TranslationEntryKey);
-
-            if (Accepted == true)
-            {
-                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
-                learningInfo.IncreaseRepeatType();
-
-                // The inputed answer can differ from the first one
-                CorrectAnswer = mostSuitable;
-                closeTimeout = SuccessCloseTimeout;
-            }
-            else
-            {
-                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
-                Accepted = false;
-                learningInfo.DecreaseRepeatType();
-                closeTimeout = FailureCloseTimeout;
-            }
-
-            _learningInfoRepository.Update(learningInfo);
-            MessageHub.Publish(TranslationInfo.TranslationEntry);
-            return closeTimeout;
         }
     }
 }

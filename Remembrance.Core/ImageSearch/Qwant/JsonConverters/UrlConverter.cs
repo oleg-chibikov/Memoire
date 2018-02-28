@@ -14,11 +14,7 @@ namespace Remembrance.Core.ImageSearch.Qwant.JsonConverters
         [NotNull]
         public override object ReadJson([NotNull] JsonReader reader, Type objectType, object existingValue, [NotNull] JsonSerializer serializer)
         {
-            return !(reader.Value is string valueString)
-                ? string.Empty
-                : (valueString.StartsWith(@"//", StringComparison.Ordinal)
-                    ? $"https:{valueString}"
-                    : valueString);
+            return !(reader.Value is string valueString) ? string.Empty : (valueString.StartsWith(@"//", StringComparison.Ordinal) ? $"https:{valueString}" : valueString);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

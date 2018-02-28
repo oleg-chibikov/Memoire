@@ -16,6 +16,7 @@ using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
+using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
 using Scar.Common.WPF.View.Contracts;
@@ -70,7 +71,9 @@ namespace Remembrance.Core.CardManagement
             }
 
             logger.Trace("Starting showing cards...");
-            _interval = Disposable.Empty; //just to assign the field in the costructor
+
+            // just to assign the field in the costructor
+            _interval = Disposable.Empty;
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -84,8 +87,9 @@ namespace Remembrance.Core.CardManagement
             _pausedTime = localSettings.PausedTime;
             if (!IsPaused)
             {
-                //no await here
-                CreateIntervalAsync();
+                // no await here
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = CreateIntervalAsync();
             }
             else
             {
@@ -97,15 +101,15 @@ namespace Remembrance.Core.CardManagement
             logger.Debug("Started showing cards");
         }
 
-        public bool IsPaused { get; private set; }
-
         public TimeSpan CardShowFrequency { get; private set; }
+
+        public bool IsPaused { get; private set; }
 
         public DateTime? LastCardShowTime { get; private set; }
 
-        public DateTime NextCardShowTime => DateTime.Now + TimeLeftToShowCard;
-
         public DateTime LastPausedTime { get; private set; } = DateTime.MinValue;
+
+        public DateTime NextCardShowTime => DateTime.Now + TimeLeftToShowCard;
 
         public TimeSpan PausedTime
         {
@@ -126,9 +130,7 @@ namespace Remembrance.Core.CardManagement
             {
                 var requiredInterval = CardShowFrequency + PausedTime;
                 var alreadyPassedTime = DateTime.Now - (LastCardShowTime ?? _initTime);
-                return alreadyPassedTime >= requiredInterval
-                    ? TimeSpan.Zero
-                    : requiredInterval - alreadyPassedTime;
+                return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
         }
 
@@ -148,6 +150,69 @@ namespace Remembrance.Core.CardManagement
             Logger.Debug("Finished showing cards");
         }
 
+        protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
+        {
+            if (_hasOpenWindows)
+            {
+                Logger.Trace("There is another window opened. Skipping creation...");
+                return null;
+            }
+
+            Logger.TraceFormat("Creating window for {0}...", translationInfo);
+            var learningInfo = _learningInfoRepository.GetById(translationInfo.TranslationEntryKey);
+            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
+            learningInfo.LastCardShowTime = DateTime.Now;
+            _learningInfoRepository.Update(learningInfo);
+            _messageHub.Publish(learningInfo);
+            IWindow window;
+
+            var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
+            switch (learningInfo.RepeatType)
+            {
+                case RepeatType.Elementary:
+                case RepeatType.Beginner:
+                case RepeatType.Novice:
+                {
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    break;
+                }
+
+                case RepeatType.PreIntermediate:
+                case RepeatType.Intermediate:
+                case RepeatType.UpperIntermediate:
+                {
+                    // TODO: Dropdown
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
+                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
+                        new TypedParameter(typeof(Window), ownerWindow));
+                    break;
+                }
+
+                case RepeatType.Advanced:
+                case RepeatType.Proficiency:
+                // TODO: Reverse and random trans for high levels
+                case RepeatType.Expert:
+                {
+                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
+                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
+                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
+                        new TypedParameter(typeof(Window), ownerWindow));
+                    break;
+                }
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            window.Closed += Window_Closed;
+            window.AssociateDisposable(nestedLifeTimeScope);
+            _hasOpenWindows = true;
+            return window;
+        }
+
+        [NotNull]
         private async Task CreateIntervalAsync()
         {
             var delay = TimeLeftToShowCard;
@@ -183,7 +248,7 @@ namespace Remembrance.Core.CardManagement
                         var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
 
                         var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
-                            .ConfigureAwait(false);
+                                                     .ConfigureAwait(false);
                         var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
                         Logger.TraceFormat("Trying to show {0}...", translationInfo);
                         ShowCard(translationInfo, null);
@@ -194,20 +259,21 @@ namespace Remembrance.Core.CardManagement
         private async void OnCardShowFrequencyChangedAsync(TimeSpan newCardShowFrequency)
         {
             await Task.Run(
-                async () =>
-                {
-                    CardShowFrequency = newCardShowFrequency;
-                    if (!IsPaused)
+                    async () =>
                     {
-                        Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
-                        await CreateIntervalAsync().ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
-                    }
-                },
-                CancellationToken.None);
+                        CardShowFrequency = newCardShowFrequency;
+                        if (!IsPaused)
+                        {
+                            Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
+                            await CreateIntervalAsync().ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
+                        }
+                    },
+                    CancellationToken.None)
+                .ConfigureAwait(false);
         }
 
         private async void OnIntervalModifiedAsync(IntervalModificator intervalModificator)
@@ -256,65 +322,6 @@ namespace Remembrance.Core.CardManagement
             settings.PausedTime = _pausedTime += DateTime.Now - LastPausedTime;
             Logger.DebugFormat("Paused time is {0}...", PausedTime);
             LocalSettingsRepository.UpdateOrInsert(settings);
-        }
-
-        protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
-        {
-            if (_hasOpenWindows)
-            {
-                Logger.Trace("There is another window opened. Skipping creation...");
-                return null;
-            }
-
-            Logger.TraceFormat("Creating window for {0}...", translationInfo);
-            var learningInfo = _learningInfoRepository.GetById(translationInfo.TranslationEntryKey);
-            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
-            learningInfo.LastCardShowTime = DateTime.Now;
-            _learningInfoRepository.Update(learningInfo);
-            _messageHub.Publish(translationInfo.TranslationEntry);
-            IWindow window;
-
-            var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
-            switch (learningInfo.RepeatType)
-            {
-                case RepeatType.Elementary:
-                case RepeatType.Beginner:
-                case RepeatType.Novice:
-                {
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
-                    break;
-                }
-                case RepeatType.PreIntermediate:
-                case RepeatType.Intermediate:
-                case RepeatType.UpperIntermediate:
-                {
-                    //TODO: Dropdown
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
-                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
-                        new TypedParameter(typeof(Window), ownerWindow));
-                    break;
-                }
-                case RepeatType.Advanced:
-                case RepeatType.Proficiency:
-                //TODO: Reverse and random trans for high levels
-                case RepeatType.Expert:
-                {
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
-                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
-                        new TypedParameter(typeof(Window), ownerWindow));
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            window.Closed += Window_Closed;
-            window.AssociateDisposable(nestedLifeTimeScope);
-            _hasOpenWindows = true;
-            return window;
         }
 
         private void Window_Closed(object sender, EventArgs e)

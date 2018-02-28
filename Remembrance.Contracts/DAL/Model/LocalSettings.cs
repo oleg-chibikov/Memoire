@@ -6,6 +6,7 @@ using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class LocalSettings : Entity<int>
     {
         public LocalSettings()
@@ -15,21 +16,21 @@ namespace Remembrance.Contracts.DAL.Model
             SyncTimes = new Dictionary<string, DateTimeOffset>();
         }
 
-        [CanBeNull]
-        public string LastUsedTargetLanguage { get; set; }
+        public bool IsActive { get; set; }
+
+        public DateTime? LastCardShowTime { get; set; }
 
         [CanBeNull]
         public string LastUsedSourceLanguage { get; set; }
 
-        public DateTime? LastCardShowTime { get; set; }
+        [CanBeNull]
+        public string LastUsedTargetLanguage { get; set; }
 
         public TimeSpan PausedTime { get; set; }
 
-        public string UiLanguage { get; set; }
-
-        public bool IsActive { get; set; }
-
         public IDictionary<string, DateTimeOffset> SyncTimes { get; set; }
+
+        public string UiLanguage { get; set; }
 
         public override string ToString()
         {

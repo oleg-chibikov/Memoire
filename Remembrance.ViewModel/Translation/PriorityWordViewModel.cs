@@ -64,6 +64,11 @@ namespace Remembrance.ViewModel.Translation
         [DoNotNotify]
         public override string Language => _translationEntry.Id.TargetLanguage;
 
+        public void SetIsPriority(bool isPriority)
+        {
+            IsPriority = isPriority;
+        }
+
         internal WordViewModel ConvertToBase()
         {
             return LifetimeScope.Resolve<WordViewModel>(
@@ -71,7 +76,7 @@ namespace Remembrance.ViewModel.Translation
                     typeof(Word),
                     new Word
                     {
-                        //TODO: Store Word in viewModel?
+                        // TODO: Store Word in viewModel?
                         NounAnimacy = NounAnimacy,
                         Text = Text,
                         PartOfSpeech = PartOfSpeech,
@@ -79,11 +84,6 @@ namespace Remembrance.ViewModel.Translation
                         VerbType = VerbType
                     }),
                 new TypedParameter(typeof(string), Language));
-        }
-
-        public void SetIsPriority(bool isPriority)
-        {
-            IsPriority = isPriority;
         }
 
         protected override void TogglePriority()

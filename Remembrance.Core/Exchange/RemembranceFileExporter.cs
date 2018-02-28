@@ -48,7 +48,7 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs> Progress;
 
-        public async Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
+        public Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {
             if (fileName == null)
             {
@@ -57,8 +57,8 @@ namespace Remembrance.Core.Exchange
 
             var translationEntries = _translationEntryRepository.GetAll();
             var learningInfos = _learningInfoRepository.GetAll().ToDictionary(x => x.Id, x => x);
-            var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Length);
-            var totalCount = translationEntries.Length;
+            var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Count);
+            var totalCount = translationEntries.Count;
             var count = 0;
             foreach (var translationEntry in translationEntries)
             {
@@ -71,7 +71,7 @@ namespace Remembrance.Core.Exchange
             {
                 var json = JsonConvert.SerializeObject(exportEntries, Formatting.Indented, ExportEntrySerializerSettings);
                 File.WriteAllText(fileName, json);
-                return new ExchangeResult(true, null, exportEntries.Count);
+                return Task.FromResult(new ExchangeResult(true, null, exportEntries.Count));
             }
             catch (IOException ex)
             {
@@ -82,7 +82,7 @@ namespace Remembrance.Core.Exchange
                 _logger.Warn("Cannot serialize object", ex);
             }
 
-            return new ExchangeResult(false, null, 0);
+            return Task.FromResult(new ExchangeResult(false, null, 0));
         }
 
         private void OnProgress(int current, int total)

@@ -60,51 +60,38 @@ namespace Remembrance.ViewModel.Translation
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             CanLearnWord = false;
             var learningInfo = learningInfoRepository.GetOrInsert(Id);
-            //no await here
-            ConstructionTask = UpdateAsync(translationEntry, learningInfo);
-        }
+            UpdateLearningInfo(learningInfo);
 
-        [NotNull]
-        internal Task ConstructionTask { get; }
+            // no await here
+            ConstructionTask = ReloadTranslationsAsync(translationEntry);
+        }
 
         [DoNotNotify]
         public TranslationEntryKey Id { get; }
 
-        public override string Text => Id.Text;
-
-        [NotNull]
-        public ObservableCollection<PriorityWordViewModel> Translations { get; private set; }
-
-        public int ShowCount { get; set; }
+        public bool IsFavorited { get; set; }
 
         [NotNull]
         public override string Language => Id.SourceLanguage;
-
-        [NotNull]
-        public string TargetLanguage => Id.TargetLanguage;
-
-        public RepeatType RepeatType { get; set; }
 
         public DateTime LastCardShowTime { get; set; }
 
         public DateTime NextCardShowTime { get; set; }
 
-        public bool IsFavorited { get; set; }
+        public RepeatType RepeatType { get; set; }
 
-        public async Task UpdateAsync([NotNull] TranslationEntry translationEntry, [NotNull] LearningInfo learningInfo)
-        {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
+        public int ShowCount { get; set; }
 
-            IsFavorited = learningInfo.IsFavorited;
-            LastCardShowTime = learningInfo.LastCardShowTime;
-            NextCardShowTime = learningInfo.NextCardShowTime;
-            RepeatType = learningInfo.RepeatType;
-            ShowCount = learningInfo.ShowCount;
-            await ReloadTranslationsAsync(translationEntry).ConfigureAwait(false);
-        }
+        [NotNull]
+        public string TargetLanguage => Id.TargetLanguage;
+
+        public override string Text => Id.Text;
+
+        [NotNull]
+        public ObservableCollection<PriorityWordViewModel> Translations { get; } = new ObservableCollection<PriorityWordViewModel>();
+
+        [NotNull]
+        internal Task ConstructionTask { get; }
 
         public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
         {
@@ -123,6 +110,54 @@ namespace Remembrance.ViewModel.Translation
             }
         }
 
+        [NotNull]
+        public async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
+        {
+            if (translationEntry == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntry));
+            }
+
+            Translations.Clear();
+            var isPriority = translationEntry.PriorityWords?.Any() == true;
+            IEnumerable<Word> words;
+            if (isPriority)
+            {
+                words = translationEntry.PriorityWords.Select(
+                    baseWord => new Word
+                    {
+                        Text = baseWord.Text,
+                        PartOfSpeech = baseWord.PartOfSpeech
+                    });
+            }
+            else
+            {
+                var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+                words = translationDetails.TranslationResult.GetDefaultWords();
+            }
+
+            var translations = words.Select(word => LifetimeScope.Resolve<PriorityWordViewModel>(new TypedParameter(typeof(Word), word), new TypedParameter(typeof(TranslationEntry), translationEntry)));
+
+            foreach (var translation in translations)
+            {
+                Translations.Add(translation);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{Id}";
+        }
+
+        public void UpdateLearningInfo([NotNull] LearningInfo learningInfo)
+        {
+            IsFavorited = learningInfo.IsFavorited;
+            LastCardShowTime = learningInfo.LastCardShowTime;
+            NextCardShowTime = learningInfo.NextCardShowTime;
+            RepeatType = learningInfo.RepeatType;
+            ShowCount = learningInfo.ShowCount;
+        }
+
         private void ProcessNonPriority([NotNull] WordKey wordKey)
         {
             var translations = Translations;
@@ -134,6 +169,8 @@ namespace Remembrance.ViewModel.Translation
                 if (translation.Equals(wordKey.Word))
                 {
                     _logger.TraceFormat("Removing {0} from the list...", wordKey);
+
+                    // ReSharper disable once AccessToModifiedClosure
                     _synchronizationContext.Send(x => Translations.RemoveAt(i--), null);
                 }
             }
@@ -142,8 +179,10 @@ namespace Remembrance.ViewModel.Translation
             {
                 _logger.Debug("No more translations left in the list. Restoring default...");
                 var translationEntry = _translationEntryRepository.GetById(Id);
-                //no await here
-                ReloadTranslationsAsync(translationEntry);
+
+                // no await here
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = ReloadTranslationsAsync(translationEntry);
             }
         }
 
@@ -172,6 +211,7 @@ namespace Remembrance.ViewModel.Translation
 
                 if (!translation.IsPriority)
                 {
+                    // ReSharper disable once AccessToModifiedClosure
                     _synchronizationContext.Send(x => Translations.RemoveAt(i--), null);
                 }
             }
@@ -193,40 +233,6 @@ namespace Remembrance.ViewModel.Translation
                 _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);
                 _logger.DebugFormat("{0} has been added to the list", wordKey);
             }
-        }
-
-        private async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
-        {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
-
-            var isPriority = translationEntry.PriorityWords?.Any() == true;
-            IEnumerable<Word> words;
-            if (isPriority)
-            {
-                words = translationEntry.PriorityWords.Select(
-                    baseWord => new Word
-                    {
-                        Text = baseWord.Text,
-                        PartOfSpeech = baseWord.PartOfSpeech
-                    });
-            }
-            else
-            {
-                var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
-                words = translationDetails.TranslationResult.GetDefaultWords();
-            }
-
-            var translations = words.Select(word => LifetimeScope.Resolve<PriorityWordViewModel>(new TypedParameter(typeof(Word), word), new TypedParameter(typeof(TranslationEntry), translationEntry)));
-
-            Translations = new ObservableCollection<PriorityWordViewModel>(translations);
-        }
-
-        public override string ToString()
-        {
-            return $"{Id}";
         }
     }
 }

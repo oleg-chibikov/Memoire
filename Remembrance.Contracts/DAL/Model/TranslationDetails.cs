@@ -3,8 +3,10 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.DAL.Model;
 
+// ReSharper disable NotNullMemberIsNotInitialized
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class TranslationDetails : Entity<TranslationEntryKey>
     {
         [UsedImplicitly]
@@ -12,7 +14,6 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        //TODO: Combine with TranslationResult
         public TranslationDetails([NotNull] TranslationResult translationResult, [NotNull] TranslationEntryKey translationEntryKey)
         {
             Id = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));

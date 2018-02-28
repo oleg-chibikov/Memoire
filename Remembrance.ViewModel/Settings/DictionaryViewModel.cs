@@ -40,7 +40,7 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
-        //TODO: config
+        // TODO: config
         private const int PageSize = 15;
 
         [NotNull]
@@ -77,7 +77,9 @@ namespace Remembrance.ViewModel.Settings
         private readonly ObservableCollection<TranslationEntryViewModel> _translationList;
 
         private int _count;
+
         private bool _filterChanged;
+
         private int _lastRecordedCount;
 
         public DictionaryViewModel(
@@ -129,6 +131,7 @@ namespace Remembrance.ViewModel.Settings
             Logger.Trace("Subscribing to the events...");
 
             _subscriptionTokens.Add(messageHub.Subscribe<TranslationEntry>(OnTranslationInfoReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<ICollection<TranslationEntry>>(OnTranslationInfosBatchReceivedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
@@ -136,22 +139,16 @@ namespace Remembrance.ViewModel.Settings
             Logger.Debug("Started");
         }
 
+        public int Count { get; private set; }
+
+        [NotNull]
+        public ICommand DeleteCommand { get; }
+
         [NotNull]
         public EditManualTranslationsViewModel EditManualTranslationsViewModel { get; }
 
         [NotNull]
-        public ICollectionView View { get; }
-
-        public int Count { get; private set; }
-
-        [CanBeNull]
-        public string SearchText { get; set; }
-
-        [NotNull]
         public ICommand FavoriteCommand { get; }
-
-        [NotNull]
-        public ICommand DeleteCommand { get; }
 
         [NotNull]
         public ICommand OpenDetailsCommand { get; }
@@ -162,41 +159,14 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public ICommand SearchCommand { get; }
 
+        [CanBeNull]
+        public string SearchText { get; set; }
+
+        [NotNull]
+        public ICollectionView View { get; }
+
         [NotNull]
         public ICommand WindowContentRenderedCommand { get; }
-
-        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
-        {
-            if (priorityWordKey == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordKey));
-            }
-
-            Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
-
-            await Task.Run(
-                    async () =>
-                    {
-                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(priorityWordKey.WordKey.TranslationEntryKey));
-                        _semaphore.Release();
-
-                        if (translationEntryViewModel == null)
-                        {
-                            Logger.WarnFormat("Cannot find {0} in translations list", priorityWordKey.WordKey);
-                            return;
-                        }
-
-                        translationEntryViewModel.ProcessPriorityChange(priorityWordKey);
-                    },
-                    CancellationTokenSource.Token)
-                .ConfigureAwait(false);
-        }
-
-        protected override async Task<IWindow> GetWindowAsync()
-        {
-            return await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-        }
 
         protected override void Cleanup()
         {
@@ -209,6 +179,12 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
+        protected override async Task<IWindow> GetWindowAsync()
+        {
+            return await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        [NotNull]
         private async Task DeleteAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             if (translationEntryViewModel == null)
@@ -239,18 +215,14 @@ namespace Remembrance.ViewModel.Settings
 
         private void Favorite([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            Logger.TraceFormat(
-                "{0} {1}...",
-                translationEntryViewModel.IsFavorited
-                    ? "Unfavoriting"
-                    : "Favoriting",
-                translationEntryViewModel);
+            Logger.TraceFormat("{0} {1}...", translationEntryViewModel.IsFavorited ? "Unfavoriting" : "Favoriting", translationEntryViewModel);
             translationEntryViewModel.IsFavorited = !translationEntryViewModel.IsFavorited;
             var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryViewModel.Id);
             learningInfo.IsFavorited = translationEntryViewModel.IsFavorited;
             _learningInfoRepository.Update(learningInfo);
         }
 
+        [NotNull]
         private async Task LoadTranslationsAsync()
         {
             await Task.Run(
@@ -270,6 +242,7 @@ namespace Remembrance.ViewModel.Settings
                 .ConfigureAwait(false);
         }
 
+        [NotNull]
         private async Task<bool> LoadTranslationsPageAsync(int pageNumber)
         {
             if (CancellationTokenSource.IsCancellationRequested)
@@ -298,24 +271,72 @@ namespace Remembrance.ViewModel.Settings
                 },
                 null);
 
-            Logger.DebugFormat("{0} translations have been received", translationEntries.Length);
+            Logger.DebugFormat("{0} translations have been received", translationEntries.Count);
             _semaphore.Release();
             return true;
         }
 
-        private async void OnTranslationInfoReceivedAsync([NotNull] TranslationEntry translationEntry)
+        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
         {
-            if (translationEntry == null)
+            if (learningInfo == null)
             {
-                throw new ArgumentNullException(nameof(translationEntry));
+                throw new ArgumentNullException(nameof(learningInfo));
             }
 
-            Logger.DebugFormat("Received {0} from external source", translationEntry);
+            Logger.DebugFormat("Received {0} from external source", learningInfo);
 
-            await Task.Run(async () => await ProcessNewTranslationAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
+            await Task.Run(
+                    async () =>
+                    {
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(learningInfo.Id));
+                        _semaphore.Release();
+                        if (translationEntryViewModel == null)
+                        {
+                            Logger.DebugFormat("Translation entry is still not loaded for {0}", learningInfo);
+                            return;
+                        }
+
+                        Logger.TraceFormat("Updating LearningInfo for {0} in the list...", translationEntryViewModel);
+                        translationEntryViewModel.UpdateLearningInfo(learningInfo);
+
+                        _synchronizationContext.Post(x => View.MoveCurrentTo(translationEntryViewModel), null);
+                        Logger.DebugFormat("LearningInfo for {0} has been updated in the list", translationEntryViewModel);
+                    },
+                    CancellationTokenSource.Token)
+                .ConfigureAwait(false);
         }
 
-        private async Task ProcessNewTranslationAsync([NotNull] TranslationEntry translationEntry)
+        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
+        {
+            if (priorityWordKey == null)
+            {
+                throw new ArgumentNullException(nameof(priorityWordKey));
+            }
+
+            Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
+
+            await Task.Run(
+                    async () =>
+                    {
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(priorityWordKey.WordKey.TranslationEntryKey));
+                        _semaphore.Release();
+
+                        if (translationEntryViewModel == null)
+                        {
+                            Logger.WarnFormat("Cannot find {0} in translations list", priorityWordKey.WordKey);
+                            return;
+                        }
+
+                        translationEntryViewModel.ProcessPriorityChange(priorityWordKey);
+                    },
+                    CancellationTokenSource.Token)
+                .ConfigureAwait(false);
+        }
+
+        [NotNull]
+        private async Task OnTranslationEntryReceivedInternalAsync([NotNull] TranslationEntry translationEntry)
         {
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             var existingTranslationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(translationEntry.Id));
@@ -325,8 +346,11 @@ namespace Remembrance.ViewModel.Settings
             {
                 Logger.TraceFormat("Updating {0} in the list...", existingTranslationEntryViewModel);
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
-                //no await here
-                existingTranslationEntryViewModel.UpdateAsync(translationEntry, learningInfo);
+                existingTranslationEntryViewModel.UpdateLearningInfo(learningInfo);
+
+                // no await here
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = existingTranslationEntryViewModel.ReloadTranslationsAsync(translationEntry);
 
                 _synchronizationContext.Post(x => View.MoveCurrentTo(existingTranslationEntryViewModel), null);
                 Logger.DebugFormat("{0} has been updated in the list", existingTranslationEntryViewModel);
@@ -349,6 +373,18 @@ namespace Remembrance.ViewModel.Settings
             }
         }
 
+        private async void OnTranslationInfoReceivedAsync([NotNull] TranslationEntry translationEntry)
+        {
+            if (translationEntry == null)
+            {
+                throw new ArgumentNullException(nameof(translationEntry));
+            }
+
+            Logger.DebugFormat("Received {0} from external source", translationEntry);
+
+            await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
         private async void OnTranslationInfosBatchReceivedAsync([NotNull] ICollection<TranslationEntry> translationEntries)
         {
             if (translationEntries == null)
@@ -363,7 +399,7 @@ namespace Remembrance.ViewModel.Settings
                     {
                         foreach (var translationEntry in translationEntries)
                         {
-                            await ProcessNewTranslationAsync(translationEntry).ConfigureAwait(false);
+                            await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false);
                         }
                     },
                     CancellationTokenSource.Token)
@@ -396,11 +432,7 @@ namespace Remembrance.ViewModel.Settings
                 .ConfigureAwait(false);
         }
 
-        private async Task WindowContentRenderedAsync()
-        {
-            await LoadTranslationsAsync().ConfigureAwait(false);
-        }
-
+        [NotNull]
         private async Task OpenDetailsAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             if (translationEntryViewModel == null)
@@ -424,6 +456,7 @@ namespace Remembrance.ViewModel.Settings
             detailsWindow.Show();
         }
 
+        [NotNull]
         private async Task OpenSettingsAsync()
         {
             Logger.Trace("Opening settings...");
@@ -450,7 +483,8 @@ namespace Remembrance.ViewModel.Settings
             }
 
             _filterChanged = true;
-            //Count = View.Cast<object>().Count();
+
+            // Count = View.Cast<object>().Count();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -462,21 +496,6 @@ namespace Remembrance.ViewModel.Settings
             }
 
             UpdateCount();
-        }
-
-        private void UpdateCount()
-        {
-            if (!_filterChanged && _count == _lastRecordedCount)
-            {
-                return;
-            }
-
-            _filterChanged = false;
-            _lastRecordedCount = _count;
-
-            Count = View.Filter == null
-                ? _count
-                : View.Cast<object>().Count();
         }
 
         private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
@@ -492,13 +511,32 @@ namespace Remembrance.ViewModel.Settings
 
                     break;
                 case NotifyCollectionChangedAction.Add:
-                    foreach (TranslationEntryViewModel translationEntryViewModel in e.NewItems)
+                    foreach (var _ in e.NewItems)
                     {
                         Interlocked.Increment(ref _count);
                     }
 
                     break;
             }
+        }
+
+        private void UpdateCount()
+        {
+            if (!_filterChanged && _count == _lastRecordedCount)
+            {
+                return;
+            }
+
+            _filterChanged = false;
+            _lastRecordedCount = _count;
+
+            Count = View.Filter == null ? _count : View.Cast<object>().Count();
+        }
+
+        [NotNull]
+        private async Task WindowContentRenderedAsync()
+        {
+            await LoadTranslationsAsync().ConfigureAwait(false);
         }
     }
 }

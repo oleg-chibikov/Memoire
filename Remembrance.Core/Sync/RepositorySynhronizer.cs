@@ -82,7 +82,7 @@ namespace Remembrance.Core.Sync
                 throw new NotSupportedException($"Improper repository file extension: {filePath}");
             }
 
-            //Copy is needed because LiteDB changes the remote file when creation a repository over it and it could lead to the conflicts.
+            // Copy is needed because LiteDB changes the remote file when creation a repository over it and it could lead to the conflicts.
             var newDirectoryPath = Path.GetTempPath();
             var newFileName = Path.Combine(newDirectoryPath, fileName + extension);
             if (File.Exists(newFileName))

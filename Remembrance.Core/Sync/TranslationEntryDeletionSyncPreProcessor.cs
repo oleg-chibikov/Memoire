@@ -18,7 +18,7 @@ namespace Remembrance.Core.Sync
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
         }
 
-        public async Task<bool> BeforeEntityChangedAsync(TranslationEntryDeletion oldValue, TranslationEntryDeletion newValue)
+        public Task<bool> BeforeEntityChangedAsync(TranslationEntryDeletion oldValue, TranslationEntryDeletion newValue)
         {
             if (newValue == null)
             {
@@ -26,8 +26,7 @@ namespace Remembrance.Core.Sync
             }
 
             _translationEntryProcessor.DeleteTranslationEntry(newValue.Id, false);
-            //TODO: Check all other repositories whether there is such TranEntry - if no - delete DeletionEvent as well
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

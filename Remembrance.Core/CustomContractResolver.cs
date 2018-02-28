@@ -8,9 +8,9 @@ namespace Remembrance.Core
 {
     internal abstract class CustomContractResolver : DefaultContractResolver
     {
-        protected abstract Dictionary<string, string> PropertyMappings { get; }
-
         protected virtual Dictionary<Type, JsonConverter> PropertyConverters { get; } = null;
+
+        protected abstract Dictionary<string, string> PropertyMappings { get; }
 
         protected override JsonContract CreateContract(Type objectType)
         {
@@ -28,9 +28,7 @@ namespace Remembrance.Core
         protected override string ResolvePropertyName([NotNull] string propertyName)
         {
             var resolved = PropertyMappings.TryGetValue(propertyName, out var resolvedName);
-            return resolved
-                ? resolvedName
-                : base.ResolvePropertyName(propertyName);
+            return resolved ? resolvedName : base.ResolvePropertyName(propertyName);
         }
     }
 }

@@ -2,6 +2,8 @@ using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
+// ReSharper disable VirtualMemberCallInConstructor
+// ReSharper disable NonReadonlyMemberInGetHashCode
 namespace Remembrance.Contracts.DAL.Model
 {
     public class BaseWord : TextEntry, IEquatable<BaseWord>
@@ -24,12 +26,20 @@ namespace Remembrance.Contracts.DAL.Model
 
         public virtual PartOfSpeech PartOfSpeech { get; set; }
 
-        public override string ToString()
+        public static bool operator ==([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
         {
-            return $"{Text} ({PartOfSpeech}))";
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1?.Equals(obj2) == true;
         }
 
-        #region Equality
+        public static bool operator !=([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
+        {
+            return !(obj1 == obj2);
+        }
 
         public bool Equals(BaseWord other)
         {
@@ -44,22 +54,6 @@ namespace Remembrance.Contracts.DAL.Model
             }
 
             return Text == other.Text && PartOfSpeech == other.PartOfSpeech;
-        }
-
-        public static bool operator ==([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
-        {
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1?.Equals(obj2) == true;
-        }
-
-        // this is second one '!='
-        public static bool operator !=([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
-        {
-            return !(obj1 == obj2);
         }
 
         public override bool Equals(object obj)
@@ -77,6 +71,9 @@ namespace Remembrance.Contracts.DAL.Model
             }
         }
 
-        #endregion
+        public override string ToString()
+        {
+            return $"{Text} ({PartOfSpeech}))";
+        }
     }
 }

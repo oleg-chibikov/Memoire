@@ -25,6 +25,12 @@ namespace Remembrance.Core.Exchange
         [CanBeNull]
         private Type _currentDeclaringType;
 
+        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+        {
+            _currentDeclaringType = type;
+            return base.CreateProperties(type, memberSerialization);
+        }
+
         [NotNull]
         protected override JsonProperty CreateProperty([NotNull] MemberInfo member, MemberSerialization memberSerialization)
         {
@@ -32,12 +38,6 @@ namespace Remembrance.Core.Exchange
             var objectType = _currentDeclaringType;
             property.ShouldSerialize = _ => !ShouldExclude(member, objectType);
             return property;
-        }
-
-        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-        {
-            _currentDeclaringType = type;
-            return base.CreateProperties(type, memberSerialization);
         }
 
         private bool ShouldExclude([NotNull] MemberInfo memberInfo, [CanBeNull] Type objectType)

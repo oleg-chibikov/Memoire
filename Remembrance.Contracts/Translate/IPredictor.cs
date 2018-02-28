@@ -8,6 +8,7 @@ namespace Remembrance.Contracts.Translate
     public interface IPredictor
     {
         [ItemCanBeNull]
+        [NotNull]
         Task<PredictionResult> PredictAsync([NotNull] string text, int limit, CancellationToken cancellationToken);
     }
 }

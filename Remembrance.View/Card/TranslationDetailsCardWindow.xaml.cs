@@ -5,6 +5,9 @@ using Remembrance.ViewModel.Card;
 
 namespace Remembrance.View.Card
 {
+    /// <summary>
+    /// The translation details card window.
+    /// </summary>
     [UsedImplicitly]
     internal sealed partial class TranslationDetailsCardWindow : ITranslationDetailsCardWindow
     {

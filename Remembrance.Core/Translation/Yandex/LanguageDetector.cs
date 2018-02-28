@@ -19,15 +19,15 @@ namespace Remembrance.Core.Translation.Yandex
     internal sealed class LanguageDetector : ILanguageDetector
     {
         [NotNull]
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new DetectionResultContractResolver()
-        };
-
-        [NotNull]
         private static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
         {
             ContractResolver = new ListResultContractResolver()
+        };
+
+        [NotNull]
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DetectionResultContractResolver()
         };
 
         private readonly ConcurrentDictionary<string, Task<ListResult>> _cacheTasks = new ConcurrentDictionary<string, Task<ListResult>>();
@@ -90,35 +90,35 @@ namespace Remembrance.Core.Translation.Yandex
             }
 
             return await _cacheTasks.GetOrAdd(
-                    ui,
-                    async x =>
-                    {
-                        var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
-                        try
-                        {
-                            var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
-                            if (!response.IsSuccessStatusCode)
-                            {
-                                throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
-                            }
+                           ui,
+                           async x =>
+                           {
+                               var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
+                               try
+                               {
+                                   var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+                                   if (!response.IsSuccessStatusCode)
+                                   {
+                                       throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                                   }
 
-                            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return JsonConvert.DeserializeObject<ListResult>(result, ListResultSettings);
-                        }
-                        catch (Exception ex)
-                        {
-                            _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
-                            return new ListResult
-                            {
-                                Languages =
-                                {
-                                    { Constants.EnLanguageTwoLetters, Constants.EnLanguage },
-                                    { Constants.RuLanguageTwoLetters, Constants.RuLanguage }
-                                }
-                            };
-                        }
-                    })
-                .ConfigureAwait(false);
+                                   var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                   return JsonConvert.DeserializeObject<ListResult>(result, ListResultSettings);
+                               }
+                               catch (Exception ex)
+                               {
+                                   _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
+                                   return new ListResult
+                                   {
+                                       Languages =
+                                       {
+                                           { Constants.EnLanguageTwoLetters, Constants.EnLanguage },
+                                           { Constants.RuLanguageTwoLetters, Constants.RuLanguage }
+                                       }
+                                   };
+                               }
+                           })
+                       .ConfigureAwait(false);
         }
     }
 }

@@ -124,6 +124,7 @@
     <Compile Include="Converters\MessageTypeToBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
     <Compile Include="Converters\PartOfSpeechToVisibilityConverter.cs" />
+    <Compile Include="Converters\PriorityWordViewModelToBooleanConverter.cs" />
     <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
@@ -272,6 +273,10 @@
     <Page Include="Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DesignTimeResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

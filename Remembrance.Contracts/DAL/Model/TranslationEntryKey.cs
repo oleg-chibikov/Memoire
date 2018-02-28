@@ -1,8 +1,11 @@
 using System;
 using JetBrains.Annotations;
 
+// ReSharper disable NotNullMemberIsNotInitialized
+// ReSharper disable NonReadonlyMemberInGetHashCode
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
         [UsedImplicitly]
@@ -26,28 +29,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public string Text { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
-        }
-
-        #region Equality
-
-        public bool Equals(TranslationEntryKey other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
-        }
-
         public static bool operator ==([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
         {
             if (ReferenceEquals(obj1, obj2))
@@ -62,6 +43,21 @@ namespace Remembrance.Contracts.DAL.Model
         public static bool operator !=([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public bool Equals(TranslationEntryKey other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
         public override bool Equals(object obj)
@@ -80,6 +76,9 @@ namespace Remembrance.Contracts.DAL.Model
             }
         }
 
-        #endregion
+        public override string ToString()
+        {
+            return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
+        }
     }
 }

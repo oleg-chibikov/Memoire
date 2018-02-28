@@ -12,6 +12,7 @@ namespace Remembrance.Contracts.Processing
     public interface ITranslationEntryProcessor
     {
         [ItemNotNull]
+        [NotNull]
         Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
             [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
@@ -19,21 +20,22 @@ namespace Remembrance.Contracts.Processing
             bool needPostProcess = true,
             [CanBeNull] ICollection<ManualTranslation> manualTranslations = null);
 
+        void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
+
         [ItemNotNull]
+        [NotNull]
         Task<string> GetDefaultTargetLanguageAsync([NotNull] string sourceLanguage, CancellationToken cancellationToken);
 
         [ItemNotNull]
+        [NotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
             [CanBeNull] ICollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken,
             [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
 
-        void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
-
         [ItemNotNull]
+        [NotNull]
         Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken);
-
-        //TODO: remove notnull on tasks everywhere (leave only itemnotnull)
     }
 }

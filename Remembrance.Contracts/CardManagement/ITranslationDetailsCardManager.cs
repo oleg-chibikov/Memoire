@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using Remembrance.Contracts.DAL.Model;
+using JetBrains.Annotations;
+using Remembrance.Contracts.Processing.Data;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Contracts.CardManagement

@@ -59,6 +59,16 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs> Progress;
 
+        public void Dispose()
+        {
+            foreach (var importer in _importers)
+            {
+                importer.Progress -= ImporterExporter_Progress;
+            }
+
+            _exporter.Progress -= ImporterExporter_Progress;
+        }
+
         public async Task ExportAsync(CancellationToken cancellationToken)
         {
             var fileName = ShowSaveFileDialog();
@@ -136,33 +146,6 @@ namespace Remembrance.Core.Exchange
             }
         }
 
-        public void Dispose()
-        {
-            foreach (var importer in _importers)
-            {
-                importer.Progress -= ImporterExporter_Progress;
-            }
-
-            _exporter.Progress -= ImporterExporter_Progress;
-        }
-
-        [CanBeNull]
-        private string ShowOpenFileDialog()
-        {
-            return _openFileDialog.ShowDialog() == true
-                ? _openFileDialog.FileName
-                : null;
-        }
-
-        [CanBeNull]
-        private string ShowSaveFileDialog()
-        {
-            _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
-            return _saveFileDialog.ShowDialog() == true
-                ? _saveFileDialog.FileName
-                : null;
-        }
-
         private void ImporterExporter_Progress(object sender, ProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
@@ -171,6 +154,19 @@ namespace Remembrance.Core.Exchange
         private void OnProgress(int current, int total)
         {
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
+        }
+
+        [CanBeNull]
+        private string ShowOpenFileDialog()
+        {
+            return _openFileDialog.ShowDialog() == true ? _openFileDialog.FileName : null;
+        }
+
+        [CanBeNull]
+        private string ShowSaveFileDialog()
+        {
+            _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
+            return _saveFileDialog.ShowDialog() == true ? _saveFileDialog.FileName : null;
         }
     }
 }

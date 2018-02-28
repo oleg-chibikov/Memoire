@@ -72,6 +72,7 @@ namespace Remembrance.Core.Translation.Yandex
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
         
+        [NotNull]
         public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui)
         {
             var dictionaryTask = GetDictionaryResultAsync(from, to, text, ui);
@@ -106,7 +107,8 @@ namespace Remembrance.Core.Translation.Yandex
             public string[] Texts { get; set; }
         }
 
-        [NotNull, ItemCanBeNull]
+        [ItemCanBeNull]
+        [NotNull]
         private async Task<string> GetTranslateResultAsync(string from, string to, string text)
         {
             var uriPart = $"translate?key={YandexConstants.ApiKey}&lang={from}-{to}&text={text}";

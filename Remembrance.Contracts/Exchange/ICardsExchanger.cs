@@ -8,12 +8,12 @@ namespace Remembrance.Contracts.Exchange
 {
     public interface ICardsExchanger
     {
+        event EventHandler<ProgressEventArgs> Progress;
+
         [NotNull]
         Task ExportAsync(CancellationToken cancellationToken);
 
         [NotNull]
         Task ImportAsync(CancellationToken cancellationToken);
-
-        event EventHandler<ProgressEventArgs> Progress;
     }
 }

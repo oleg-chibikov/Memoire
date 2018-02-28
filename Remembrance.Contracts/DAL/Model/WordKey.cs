@@ -1,8 +1,11 @@
 using System;
 using JetBrains.Annotations;
 
+// ReSharper disable NotNullMemberIsNotInitialized
+// ReSharper disable NonReadonlyMemberInGetHashCode
 namespace Remembrance.Contracts.DAL.Model
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class WordKey : IEquatable<WordKey>
     {
         [UsedImplicitly]
@@ -22,28 +25,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public BaseWord Word { get; set; }
 
-        public override string ToString()
-        {
-            return $"{TranslationEntryKey} - {Word}";
-        }
-
-        #region Equality
-
-        public bool Equals(WordKey other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
-        }
-
         public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
         {
             if (ReferenceEquals(obj1, obj2))
@@ -58,6 +39,21 @@ namespace Remembrance.Contracts.DAL.Model
         public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public bool Equals(WordKey other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
         }
 
         public override bool Equals(object obj)
@@ -75,6 +71,9 @@ namespace Remembrance.Contracts.DAL.Model
             }
         }
 
-        #endregion
+        public override string ToString()
+        {
+            return $"{TranslationEntryKey} - {Word}";
+        }
     }
 }

@@ -19,7 +19,8 @@
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=settings:EditManualTranslationsViewModel}">
     <UserControl.Resources>
-        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <view:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </UserControl.Resources>
     <Grid
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -37,6 +38,7 @@
             Grid.Column="0"
             Text="{lex:Loc AddTranslation}" />
 
+        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <controls:CompletableTextBox
             Grid.Column="1"
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"

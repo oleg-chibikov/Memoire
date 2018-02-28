@@ -9,7 +9,7 @@ using Remembrance.Contracts.Translate;
 namespace Remembrance.View.Various
 {
     [UsedImplicitly]
-    public sealed class SuggestionProvider : IAutoCompleteDataProvider
+    internal sealed class SuggestionProvider : IAutoCompleteDataProvider
     {
         [NotNull]
         private readonly IPredictor _predictor;
@@ -20,6 +20,7 @@ namespace Remembrance.View.Various
         }
 
         [ItemCanBeNull]
+        [NotNull]
         public async Task<IEnumerable<object>> GetItemsAsync([NotNull] string textPattern, CancellationToken cancellationToken)
         {
             if (textPattern == null)
@@ -28,9 +29,7 @@ namespace Remembrance.View.Various
             }
 
             var variants = await _predictor.PredictAsync(textPattern, 5, cancellationToken).ConfigureAwait(false);
-            return variants?.Position < 0
-                ? variants.PredictionVariants
-                : null;
+            return variants?.Position < 0 ? variants.PredictionVariants : null;
         }
     }
 }

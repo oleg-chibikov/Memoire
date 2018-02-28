@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.Translate.Data.LanguageDetector
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class DetectionResult
     {
         [CanBeNull]

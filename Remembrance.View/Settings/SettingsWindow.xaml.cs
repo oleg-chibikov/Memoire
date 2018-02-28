@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using JetBrains.Annotations;
 using Remembrance.Contracts.View.Settings;
@@ -6,6 +6,9 @@ using Remembrance.ViewModel.Settings;
 
 namespace Remembrance.View.Settings
 {
+    /// <summary>
+    /// The settings window.
+    /// </summary>
     [UsedImplicitly]
     internal sealed partial class SettingsWindow : ISettingsWindow
     {

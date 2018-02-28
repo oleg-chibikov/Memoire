@@ -12,9 +12,7 @@ namespace Remembrance.View.Converters
     {
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            return !(value is RepeatType status)
-                ? null
-                : Convert(status);
+            return !(value is RepeatType status) ? null : Convert(status);
         }
 
         public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)

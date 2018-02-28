@@ -12,11 +12,11 @@ namespace Remembrance.Contracts.Exchange.Data
             Count = count;
         }
 
-        public bool Success { get; }
+        public int Count { get; }
 
         [CanBeNull]
         public ICollection<string> Errors { get; }
 
-        public int Count { get; }
+        public bool Success { get; }
     }
 }

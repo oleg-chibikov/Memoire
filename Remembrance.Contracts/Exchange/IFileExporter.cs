@@ -9,9 +9,10 @@ namespace Remembrance.Contracts.Exchange
 {
     public interface IFileExporter
     {
-        [ItemNotNull]
-        Task<ExchangeResult> ExportAsync([NotNull] string fileName, CancellationToken cancellationToken);
-
         event EventHandler<ProgressEventArgs> Progress;
+
+        [ItemNotNull]
+        [NotNull]
+        Task<ExchangeResult> ExportAsync([NotNull] string fileName, CancellationToken cancellationToken);
     }
 }
