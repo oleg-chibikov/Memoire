@@ -94,15 +94,13 @@
                                                     <view:WordControl
                                                         DataContext="{Binding Mode=OneTime}" />
                                                     <view:WordsControl
-                                                        ItemsSource="{Binding Synonyms, Mode=OneTime}"
-                                                        MaxWidth="{StaticResource WordsWidth}" />
+                                                        ItemsSource="{Binding Synonyms, Mode=OneTime}" />
                                                 </StackPanel>
                                                 <view:WordsControl
                                                     Foreground="IndianRed"
                                                     HorizontalAlignment="Left"
                                                     FontSize="{StaticResource SmallFontSize}"
-                                                    ItemsSource="{Binding Meanings, Mode=OneTime}"
-                                                    MaxWidth="{StaticResource WordsWidth}" />
+                                                    ItemsSource="{Binding Meanings, Mode=OneTime}" />
                                                 <ItemsControl
                                                     ItemsSource="{Binding Examples, Mode=OneTime}"
                                                     Visibility="{Binding Examples, Mode=OneTime, Converter={StaticResource CollectionToVisibilityConverter}}">

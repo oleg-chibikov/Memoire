@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -47,7 +46,7 @@ namespace Remembrance.ViewModel.Card
         private readonly TranslationEntry _translationEntry;
 
         public TranslationDetailsCardViewModel(
-            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
             [NotNull] TranslationInfo translationInfo,
             [NotNull] ILog logger,
             [NotNull] IMessageHub messageHub,
@@ -55,15 +54,19 @@ namespace Remembrance.ViewModel.Card
             [NotNull] IPredictor predictor,
             [NotNull] ILearningInfoRepository learningInfoRepository)
         {
-            if (lifetimeScope == null)
+            if (translationDetailsViewModelFactory == null)
             {
-                throw new ArgumentNullException(nameof(lifetimeScope));
+                throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             }
 
             if (translationInfo == null)
             {
                 throw new ArgumentNullException(nameof(translationInfo));
             }
+
+            var translationDetails = translationDetailsViewModelFactory(translationInfo);
+
+            TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
 
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
@@ -73,7 +76,6 @@ namespace Remembrance.ViewModel.Card
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            TranslationDetails = lifetimeScope.Resolve<TranslationDetailsViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
             _translationEntry = translationInfo.TranslationEntry;
             IsFavorited = translationInfo.LearningInfo.IsFavorited;
             Word = translationInfo.TranslationEntryKey.Text;
@@ -107,6 +109,8 @@ namespace Remembrance.ViewModel.Card
             {
                 _messageHub.UnSubscribe(subscriptionToken);
             }
+
+            _subscriptionTokens.Clear();
         }
 
         private void Favorite()

@@ -55,10 +55,9 @@ namespace Remembrance.Core.Translation.Yandex
             }
 
             _logger.TraceFormat("Starting speaking {0}...", text);
-            var settings = _settingsRepository.Get();
             var reset = new AutoResetEvent(false);
             var uriPart =
-                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={settings.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={settings.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={_settingsRepository.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={_settingsRepository.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
             try
             {
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);

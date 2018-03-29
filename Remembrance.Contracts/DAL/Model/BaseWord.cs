@@ -73,7 +73,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{Text} ({PartOfSpeech}))";
+            return $"{Text} ({PartOfSpeech})";
         }
     }
 }

@@ -126,11 +126,8 @@
   <data name="TimeToShow" xml:space="preserve">
     <value>До следующего показа осталось</value>
   </data>
-  <data name="PausedTime" xml:space="preserve">
-    <value>Время на паузе</value>
-  </data>
-  <data name="PausedAt" xml:space="preserve">
-    <value>Поставлено на паузу</value>
+  <data name="CardVisiblePauseTime" xml:space="preserve">
+    <value>Карточка была видима в течение</value>
   </data>
   <data name="Favorite" xml:space="preserve">
     <value>Добавить в избранное</value>
@@ -300,15 +297,6 @@
   <data name="OpenSharedFolder" xml:space="preserve">
     <value>Открыть общую папку</value>
   </data>
-  <data name="AssessmentFailureCloseTimeout" xml:space="preserve">
-    <value>Время показа провала</value>
-  </data>
-  <data name="AssessmentSuccessCloseTimeout" xml:space="preserve">
-    <value>Время показа успеха</value>
-  </data>
-  <data name="TranslationCloseTimeout" xml:space="preserve">
-    <value>Время показа перевода</value>
-  </data>
   <data name="WithCustomTranslation" xml:space="preserve">
     <value>с особым перводом</value>
   </data>
@@ -323,5 +311,41 @@
   </data>
   <data name="AreYouSureDelete" xml:space="preserve">
     <value>Вы уверены, что хотите удалить перевод {0}?</value>
+  </data>
+  <data name="PauseReasonActiveProcessBlacklisted" xml:space="preserve">
+    <value>Процесс из черного списка активен</value>
+  </data>
+  <data name="PauseReasonCardIsVisible" xml:space="preserve">
+    <value>Карточка показывается в настоящее время</value>
+  </data>
+  <data name="PauseReasonInactiveMode" xml:space="preserve">
+    <value>Неактивный режим</value>
+  </data>
+  <data name="PauseReasonOperationInProgress" xml:space="preserve">
+    <value>Выполнение длительной операции</value>
+  </data>
+  <data name="AddProcessToBlacklist" xml:space="preserve">
+    <value>Добавить процесс в чёрный список</value>
+  </data>
+  <data name="ShowActiveProcesses" xml:space="preserve">
+    <value>Показать список активных процессов</value>
+  </data>
+  <data name="ProcessesBlacklist" xml:space="preserve">
+    <value>Останавливать для процессов</value>
+  </data>
+  <data name="Process" xml:space="preserve">
+    <value>Процесс</value>
+  </data>
+  <data name="ProcessFilePath" xml:space="preserve">
+    <value>Путь к файлу</value>
+  </data>
+  <data name="ProcessIcon" xml:space="preserve">
+    <value>Иконка</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Фильтр</value>
+  </data>
+  <data name="ClearFilter" xml:space="preserve">
+    <value>Очистить фильтр</value>
   </data>
 </root>

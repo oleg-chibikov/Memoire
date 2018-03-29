@@ -92,7 +92,7 @@
                 <TextBlock
                     Text="{Binding Count, Mode=OneWay}" />
                 <view:AddTranslationControl
-                    Width="800"
+                    Width="900"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"

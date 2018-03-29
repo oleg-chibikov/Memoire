@@ -1,5 +1,4 @@
 using System;
-using Autofac;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
@@ -14,11 +13,12 @@ namespace Remembrance.ViewModel.Translation
     {
         private readonly TranslationEntryKey _translationEntryKey;
 
-        public TranslationDetailsViewModel([NotNull] ILifetimeScope lifetimeScope, [NotNull] TranslationInfo translationInfo)
+        public TranslationDetailsViewModel(
+            [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory, [NotNull] TranslationInfo translationInfo)
         {
-            if (lifetimeScope == null)
+            if (translationResultViewModelFactory == null)
             {
-                throw new ArgumentNullException(nameof(lifetimeScope));
+                throw new ArgumentNullException(nameof(translationResultViewModelFactory));
             }
 
             if (translationInfo == null)
@@ -27,9 +27,7 @@ namespace Remembrance.ViewModel.Translation
             }
 
             _translationEntryKey = translationInfo.TranslationEntryKey;
-            TranslationResult = lifetimeScope.Resolve<TranslationResultViewModel>(
-                new TypedParameter(typeof(TranslationResult), translationInfo.TranslationDetails.TranslationResult),
-                new TypedParameter(typeof(TranslationEntry), translationInfo.TranslationEntry));
+            TranslationResult = translationResultViewModelFactory(translationInfo.TranslationDetails.TranslationResult, translationInfo.TranslationEntry);
         }
 
         [NotNull]

@@ -8,7 +8,7 @@ using Remembrance.ViewModel.Translation;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(WordViewModel), typeof(Visibility))]
-    public sealed class PriorityWordViewModelToVisibilityConverter : IValueConverter
+    internal sealed class PriorityWordViewModelToVisibilityConverter : IValueConverter
     {
         [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

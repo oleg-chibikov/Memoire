@@ -159,7 +159,7 @@
   <data name="DefaultError" xml:space="preserve">
     <value>Простите, что-то пошло не так.</value>
   </data>
-  <data name="NoTranslations" xml:space="preserve">
+  <data name="NoAssessmentTranslations" xml:space="preserve">
     <value>Переводы для слова не найдены.</value>
   </data>
   <data name="WordIsMissing" xml:space="preserve">
@@ -176,5 +176,8 @@
   </data>
   <data name="CannotListLanguages" xml:space="preserve">
     <value>Не получилось получить список языков.</value>
+  </data>
+  <data name="NoTranslations" xml:space="preserve">
+    <value>Не найдено ни одного перевода для слова '{0}'.</value>
   </data>
 </root>

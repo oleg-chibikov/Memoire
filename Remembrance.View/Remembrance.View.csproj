@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
@@ -40,8 +43,8 @@
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.1.953, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.4.0.1044, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.2.4.0.1044\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
@@ -55,17 +58,20 @@
     <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.6611.32789, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.6611.32789\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.6662.31587, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.6662.31587\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid">
       <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.5\lib\net462\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6617.27638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6617.27638\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6662.25183, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6662.25183\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View, Version=1.0.6611.32227, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.1.0.6611.32227\lib\net47\Scar.Common.WPF.View.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View, Version=1.0.6647.22152, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.1.0.6647.22152\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6620.19599, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.6620.19599\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
@@ -73,26 +79,22 @@
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6642.31884, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6642.31884\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.2\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFLocalizeExtension.3.1.0\lib\net35\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\packages\WPFLocalizeExtension.3.1.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XAMLMarkupExtensions.1.3.0\lib\net40\XAMLMarkupExtensions.dll</HintPath>
@@ -128,6 +130,22 @@
     <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
+    <Compile Include="Settings\Processes\ActiveProcessesDialog.xaml.cs">
+      <DependentUpon>ActiveProcessesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Processes\ProcessesBlacklistControl.xaml.cs">
+      <DependentUpon>ProcessesBlacklistControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Processes\AddProcessToBlacklistControl.xaml.cs">
+      <DependentUpon>AddProcessToBlacklistControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowCreators\AddTranslationWindowCreator.cs" />
+    <Compile Include="WindowCreators\AssessmentTextInputCardWindowCreator.cs" />
+    <Compile Include="WindowCreators\AssessmentViewOnlyCardWindowCreator.cs" />
+    <Compile Include="WindowCreators\DictionaryWindowCreator.cs" />
+    <Compile Include="WindowCreators\SettingsWindowCreator.cs" />
+    <Compile Include="WindowCreators\SplashScreenWindowCreator.cs" />
+    <Compile Include="WindowCreators\TranslationDetailsCardWindowCreator.cs" />
     <Compile Include="Various\FavoriteButton.xaml.cs">
       <DependentUpon>FavoriteButton.xaml</DependentUpon>
     </Compile>
@@ -214,7 +232,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Spinner.xaml">
+    <Page Include="Settings\Processes\ActiveProcessesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Processes\ProcessesBlacklistControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Processes\AddProcessToBlacklistControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -266,10 +292,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Slider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -298,13 +320,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Resource Include="Champagne &amp; Limousines.ttf" />
     <None Include="packages.config" />
-    <Resource Include="Web Serveroff.ttf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WordMetadata.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>WordMetadata.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WordMetadata.ru-RU.resx">
       <DependentUpon>WordMetadata.resx</DependentUpon>

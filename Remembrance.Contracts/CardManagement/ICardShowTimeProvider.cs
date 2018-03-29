@@ -7,16 +7,10 @@ namespace Remembrance.Contracts.CardManagement
     {
         TimeSpan CardShowFrequency { get; }
 
-        bool IsPaused { get; }
-
         [CanBeNull]
         DateTime? LastCardShowTime { get; }
 
-        DateTime LastPausedTime { get; }
-
         DateTime NextCardShowTime { get; }
-
-        TimeSpan PausedTime { get; }
 
         TimeSpan TimeLeftToShowCard { get; }
     }

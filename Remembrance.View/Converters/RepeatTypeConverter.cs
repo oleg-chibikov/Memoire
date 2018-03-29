@@ -8,7 +8,7 @@ using Scar.Common;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(RepeatType), typeof(string))]
-    public sealed class RepeatTypeConverter : IValueConverter
+    internal sealed class RepeatTypeConverter : IValueConverter
     {
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {

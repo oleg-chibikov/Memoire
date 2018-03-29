@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -18,7 +17,7 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
-using Remembrance.ViewModel.Card;
+using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
@@ -29,13 +28,19 @@ namespace Remembrance.Core.CardManagement
         private readonly DateTime _initTime;
 
         [NotNull]
+        private readonly IPauseManager _pauseManager;
+
+        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
+
+        [NotNull]
+        private readonly object _lockObject = new object();
 
         [NotNull]
         private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly IScopedWindowProvider _scopedWindowProvider;
 
         [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
@@ -51,106 +56,80 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         private IDisposable _interval;
 
-        private TimeSpan _pausedTime;
-
         public AssessmentCardManager(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] IMessageHub messageHub,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ISettingsRepository settingsRepository,
             [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
-            : base(lifetimeScope, localSettingsRepository, logger, synchronizationContext)
+            [NotNull] ILearningInfoRepository learningInfoRepository,
+            [NotNull] IScopedWindowProvider scopedWindowProvider,
+            [NotNull] IPauseManager pauseManager)
+            : base(localSettingsRepository, logger, synchronizationContext)
         {
+            logger.Trace("Starting showing cards...");
             if (settingsRepository == null)
             {
                 throw new ArgumentNullException(nameof(settingsRepository));
             }
 
-            logger.Trace("Starting showing cards...");
-
             // just to assign the field in the costructor
             _interval = Disposable.Empty;
+            _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
+            _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _initTime = DateTime.Now;
-            var localSettings = localSettingsRepository.Get();
-            var settings = settingsRepository.Get();
-            IsPaused = !localSettings.IsActive;
-            CardShowFrequency = settings.CardShowFrequency;
-            LastCardShowTime = localSettings.LastCardShowTime;
-            _pausedTime = localSettings.PausedTime;
-            if (!IsPaused)
+            CardShowFrequency = settingsRepository.CardShowFrequency;
+            LastCardShowTime = localSettingsRepository.LastCardShowTime;
+            if (!_pauseManager.IsPaused)
             {
-                // no await here
-                // ReSharper disable once AssignmentIsFullyDiscarded
-                _ = CreateIntervalAsync();
-            }
-            else
-            {
-                LastPausedTime = DateTime.Now;
+                CreateInterval();
             }
 
-            _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(OnCardShowFrequencyChangedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<IntervalModificator>(OnIntervalModifiedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(OnCardShowFrequencyChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
             logger.Debug("Started showing cards");
         }
 
         public TimeSpan CardShowFrequency { get; private set; }
 
-        public bool IsPaused { get; private set; }
-
         public DateTime? LastCardShowTime { get; private set; }
 
-        public DateTime LastPausedTime { get; private set; } = DateTime.MinValue;
-
         public DateTime NextCardShowTime => DateTime.Now + TimeLeftToShowCard;
-
-        public TimeSpan PausedTime
-        {
-            get
-            {
-                if (!IsPaused)
-                {
-                    return _pausedTime;
-                }
-
-                return _pausedTime + (DateTime.Now - LastPausedTime);
-            }
-        }
 
         public TimeSpan TimeLeftToShowCard
         {
             get
             {
-                var requiredInterval = CardShowFrequency + PausedTime;
+                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
                 var alreadyPassedTime = DateTime.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
         }
 
-        public async void Dispose()
+        public void Dispose()
         {
             foreach (var subscriptionToken in _subscriptionTokens)
             {
                 _messageHub.UnSubscribe(subscriptionToken);
             }
 
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-            _interval.Dispose();
-            _semaphore.Release();
+            _subscriptionTokens.Clear();
 
-            RecordPausedTime();
+            lock (_lockObject)
+            {
+                _interval.Dispose();
+            }
 
             Logger.Debug("Finished showing cards");
         }
 
-        protected override IWindow TryCreateWindow(TranslationInfo translationInfo, IWindow ownerWindow)
+        protected override async Task<IWindow> TryCreateWindowAsync(TranslationInfo translationInfo, IWindow ownerWindow)
         {
             if (_hasOpenWindows)
             {
@@ -165,16 +144,14 @@ namespace Remembrance.Core.CardManagement
             _learningInfoRepository.Update(learningInfo);
             _messageHub.Publish(learningInfo);
             IWindow window;
-
-            var nestedLifeTimeScope = LifetimeScope.BeginLifetimeScope();
             switch (learningInfo.RepeatType)
             {
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
                 {
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentViewOnlyCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentViewOnlyCardWindow>(new TypedParameter(typeof(AssessmentViewOnlyCardViewModel), assessmentViewModel), new TypedParameter(typeof(Window), ownerWindow));
+                    // ReSharper disable once StyleCop.SA1009
+                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
                     break;
                 }
 
@@ -183,22 +160,17 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.UpperIntermediate:
                 {
                     // TODO: Dropdown
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
-                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
-                        new TypedParameter(typeof(Window), ownerWindow));
+                    // ReSharper disable once StyleCop.SA1009
+                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
                     break;
                 }
 
                 case RepeatType.Advanced:
                 case RepeatType.Proficiency:
-                // TODO: Reverse and random trans for high levels
                 case RepeatType.Expert:
                 {
-                    var assessmentViewModel = nestedLifeTimeScope.Resolve<AssessmentTextInputCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-                    window = nestedLifeTimeScope.Resolve<IAssessmentTextInputCardWindow>(
-                        new TypedParameter(typeof(AssessmentTextInputCardViewModel), assessmentViewModel),
-                        new TypedParameter(typeof(Window), ownerWindow));
+                    // ReSharper disable once StyleCop.SA1009
+                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
                     break;
                 }
 
@@ -207,121 +179,86 @@ namespace Remembrance.Core.CardManagement
             }
 
             window.Closed += Window_Closed;
-            window.AssociateDisposable(nestedLifeTimeScope);
             _hasOpenWindows = true;
             return window;
         }
 
-        [NotNull]
-        private async Task CreateIntervalAsync()
+        private void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
             Logger.DebugFormat("Next card will be shown in: {0} (frequency is {1})", delay, CardShowFrequency);
 
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-            _interval.Dispose();
-            _interval = Observable.Timer(delay, CardShowFrequency)
-                .Subscribe(
-                    async x =>
-                    {
-                        Logger.Trace("Trying to show next card...");
-                        Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                        var settings = LocalSettingsRepository.Get();
-                        settings.PausedTime = _pausedTime = TimeSpan.Zero;
-
-                        if (!settings.IsActive)
-                        {
-                            Logger.Debug("Skipped showing card due to inactivity");
-                            LocalSettingsRepository.UpdateOrInsert(settings);
-                            return;
-                        }
-
-                        settings.LastCardShowTime = LastCardShowTime = DateTime.Now;
-                        LocalSettingsRepository.UpdateOrInsert(settings);
-                        var mostSuitableLearningInfo = _learningInfoRepository.GetMostSuitable();
-                        if (mostSuitableLearningInfo == null)
-                        {
-                            Logger.Debug("Skipped showing card due to absence of suitable cards");
-                            return;
-                        }
-
-                        var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
-
-                        var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
-                                                     .ConfigureAwait(false);
-                        var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
-                        Logger.TraceFormat("Trying to show {0}...", translationInfo);
-                        ShowCard(translationInfo, null);
-                    });
-            _semaphore.Release();
-        }
-
-        private async void OnCardShowFrequencyChangedAsync(TimeSpan newCardShowFrequency)
-        {
-            await Task.Run(
-                    async () =>
-                    {
-                        CardShowFrequency = newCardShowFrequency;
-                        if (!IsPaused)
-                        {
-                            Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
-                            await CreateIntervalAsync().ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
-                        }
-                    },
-                    CancellationToken.None)
-                .ConfigureAwait(false);
-        }
-
-        private async void OnIntervalModifiedAsync(IntervalModificator intervalModificator)
-        {
-            Logger.TraceFormat("Modifying interval: {0}...", intervalModificator.ToString());
-            await Task.Run(
-                    async () =>
-                    {
-                        switch (intervalModificator)
-                        {
-                            case IntervalModificator.Pause:
-                                if (!IsPaused)
-                                {
-                                    await _semaphore.WaitAsync().ConfigureAwait(false);
-                                    _interval.Dispose();
-                                    _semaphore.Release();
-
-                                    IsPaused = true;
-                                    LastPausedTime = DateTime.Now;
-                                }
-
-                                break;
-                            case IntervalModificator.Resume:
-                                if (IsPaused)
-                                {
-                                    RecordPausedTime();
-                                    await CreateIntervalAsync().ConfigureAwait(false);
-                                }
-
-                                break;
-                        }
-                    },
-                    CancellationToken.None)
-                .ConfigureAwait(false);
-        }
-
-        private void RecordPausedTime()
-        {
-            if (!IsPaused)
+            lock (_lockObject)
             {
+                _interval.Dispose();
+                _interval = ProvideInterval(delay);
+            }
+        }
+
+        private IDisposable ProvideInterval(TimeSpan delay)
+        {
+            return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);
+        }
+
+        private async void OnIntervalHit(long x)
+        {
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            Logger.Trace("Trying to show next card...");
+
+            if (!LocalSettingsRepository.IsActive)
+            {
+                Logger.Debug("Skipped showing card due to inactivity");
                 return;
             }
 
-            IsPaused = false;
-            var settings = LocalSettingsRepository.Get();
-            settings.PausedTime = _pausedTime += DateTime.Now - LastPausedTime;
-            Logger.DebugFormat("Paused time is {0}...", PausedTime);
-            LocalSettingsRepository.UpdateOrInsert(settings);
+            _pauseManager.ResetPauseTimes();
+
+            LocalSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
+            var mostSuitableLearningInfo = _learningInfoRepository.GetMostSuitable();
+            if (mostSuitableLearningInfo == null)
+            {
+                Logger.Debug("Skipped showing card due to absence of suitable cards");
+                return;
+            }
+
+            var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
+
+            var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
+            Logger.TraceFormat("Trying to show {0}...", translationInfo);
+            await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
+        }
+
+        private void OnCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
+        {
+            CardShowFrequency = newCardShowFrequency;
+            if (!_pauseManager.IsPaused)
+            {
+                Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
+                lock (_lockObject)
+                {
+                    CreateInterval();
+                }
+            }
+            else
+            {
+                Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
+            }
+        }
+
+        private void OnPauseReasonChanged(PauseReason pauseReason)
+        {
+            if (_pauseManager.IsPaused)
+            {
+                lock (_lockObject)
+                {
+                    _interval.Dispose();
+                }
+            }
+            else
+            {
+                CreateInterval();
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)

@@ -4,10 +4,11 @@ using Autofac;
 using Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using JetBrains.Annotations;
 using Microsoft.Win32;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
@@ -59,19 +60,24 @@ namespace Remembrance
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = ResolveInSeparateTaskAsync<IAssessmentCardManager>();
+
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
         }
 
         protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(WindowFactory<>)).AsSelf().SingleInstance();
+            builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterType<INamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<IAutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
             RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
             RegisterNamed<LearningInfoRepository, ILearningInfoRepository>(builder);
             RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
             RegisterNamed<TranslationEntryDeletionRepository, ITranslationEntryDeletionRepository>(builder);
 
-            builder.RegisterType(typeof(RepositorySynhronizer<Settings, int, ISettingsRepository>)).SingleInstance().AsImplementedInterfaces();
+            builder.RegisterType(typeof(RepositorySynhronizer<Settings, string, ISettingsRepository>)).SingleInstance().AsImplementedInterfaces();
             builder.RegisterType(typeof(RepositorySynhronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository>)).SingleInstance().AsImplementedInterfaces();
             builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).SingleInstance().AsImplementedInterfaces();
             builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository>)).SingleInstance().AsImplementedInterfaces();

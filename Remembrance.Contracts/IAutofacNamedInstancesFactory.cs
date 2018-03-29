@@ -1,9 +1,9 @@
 using Autofac.Core;
 using JetBrains.Annotations;
 
-namespace Remembrance.Contracts.DAL
+namespace Remembrance.Contracts
 {
-    public interface INamedInstancesFactory
+    public interface IAutofacNamedInstancesFactory
     {
         [NotNull]
         T GetInstance<T>(params Parameter[] parameters);

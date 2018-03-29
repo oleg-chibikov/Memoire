@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using Remembrance.ViewModel.Translation;
@@ -6,7 +6,7 @@ using Remembrance.ViewModel.Translation;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(WordViewModel), typeof(bool))]
-    public sealed class PriorityWordViewModelToBooleanConverter : IValueConverter
+    internal sealed class PriorityWordViewModelToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

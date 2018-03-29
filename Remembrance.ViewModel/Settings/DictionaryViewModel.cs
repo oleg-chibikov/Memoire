@@ -7,11 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -26,7 +24,6 @@ using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
-using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Translation;
 using Scar.Common.DAL;
 using Scar.Common.WPF.Commands;
@@ -40,20 +37,19 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
-        // TODO: config
-        private const int PageSize = 15;
+        private readonly IScopedWindowProvider _scopedWindowProvider;
 
         [NotNull]
         private readonly IDialogService _dialogService;
 
         [NotNull]
-        private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+        private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+
+        [NotNull]
+        private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
 
         [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
-
-        [NotNull]
-        private readonly ILifetimeScope _lifetimeScope;
 
         [NotNull]
         private readonly IMessageHub _messageHub;
@@ -76,6 +72,9 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly ObservableCollection<TranslationEntryViewModel> _translationList;
 
+        [NotNull]
+        private readonly Func<TranslationEntry, TranslationEntryViewModel> _translationEntryViewModelFactory;
+
         private int _count;
 
         private bool _filterChanged;
@@ -88,23 +87,27 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope,
-            [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] IMessageHub messageHub,
             [NotNull] EditManualTranslationsViewModel editManualTranslationsViewModel,
             [NotNull] IDialogService dialogService,
             [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            [NotNull] ILearningInfoRepository learningInfoRepository,
+            [NotNull] Func<TranslationEntry, TranslationEntryViewModel> translationEntryViewModelFactory,
+            [NotNull] IScopedWindowProvider scopedWindowProvider,
+            [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory)
             : base(localSettingsRepository, languageDetector, translationEntryProcessor, logger)
         {
             EditManualTranslationsViewModel = editManualTranslationsViewModel ?? throw new ArgumentNullException(nameof(editManualTranslationsViewModel));
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
+            _translationEntryViewModelFactory = translationEntryViewModelFactory ?? throw new ArgumentNullException(nameof(translationEntryViewModelFactory));
+            _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
+            _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
 
             FavoriteCommand = new CorrelationCommand<TranslationEntryViewModel>(Favorite);
             DeleteCommand = new AsyncCorrelationCommand<TranslationEntryViewModel>(DeleteAsync);
@@ -177,6 +180,8 @@ namespace Remembrance.ViewModel.Settings
             {
                 _messageHub.UnSubscribe(subscriptionToken);
             }
+
+            _subscriptionTokens.Clear();
         }
 
         protected override async Task<IWindow> GetWindowAsync()
@@ -251,14 +256,14 @@ namespace Remembrance.ViewModel.Settings
             }
 
             Logger.TraceFormat("Receiving translations page {0}...", pageNumber);
-            var translationEntries = _translationEntryRepository.GetPage(pageNumber, PageSize, nameof(TranslationEntry.ModifiedDate), SortOrder.Descending);
+            var translationEntries = _translationEntryRepository.GetPage(pageNumber, AppSettings.DictionaryPageSize, nameof(TranslationEntry.ModifiedDate), SortOrder.Descending);
             if (!translationEntries.Any())
             {
                 return false;
             }
 
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-            var viewModels = translationEntries.Select(translationEntry => _lifetimeScope.Resolve<TranslationEntryViewModel>(new TypedParameter(typeof(TranslationEntry), translationEntry)));
+            var viewModels = translationEntries.Select(_translationEntryViewModelFactory);
             _synchronizationContext.Send(
                 x =>
                 {
@@ -358,7 +363,7 @@ namespace Remembrance.ViewModel.Settings
             else
             {
                 Logger.TraceFormat("Adding {0} to the list...", translationEntry);
-                var translationEntryViewModel = _lifetimeScope.Resolve<TranslationEntryViewModel>(new TypedParameter(typeof(TranslationEntry), translationEntry));
+                var translationEntryViewModel = _translationEntryViewModelFactory(translationEntry);
                 await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
                 _synchronizationContext.Send(
                     x =>
@@ -446,14 +451,9 @@ namespace Remembrance.ViewModel.Settings
             var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationTokenSource.Token).ConfigureAwait(false);
             var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
-            var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
-            var translationDetailsCardViewModel = nestedLifeTimeScope.Resolve<TranslationDetailsCardViewModel>(new TypedParameter(typeof(TranslationInfo), translationInfo));
-            var dictionaryWindow = await nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-            var detailsWindow = nestedLifeTimeScope.Resolve<ITranslationDetailsCardWindow>(
-                new TypedParameter(typeof(Window), dictionaryWindow),
-                new TypedParameter(typeof(TranslationDetailsCardViewModel), translationDetailsCardViewModel));
-            detailsWindow.AssociateDisposable(nestedLifeTimeScope);
-            detailsWindow.Show();
+            var ownerWindow = await _dictionaryWindowFactory.GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+            var window = await _scopedWindowProvider.GetScopedWindowAsync<ITranslationDetailsCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token).ConfigureAwait(false);
+            window.Show();
         }
 
         [NotNull]
@@ -461,12 +461,7 @@ namespace Remembrance.ViewModel.Settings
         {
             Logger.Trace("Opening settings...");
 
-            var nestedLifeTimeScope = _lifetimeScope.BeginLifetimeScope();
-            var dictionaryWindow = await nestedLifeTimeScope.Resolve<WindowFactory<IDictionaryWindow>>().GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-            dictionaryWindow.AssociateDisposable(nestedLifeTimeScope);
-            var dictionaryWindowParameter = new TypedParameter(typeof(Window), dictionaryWindow);
-            var windowFactory = nestedLifeTimeScope.Resolve<WindowFactory<ISettingsWindow>>();
-            await windowFactory.ShowWindowAsync(CancellationTokenSource.Token, dictionaryWindowParameter).ConfigureAwait(false);
+            await _settingsWindowFactory.ShowWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private void Search([CanBeNull] string text)
@@ -479,7 +474,13 @@ namespace Remembrance.ViewModel.Settings
             }
             else
             {
-                View.Filter = o => string.IsNullOrWhiteSpace(text) || ((TranslationEntryViewModel)o).Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0;
+                View.Filter = obj =>
+                {
+                    var translationEntryViewModel = (TranslationEntryViewModel)obj;
+                    return string.IsNullOrWhiteSpace(text)
+                        || translationEntryViewModel.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0
+                        || translationEntryViewModel.Translations.Any(translation => translation.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                };
             }
 
             _filterChanged = true;

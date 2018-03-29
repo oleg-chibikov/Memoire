@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 
 namespace Remembrance.ViewModel.Settings.Data
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class Language
     {
         internal Language([NotNull] string code, [NotNull] string displayName)
@@ -11,10 +12,10 @@ namespace Remembrance.ViewModel.Settings.Data
         }
 
         [NotNull]
-        internal string Code { get; }
+        public string Code { get; }
 
         [NotNull]
-        internal string DisplayName { get; }
+        public string DisplayName { get; }
 
         public override bool Equals(object obj)
         {

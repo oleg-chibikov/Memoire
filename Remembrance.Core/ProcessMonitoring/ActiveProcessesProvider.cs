@@ -1,0 +1,38 @@
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Management;
+using JetBrains.Annotations;
+using Remembrance.Contracts.ProcessMonitoring;
+using Remembrance.Contracts.ProcessMonitoring.Data;
+
+namespace Remembrance.Core.ProcessMonitoring
+{
+    [UsedImplicitly]
+    internal sealed class ActiveProcessesProvider : IActiveProcessesProvider
+    {
+        public ICollection<ProcessInfo> GetActiveProcesses()
+        {
+            const string WmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process";
+            using (var searcher = new ManagementObjectSearcher(WmiQueryString))
+            using (var results = searcher.Get())
+            {
+                var processes = from process in Process.GetProcesses()
+                    join managementObject in results.Cast<ManagementObject>() on process.Id equals (int)(uint)managementObject["ProcessId"]
+                    let filePath = (string)managementObject["ExecutablePath"]
+                    where filePath != null
+                    select new ProcessInfo(process.ProcessName, filePath);
+
+                return processes.GroupBy(
+                        p => new
+                        {
+                            p.Name,
+                            FileName = p.FilePath
+                        })
+                    .Select(g => g.First())
+                    .OrderBy(processInfo => processInfo.Name)
+                    .ToArray();
+            }
+        }
+    }
+}

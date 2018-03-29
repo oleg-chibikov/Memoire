@@ -34,6 +34,7 @@
             Width="200"
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}"
+            ToolTip="{Binding Tooltip, Mode=OneTime}"
             Text="{Binding ProvidedAnswer, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
             DataProvider="{StaticResource SuggestionProvider}">
             <controls:CompletableTextBox.InputBindings>

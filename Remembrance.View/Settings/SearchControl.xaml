@@ -39,6 +39,7 @@
         </controls:CompletableTextBox>
 
         <Button
+            IsDefault="True"
             Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Search}"
             Command="{Binding SearchCommand, Mode=OneTime}"

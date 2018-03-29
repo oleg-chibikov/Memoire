@@ -142,12 +142,15 @@
         <StackPanel
             Grid.Row="2"
             Orientation="Horizontal"
+            HorizontalAlignment="Right"
             view:MarginSetter.Margin="{StaticResource CommonMargin}">
             <Button
+                IsDefault="True"
                 Width="100"
                 Command="{Binding SaveCommand, Mode=OneTime}"
                 Content="{lex:Loc OK}" />
             <Button
+                IsCancel="True"
                 Command="{Binding CancelCommand, Mode=OneTime}"
                 Width="100"
                 Background="OrangeRed"

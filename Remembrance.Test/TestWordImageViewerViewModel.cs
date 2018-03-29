@@ -89,7 +89,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNull(sut.Image);
+            Assert.That(sut.Image, Is.Null);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, FallbackSearchText);
                 Assert.IsTrue(sut.IsReverse);
                 Assert.AreEqual(i, sut.SearchIndex);
-                Assert.IsNotNull(sut.Image);
+                Assert.That(sut.Image, Is.Not.Null);
 
                 // Act
                 Reset();
@@ -121,7 +121,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, DefaultSearchText);
                 Assert.IsFalse(sut.IsReverse);
                 Assert.AreEqual(i, sut.SearchIndex);
-                Assert.IsNotNull(sut.Image);
+                Assert.That(sut.Image, Is.Not.Null);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, DefaultSearchText);
                 Assert.IsFalse(sut.IsReverse);
                 Assert.AreEqual(i, sut.SearchIndex);
-                Assert.IsNotNull(sut.Image);
+                Assert.That(sut.Image, Is.Not.Null);
 
                 // Act
                 Reset();
@@ -154,7 +154,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, FallbackSearchText);
                 Assert.IsTrue(sut.IsReverse);
                 Assert.AreEqual(i, sut.SearchIndex);
-                Assert.IsNotNull(sut.Image);
+                Assert.That(sut.Image, Is.Not.Null);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [Test]
@@ -215,7 +215,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace Remembrance.Test
             VerifyMessage(Times.Once);
             Assert.IsTrue(sut.IsReverse);
             Assert.AreEqual(0, sut.SearchIndex);
-            Assert.IsNull(sut.Image);
+            Assert.That(sut.Image, Is.Null);
         }
 
         [Test]
@@ -300,7 +300,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.IsFalse(sut.IsReverse);
             Assert.AreEqual(2, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [Test]
@@ -331,7 +331,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.IsTrue(sut.IsReverse);
             Assert.AreEqual(2, sut.SearchIndex);
-            Assert.IsNotNull(sut.Image);
+            Assert.That(sut.Image, Is.Not.Null);
         }
 
         [ItemNotNull]

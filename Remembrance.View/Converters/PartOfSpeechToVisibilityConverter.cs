@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Converters;
@@ -6,7 +6,7 @@ using Scar.Common.WPF.Converters;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(Visibility))]
-    public sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>
+    internal sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>
     {
         protected override bool IsVisible(PartOfSpeech? value)
         {

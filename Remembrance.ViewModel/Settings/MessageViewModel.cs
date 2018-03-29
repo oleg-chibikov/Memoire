@@ -2,6 +2,7 @@ using System;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Resources;
 using Scar.Common.Messages;
 
 namespace Remembrance.ViewModel.Settings
@@ -10,9 +11,6 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel
     {
-        // TODO: Configure
-        private static readonly TimeSpan CloseTimeout = TimeSpan.FromSeconds(3);
-
         public MessageViewModel([NotNull] Message message, [NotNull] ILog logger)
         {
             if (logger == null)
@@ -20,9 +18,12 @@ namespace Remembrance.ViewModel.Settings
                 throw new ArgumentNullException(nameof(logger));
             }
 
+            AutoCloseTimeout = AppSettings.MessageCloseTimeout;
             Message = message ?? throw new ArgumentNullException(nameof(message));
-            logger.TraceFormat("Showing message {0} and closing window in {1}...", message, CloseTimeout);
+            logger.TraceFormat("Showing message {0} and closing window in {1}...", message, AutoCloseTimeout);
         }
+
+        public TimeSpan AutoCloseTimeout { get; }
 
         [NotNull]
         public Message Message { get; }

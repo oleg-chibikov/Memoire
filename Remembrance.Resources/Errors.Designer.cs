@@ -196,6 +196,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No translations have been found for the word..
+        /// </summary>
+        public static string NoAssessmentTranslations {
+            get {
+                return ResourceManager.GetString("NoAssessmentTranslations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image cannot be found for the word {0}..
         /// </summary>
         public static string NoMoreImages {
@@ -205,7 +214,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No translations were found for the word..
+        ///   Looks up a localized string similar to No translations have been found for the word &apos;{0}&apos;..
         /// </summary>
         public static string NoTranslations {
             get {

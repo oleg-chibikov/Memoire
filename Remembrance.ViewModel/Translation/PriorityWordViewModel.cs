@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -31,24 +30,28 @@ namespace Remembrance.ViewModel.Translation
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
+        private readonly Func<Word, string, WordViewModel> _wordViewModelFactory;
+
+        [NotNull]
         private readonly WordKey _wordKey;
 
         public PriorityWordViewModel(
             [NotNull] TranslationEntry translationEntry,
             [NotNull] Word word,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] IMessageHub messageHub,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
+            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
             [NotNull] ITranslationEntryRepository translationEntryRepository)
-            : base(word, translationEntry.Id.TargetLanguage, lifetimeScope, textToSpeechPlayer, translationEntryProcessor)
+            : base(word, translationEntry.Id.TargetLanguage, textToSpeechPlayer, translationEntryProcessor)
         {
             if (translationEntry == null)
             {
                 throw new ArgumentNullException(nameof(translationEntry));
             }
 
+            _wordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(this) ?? false;
             _translationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -71,19 +74,16 @@ namespace Remembrance.ViewModel.Translation
 
         internal WordViewModel ConvertToBase()
         {
-            return LifetimeScope.Resolve<WordViewModel>(
-                new TypedParameter(
-                    typeof(Word),
-                    new Word
-                    {
-                        // TODO: Store Word in viewModel?
-                        NounAnimacy = NounAnimacy,
-                        Text = Text,
-                        PartOfSpeech = PartOfSpeech,
-                        NounGender = NounGender,
-                        VerbType = VerbType
-                    }),
-                new TypedParameter(typeof(string), Language));
+            var word = new Word
+            {
+                // TODO: Store Word in viewModel?
+                NounAnimacy = NounAnimacy,
+                Text = Text,
+                PartOfSpeech = PartOfSpeech,
+                NounGender = NounGender,
+                VerbType = VerbType
+            };
+            return _wordViewModelFactory(word, Language);
         }
 
         protected override void TogglePriority()

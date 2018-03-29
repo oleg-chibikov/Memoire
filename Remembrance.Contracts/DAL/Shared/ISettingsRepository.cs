@@ -1,14 +1,22 @@
+using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.ProcessMonitoring.Data;
+using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL.Shared
 {
-    public interface ISettingsRepository : ITrackedRepository<Settings, int>
+    public interface ISettingsRepository : ITrackedRepository<Settings, string>
     {
-        [NotNull]
-        Settings Get();
+        TimeSpan CardShowFrequency { get; set; }
 
-        void UpdateOrInsert([NotNull] Settings settings);
+        [CanBeNull]
+        ICollection<ProcessInfo> BlacklistedProcesses { get; set; }
+
+        Speaker TtsSpeaker { get; set; }
+
+        VoiceEmotion TtsVoiceEmotion { get; set; }
     }
 }

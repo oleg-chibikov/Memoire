@@ -36,10 +36,6 @@
         x:Key="SmallFontSize">
         14
     </system:Double>
-    <system:Double
-        x:Key="WordsWidth">
-        400
-    </system:Double>
 
     <system:String
         x:Key="AdditionalInfoFormat">
@@ -98,7 +94,7 @@
             Value="Center" />
         <Setter
             Property="FontFamily"
-            Value="./#Web Serveroff" />
+            Value="./#Champagne &amp; Limousines" />
 
         <Setter
             Property="FontSize"
@@ -127,7 +123,7 @@
             Value="Center" />
         <Setter
             Property="FontFamily"
-            Value="./#Web Serveroff" />
+            Value="./#Champagne &amp; Limousines" />
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
@@ -141,7 +137,7 @@
         TargetType="xcdg:Cell">
         <Setter
             Property="FontFamily"
-            Value="./#Web Serveroff" />
+            Value="./#Champagne &amp; Limousines" />
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
@@ -193,6 +189,8 @@
         x:Key="PercentageIntToDoubleConverter" />
     <commonConverters:DoubleToTextTimeSpanConverter
         x:Key="DoubleToTextTimeSpanConverter" />
+    <commonConverters:FilePathToIconImageSourceConverter
+        x:Key="FilePathToIconImageSourceConverter" />
     <converters:RepeatTypeConverter
         x:Key="RepeatTypeConverter" />
     <converters:DateTimeToBrushConverter

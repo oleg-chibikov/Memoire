@@ -2,14 +2,17 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
-using Autofac;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
 using Scar.Common;
 using Scar.Common.WPF.Commands;
@@ -25,19 +28,21 @@ namespace Remembrance.ViewModel.Card
 
         public AssessmentTextInputCardViewModel(
             [NotNull] TranslationInfo translationInfo,
-            [NotNull] ISettingsRepository settingsRepository,
             [NotNull] IMessageHub messageHub,
             [NotNull] ILog logger,
-            [NotNull] ILifetimeScope lifetimeScope,
+            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
-            : base(translationInfo, settingsRepository, messageHub, logger, lifetimeScope, synchronizationContext)
+            [NotNull] ILearningInfoRepository learningInfoRepository,
+            [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
+            [NotNull] IPauseManager pauseManager)
+            : base(translationInfo, messageHub, logger, wordViewModelFactory, synchronizationContext, assessmentInfoProvider, pauseManager)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
+            Logger.Trace("Showing text input card...");
+
             ProvideAnswerCommand = new CorrelationCommand(ProvideAnswer);
-            logger.DebugFormat("Card for {0} is initialized", translationInfo);
         }
 
         [CanBeNull]
@@ -49,7 +54,7 @@ namespace Remembrance.ViewModel.Card
         [CanBeNull]
         public string ProvidedAnswer { get; set; }
 
-        private TimeSpan ChangeRepeatType(WordViewModel mostSuitable, int currentMinDistance)
+        private TimeSpan ChangeRepeatType(Word mostSuitable, int currentMinDistance)
         {
             TimeSpan closeTimeout;
             var learningInfo = _learningInfoRepository.GetById(TranslationInfo.TranslationEntryKey);
@@ -60,15 +65,15 @@ namespace Remembrance.ViewModel.Card
                 learningInfo.IncreaseRepeatType();
 
                 // The inputed answer can differ from the first one
-                CorrectAnswer = mostSuitable;
-                closeTimeout = SuccessCloseTimeout;
+                CorrectAnswer = WordViewModelFactory(mostSuitable, TranslationInfo.TranslationEntryKey.TargetLanguage);
+                closeTimeout = AppSettings.AssessmentCardSuccessCloseTimeout;
             }
             else
             {
                 Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
                 Accepted = false;
                 learningInfo.DecreaseRepeatType();
-                closeTimeout = FailureCloseTimeout;
+                closeTimeout = AppSettings.AssessmentCardFailureCloseTimeout;
             }
 
             _learningInfoRepository.Update(learningInfo);

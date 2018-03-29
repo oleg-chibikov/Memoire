@@ -9,7 +9,7 @@ using Scar.Common.WPF.Converters;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(ICollection<TextEntry>), typeof(string))]
-    public sealed class WordConcatConverter : EnumerableConcatConverter
+    internal sealed class WordConcatConverter : EnumerableConcatConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

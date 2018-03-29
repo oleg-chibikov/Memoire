@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,14 +23,21 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class TrayViewModel : IDisposable
     {
+        private const string DateTimeFormat = @"HH\:mm\:ss";
+
+        private const string TimeSpanFormat = @"hh\:mm\:ss";
+
         [NotNull]
-        private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
+        private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         [NotNull]
         private readonly ICardShowTimeProvider _cardShowTimeProvider;
 
         [NotNull]
-        private readonly WindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+        private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+
+        [NotNull]
+        private readonly IPauseManager _pauseManager;
 
         [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
@@ -41,10 +49,13 @@ namespace Remembrance.ViewModel.Settings
         private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly WindowFactory<ISettingsWindow> _settingsWindowFactory;
+        private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
 
         [NotNull]
-        private readonly WindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+        private readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
         private readonly DispatcherTimer _timer;
@@ -54,21 +65,24 @@ namespace Remembrance.ViewModel.Settings
         public TrayViewModel(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
-            [NotNull] WindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
-            [NotNull] WindowFactory<IDictionaryWindow> dictionaryWindowFactory,
-            [NotNull] WindowFactory<ISettingsWindow> settingsWindowFactory,
-            [NotNull] WindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ICardShowTimeProvider cardShowTimeProvider)
+            [NotNull] IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
+            [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory,
+            [NotNull] IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
+            [NotNull] ICardShowTimeProvider cardShowTimeProvider,
+            [NotNull] IPauseManager pauseManager,
+            [NotNull] IMessageHub messageHub)
         {
-            _messageHub = messageHub;
             _cardShowTimeProvider = cardShowTimeProvider ?? throw new ArgumentNullException(nameof(cardShowTimeProvider));
+            _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
             AddTranslationCommand = new AsyncCorrelationCommand(AddTranslationAsync);
             ShowSettingsCommand = new AsyncCorrelationCommand(ShowSettingsAsync);
             ShowDictionaryCommand = new AsyncCorrelationCommand(ShowDictionaryAsync);
@@ -76,7 +90,10 @@ namespace Remembrance.ViewModel.Settings
             ToolTipOpenCommand = new CorrelationCommand(ToolTipOpen);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
             ExitCommand = new CorrelationCommand(Exit);
-            IsActive = localSettingsRepository.Get().IsActive;
+            OpenSharedFolderCommand = new CorrelationCommand(ProcessCommands.OpenSharedFolder);
+            OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
+            ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
+            IsActive = _localSettingsRepository.IsActive;
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -84,6 +101,8 @@ namespace Remembrance.ViewModel.Settings
             _timer.Start();
             SetTimesInfo();
             _timer.Tick += Timer_Tick;
+
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
         }
 
         [NotNull]
@@ -99,17 +118,25 @@ namespace Remembrance.ViewModel.Settings
 
         public bool IsActive { get; private set; }
 
+        public bool IsPaused { get; private set; }
+
         [CanBeNull]
         public string LastCardShowTime { get; private set; }
 
         [NotNull]
         public string NextCardShowTime { get; private set; } = string.Empty;
 
-        [CanBeNull]
-        public string PausedAt { get; private set; }
+        [NotNull]
+        public ICommand OpenSettingsFolderCommand { get; }
+
+        [NotNull]
+        public ICommand OpenSharedFolderCommand { get; }
 
         [CanBeNull]
-        public string PausedTime { get; private set; }
+        public string PauseReasons { get; private set; }
+
+        [CanBeNull]
+        public string CardVisiblePauseTime { get; private set; }
 
         [NotNull]
         public ICommand ShowDictionaryCommand { get; }
@@ -129,8 +156,18 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public ICommand ToolTipOpenCommand { get; }
 
+        [NotNull]
+        public ICommand ViewLogsCommand { get; }
+
         public void Dispose()
         {
+            foreach (var subscriptionToken in _subscriptionTokens)
+            {
+                _messageHub.UnSubscribe(subscriptionToken);
+            }
+
+            _subscriptionTokens.Clear();
+
             _timer.Tick -= Timer_Tick;
             _timer.Stop();
         }
@@ -148,17 +185,20 @@ namespace Remembrance.ViewModel.Settings
             Application.Current.Shutdown();
         }
 
+        private void OnPauseReasonChanged(PauseReason reason)
+        {
+            IsPaused = _pauseManager.IsPaused;
+        }
+
         private void SetTimesInfo()
         {
-            const string DateTimeFormat = @"HH\:mm\:ss";
-            const string TimeSpanFormat = @"hh\:mm\:ss";
-
             TimeLeftToShowCard = Texts.TimeToShow + ": " + _cardShowTimeProvider.TimeLeftToShowCard.ToString(TimeSpanFormat);
             LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToString(DateTimeFormat);
             NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToString(DateTimeFormat);
             CardShowFrequency = Texts.CardShowFrequency + ": " + _cardShowTimeProvider.CardShowFrequency.ToString(TimeSpanFormat);
-            PausedTime = _cardShowTimeProvider.PausedTime == TimeSpan.Zero ? null : Texts.PausedTime + ": " + _cardShowTimeProvider.PausedTime.ToString(TimeSpanFormat);
-            PausedAt = !_cardShowTimeProvider.IsPaused ? null : Texts.PausedAt + ": " + _cardShowTimeProvider.LastPausedTime.ToString(DateTimeFormat);
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
+            CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);
+            PauseReasons = _pauseManager.GetPauseReasons();
             CurrentTime = DateTime.Now;
         }
 
@@ -190,19 +230,15 @@ namespace Remembrance.ViewModel.Settings
         {
             _logger.Trace("Toggling state...");
             IsActive = !IsActive;
-            var settings = _localSettingsRepository.Get();
-            settings.IsActive = IsActive;
-            _localSettingsRepository.UpdateOrInsert(settings);
+            _localSettingsRepository.IsActive = IsActive;
             _logger.InfoFormat("New state is {0}", IsActive);
             if (IsActive)
             {
-                _logger.Trace("Resuming showing cards...");
-                _messageHub.Publish(IntervalModificator.Resume);
+                _pauseManager.Resume(PauseReason.InactiveMode);
             }
             else
             {
-                _logger.Trace("Pausing showing cards...");
-                _messageHub.Publish(IntervalModificator.Pause);
+                _pauseManager.Pause(PauseReason.InactiveMode);
             }
         }
 
@@ -213,6 +249,7 @@ namespace Remembrance.ViewModel.Settings
 
         private void ToolTipOpen()
         {
+            SetTimesInfo();
             _isToolTipOpened = true;
         }
     }

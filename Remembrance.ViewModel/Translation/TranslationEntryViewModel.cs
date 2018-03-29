@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
@@ -30,14 +29,17 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
+        [NotNull]
+        private readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
+
         public TranslationEntryViewModel(
             [NotNull] TranslationEntry translationEntry,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             [NotNull] ILearningInfoRepository learningInfoRepository)
             : base(
                 new Word
@@ -45,7 +47,6 @@ namespace Remembrance.ViewModel.Translation
                     Text = translationEntry.Id.Text
                 },
                 translationEntry.Id.SourceLanguage,
-                lifetimeScope,
                 textToSpeechPlayer,
                 translationEntryProcessor)
         {
@@ -54,10 +55,11 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationEntry));
             }
 
-            Id = translationEntry.Id;
+            _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Id = translationEntry.Id;
             CanLearnWord = false;
             var learningInfo = learningInfoRepository.GetOrInsert(Id);
             UpdateLearningInfo(learningInfo);
@@ -118,7 +120,6 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationEntry));
             }
 
-            Translations.Clear();
             var isPriority = translationEntry.PriorityWords?.Any() == true;
             IEnumerable<Word> words;
             if (isPriority)
@@ -136,12 +137,18 @@ namespace Remembrance.ViewModel.Translation
                 words = translationDetails.TranslationResult.GetDefaultWords();
             }
 
-            var translations = words.Select(word => LifetimeScope.Resolve<PriorityWordViewModel>(new TypedParameter(typeof(Word), word), new TypedParameter(typeof(TranslationEntry), translationEntry)));
+            var translations = words.Select(word => _priorityWordViewModelFactory(word, translationEntry));
 
-            foreach (var translation in translations)
-            {
-                Translations.Add(translation);
-            }
+            _synchronizationContext.Send(
+                x =>
+                {
+                    Translations.Clear();
+                    foreach (var translation in translations)
+                    {
+                        Translations.Add(translation);
+                    }
+                },
+                null);
         }
 
         public override string ToString()
@@ -221,15 +228,12 @@ namespace Remembrance.ViewModel.Translation
                 _logger.TraceFormat("Not found {0} in the list. Adding...", wordKey);
 
                 var translationEntry = _translationEntryRepository.GetById(wordKey.TranslationEntryKey);
-                var priorityWordViewModel = LifetimeScope.Resolve<PriorityWordViewModel>(
-                    new TypedParameter(
-                        typeof(Word),
-                        new Word
-                        {
-                            Text = wordKey.Word.Text,
-                            PartOfSpeech = wordKey.Word.PartOfSpeech
-                        }),
-                    new TypedParameter(typeof(TranslationEntry), translationEntry));
+                var word = new Word
+                {
+                    Text = wordKey.Word.Text,
+                    PartOfSpeech = wordKey.Word.PartOfSpeech
+                };
+                var priorityWordViewModel = _priorityWordViewModelFactory(word, translationEntry);
                 _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);
                 _logger.DebugFormat("{0} has been added to the list", wordKey);
             }

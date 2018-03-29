@@ -2,11 +2,14 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Easy.MessageHub;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Core.Translation.Yandex.ContractResolvers;
+using Remembrance.Resources;
+using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
@@ -27,6 +30,14 @@ namespace Remembrance.Core.Translation.Yandex
         {
             BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
         };
+
+        [NotNull]
+        private readonly IMessageHub _messageHub;
+
+        public WordsTranslator([NotNull] IMessageHub messageHub)
+        {
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+        }
 
         public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken cancellationToken)
         {
@@ -52,18 +63,25 @@ namespace Remembrance.Core.Translation.Yandex
 
             // flags morpho(4) //|family(1)
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
-
-            var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
+            try
             {
+                var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                    }
                 }
-            }
 
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
+                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
+            }
+            catch (Exception ex)
+            {
+                _messageHub.Publish(Errors.CannotTranslate.ToError(ex));
+                return null;
+            }
         }
 
         /*

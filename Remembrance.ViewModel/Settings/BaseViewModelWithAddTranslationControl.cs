@@ -78,12 +78,11 @@ namespace Remembrance.ViewModel.Settings
                     autoSourceLanguage
                 }.Concat(availableLanguages)
                 .ToArray();
-
-            var localSettings = localSettingsRepository.Get();
+            var lastUsedTargetLanguage = localSettingsRepository.LastUsedTargetLanguage;
             Language targetLanguage = null;
-            if (localSettings.LastUsedTargetLanguage != null)
+            if (lastUsedTargetLanguage != null)
             {
-                targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == localSettings.LastUsedTargetLanguage);
+                targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == lastUsedTargetLanguage);
             }
 
             if (targetLanguage == null)
@@ -94,9 +93,10 @@ namespace Remembrance.ViewModel.Settings
             _selectedTargetLanguage = targetLanguage;
 
             Language sourceLanguage = null;
-            if (localSettings.LastUsedSourceLanguage != null)
+            var lastUsedSourceLanguage = localSettingsRepository.LastUsedSourceLanguage;
+            if (lastUsedSourceLanguage != null)
             {
-                sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == localSettings.LastUsedSourceLanguage);
+                sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == lastUsedSourceLanguage);
             }
 
             if (sourceLanguage == null)
@@ -126,11 +126,8 @@ namespace Remembrance.ViewModel.Settings
             get => _selectedSourceLanguage;
             set
             {
-                // TODO: Transactions - https://github.com/mbdavid/LiteDB/wiki/Transactions-and-Concurrency? across all solution
                 _selectedSourceLanguage = value;
-                var settings = _localSettingsRepository.Get();
-                settings.LastUsedSourceLanguage = value.Code;
-                _localSettingsRepository.UpdateOrInsert(settings);
+                _localSettingsRepository.LastUsedSourceLanguage = value.Code;
             }
         }
 
@@ -140,11 +137,8 @@ namespace Remembrance.ViewModel.Settings
             get => _selectedTargetLanguage;
             set
             {
-                // TODO: Transactions?
                 _selectedTargetLanguage = value;
-                var settings = _localSettingsRepository.Get();
-                settings.LastUsedTargetLanguage = value.Code;
-                _localSettingsRepository.UpdateOrInsert(settings);
+                _localSettingsRepository.LastUsedTargetLanguage = value.Code;
             }
         }
 
@@ -170,11 +164,11 @@ namespace Remembrance.ViewModel.Settings
         {
             var text = Text;
             var manualTranslation = string.IsNullOrWhiteSpace(ManualTranslation)
-                                        ? null
-                                        : new[]
-                                        {
-                                            new ManualTranslation(ManualTranslation)
-                                        };
+                ? null
+                : new[]
+                {
+                    new ManualTranslation(ManualTranslation)
+                };
             var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage.Code, SelectedTargetLanguage.Code);
             var addition = manualTranslation == null ? null : $" with manual translation {ManualTranslation}";
             Logger.Info($"Adding translation for {translationEntryAdditionInfo}{addition}...");

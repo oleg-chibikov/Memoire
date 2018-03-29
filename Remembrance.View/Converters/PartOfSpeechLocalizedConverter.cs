@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using JetBrains.Annotations;
@@ -8,7 +8,7 @@ using Scar.Common.WPF.Localization;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(string))]
-    public sealed class PartOfSpeechLocalizedConverter : IValueConverter
+    internal sealed class PartOfSpeechLocalizedConverter : IValueConverter
     {
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {

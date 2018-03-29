@@ -21,7 +21,7 @@
                 <view:DesignTimeResourceDictionary
                     Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
                 <ResourceDictionary
-                    Source="pack://application:,,,/Remembrance.View;component/Spinner.xaml" />
+                    Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
                 <ResourceDictionary>
                     <DataTemplate
                         x:Key="ImageTemplate">
@@ -57,12 +57,11 @@
             <materialDesign:PackIcon
                 Kind="ChevronLeft" />
         </Button>
-        <ContentControl DataContext="{Binding Mode=OneTime}">
+        <ContentControl>
             <ContentControl.Style>
                 <Style
                     TargetType="{x:Type ContentControl}">
                     <Style.Triggers>
-                        <!--//TODO: Bindings for Image and IsLoading are not valid in designer-->
                         <DataTrigger
                             Binding="{Binding Path=Image, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
                             Value="False">

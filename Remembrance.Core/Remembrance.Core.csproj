@@ -37,18 +37,17 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Easy.MessageHub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Easy.MessageHub.3.2.1\lib\net35\Easy.MessageHub.dll</HintPath>
+    <Reference Include="Easy.MessageHub, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Easy.MessageHub.3.3.0\lib\net35\Easy.MessageHub.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -67,8 +66,13 @@
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6642.31884, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6642.31884\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
@@ -86,8 +90,10 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ProcessMonitoring\ActiveProcessMonitor.cs" />
     <Compile Include="CardManagement\AssessmentCardManager.cs" />
     <Compile Include="CardManagement\BaseCardManager.cs" />
+    <Compile Include="CardManagement\AssessmentInfoProvider.cs" />
     <Compile Include="DialogService.cs" />
     <Compile Include="Exchange\CardsExchanger.cs" />
     <Compile Include="CardManagement\Data\IExchangeEntry.cs" />
@@ -104,7 +110,9 @@
     <Compile Include="ImageSearch\Qwant\Data\QwantResult.cs" />
     <Compile Include="ImageSearch\Qwant\ImageSearcher.cs" />
     <Compile Include="ImageSearch\Qwant\JsonConverters\UrlConverter.cs" />
-    <Compile Include="NamedInstancesFactory.cs" />
+    <Compile Include="AutofacNamedInstancesFactory.cs" />
+    <Compile Include="PauseManager.cs" />
+    <Compile Include="ProcessMonitoring\ActiveProcessesProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
@@ -136,10 +144,6 @@
     <ProjectReference Include="..\Remembrance.Resources\Remembrance.Resources.csproj">
       <Project>{0E8CE927-1859-41A0-971A-DE6425AC6852}</Project>
       <Name>Remembrance.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
-      <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
-      <Name>Remembrance.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

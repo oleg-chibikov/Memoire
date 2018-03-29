@@ -11,7 +11,6 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate;
 using Remembrance.Core.CardManagement.Data;
-using Remembrance.Resources;
 
 namespace Remembrance.Core.Exchange
 {
@@ -55,7 +54,7 @@ namespace Remembrance.Core.Exchange
         protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
             var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
-            var sourceLanguage = detectionResult.Language ?? Constants.EnLanguage;
+            var sourceLanguage = detectionResult.Language;
             var targetLanguage = await TranslationEntryProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }

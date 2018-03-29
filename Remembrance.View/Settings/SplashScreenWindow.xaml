@@ -1,4 +1,4 @@
-﻿<window:BaseWindow
+<window:BaseWindow
     x:Class="Remembrance.View.Settings.SplashScreenWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

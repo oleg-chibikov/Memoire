@@ -126,8 +126,8 @@
   <data name="ImportErrors" xml:space="preserve">
     <value>The following words were not imported</value>
   </data>
-  <data name="NoTranslations" xml:space="preserve">
-    <value>No translations were found for the word.</value>
+  <data name="NoAssessmentTranslations" xml:space="preserve">
+    <value>No translations have been found for the word.</value>
   </data>
   <data name="CannotDeleteManual" xml:space="preserve">
     <value>Cannot delete the manual translation because it will lead to the abscence of translations.</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
     <value>Remembrance is already running.</value>
+  </data>
+  <data name="NoTranslations" xml:space="preserve">
+    <value>No translations have been found for the word '{0}'.</value>
   </data>
 </root>

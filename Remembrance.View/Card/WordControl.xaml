@@ -39,9 +39,10 @@
     <DockPanel
         view:MarginSetter.Margin="{StaticResource CommonMargin}"
         view:MarginSetter.Orientation="Horizontal">
+        <!--Part of speech can be changed when language is changed-->
         <TextBlock
             Visibility="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
-            Text="{Binding PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
+            Text="{Binding PartOfSpeech, Mode=OneWay, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
             Foreground="DarkGreen"
             FontSize="{StaticResource SmallFontSize}"
             Cursor="Arrow" />

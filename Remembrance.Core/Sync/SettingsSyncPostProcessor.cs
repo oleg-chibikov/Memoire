@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
@@ -25,8 +26,13 @@ namespace Remembrance.Core.Sync
                 throw new ArgumentNullException(nameof(newValue));
             }
 
-            var prevFreq = oldValue?.CardShowFrequency;
-            var newFreq = newValue.CardShowFrequency;
+            if (newValue.Id != nameof(ISettingsRepository.CardShowFrequency))
+            {
+                return Task.CompletedTask;
+            }
+
+            var prevFreq = oldValue?.Value;
+            var newFreq = newValue.Value;
 
             if (prevFreq != newFreq)
             {

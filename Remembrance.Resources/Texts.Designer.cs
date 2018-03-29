@@ -70,6 +70,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add process to blacklist.
+        /// </summary>
+        public static string AddProcessToBlacklist {
+            get {
+                return ResourceManager.GetString("AddProcessToBlacklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add translation.
         /// </summary>
         public static string AddTranslation {
@@ -97,24 +106,6 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assessment failure.
-        /// </summary>
-        public static string AssessmentFailureCloseTimeout {
-            get {
-                return ResourceManager.GetString("AssessmentFailureCloseTimeout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Assessment success .
-        /// </summary>
-        public static string AssessmentSuccessCloseTimeout {
-            get {
-                return ResourceManager.GetString("AssessmentSuccessCloseTimeout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The browser was opened at qwant.com. Please confirm that you are not a robot..
         /// </summary>
         public static string BrowserWasOpened {
@@ -138,6 +129,24 @@ namespace Remembrance.Resources {
         public static string CardShowFrequency {
             get {
                 return ResourceManager.GetString("CardShowFrequency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card was visible for.
+        /// </summary>
+        public static string CardVisiblePauseTime {
+            get {
+                return ResourceManager.GetString("CardVisiblePauseTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear filter.
+        /// </summary>
+        public static string ClearFilter {
+            get {
+                return ResourceManager.GetString("ClearFilter", resourceCulture);
             }
         }
         
@@ -273,6 +282,15 @@ namespace Remembrance.Resources {
         public static string Favorite {
             get {
                 return ResourceManager.GetString("Favorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Filter {
+            get {
+                return ResourceManager.GetString("Filter", resourceCulture);
             }
         }
         
@@ -439,20 +457,74 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paused at.
+        ///   Looks up a localized string similar to Active blacklisted process.
         /// </summary>
-        public static string PausedAt {
+        public static string PauseReasonActiveProcessBlacklisted {
             get {
-                return ResourceManager.GetString("PausedAt", resourceCulture);
+                return ResourceManager.GetString("PauseReasonActiveProcessBlacklisted", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paused time.
+        ///   Looks up a localized string similar to The card is being shown now.
         /// </summary>
-        public static string PausedTime {
+        public static string PauseReasonCardIsVisible {
             get {
-                return ResourceManager.GetString("PausedTime", resourceCulture);
+                return ResourceManager.GetString("PauseReasonCardIsVisible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive mode.
+        /// </summary>
+        public static string PauseReasonInactiveMode {
+            get {
+                return ResourceManager.GetString("PauseReasonInactiveMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation in progress.
+        /// </summary>
+        public static string PauseReasonOperationInProgress {
+            get {
+                return ResourceManager.GetString("PauseReasonOperationInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process.
+        /// </summary>
+        public static string Process {
+            get {
+                return ResourceManager.GetString("Process", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause when processes are active.
+        /// </summary>
+        public static string ProcessesBlacklist {
+            get {
+                return ResourceManager.GetString("ProcessesBlacklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File path.
+        /// </summary>
+        public static string ProcessFilePath {
+            get {
+                return ResourceManager.GetString("ProcessFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string ProcessIcon {
+            get {
+                return ResourceManager.GetString("ProcessIcon", resourceCulture);
             }
         }
         
@@ -529,6 +601,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show active processes.
+        /// </summary>
+        public static string ShowActiveProcesses {
+            get {
+                return ResourceManager.GetString("ShowActiveProcesses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show #.
         /// </summary>
         public static string ShowCount {
@@ -556,7 +637,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remembrance - Memorize the words easily.
+        ///   Looks up a localized string similar to Remembrance - Memorize words easily.
         /// </summary>
         public static string Title {
             get {
@@ -615,15 +696,6 @@ namespace Remembrance.Resources {
         public static string Translation {
             get {
                 return ResourceManager.GetString("Translation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Translation close.
-        /// </summary>
-        public static string TranslationCloseTimeout {
-            get {
-                return ResourceManager.GetString("TranslationCloseTimeout", resourceCulture);
             }
         }
         

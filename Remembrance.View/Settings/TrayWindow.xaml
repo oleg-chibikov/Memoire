@@ -106,6 +106,35 @@
                     <Separator />
 
                     <MenuItem
+                        Header="{lex:Loc Remembrance.Resources:Texts:ViewLogs}"
+                        Command="{Binding ViewLogsCommand, Mode=OneTime}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+                                Kind="FileDocument" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="{lex:Loc Remembrance.Resources:Texts:OpenSharedFolder}"
+                        Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+                                Kind="Dropbox" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="{lex:Loc Remembrance.Resources:Texts:OpenSettingsFolder}"
+                        Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+                                Kind="Folder" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator />
+
+                    <MenuItem
                         Header="{lex:Loc Remembrance.Resources:Texts:Exit}"
                         Command="{Binding ExitCommand, Mode=OneTime}">
                         <MenuItem.Icon>
@@ -118,13 +147,16 @@
             <tb:TaskbarIcon.Style>
                 <Style
                     TargetType="tb:TaskbarIcon">
+                    <Setter
+                        Property="IconSource"
+                        Value="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico" />
                     <Style.Triggers>
                         <DataTrigger
-                            Binding="{Binding IsActive, Mode=OneWay}"
+                            Binding="{Binding IsPaused, Mode=OneWay}"
                             Value="True">
                             <Setter
                                 Property="IconSource"
-                                Value="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico" />
+                                Value="pack://application:,,/Remembrance.Resources;component/Images/IconPaused.ico" />
                         </DataTrigger>
                         <DataTrigger
                             Binding="{Binding IsActive, Mode=OneWay}"
@@ -176,11 +208,11 @@
                                 Visibility="{Binding LastCardShowTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
                                 Text="{Binding LastCardShowTime, Mode=OneWay}" />
                             <TextBlock
-                                Visibility="{Binding PausedAt, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
-                                Text="{Binding PausedAt, Mode=OneWay}" />
+                                Visibility="{Binding CardVisiblePauseTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                Text="{Binding CardVisiblePauseTime, Mode=OneWay}" />
                             <TextBlock
-                                Visibility="{Binding PausedTime, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
-                                Text="{Binding PausedTime, Mode=OneWay}" />
+                                Visibility="{Binding PauseReasons, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                Text="{Binding PauseReasons, Mode=OneWay}" />
                         </StackPanel>
                         <StackPanel
                             view:MarginSetter.Margin="{StaticResource CommonMargin}">

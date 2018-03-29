@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Autofac;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
@@ -21,9 +20,6 @@ namespace Remembrance.ViewModel.Translation
     public class WordViewModel : BaseWord
     {
         [NotNull]
-        protected readonly ILifetimeScope LifetimeScope;
-
-        [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         [NotNull]
@@ -32,7 +28,6 @@ namespace Remembrance.ViewModel.Translation
         public WordViewModel(
             [NotNull] Word word,
             [NotNull] string language,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor)
         {
@@ -50,8 +45,6 @@ namespace Remembrance.ViewModel.Translation
             {
                 throw new ArgumentNullException(nameof(translationEntryProcessor));
             }
-
-            LifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
 
             Text = word.Text;
             Language = language ?? throw new ArgumentNullException(nameof(language));

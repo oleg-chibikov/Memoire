@@ -11,7 +11,7 @@ namespace Remembrance.Contracts.Processing
 {
     public interface ITranslationEntryProcessor
     {
-        [ItemNotNull]
+        [ItemCanBeNull]
         [NotNull]
         Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
             [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,

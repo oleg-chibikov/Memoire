@@ -1,14 +1,15 @@
 using JetBrains.Annotations;
 
+// ReSharper disable NotNullMemberIsNotInitialized
 namespace Remembrance.Contracts.Translate.Data.LanguageDetector
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class DetectionResult
     {
-        [CanBeNull]
+        [NotNull]
         public string Code { get; set; }
 
-        [CanBeNull]
+        [NotNull]
         public string Language { get; set; }
     }
 }

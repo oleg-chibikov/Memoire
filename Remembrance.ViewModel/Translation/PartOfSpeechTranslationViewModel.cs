@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing;
@@ -15,23 +14,23 @@ namespace Remembrance.ViewModel.Translation
         public PartOfSpeechTranslationViewModel(
             [NotNull] TranslationEntry translationEntry,
             [NotNull] PartOfSpeechTranslation partOfSpeechTranslation,
-            [NotNull] ILifetimeScope lifetimeScope,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
+            [NotNull] Func<TranslationVariant, TranslationEntry, string, TranslationVariantViewModel> translationVariantViewModelFactory,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor)
-            : base(partOfSpeechTranslation, translationEntry.Id.SourceLanguage, lifetimeScope, textToSpeechPlayer, translationEntryProcessor)
+            : base(partOfSpeechTranslation, translationEntry.Id.SourceLanguage, textToSpeechPlayer, translationEntryProcessor)
         {
             if (partOfSpeechTranslation == null)
             {
                 throw new ArgumentNullException(nameof(partOfSpeechTranslation));
             }
 
+            if (translationVariantViewModelFactory == null)
+            {
+                throw new ArgumentNullException(nameof(translationVariantViewModelFactory));
+            }
+
             Transcription = partOfSpeechTranslation.Transcription;
-            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(
-                    translationVariant => lifetimeScope.Resolve<TranslationVariantViewModel>(
-                        new TypedParameter(typeof(TranslationVariant), translationVariant),
-                        new TypedParameter(typeof(TranslationEntry), translationEntry),
-                        new TypedParameter(typeof(string), Text)))
-                .ToArray();
+            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Text)).ToArray();
             CanLearnWord = false;
         }
 

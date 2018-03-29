@@ -24,7 +24,7 @@
     Focusable="False"
     Topmost="True"
     ShowInTaskbar="False"
-    AutoCloseTimeout="00:00:03"
+    AutoCloseTimeout="{Binding AutoCloseTimeout, Mode=OneTime}"
     Icon="../IconAlt.ico">
     <window:AnimatedWindow.Resources>
         <view1:DesignTimeResourceDictionary

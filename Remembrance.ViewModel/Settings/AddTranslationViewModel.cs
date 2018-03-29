@@ -18,14 +18,14 @@ namespace Remembrance.ViewModel.Settings
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl
     {
         [NotNull]
-        private readonly WindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
+        private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         public AddTranslationViewModel(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILanguageDetector languageDetector,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
-            [NotNull] WindowFactory<IAddTranslationWindow> addTranslationWindowFactory)
+            [NotNull] IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory)
             : base(localSettingsRepository, languageDetector, translationEntryProcessor, logger)
         {
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));

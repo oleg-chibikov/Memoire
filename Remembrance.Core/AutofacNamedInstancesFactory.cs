@@ -2,17 +2,17 @@ using System;
 using Autofac;
 using Autofac.Core;
 using JetBrains.Annotations;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts;
 
 namespace Remembrance.Core
 {
     [UsedImplicitly]
-    public sealed class NamedInstancesFactory : INamedInstancesFactory
+    public sealed class AutofacNamedInstancesFactory : IAutofacNamedInstancesFactory
     {
         [NotNull]
         private readonly ILifetimeScope _lifetimeScope;
 
-        public NamedInstancesFactory([NotNull] ILifetimeScope lifetimeScope)
+        public AutofacNamedInstancesFactory([NotNull] ILifetimeScope lifetimeScope)
         {
             _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
         }

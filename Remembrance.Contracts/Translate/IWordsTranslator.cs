@@ -7,7 +7,7 @@ namespace Remembrance.Contracts.Translate
 {
     public interface IWordsTranslator
     {
-        [ItemNotNull]
+        [ItemCanBeNull]
         [NotNull]
         Task<TranslationResult> GetTranslationAsync([NotNull] string from, [NotNull] string to, [NotNull] string text, [NotNull] string ui, CancellationToken cancellationToken);
     }

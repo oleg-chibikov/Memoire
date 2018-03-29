@@ -7,7 +7,7 @@ using Autofac.Core;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Remembrance.Contracts.DAL;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
@@ -32,7 +32,7 @@ namespace Remembrance.Core.Sync
         private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly INamedInstancesFactory _namedInstancesFactory;
+        private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
 
         [NotNull]
         private readonly TRepository _ownRepository;
@@ -47,7 +47,7 @@ namespace Remembrance.Core.Sync
         private readonly ISyncPreProcessor<TEntity> _syncPreProcessor;
 
         public RepositorySynhronizer(
-            [NotNull] INamedInstancesFactory namedInstancesFactory,
+            [NotNull] IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
             [NotNull] ILog logger,
             [NotNull] TRepository ownRepository,
             [NotNull] IMessageHub messageHub,
@@ -61,7 +61,7 @@ namespace Remembrance.Core.Sync
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _namedInstancesFactory = namedInstancesFactory ?? throw new ArgumentNullException(nameof(namedInstancesFactory));
+            _autofacNamedInstancesFactory = autofacNamedInstancesFactory ?? throw new ArgumentNullException(nameof(autofacNamedInstancesFactory));
             _syncPreProcessor = syncPreProcessor;
             _syncPostProcessor = syncPostProcessor;
         }
@@ -96,7 +96,7 @@ namespace Remembrance.Core.Sync
                 new PositionalParameter(0, newDirectoryPath),
                 new TypedParameter(typeof(bool), false)
             };
-            using (var remoteRepository = _namedInstancesFactory.GetInstance<TRepository>(parameters))
+            using (var remoteRepository = _autofacNamedInstancesFactory.GetInstance<TRepository>(parameters))
             {
                 foreach (var syncExtender in _syncExtenders)
                 {
@@ -111,11 +111,7 @@ namespace Remembrance.Core.Sync
 
         private void SyncInternal([NotNull] TRepository remoteRepository)
         {
-            var localSettings = _localSettingsRepository.Get();
-            if (!localSettings.SyncTimes.TryGetValue(FileName, out var lastSyncTime))
-            {
-                lastSyncTime = DateTimeOffset.MinValue;
-            }
+            var lastSyncTime = _localSettingsRepository.GetSyncTime(FileName);
 
             var changed = remoteRepository.GetModifiedAfter(lastSyncTime);
             Parallel.ForEach(
@@ -124,14 +120,14 @@ namespace Remembrance.Core.Sync
                 {
                     try
                     {
-                        _logger.TraceFormat("Processing {0}...", remoteEntity);
+                        // _logger.TraceFormat("Processing {0}...", remoteEntity);
                         var existingEntity = _ownRepository.TryGetById(remoteEntity.Id);
                         var insert = false;
                         if (!Equals(existingEntity, default(TEntity)))
                         {
                             if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
                             {
-                                _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
+                                // _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
                                 return;
                             }
                         }
@@ -164,9 +160,6 @@ namespace Remembrance.Core.Sync
                         {
                             await _syncPostProcessor.AfterEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(false);
                         }
-
-                        localSettings.SyncTimes[FileName] = DateTimeOffset.UtcNow;
-                        _localSettingsRepository.UpdateOrInsert(localSettings);
                     }
                     catch (Exception ex)
                     {
@@ -174,6 +167,8 @@ namespace Remembrance.Core.Sync
                             string.Format(Errors.CannotSynchronize, remoteEntity, Path.Combine(remoteRepository.DbDirectoryPath, $"{remoteRepository.DbFileName}{remoteRepository.DbFileExtension}")).ToError(ex));
                     }
                 });
+
+            _localSettingsRepository.AddOrUpdateSyncTime(FileName, DateTimeOffset.UtcNow);
         }
     }
 }

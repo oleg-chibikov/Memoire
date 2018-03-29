@@ -8,7 +8,7 @@ using Scar.Common.Messages;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(MessageType), typeof(Color))]
-    public sealed class MessageTypeToBrushConverter : IValueConverter
+    internal sealed class MessageTypeToBrushConverter : IValueConverter
     {
         [NotNull]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

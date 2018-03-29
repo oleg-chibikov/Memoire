@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
@@ -13,11 +12,14 @@ namespace Remembrance.ViewModel.Translation
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationResultViewModel
     {
-        public TranslationResultViewModel([NotNull] TranslationResult translationResult, [NotNull] TranslationEntry translationEntry, [NotNull] ILifetimeScope lifetimeScope)
+        public TranslationResultViewModel(
+            [NotNull] TranslationResult translationResult,
+            [NotNull] TranslationEntry translationEntry,
+            [NotNull] Func<PartOfSpeechTranslation, TranslationEntry, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory)
         {
-            if (lifetimeScope == null)
+            if (partOfSpeechTranslationViewModelFactory == null)
             {
-                throw new ArgumentNullException(nameof(lifetimeScope));
+                throw new ArgumentNullException(nameof(partOfSpeechTranslationViewModelFactory));
             }
 
             if (translationResult == null)
@@ -25,14 +27,10 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationResult));
             }
 
-            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.Select(
-                    partOfSpeechTranslation => lifetimeScope.Resolve<PartOfSpeechTranslationViewModel>(
-                        new TypedParameter(typeof(PartOfSpeechTranslation), partOfSpeechTranslation),
-                        new TypedParameter(typeof(TranslationEntry), translationEntry)))
-                .ToArray();
+            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry)).ToArray();
         }
 
         [NotNull]
-        public ICollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; set; }
+        public ICollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; }
     }
 }

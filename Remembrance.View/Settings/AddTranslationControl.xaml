@@ -87,6 +87,7 @@
                 ItemsSource="{Binding AvailableTargetLanguages, Mode=OneTime}"
                 SelectedItem="{Binding SelectedTargetLanguage, Mode=TwoWay}" />
             <Button
+                IsDefault="True"
                 Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc AddTranslation}"
                 Command="{Binding SaveCommand, Mode=OneTime}">

@@ -19,7 +19,8 @@
     d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
-    Icon="../IconAlt.ico">
+    Icon="../IconAlt.ico"
+    Title="{Binding Word, Mode=OneTime}">
     <window:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
@@ -34,6 +35,7 @@
 
     <StackPanel
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+        <TextBlock Text="{Binding RepeatType, Mode=OneTime, Converter={StaticResource RepeatTypeConverter}}"/>
         <Expander
             Header="{lex:Loc Details}"
             ExpandDirection="Up">
@@ -47,6 +49,7 @@
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
+            <!--Prepositions collection is lazy loaded-->
             <TextBlock
                 Foreground="DimGray"
                 Text="{Binding TranslationDetailsCardViewModel.PrepositionsCollection, Mode=OneWay}" />

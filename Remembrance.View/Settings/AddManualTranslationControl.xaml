@@ -57,6 +57,7 @@
             Orientation="Horizontal"
             view:MarginSetter.Margin="{StaticResource CommonMargin}">
             <Button
+                IsDefault="True"
                 Style="{StaticResource ImageButton}"
                 ToolTip="{lex:Loc AddTranslation}"
                 Command="{Binding AddTranslationCommand, Mode=OneTime}">
