@@ -24,13 +24,13 @@ namespace Remembrance.ViewModel.Translation
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
+
+        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
-
-        [NotNull]
-        private readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
 
         public TranslationEntryViewModel(
             [NotNull] TranslationEntry translationEntry,
@@ -87,13 +87,15 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public string TargetLanguage => Id.TargetLanguage;
 
-        public override string Text => Id.Text;
-
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations { get; } = new ObservableCollection<PriorityWordViewModel>();
 
         [NotNull]
         internal Task ConstructionTask { get; }
+
+        // A hack to raise NotifyPropertyChanged for other properties
+        [AlsoNotifyFor(nameof(NextCardShowTime))]
+        private bool ReRenderNextCardShowTimeSwitch { get; set; }
 
         public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
         {
@@ -133,7 +135,9 @@ namespace Remembrance.ViewModel.Translation
             }
             else
             {
-                var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+                var translationDetails = await TranslationEntryProcessor
+                    .ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+                    .ConfigureAwait(false);
                 words = translationDetails.TranslationResult.GetDefaultWords();
             }
 
@@ -151,9 +155,14 @@ namespace Remembrance.ViewModel.Translation
                 null);
         }
 
+        public void ReRenderNextCardShowTime()
+        {
+            ReRenderNextCardShowTimeSwitch = !ReRenderNextCardShowTimeSwitch;
+        }
+
         public override string ToString()
         {
-            return $"{Id}";
+            return Id.ToString();
         }
 
         public void UpdateLearningInfo([NotNull] LearningInfo learningInfo)
@@ -173,7 +182,7 @@ namespace Remembrance.ViewModel.Translation
             {
                 var translation = translations[i];
 
-                if (translation.Equals(wordKey.Word))
+                if (translation.Word.Equals(wordKey.Word))
                 {
                     _logger.TraceFormat("Removing {0} from the list...", wordKey);
 
@@ -200,7 +209,7 @@ namespace Remembrance.ViewModel.Translation
             for (var i = 0; i < Translations.Count; i++)
             {
                 var translation = Translations[i];
-                if (translation.Equals(wordKey.Word))
+                if (translation.Word.Equals(wordKey.Word))
                 {
                     if (!translation.IsPriority)
                     {

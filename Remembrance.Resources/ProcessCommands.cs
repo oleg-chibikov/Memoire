@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Scar.Common.IO;
 
 namespace Remembrance.Resources
 {
@@ -7,12 +8,12 @@ namespace Remembrance.Resources
     {
         public static void OpenSettingsFolder()
         {
-            Process.Start($@"{Paths.SettingsPath}");
+            Process.Start($@"{CommonPaths.SettingsPath}");
         }
 
         public static void OpenSharedFolder()
         {
-            Process.Start($@"{Paths.SharedDataPath}");
+            Process.Start($@"{RemembrancePaths.SharedDataPath}");
         }
 
         public static void ViewLogs()

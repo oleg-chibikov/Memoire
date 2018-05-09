@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -10,6 +11,7 @@ using Moq;
 using NUnit.Framework;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.ViewModel.Card;
@@ -22,6 +24,30 @@ namespace Remembrance.Test
     [Apartment(ApartmentState.STA)]
     internal sealed class WordImageViewerViewModelTest
     {
+        [SetUp]
+        public void SetUp()
+        {
+            _autoMock = AutoMock.GetLoose();
+            _autoMock.Mock<ICancellationTokenSourceProvider>()
+                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
+            _key = _autoMock.Create<WordKey>();
+            var word = _key.Word;
+            word.Text = FallbackSearchText;
+            _imageInfoWithBitmap = _autoMock.Create<ImageInfoWithBitmap>();
+            _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
+            _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
+            _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
+            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Assert.That(_sut.IsLoading, Is.False, "IsLoading should be false after each kind of processing");
+            _autoMock.Dispose();
+        }
+
         private const string FallbackSearchText = "foo";
 
         private const string ParentText = "bar";
@@ -34,318 +60,24 @@ namespace Remembrance.Test
 
         private WordKey _key;
 
-        [SetUp]
-        public void SetUp()
-        {
-            _autoMock = AutoMock.GetLoose();
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
-                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
-                .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
-            _key = _autoMock.Create<WordKey>();
-            var wordMock = Mock.Get(_key.Word);
-            wordMock.SetupGet(x => x.Text).Returns(FallbackSearchText);
-            _imageInfoWithBitmap = _autoMock.Create<ImageInfoWithBitmap>();
-            _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
-            _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _autoMock.Dispose();
-        }
-
-        [Test]
-        [NotNull]
-        public async Task TriesSearchWithDifferentText_When_ErrorOccursDuringDownload()
-        {
-            await Task.CompletedTask.ConfigureAwait(false);
-
-            // TODO:
-        }
-
-        [Test]
-        [NotNull]
-        public async Task VerifiesIsLoadingWasSetToTrueAndWasSetToFalseOnlyWhenEverythingWasCompleted()
-        {
-            await Task.CompletedTask.ConfigureAwait(false);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_ErrorOccursDuringSearch_StopsSearch()
-        {
-            // Arrange
-            WithImageSearchError();
-
-            // Act
-            var sut = await CreateViewModelAsync(false).ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Never);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_GoingBackwards_AlternatesSearchTextForEveryRequest()
-        {
-            // Arrange
-            WithInitialImage(2);
-            WithSuccessfulImageSearch();
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            for (var i = 1; i >= 0; i--)
-            {
-                // Act
-                Reset();
-                await sut.SetPreviousImageAsync().ConfigureAwait(false);
-
-                // Assert
-                VerifyImagesSearch(Times.Once, FallbackSearchText);
-                Assert.IsTrue(sut.IsReverse);
-                Assert.AreEqual(i, sut.SearchIndex);
-                Assert.That(sut.Image, Is.Not.Null);
-
-                // Act
-                Reset();
-                await sut.SetPreviousImageAsync().ConfigureAwait(false);
-
-                // Assert
-                VerifyImagesSearch(Times.Once, DefaultSearchText);
-                Assert.IsFalse(sut.IsReverse);
-                Assert.AreEqual(i, sut.SearchIndex);
-                Assert.That(sut.Image, Is.Not.Null);
-            }
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_GoingForwards_AlternatesSearchTextForEveryRequest()
-        {
-            // Arrange
-            WithInitialImage(0, true);
-            WithSuccessfulImageSearch();
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            for (var i = 1; i <= 2; i++)
-            {
-                // Act
-                Reset();
-                await sut.SetNextImageAsync().ConfigureAwait(false);
-
-                // Assert
-                VerifyImagesSearch(Times.Once, DefaultSearchText);
-                Assert.IsFalse(sut.IsReverse);
-                Assert.AreEqual(i, sut.SearchIndex);
-                Assert.That(sut.Image, Is.Not.Null);
-
-                // Act
-                Reset();
-                await sut.SetNextImageAsync().ConfigureAwait(false);
-
-                // Assert
-                VerifyImagesSearch(Times.Once, FallbackSearchText);
-                Assert.IsTrue(sut.IsReverse);
-                Assert.AreEqual(i, sut.SearchIndex);
-                Assert.That(sut.Image, Is.Not.Null);
-            }
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_IndexIsZero_And_IsReverse_PreviousSearchShouldUseDefaultSearchText()
-        {
-            // Arrange
-            WithInitialImage(0, true);
-            WithSuccessfulImageSearch();
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            // Act
-            await sut.SetPreviousImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_IndexIsZero_AndNot_IsReverse_PreviousButton_Should_DoNothing()
-        {
-            // Arrange
-            WithInitialImage();
-            WithSuccessfulImageSearch();
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            // Act
-            await sut.SetPreviousImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Never);
-            VerifyDownloadCount(Times.Never);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_InitialImageIsEmpty_PerformsSearchWithDefaultSearchText()
-        {
-            // Arrange
-            WithSuccessfulImageSearch();
-
-            // Act
-            var sut = await CreateViewModelAsync(false).ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_IsInitialized_NoSearchAndDownloadOccurs()
-        {
-            // Arrange
-            WithInitialImage();
-            WithSuccessfulImageSearch();
-
-            // Act
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Never);
-            VerifyDownloadCount(Times.Never);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_MoreThanOneImageIsReturned_Throws()
-        {
-            // Arrange
-            WithInitialImage();
-            WithImageSearchResult(new ImageInfo[2]);
-            var sut = await CreateViewModelAsync().ConfigureAwait(false);
-
-            // Act
-            // Assert
-            Assert.ThrowsAsync<InvalidOperationException>(() => sut.SetNextImageAsync());
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_NoImagesAvailableForBothSearchTexts_PerformsTwoAttemptsWithDifferentSearchTexts()
-        {
-            // Arrange
-            WithNoImageFound();
-
-            // Act
-            var sut = await CreateViewModelAsync(false).ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Never);
-            VerifyMessage(Times.Once);
-            Assert.IsTrue(sut.IsReverse);
-            Assert.AreEqual(0, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_OnlyDefaultSearchTextReturnsResults_IndexIncreasesEveryTime()
-        {
-            // Arrange
-            WithSuccessfulImageSearch(DefaultSearchText);
-            WithNoImageFound(FallbackSearchText);
-
-            var sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using only DefaultSearchText
-
-            // Act
-            await sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-
-            Reset();
-
-            // Act
-            await sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.IsFalse(sut.IsReverse);
-            Assert.AreEqual(2, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
-
-        [Test]
-        [NotNull]
-        public async Task When_OnlyFallbackSearchTextReturnsResults_IndexIncreasesEveryTime()
-        {
-            // Arrange
-            WithSuccessfulImageSearch(FallbackSearchText);
-            WithNoImageFound(DefaultSearchText);
-
-            var sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using DefaultSearchText and then FallbackSearchText
-
-            // Act
-            await sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Never, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-
-            // Act
-            Reset();
-            await sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Never, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.IsTrue(sut.IsReverse);
-            Assert.AreEqual(2, sut.SearchIndex);
-            Assert.That(sut.Image, Is.Not.Null);
-        }
+        private WordImageViewerViewModel _sut;
 
         [ItemNotNull]
         [NotNull]
-        private async Task<WordImageViewerViewModel> CreateViewModelAsync(bool reset = true)
+        private async Task<WordImageViewerViewModel> CreateViewModelAsync(bool reset = true, bool wait = true)
         {
-            var sut = _autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), _key));
-            await sut.ConstructionTask.ConfigureAwait(false);
+            _sut = _autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), _key));
+            if (wait)
+            {
+                await _sut.ConstructionTask.ConfigureAwait(false);
+            }
+
             if (reset)
             {
                 Reset();
             }
 
-            return sut;
+            return _sut;
         }
 
         private void Reset()
@@ -362,7 +94,14 @@ namespace Remembrance.Test
         private void VerifyImagesSearch([NotNull] Func<Times> times, [CanBeNull] string searchText = null)
         {
             _autoMock.Mock<IImageSearcher>()
-                .Verify(x => x.SearchImagesAsync(It.Is<string>(s => searchText == null || s == searchText), It.IsAny<CancellationToken>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), times);
+                .Verify(
+                    x => x.SearchImagesAsync(
+                        It.Is<string>(s => searchText == null || s == searchText),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
+                        It.IsAny<string>()),
+                    times);
         }
 
         private void VerifyMessage([NotNull] Func<Times> times)
@@ -375,16 +114,36 @@ namespace Remembrance.Test
             WithImageSearchResult(null, searchText);
         }
 
-        private void WithImageSearchResult([CanBeNull] ImageInfo[] imageInfos, [CanBeNull] string searchText = null)
+        private void WithImageSearchResult([CanBeNull] ICollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
         {
             _autoMock.Mock<IImageSearcher>()
-                .Setup(x => x.SearchImagesAsync(It.Is<string>(s => searchText == null || s == searchText), It.IsAny<CancellationToken>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Setup(
+                    x => x.SearchImagesAsync(
+                        It.Is<string>(s => searchText == null || s == searchText),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
+                        It.IsAny<string>()))
                 .ReturnsAsync(imageInfos);
         }
 
-        private void WithInitialImage(int searchIndex = 0, bool isReverse = false, [CanBeNull] int?[] notAvailableIndexes = null)
+        private void WithInitialEmptyImage()
         {
-            _autoMock.Mock<IWordImagesInfoRepository>().Setup(x => x.TryGetById(_key)).Returns(new WordImageInfo(_key, searchIndex, _imageInfoWithBitmap, isReverse, notAvailableIndexes ?? new int?[2]));
+            var image = _autoMock.Create<ImageInfoWithBitmap>();
+            image.ImageInfo = _autoMock.Create<ImageInfo>();
+            WithInitialImage(customImage: image);
+        }
+
+        private void WithInitialImage(
+            int searchIndex = 0,
+            bool isAlternate = false,
+            [CanBeNull] int?[] notAvailableIndexes = null,
+            [CanBeNull] ImageInfoWithBitmap customImage = null)
+        {
+            _autoMock.Mock<IWordImageInfoRepository>()
+                .Setup(x => x.TryGetById(_key))
+                .Returns(new WordImageInfo(_key, customImage ?? _imageInfoWithBitmap, notAvailableIndexes ?? new int?[2]));
+            _autoMock.Mock<IWordImageSearchIndexRepository>().Setup(x => x.TryGetById(_key)).Returns(new WordImageSearchIndex(_key, searchIndex, isAlternate));
         }
 
         private void WithNoImageFound([CanBeNull] string searchText = null)
@@ -400,6 +159,422 @@ namespace Remembrance.Test
                     _autoMock.Create<ImageInfo>()
                 },
                 searchText);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task IsLoadingIsTrueDuringProcessing()
+        {
+            // Arrange
+            var semaphore = new SemaphoreSlim(0, 1);
+            var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
+            _autoMock.Mock<ICancellationTokenSourceProvider>()
+                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .Returns(runningTask);
+
+            // Act
+            _sut = await CreateViewModelAsync(false, false).ConfigureAwait(false);
+
+            // Assert
+            Assert.That(_sut.IsLoading, Is.True);
+            semaphore.Release();
+            await runningTask.ConfigureAwait(false);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task PerformsReload()
+        {
+            // Arrange
+            WithInitialEmptyImage();
+            WithSuccessfulImageSearch();
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Act
+            await _sut.ReloadImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.IsReloadVisible, Is.False);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task ReloadIsNotVisibleDuringProcessing()
+        {
+            // Arrange
+            var semaphore = new SemaphoreSlim(0, 1);
+            var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
+            _autoMock.Mock<ICancellationTokenSourceProvider>()
+                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .Returns(runningTask);
+
+            // Act
+            _sut = await CreateViewModelAsync(false, false).ConfigureAwait(false);
+
+            // Assert
+            Assert.That(_sut.IsReloadVisible, Is.False);
+            semaphore.Release();
+            await runningTask.ConfigureAwait(false);
+        }
+
+        [Test]
+        public void When_Cancelled_Throws()
+        {
+            // Arrange
+            _autoMock.Mock<ICancellationTokenSourceProvider>()
+                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .ThrowsAsync(new OperationCanceledException());
+
+            // Assert
+            Assert.That(
+                async () =>
+                {
+                    // Act
+                    _sut = await CreateViewModelAsync().ConfigureAwait(false);
+                },
+                Throws.Exception.TypeOf<TaskCanceledException>());
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_DownloadsEmptyImage_ShouldTrySearchWithDifferentText()
+        {
+            // Arrange
+            _autoMock.Mock<IImageDownloader>()
+                .SetupSequence(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(null)
+                .ReturnsAsync(new byte[1]);
+            WithSuccessfulImageSearch();
+
+            // Act
+            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Once, FallbackSearchText);
+            VerifyDownloadCount(() => Times.Exactly(2));
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.True);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_ErrorOccursDuringSearch_StopsSearch()
+        {
+            // Arrange
+            WithImageSearchError();
+
+            // Act
+            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Never);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Null);
+        }
+
+        [Test]
+        public void When_ExceptionOccursDuringImageLoading_Throws()
+        {
+            // Arrange
+            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Throws(new InvalidOperationException());
+            WithSuccessfulImageSearch();
+
+            // Assert
+            Assert.That(
+                async () =>
+                {
+                    // Act
+                    _sut = await CreateViewModelAsync().ConfigureAwait(false);
+                },
+                Throws.Exception.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_GoingBackwards_AlternatesSearchTextForEveryRequest()
+        {
+            // Arrange
+            WithInitialImage(2);
+            WithSuccessfulImageSearch();
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            for (var i = 1; i >= 0; i--)
+            {
+                // Act
+                Reset();
+                await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+
+                // Assert
+                VerifyImagesSearch(Times.Once, FallbackSearchText);
+                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(_sut.IsAlternate, Is.True);
+                Assert.That(_sut.Image, Is.Not.Null);
+
+                // Act
+                Reset();
+                await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+
+                // Assert
+                VerifyImagesSearch(Times.Once, DefaultSearchText);
+                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(_sut.IsAlternate, Is.False);
+                Assert.That(_sut.Image, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_GoingForwards_AlternatesSearchTextForEveryRequest()
+        {
+            // Arrange
+            WithInitialImage(0, true);
+            WithSuccessfulImageSearch();
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            for (var i = 1; i <= 2; i++)
+            {
+                // Act
+                Reset();
+                await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+                // Assert
+                VerifyImagesSearch(Times.Once, DefaultSearchText);
+                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(_sut.IsAlternate, Is.False);
+                Assert.That(_sut.Image, Is.Not.Null);
+
+                // Act
+                Reset();
+                await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+                // Assert
+                VerifyImagesSearch(Times.Once, FallbackSearchText);
+                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(_sut.IsAlternate, Is.True);
+                Assert.That(_sut.Image, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_ImageBytesAreNull_Then_ShouldRepeatSearchInitially()
+        {
+            // Arrange
+            WithInitialEmptyImage();
+            WithSuccessfulImageSearch();
+
+            // Act
+            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_ImageIsEmpty_ReloadIsVisible()
+        {
+            // Arrange
+            WithInitialEmptyImage();
+
+            // Act
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Assert
+            Assert.That(_sut.Image, Is.Null);
+            Assert.That(_sut.IsReloadVisible, Is.True);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_IndexIsZero_And_IsAlternate_PreviousSearchShouldUseDefaultSearchText()
+        {
+            // Arrange
+            WithInitialImage(0, true);
+            WithSuccessfulImageSearch();
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Act
+            await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_IndexIsZero_AndNot_IsAlternate_PreviousButton_Should_DoNothing()
+        {
+            // Arrange
+            WithInitialImage();
+            WithSuccessfulImageSearch();
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Act
+            await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Never);
+            VerifyDownloadCount(Times.Never);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_InitialImageIsEmpty_PerformsSearchWithDefaultSearchText()
+        {
+            // Arrange
+            WithSuccessfulImageSearch();
+
+            // Act
+            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_IsInitializedWithImage_NoSearchAndDownloadOccurs()
+        {
+            // Arrange
+            WithInitialImage();
+            WithSuccessfulImageSearch();
+
+            // Act
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Never);
+            VerifyDownloadCount(Times.Never);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_MoreThanOneImageIsReturned_Throws()
+        {
+            // Arrange
+            WithInitialImage();
+            WithImageSearchResult(new ImageInfo[2]);
+            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+
+            // Act
+            // Assert
+            Assert.That(() => _sut.SetNextImageAsync(), Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_NoImagesAvailableForBothSearchTexts_PerformsTwoAttemptsWithDifferentSearchTexts()
+        {
+            // Arrange
+            WithNoImageFound();
+
+            // Act
+            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Once, FallbackSearchText);
+            VerifyDownloadCount(Times.Never);
+            VerifyMessage(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.Zero);
+            Assert.That(_sut.IsAlternate, Is.True);
+            Assert.That(_sut.Image, Is.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_OnlyDefaultSearchTextReturnsResults_IndexIncreasesEveryTime()
+        {
+            // Arrange
+            WithSuccessfulImageSearch(DefaultSearchText);
+            WithNoImageFound(FallbackSearchText);
+
+            _sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using only DefaultSearchText
+
+            // Act
+            await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Once, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+
+            Reset();
+
+            // Act
+            await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Once, DefaultSearchText);
+            VerifyImagesSearch(Times.Never, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.EqualTo(2));
+            Assert.That(_sut.IsAlternate, Is.False);
+            Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [Test]
+        [NotNull]
+        public async Task When_OnlyFallbackSearchTextReturnsResults_IndexIncreasesEveryTime()
+        {
+            // Arrange
+            WithSuccessfulImageSearch(FallbackSearchText);
+            WithNoImageFound(DefaultSearchText);
+
+            _sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using DefaultSearchText and then FallbackSearchText
+
+            // Act
+            await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Never, DefaultSearchText);
+            VerifyImagesSearch(Times.Once, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+
+            // Act
+            Reset();
+            await _sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(Times.Never, DefaultSearchText);
+            VerifyImagesSearch(Times.Once, FallbackSearchText);
+            VerifyDownloadCount(Times.Once);
+            Assert.That(_sut.SearchIndex, Is.EqualTo(2));
+            Assert.That(_sut.IsAlternate, Is.True);
+            Assert.That(_sut.Image, Is.Not.Null);
         }
     }
 }

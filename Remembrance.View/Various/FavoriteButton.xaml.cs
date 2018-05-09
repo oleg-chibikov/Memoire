@@ -7,7 +7,11 @@ namespace Remembrance.View.Various
     /// </summary>
     internal sealed partial class FavoriteButton
     {
-        public static readonly DependencyProperty IsFavoritedProperty = DependencyProperty.Register(nameof(IsFavorited), typeof(bool), typeof(FavoriteButton), new PropertyMetadata(null));
+        public static readonly DependencyProperty IsFavoritedProperty = DependencyProperty.Register(
+            nameof(IsFavorited),
+            typeof(bool),
+            typeof(FavoriteButton),
+            new PropertyMetadata(null));
 
         public FavoriteButton()
         {

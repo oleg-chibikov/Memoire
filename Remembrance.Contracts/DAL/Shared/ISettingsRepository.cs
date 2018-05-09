@@ -8,15 +8,17 @@ using Scar.Common.DAL;
 
 namespace Remembrance.Contracts.DAL.Shared
 {
-    public interface ISettingsRepository : ITrackedRepository<Settings, string>
+    public interface ISettingsRepository : IRepository<Settings, string>, ISharedRepository, IDisposable
     {
-        TimeSpan CardShowFrequency { get; set; }
-
         [CanBeNull]
         ICollection<ProcessInfo> BlacklistedProcesses { get; set; }
+
+        TimeSpan CardShowFrequency { get; set; }
 
         Speaker TtsSpeaker { get; set; }
 
         VoiceEmotion TtsVoiceEmotion { get; set; }
+
+        string PreferredLanguage { get; set; }
     }
 }

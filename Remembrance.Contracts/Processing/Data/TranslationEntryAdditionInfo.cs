@@ -22,7 +22,7 @@ namespace Remembrance.Contracts.Processing.Data
 
         public override string ToString()
         {
-            return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
+            return $"Addition of {Text} [{SourceLanguage}->{TargetLanguage}]";
         }
     }
 }

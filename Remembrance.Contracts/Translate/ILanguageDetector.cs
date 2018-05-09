@@ -11,8 +11,8 @@ namespace Remembrance.Contracts.Translate
         [NotNull]
         Task<DetectionResult> DetectLanguageAsync([NotNull] string text, CancellationToken cancellationToken);
 
-        [ItemNotNull]
+        [ItemCanBeNull]
         [NotNull]
-        Task<ListResult> ListLanguagesAsync([NotNull] string ui, CancellationToken cancellationToken);
+        Task<LanguageListResult> ListLanguagesAsync([NotNull] string ui, CancellationToken cancellationToken);
     }
 }

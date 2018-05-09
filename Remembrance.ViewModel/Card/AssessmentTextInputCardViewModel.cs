@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
@@ -8,6 +7,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
@@ -32,11 +32,11 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ILog logger,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] ILearningInfoRepository learningInfoRepository,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
-            [NotNull] IPauseManager pauseManager)
-            : base(translationInfo, messageHub, logger, wordViewModelFactory, synchronizationContext, assessmentInfoProvider, pauseManager)
+            [NotNull] IPauseManager pauseManager,
+            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory)
+            : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
@@ -61,7 +61,11 @@ namespace Remembrance.ViewModel.Card
 
             if (Accepted == true)
             {
-                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
+                Logger.InfoFormat(
+                    "Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...",
+                    mostSuitable,
+                    currentMinDistance,
+                    learningInfo);
                 learningInfo.IncreaseRepeatType();
 
                 // The inputed answer can differ from the first one

@@ -30,7 +30,9 @@ namespace Remembrance.ViewModel.Translation
             }
 
             Transcription = partOfSpeechTranslation.Transcription;
-            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Text)).ToArray();
+            TranslationVariants = partOfSpeechTranslation.TranslationVariants
+                .Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Word.Text))
+                .ToArray();
             CanLearnWord = false;
         }
 

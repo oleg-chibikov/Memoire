@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,13 +9,11 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Languages;
+using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
-using Remembrance.Resources;
-using Remembrance.ViewModel.Settings.Data;
 using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.ViewModel.Settings
@@ -23,6 +21,12 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseViewModelWithAddTranslationControl : IDisposable
     {
+        [NotNull]
+        private readonly ILanguageManager _languageManager;
+
+        [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
+
         [NotNull]
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
@@ -33,78 +37,31 @@ namespace Remembrance.ViewModel.Settings
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         [NotNull]
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        private string _selectedSourceLanguage;
 
         [NotNull]
-        private Language _selectedSourceLanguage;
-
-        [NotNull]
-        private Language _selectedTargetLanguage;
+        private string _selectedTargetLanguage;
 
         protected BaseViewModelWithAddTranslationControl(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] ILanguageManager languageManager,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger)
         {
-            if (languageDetector == null)
-            {
-                throw new ArgumentNullException(nameof(languageDetector));
-            }
-
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
             SaveCommand = new AsyncCorrelationCommand(SaveAsync);
 
-            logger.Trace("Loading languages...");
-            var languages = languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationTokenSource.Token).Result;
+            var sourceLanguages = _languageManager.GetAvailableSourceLanguages();
+            AvailableSourceLanguages = sourceLanguages;
+            _selectedSourceLanguage = sourceLanguages.SelectedLanguage;
 
-            // var acceptableLanguages = languages.Directions.Where(x => x.StartsWith(UiLanguage)).Select(x => x.Split('-')[1]).Concat(new []{UiLanguage}).ToArray();
-            // AvailableTargetLanguages = languages.Languages.Where(x => acceptableLanguages.Contains(x.Key)).Select(x => new Language(x.Key, x.Value)).ToArray();
-            var availableLanguages = languages.Languages.Select(x => new Language(x.Key, x.Value)).OrderBy(x => x.DisplayName).ToArray();
-
-            var autoSourceLanguage = new Language(Constants.AutoDetectLanguage, "--AutoDetect--");
-            var autoTargetLanguage = new Language(Constants.AutoDetectLanguage, "--Reverse--");
-
-            AvailableTargetLanguages = new[]
-                {
-                    autoTargetLanguage
-                }.Concat(availableLanguages)
-                .ToArray();
-            AvailableSourceLanguages = new[]
-                {
-                    autoSourceLanguage
-                }.Concat(availableLanguages)
-                .ToArray();
-            var lastUsedTargetLanguage = localSettingsRepository.LastUsedTargetLanguage;
-            Language targetLanguage = null;
-            if (lastUsedTargetLanguage != null)
-            {
-                targetLanguage = AvailableTargetLanguages.SingleOrDefault(x => x.Code == lastUsedTargetLanguage);
-            }
-
-            if (targetLanguage == null)
-            {
-                targetLanguage = autoTargetLanguage;
-            }
-
-            _selectedTargetLanguage = targetLanguage;
-
-            Language sourceLanguage = null;
-            var lastUsedSourceLanguage = localSettingsRepository.LastUsedSourceLanguage;
-            if (lastUsedSourceLanguage != null)
-            {
-                sourceLanguage = AvailableSourceLanguages.SingleOrDefault(x => x.Code == lastUsedSourceLanguage);
-            }
-
-            if (sourceLanguage == null)
-            {
-                sourceLanguage = autoSourceLanguage;
-            }
-
-            _selectedSourceLanguage = sourceLanguage;
+            var targetLanguages = _languageManager.GetAvailableTargetLanguages(_selectedSourceLanguage);
+            AvailableTargetLanguages = new ObservableCollection<Language>(targetLanguages);
+            _selectedTargetLanguage = targetLanguages.SelectedLanguage;
             logger.Debug("Languages have been loaded");
         }
 
@@ -112,7 +69,7 @@ namespace Remembrance.ViewModel.Settings
         public ICollection<Language> AvailableSourceLanguages { get; }
 
         [NotNull]
-        public ICollection<Language> AvailableTargetLanguages { get; }
+        public ObservableCollection<Language> AvailableTargetLanguages { get; }
 
         [CanBeNull]
         public string ManualTranslation { get; set; }
@@ -121,24 +78,36 @@ namespace Remembrance.ViewModel.Settings
         public ICommand SaveCommand { get; }
 
         [NotNull]
-        public Language SelectedSourceLanguage
+        public string SelectedSourceLanguage
         {
             get => _selectedSourceLanguage;
             set
             {
                 _selectedSourceLanguage = value;
-                _localSettingsRepository.LastUsedSourceLanguage = value.Code;
+                _localSettingsRepository.LastUsedSourceLanguage = value;
+                var targetLanguages = _languageManager.GetAvailableTargetLanguages(value);
+                AvailableTargetLanguages.Clear();
+                foreach (var targetLanguage in targetLanguages)
+                {
+                    AvailableTargetLanguages.Add(targetLanguage);
+                }
+
+                SelectedTargetLanguage = targetLanguages.SelectedLanguage;
             }
         }
 
         [NotNull]
-        public Language SelectedTargetLanguage
+        public string SelectedTargetLanguage
         {
             get => _selectedTargetLanguage;
             set
             {
                 _selectedTargetLanguage = value;
-                _localSettingsRepository.LastUsedTargetLanguage = value.Code;
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (value != null)
+                {
+                    _localSettingsRepository.LastUsedTargetLanguage = value;
+                }
             }
         }
 
@@ -169,14 +138,19 @@ namespace Remembrance.ViewModel.Settings
                 {
                     new ManualTranslation(ManualTranslation)
                 };
-            var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage.Code, SelectedTargetLanguage.Code);
+            var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage, SelectedTargetLanguage);
             var addition = manualTranslation == null ? null : $" with manual translation {ManualTranslation}";
             Logger.Info($"Adding translation for {translationEntryAdditionInfo}{addition}...");
             Text = null;
             ManualTranslation = null;
 
             var window = await GetWindowAsync().ConfigureAwait(false);
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, window, manualTranslations: manualTranslation).ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
+                    translationEntryAdditionInfo,
+                    CancellationTokenSource.Token,
+                    window,
+                    manualTranslations: manualTranslation)
+                .ConfigureAwait(false);
         }
     }
 }

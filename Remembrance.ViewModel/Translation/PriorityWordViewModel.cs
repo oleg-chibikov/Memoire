@@ -30,9 +30,6 @@ namespace Remembrance.ViewModel.Translation
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private readonly Func<Word, string, WordViewModel> _wordViewModelFactory;
-
-        [NotNull]
         private readonly WordKey _wordKey;
 
         public PriorityWordViewModel(
@@ -51,13 +48,17 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationEntry));
             }
 
-            _wordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
-            IsPriority = translationEntry.PriorityWords?.Contains(this) ?? false;
+            if (wordViewModelFactory == null)
+            {
+                throw new ArgumentNullException(nameof(wordViewModelFactory));
+            }
+
+            IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;
             _translationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _wordKey = new WordKey(translationEntry.Id, new BaseWord(word));
+            _wordKey = new WordKey(translationEntry.Id, word);
         }
 
         [DoNotNotify]
@@ -70,20 +71,6 @@ namespace Remembrance.ViewModel.Translation
         public void SetIsPriority(bool isPriority)
         {
             IsPriority = isPriority;
-        }
-
-        internal WordViewModel ConvertToBase()
-        {
-            var word = new Word
-            {
-                // TODO: Store Word in viewModel?
-                NounAnimacy = NounAnimacy,
-                Text = Text,
-                PartOfSpeech = PartOfSpeech,
-                NounGender = NounGender,
-                VerbType = VerbType
-            };
-            return _wordViewModelFactory(word, Language);
         }
 
         protected override void TogglePriority()

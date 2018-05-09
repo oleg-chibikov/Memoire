@@ -31,8 +31,8 @@ namespace Remembrance.Core.Sync
                 return Task.CompletedTask;
             }
 
-            var prevFreq = oldValue?.Value;
-            var newFreq = newValue.Value;
+            var prevFreq = oldValue;
+            var newFreq = newValue;
 
             if (prevFreq != newFreq)
             {

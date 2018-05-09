@@ -14,9 +14,10 @@ using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Exchange;
+using Remembrance.Contracts.Languages;
+using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
-using Remembrance.ViewModel.Settings.Data;
 using Scar.Common.Events;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.ViewModel;
@@ -27,9 +28,6 @@ namespace Remembrance.ViewModel.Settings
     [AddINotifyPropertyChangedInterface]
     public sealed class SettingsViewModel : IRequestCloseViewModel, IDisposable
     {
-        [NotNull]
-        private readonly IPauseManager _pauseManager;
-
         [NotNull]
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -46,14 +44,17 @@ namespace Remembrance.ViewModel.Settings
         private readonly IMessageHub _messageHub;
 
         [NotNull]
+        private readonly IPauseManager _pauseManager;
+
+        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
         [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        private Language _uiLanguage;
-
         private bool _saved;
+
+        private string _uiLanguage;
 
         public SettingsViewModel(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
@@ -63,8 +64,14 @@ namespace Remembrance.ViewModel.Settings
             [NotNull] ICardsExchanger cardsExchanger,
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] IPauseManager pauseManager,
-            [NotNull] ProcessBlacklistViewModel processBlacklistViewModel)
+            [NotNull] ProcessBlacklistViewModel processBlacklistViewModel,
+            [NotNull] ILanguageManager languageManager)
         {
+            if (languageManager == null)
+            {
+                throw new ArgumentNullException(nameof(languageManager));
+            }
+
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -83,22 +90,21 @@ namespace Remembrance.ViewModel.Settings
                 }
             }
 
+            AvailableTranslationLanguages = languageManager.GetAvailableSourceLanguages(false);
+            SelectedPreferredLanguage = _settingsRepository.PreferredLanguage;
             TtsSpeaker = _settingsRepository.TtsSpeaker;
-            UiLanguage = AvailableUiLanguages.Single(x => x.Code == _localSettingsRepository.UiLanguage);
+            UiLanguage = _localSettingsRepository.UiLanguage;
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
             OpenSharedFolderCommand = new CorrelationCommand(ProcessCommands.OpenSharedFolder);
             OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
             ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
             SaveCommand = new CorrelationCommand(Save);
-            CancelCommand = new CorrelationCommand(Cancel);
             ExportCommand = new AsyncCorrelationCommand(ExportAsync);
             ImportCommand = new AsyncCorrelationCommand(ImportAsync);
             WindowClosingCommand = new CorrelationCommand(WindowClosing);
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
-
-        public event EventHandler RequestClose;
 
         [NotNull]
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
@@ -111,7 +117,13 @@ namespace Remembrance.ViewModel.Settings
         };
 
         [NotNull]
-        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
+        public ICollection<Language> AvailableTranslationLanguages { get; }
+
+        [NotNull]
+        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } =
+            Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
+
+        public string SelectedPreferredLanguage { get; set; }
 
         public double CardShowFrequency { get; set; }
 
@@ -127,6 +139,9 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public ICommand OpenSharedFolderCommand { get; }
 
+        [NotNull]
+        public ProcessBlacklistViewModel ProcessBlacklistViewModel { get; }
+
         public int Progress { get; private set; }
 
         [CanBeNull]
@@ -136,23 +151,18 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         public ICommand SaveCommand { get; }
-        [NotNull]
-        public ICommand CancelCommand { get; }
 
         public Speaker TtsSpeaker { get; set; }
 
-        [NotNull]
-        public ProcessBlacklistViewModel ProcessBlacklistViewModel { get; }
-
         public VoiceEmotion TtsVoiceEmotion { get; set; }
 
-        public Language UiLanguage
+        public string UiLanguage
         {
             get => _uiLanguage;
             set
             {
                 _uiLanguage = value;
-                _messageHub.Publish(CultureInfo.GetCultureInfo(value.Code));
+                _messageHub.Publish(CultureInfo.GetCultureInfo(value));
             }
         }
 
@@ -166,6 +176,8 @@ namespace Remembrance.ViewModel.Settings
         {
             _cardsExchanger.Progress -= CardsExchanger_Progress;
         }
+
+        public event EventHandler RequestClose;
 
         private void BeginProgress()
         {
@@ -217,11 +229,12 @@ namespace Remembrance.ViewModel.Settings
             _logger.Trace("Saving settings...");
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
             var prevFreq = _settingsRepository.CardShowFrequency;
+            _settingsRepository.PreferredLanguage = SelectedPreferredLanguage;
             _settingsRepository.CardShowFrequency = freq;
             _settingsRepository.TtsSpeaker = TtsSpeaker;
             _settingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
             _settingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
-            _localSettingsRepository.UiLanguage = UiLanguage.Code;
+            _localSettingsRepository.UiLanguage = UiLanguage;
             if (prevFreq != freq)
             {
                 _messageHub.Publish(freq);
@@ -231,11 +244,6 @@ namespace Remembrance.ViewModel.Settings
 
             RequestClose?.Invoke(null, null);
             _logger.Info("Settings has been saved");
-        }
-
-        private void Cancel()
-        {
-            RequestClose?.Invoke(null, null);
         }
 
         private void WindowClosing()

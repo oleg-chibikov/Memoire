@@ -5,8 +5,8 @@ using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
+using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.View.Settings;
 using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
@@ -22,11 +22,11 @@ namespace Remembrance.ViewModel.Settings
 
         public AddTranslationViewModel(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] ILanguageManager languageManager,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
             [NotNull] IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory)
-            : base(localSettingsRepository, languageDetector, translationEntryProcessor, logger)
+            : base(localSettingsRepository, languageManager, translationEntryProcessor, logger)
         {
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
         }

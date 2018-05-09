@@ -1,11 +1,10 @@
 using JetBrains.Annotations;
 
-namespace Remembrance.ViewModel.Settings.Data
+namespace Remembrance.Contracts.Languages.Data
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class Language
     {
-        internal Language([NotNull] string code, [NotNull] string displayName)
+        public Language([NotNull] string code, [NotNull] string displayName)
         {
             Code = code;
             DisplayName = displayName;

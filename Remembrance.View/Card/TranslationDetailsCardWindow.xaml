@@ -1,18 +1,18 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Card.TranslationDetailsCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Card"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:cardViewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=cardViewModel:TranslationDetailsCardViewModel}"
     SizeToContent="WidthAndHeight"
     ShowActivated="false"
     Focusable="False"
     Icon="../IconAlt.ico">
-    <view:TranslationDetailsCardControl />
-</window:AnimatedWindow>
+    <cardView:TranslationDetailsCardControl />
+</animatedWindow:AnimatedWindow>

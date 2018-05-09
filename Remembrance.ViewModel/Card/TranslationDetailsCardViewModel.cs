@@ -173,9 +173,10 @@ namespace Remembrance.ViewModel.Card
             Task.Run(
                 () =>
                 {
-                    foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                    foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
+                        partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                     {
-                        if (translationVariant.Equals(priorityWordKey.WordKey.Word))
+                        if (translationVariant.Word.Equals(priorityWordKey.WordKey.Word))
                         {
                             _logger.TraceFormat("Setting priority: {0} in translations details for translation variant...", priorityWordKey);
                             translationVariant.SetIsPriority(priorityWordKey.IsPriority);
@@ -187,7 +188,7 @@ namespace Remembrance.ViewModel.Card
                             continue;
                         }
 
-                        foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.Equals(priorityWordKey.WordKey.Word)))
+                        foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.Word.Equals(priorityWordKey.WordKey.Word)))
                         {
                             _logger.TraceFormat("Setting priority: {0} in translations details for synonym...", priorityWordKey);
                             synonym.SetIsPriority(priorityWordKey.IsPriority);
@@ -214,15 +215,15 @@ namespace Remembrance.ViewModel.Card
 
                         foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
                         {
-                            partOfSpeechTranslation.ReRender();
+                            partOfSpeechTranslation.ReRenderWord();
                             foreach (var translationVariant in partOfSpeechTranslation.TranslationVariants)
                             {
-                                translationVariant.ReRender();
+                                translationVariant.ReRenderWord();
                                 if (translationVariant.Synonyms != null)
                                 {
                                     foreach (var synonym in translationVariant.Synonyms)
                                     {
-                                        synonym.ReRender();
+                                        synonym.ReRenderWord();
                                     }
                                 }
 
@@ -230,7 +231,7 @@ namespace Remembrance.ViewModel.Card
                                 {
                                     foreach (var meaning in translationVariant.Meanings)
                                     {
-                                        meaning.ReRender();
+                                        meaning.ReRenderWord();
                                     }
                                 }
                             }

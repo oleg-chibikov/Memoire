@@ -25,11 +25,6 @@ namespace Remembrance.Core.Exchange
         where T : IExchangeEntry
     {
         [NotNull]
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
-
-        private const int MaxBlockSize = 25;
-
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
         [NotNull]
@@ -40,6 +35,9 @@ namespace Remembrance.Core.Exchange
 
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
+
+        [NotNull]
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -78,7 +76,7 @@ namespace Remembrance.Core.Exchange
             var count = 0;
             var successCount = 0;
             await deserialized.RunByBlocksAsync(
-                    MaxBlockSize,
+                    25,
                     async (exchangeEntriesBlock, index, blocksCount) =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -163,7 +161,10 @@ namespace Remembrance.Core.Exchange
         }
 
         [ItemCanBeNull]
-        private async Task<TranslationInfo> ImportNewEntry(CancellationToken cancellationToken, [NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations)
+        private async Task<TranslationInfo> ImportNewEntry(
+            CancellationToken cancellationToken,
+            [NotNull] TranslationEntryKey translationEntryKey,
+            [CanBeNull] ICollection<ManualTranslation> manualTranslations)
         {
             return await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),

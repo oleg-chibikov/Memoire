@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
@@ -19,6 +20,8 @@ namespace Remembrance.Core.Translation.Yandex
     {
         [NotNull]
         private const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
+
+        private static readonly Regex CyryllicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
 
         [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
@@ -57,7 +60,7 @@ namespace Remembrance.Core.Translation.Yandex
             _logger.TraceFormat("Starting speaking {0}...", text);
             var reset = new AutoResetEvent(false);
             var uriPart =
-                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang)}&speaker={_settingsRepository.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={_settingsRepository.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang, text)}&speaker={_settingsRepository.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={_settingsRepository.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
             try
             {
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
@@ -97,14 +100,16 @@ namespace Remembrance.Core.Translation.Yandex
         }
 
         [NotNull]
-        private static string PrepareLanguage([NotNull] string lang)
+        private static string PrepareLanguage([NotNull] string lang, [NotNull] string text)
         {
             switch (lang)
             {
-                case Constants.RuLanguageTwoLetters:
+                case Constants.RuLanguageTwoLetters: // russian
+                case "uk": // ukrainian
+                case "tr": // turkish
                     return lang;
                 default:
-                    return Constants.EnLanguageTwoLetters;
+                    return CyryllicRegex.IsMatch(text) ? Constants.RuLanguageTwoLetters : Constants.EnLanguageTwoLetters;
             }
         }
     }

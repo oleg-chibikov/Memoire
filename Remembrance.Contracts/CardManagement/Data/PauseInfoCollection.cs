@@ -16,7 +16,10 @@ namespace Remembrance.Contracts.CardManagement.Data
         {
         }
 
-        public TimeSpan GetPauseTime() => this.Any() ? this.Select(pauseInfo => pauseInfo.GetPauseTime()).Aggregate((a, b) => b + a) : TimeSpan.Zero;
+        public TimeSpan GetPauseTime()
+        {
+            return this.Any() ? this.Select(pauseInfo => pauseInfo.GetPauseTime()).Aggregate((a, b) => b + a) : TimeSpan.Zero;
+        }
 
         public bool IsPaused()
         {

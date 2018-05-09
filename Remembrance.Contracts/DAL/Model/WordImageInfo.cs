@@ -13,24 +13,18 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public WordImageInfo([NotNull] WordKey wordKey, int searchIndex, [CanBeNull] ImageInfoWithBitmap image, bool isReverse, int?[] nonAvailableIndexes)
+        public WordImageInfo([NotNull] WordKey wordKey, [CanBeNull] ImageInfoWithBitmap image, int?[] nonAvailableIndexes)
         {
             Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
-            SearchIndex = searchIndex;
             Image = image;
-            IsReverse = isReverse;
             NonAvailableIndexes = nonAvailableIndexes;
         }
 
         [CanBeNull]
         public ImageInfoWithBitmap Image { get; set; }
 
-        public bool IsReverse { get; set; }
-
         [CanBeNull]
         public int?[] NonAvailableIndexes { get; set; }
-
-        public int SearchIndex { get; set; }
 
         public override string ToString()
         {

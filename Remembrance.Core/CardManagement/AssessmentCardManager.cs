@@ -28,9 +28,6 @@ namespace Remembrance.Core.CardManagement
         private readonly DateTime _initTime;
 
         [NotNull]
-        private readonly IPauseManager _pauseManager;
-
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
         [NotNull]
@@ -38,6 +35,9 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         private readonly IMessageHub _messageHub;
+
+        [NotNull]
+        private readonly IPauseManager _pauseManager;
 
         [NotNull]
         private readonly IScopedWindowProvider _scopedWindowProvider;
@@ -138,11 +138,7 @@ namespace Remembrance.Core.CardManagement
             }
 
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
-            var learningInfo = _learningInfoRepository.GetById(translationInfo.TranslationEntryKey);
-            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
-            learningInfo.LastCardShowTime = DateTime.Now;
-            _learningInfoRepository.Update(learningInfo);
-            _messageHub.Publish(learningInfo);
+            var learningInfo = translationInfo.LearningInfo;
             IWindow window;
             switch (learningInfo.RepeatType)
             {
@@ -151,7 +147,9 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Novice:
                 {
                     // ReSharper disable once StyleCop.SA1009
-                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
+                    window = await _scopedWindowProvider
+                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .ConfigureAwait(false);
                     break;
                 }
 
@@ -159,9 +157,10 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
                 {
-                    // TODO: Dropdown
                     // ReSharper disable once StyleCop.SA1009
-                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
+                    window = await _scopedWindowProvider
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .ConfigureAwait(false);
                     break;
                 }
 
@@ -170,7 +169,9 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Expert:
                 {
                     // ReSharper disable once StyleCop.SA1009
-                    window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
+                    window = await _scopedWindowProvider
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .ConfigureAwait(false);
                     break;
                 }
 
@@ -180,6 +181,10 @@ namespace Remembrance.Core.CardManagement
 
             window.Closed += Window_Closed;
             _hasOpenWindows = true;
+            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
+            learningInfo.LastCardShowTime = DateTime.Now;
+            _learningInfoRepository.Update(learningInfo);
+            _messageHub.Publish(learningInfo);
             return window;
         }
 
@@ -195,9 +200,21 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private IDisposable ProvideInterval(TimeSpan delay)
+        private void OnCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
         {
-            return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);
+            CardShowFrequency = newCardShowFrequency;
+            if (!_pauseManager.IsPaused)
+            {
+                Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
+                lock (_lockObject)
+                {
+                    CreateInterval();
+                }
+            }
+            else
+            {
+                Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
+            }
         }
 
         private async void OnIntervalHit(long x)
@@ -223,27 +240,12 @@ namespace Remembrance.Core.CardManagement
 
             var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
 
-            var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationDetails = await _translationEntryProcessor
+                .ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+                .ConfigureAwait(false);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
             Logger.TraceFormat("Trying to show {0}...", translationInfo);
             await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
-        }
-
-        private void OnCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
-        {
-            CardShowFrequency = newCardShowFrequency;
-            if (!_pauseManager.IsPaused)
-            {
-                Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
-                lock (_lockObject)
-                {
-                    CreateInterval();
-                }
-            }
-            else
-            {
-                Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
-            }
         }
 
         private void OnPauseReasonChanged(PauseReason pauseReason)
@@ -259,6 +261,11 @@ namespace Remembrance.Core.CardManagement
             {
                 CreateInterval();
             }
+        }
+
+        private IDisposable ProvideInterval(TimeSpan delay)
+        {
+            return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);
         }
 
         private void Window_Closed(object sender, EventArgs e)

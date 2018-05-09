@@ -7,7 +7,11 @@ namespace Remembrance.View.Card
     /// </summary>
     internal sealed partial class WordControl
     {
-        public static readonly DependencyProperty SpeakerAlignmentProperty = DependencyProperty.Register(nameof(SpeakerAlignment), typeof(HorizontalAlignment), typeof(WordControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty SpeakerAlignmentProperty = DependencyProperty.Register(
+            nameof(SpeakerAlignment),
+            typeof(HorizontalAlignment),
+            typeof(WordControl),
+            new PropertyMetadata(null));
 
         public WordControl()
         {

@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Settings.Processes.ProcessesBlacklistControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,25 +8,25 @@
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:processes="clr-namespace:Remembrance.View.Settings.Processes"
+    xmlns:processesView="clr-namespace:Remembrance.View.Settings.Processes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     HorizontalAlignment="Stretch"
-    d:DataContext="{d:DesignInstance d:Type=settings:ProcessBlacklistViewModel}">
-    <UserControl.Resources>
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:ProcessBlacklistViewModel}">
+    <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </UserControl.Resources>
+    </commonView:BaseControl.Resources>
     <StackPanel
         Orientation="Vertical"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <processes:AddProcessToBlacklistControl></processes:AddProcessToBlacklistControl>
+        <processesView:AddProcessToBlacklistControl />
         <xceed:XceedAutoFitColumnGrid
             MaxHeight="400"
             ItemsSource="{Binding BlacklistedProcessesView, Mode=OneWay}"
@@ -97,4 +97,4 @@
             </xceed:XceedAutoFitColumnGrid.InputBindings>
         </xceed:XceedAutoFitColumnGrid>
     </StackPanel>
-</UserControl>
+</commonView:BaseControl>

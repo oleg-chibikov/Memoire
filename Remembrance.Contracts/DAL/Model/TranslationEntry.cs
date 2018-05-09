@@ -25,7 +25,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{Id}";
+            return Id.ToString();
         }
     }
 }

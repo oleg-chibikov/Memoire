@@ -11,11 +11,14 @@ namespace Remembrance.Contracts.CardManagement.Data
             EndTime = endTime;
         }
 
-        public DateTime StartTime { get; set; }
-
         [CanBeNull]
         public DateTime? EndTime { get; set; }
 
-        public TimeSpan GetPauseTime() => (EndTime ?? DateTime.Now) - StartTime;
+        public DateTime StartTime { get; set; }
+
+        public TimeSpan GetPauseTime()
+        {
+            return (EndTime ?? DateTime.Now) - StartTime;
+        }
     }
 }

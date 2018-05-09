@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
@@ -17,13 +16,13 @@ namespace Remembrance.ViewModel.Translation
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel : BaseWord
+    public class WordViewModel
     {
         [NotNull]
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         public WordViewModel(
             [NotNull] Word word,
@@ -31,11 +30,6 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor)
         {
-            if (word == null)
-            {
-                throw new ArgumentNullException(nameof(word));
-            }
-
             if (textToSpeechPlayer == null)
             {
                 throw new ArgumentNullException(nameof(textToSpeechPlayer));
@@ -46,12 +40,8 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationEntryProcessor));
             }
 
-            Text = word.Text;
             Language = language ?? throw new ArgumentNullException(nameof(language));
-            PartOfSpeech = word.PartOfSpeech;
-            NounAnimacy = word.NounAnimacy;
-            NounGender = word.NounGender;
-            VerbType = word.VerbType;
+            Word = word ?? throw new ArgumentNullException(nameof(word));
 
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
@@ -69,21 +59,10 @@ namespace Remembrance.ViewModel.Translation
         public bool IsPriority { get; protected set; }
 
         [DoNotNotify]
-        public virtual string Language { get; set; }
+        public virtual string Language { get; }
 
         [NotNull]
         public ICommand LearnWordCommand { get; }
-
-        [CanBeNull]
-        [DoNotNotify]
-        public string NounAnimacy { get; }
-
-        [CanBeNull]
-        [DoNotNotify]
-        public string NounGender { get; }
-
-        [DoNotNotify]
-        public override PartOfSpeech PartOfSpeech { get; set; }
 
         [NotNull]
         public ICommand PlayTtsCommand { get; }
@@ -91,35 +70,34 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         public ICommand TogglePriorityCommand { get; }
 
-        [CanBeNull]
         [DoNotNotify]
-        public string VerbType { get; }
+        public Word Word { get; }
 
         [CanBeNull]
         public string WordInfo =>
-            VerbType == null && NounAnimacy == null && NounGender == null
+            Word.VerbType == null && Word.NounAnimacy == null && Word.NounGender == null
                 ? null
                 : string.Join(
                     ", ",
                     new[]
                     {
-                        VerbType,
-                        NounAnimacy,
-                        NounGender
+                        Word.VerbType,
+                        Word.NounAnimacy,
+                        Word.NounGender
                     }.Where(x => x != null));
 
         // A hack to raise NotifyPropertyChanged for other properties
-        [AlsoNotifyFor(nameof(PartOfSpeech))]
-        private bool ReRenderSwitch { get; set; }
+        [AlsoNotifyFor(nameof(Word))]
+        private bool ReRenderWordSwitch { get; set; }
 
-        public void ReRender()
+        public void ReRenderWord()
         {
-            ReRenderSwitch = !ReRenderSwitch;
+            ReRenderWordSwitch = !ReRenderWordSwitch;
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()} [{Language}]";
+            return $"{Word} [{Language}]";
         }
 
         protected virtual void TogglePriority()
@@ -129,13 +107,13 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private async Task LearnWordAsync()
         {
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Text, Language), CancellationToken.None).ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Word.Text, Language), CancellationToken.None).ConfigureAwait(false);
         }
 
         [NotNull]
         private async Task PlayTtsAsync()
         {
-            await _textToSpeechPlayer.PlayTtsAsync(Text, Language, CancellationToken.None).ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(Word.Text, Language, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

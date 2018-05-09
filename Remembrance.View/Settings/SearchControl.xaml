@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Settings.SearchControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,36 +7,36 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=settings:DictionaryViewModel}">
-    <UserControl.Resources>
-        <view:DesignTimeResourceDictionary
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:DictionaryViewModel}">
+    <commonView:BaseControl.Resources>
+        <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </UserControl.Resources>
+    </commonView:BaseControl.Resources>
     <StackPanel
         Orientation="Horizontal"
-        view:MarginSetter.Margin="{StaticResource CommonMargin}">
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
 
         <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
-        <controls:CompletableTextBox
+        <autoComplete:CompletableTextBox
             x:Name="SearchTextBox"
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{StaticResource SuggestionProvider}">
-            <controls:CompletableTextBox.InputBindings>
+            <autoComplete:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding SearchCommand, Mode=OneTime}"
                     Key="Enter"
                     CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}, Mode=OneWay}" />
-            </controls:CompletableTextBox.InputBindings>
-        </controls:CompletableTextBox>
+            </autoComplete:CompletableTextBox.InputBindings>
+        </autoComplete:CompletableTextBox>
 
         <Button
             IsDefault="True"
@@ -48,4 +48,4 @@
                 Kind="FileFind" />
         </Button>
     </StackPanel>
-</UserControl>
+</commonView:BaseControl>

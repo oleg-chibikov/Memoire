@@ -1,4 +1,4 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Settings.AddTranslationWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,21 +8,21 @@
     mc:Ignorable="d"
     Title="{lex:Loc Title}"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Settings"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:settingsView="clr-namespace:Remembrance.View.Settings"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:AddTranslationViewModel}"
     SizeToContent="Height"
     AdvancedWindowStartupLocation="BottomLeft"
     WindowStartupLocation="Manual"
     Draggable="False"
     Width="900"
     Icon="../IconAlt.ico">
-    <view:AddTranslationControl
+    <settingsView:AddTranslationControl
         VerticalAlignment="Center"
         VerticalContentAlignment="Center" />
-</window:AnimatedWindow>
+</animatedWindow:AnimatedWindow>

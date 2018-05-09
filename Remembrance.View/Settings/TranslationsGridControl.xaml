@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Settings.TranslationsGridControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,19 +11,19 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:view="clr-namespace:Remembrance.View.Card"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:contracts="clr-namespace:Remembrance.Contracts.DAL.Model;assembly=Remembrance.Contracts"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:various="clr-namespace:Remembrance.View.Various"
+    xmlns:variousView="clr-namespace:Remembrance.View.Various"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000">
-    <UserControl.Resources>
+    <commonView:BaseControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <commonView:DesignTimeResourceDictionary
@@ -37,7 +37,7 @@
                     Value="☩" />
             </Style>
         </ResourceDictionary>
-    </UserControl.Resources>
+    </commonView:BaseControl.Resources>
     <xceed:XceedAutoFitColumnGrid
         ItemsSource="{Binding View, Mode=OneTime}"
         AutoScrollCurrentItem="All"
@@ -71,7 +71,7 @@
                 AllowSort="True">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
-                        <various:FavoriteButton
+                        <variousView:FavoriteButton
                             IsFavorited="{Binding Mode=OneWay}"
                             Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}, Mode=OneTime}"
                             CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
@@ -86,7 +86,7 @@
                 Title="{lex:Loc Remembrance.Resources:Texts:Word}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
-                        <view:WordControl
+                        <cardView:WordControl
                             HorizontalAlignment="Stretch"
                             SpeakerAlignment="Right"
                             DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
@@ -103,30 +103,29 @@
                 Title="{lex:Loc Remembrance.Resources:Texts:Translation}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
-                        <DockPanel
+                        <StackPanel
+                            Orientation="Horizontal"
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                             Background="Transparent"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
                             Cursor="Hand">
-                            <DockPanel.InputBindings>
+                            <StackPanel.InputBindings>
                                 <MouseBinding
                                     CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                                     Command="{Binding DataContext.OpenDetailsCommand,Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
                                     MouseAction="LeftDoubleClick" />
-                            </DockPanel.InputBindings>
-                            <view:WordsControl
-                                ItemsSource="{Binding Mode=OneWay}"
-                                MaxWidth="Infinity" />
+                            </StackPanel.InputBindings>
                             <Button
                                 Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc OpenDetails}"
-                                HorizontalAlignment="Right"
                                 CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                                 Command="{Binding DataContext.OpenDetailsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="FileDocument" />
                             </Button>
-                        </DockPanel>
+                            <cardView:WordsControl
+                                ItemsSource="{Binding Mode=OneWay}"
+                                MaxWidth="Infinity" />
+                        </StackPanel>
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -204,4 +203,4 @@
             </xcdg:UnboundColumn>
         </xceed:XceedAutoFitColumnGrid.Columns>
     </xceed:XceedAutoFitColumnGrid>
-</UserControl>
+</commonView:BaseControl>

@@ -1,6 +1,3 @@
-// TODO: Feature: if the word level is low, replace textbox with dropdown
-// TODO: Display image near to assessmentCard
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -19,17 +16,21 @@ using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Remembrance.ViewModel.Translation;
-using Scar.Common;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.ViewModel;
 
 namespace Remembrance.ViewModel.Card
 {
-    // TODO: Test delete file then save or smth
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseAssessmentCardViewModel : IRequestCloseViewModel, IDisposable
     {
+        [NotNull]
+        private readonly IPauseManager _pauseManager;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
         [NotNull]
         protected readonly HashSet<Word> AcceptedAnswers;
 
@@ -45,23 +46,14 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
 
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
-        [NotNull]
-        private readonly SynchronizationContext _synchronizationContext;
-
-        [NotNull]
-        private readonly IPauseManager _pauseManager;
-
         protected BaseAssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] IMessageHub messageHub,
             [NotNull] ILog logger,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
-            [NotNull] IPauseManager pauseManager)
+            [NotNull] IPauseManager pauseManager,
+            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory)
         {
             if (assessmentInfoProvider == null)
             {
@@ -71,7 +63,6 @@ namespace Remembrance.ViewModel.Card
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
 
@@ -81,28 +72,29 @@ namespace Remembrance.ViewModel.Card
             LanguagePair = $"{sourceLanguage} -> {targetLanguage}";
             RepeatType = translationInfo.LearningInfo.RepeatType;
             AcceptedAnswers = assessmentInfo.AcceptedAnswers;
-            var word = wordViewModelFactory(assessmentInfo.Word, sourceLanguage);
-            if (sourceLanguage == Constants.EnLanguageTwoLetters && word.PartOfSpeech == PartOfSpeech.Verb)
-            {
-                word.Text = "to " + word.Text;
-            }
+            var wordViewModel = wordViewModelFactory(assessmentInfo.Word, sourceLanguage);
+            PrepareVerb(sourceLanguage, wordViewModel.Word);
 
-            word.CanLearnWord = false;
-            Word = word;
+            wordViewModel.CanLearnWord = false;
+            Word = wordViewModel;
             CorrectAnswer = wordViewModelFactory(assessmentInfo.CorrectAnswer, targetLanguage);
-            if (CorrectAnswer.Text.Length > 2)
+            if (CorrectAnswer.Word.Text.Length > 2)
             {
-                Tooltip = CorrectAnswer.Text[0] + string.Join(string.Empty, Enumerable.Range(0, CorrectAnswer.Text.Length - 2).Select(x => '*')) + CorrectAnswer.Text[CorrectAnswer.Text.Length - 1];
+                var text = CorrectAnswer.Word.Text;
+                Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(x => '*')) + text[text.Length - 1];
             }
 
-            pauseManager.Pause(PauseReason.CardIsVisible, word.ToString());
+            WordImageViewerViewModel = wordImageViewerViewModelFactory(
+                new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer),
+                assessmentInfo.Word.Text,
+                true);
+
+            pauseManager.Pause(PauseReason.CardIsVisible, wordViewModel.ToString());
 
             WindowClosedCommand = new CorrelationCommand(WindowClosed);
 
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
         }
-
-        public event EventHandler RequestClose;
 
         [NotNull]
         public WordViewModel CorrectAnswer { get; protected set; }
@@ -121,6 +113,9 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         public WordViewModel Word { get; }
 
+        [NotNull]
+        public WordImageViewerViewModel WordImageViewerViewModel { get; }
+
         public void Dispose()
         {
             foreach (var subscriptionToken in _subscriptionTokens)
@@ -131,16 +126,29 @@ namespace Remembrance.ViewModel.Card
             _subscriptionTokens.Clear();
         }
 
-        protected void CloseWindowWithTimeout(TimeSpan closeTimeout)
+        public event EventHandler RequestClose;
+
+        protected async void CloseWindowWithTimeout(TimeSpan closeTimeout)
         {
             Logger.TraceFormat("Closing window in {0}...", closeTimeout);
-            ActionExtensions.DoAfterAsync(
-                () =>
-                {
-                    Logger.Trace("Window is closing...");
-                    _synchronizationContext.Post(x => RequestClose?.Invoke(null, null), null);
-                },
-                closeTimeout);
+            await Task.Delay(closeTimeout).ConfigureAwait(true);
+            RequestClose?.Invoke(this, new EventArgs());
+            Logger.Debug("Window is closed");
+        }
+
+        private static bool HasUppercaseLettersExceptFirst([NotNull] string text)
+        {
+            return text.Substring(1).Any(letter => char.IsLetter(letter) && char.IsUpper(letter));
+        }
+
+        private static void PrepareVerb([NotNull] string sourceLanguage, [NotNull] BaseWord word)
+        {
+            if (sourceLanguage != Constants.EnLanguageTwoLetters || word.PartOfSpeech != PartOfSpeech.Verb)
+            {
+                return;
+            }
+
+            word.Text = "To " + (HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant());
         }
 
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
@@ -156,7 +164,7 @@ namespace Remembrance.ViewModel.Card
                     () =>
                     {
                         CultureUtilities.ChangeCulture(cultureInfo);
-                        Word.ReRender();
+                        Word.ReRenderWord();
                     },
                     CancellationToken.None)
                 .ConfigureAwait(false);

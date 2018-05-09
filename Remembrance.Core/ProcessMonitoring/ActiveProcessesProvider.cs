@@ -13,8 +13,7 @@ namespace Remembrance.Core.ProcessMonitoring
     {
         public ICollection<ProcessInfo> GetActiveProcesses()
         {
-            const string WmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process";
-            using (var searcher = new ManagementObjectSearcher(WmiQueryString))
+            using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, ExecutablePath FROM Win32_Process"))
             using (var results = searcher.Get())
             {
                 var processes = from process in Process.GetProcesses()

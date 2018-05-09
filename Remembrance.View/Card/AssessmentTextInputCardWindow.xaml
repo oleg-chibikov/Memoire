@@ -1,4 +1,4 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Card.AssessmentTextInputCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,24 +6,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Card"
+    xmlns:cardViewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance viewModel:AssessmentTextInputCardViewModel}"
+    d:DataContext="{d:DesignInstance cardViewModel:AssessmentTextInputCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
     Title="{Binding Word, Mode=OneTime}"
     Icon="../IconAlt.ico">
-    <window:AnimatedWindow.Resources>
+    <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </window:AnimatedWindow.Resources>
+    </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger
             EventName="Closed">
@@ -49,8 +49,9 @@
             Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             Grid.Row="1">
-            <!--<Image Width="100" Source="{Binding ImageBitmap, Mode=OneTime}" />-->
-            <view:WordControl
+            <cardView:WordImageViewerControl
+                DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
+            <cardView:WordControl
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
@@ -61,14 +62,14 @@
                 FontWeight="Bold"
                 Text="-"
                 Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}" />
-            <view:WordControl
+            <cardView:WordControl
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding CorrectAnswer, Mode=OneWay}"
                 Visibility="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource NotNullToVisibilityConverter}}">
-                <view:WordControl.Style>
+                <cardView:WordControl.Style>
                     <Style
-                        TargetType="{x:Type view:WordControl}">
+                        TargetType="{x:Type cardView:WordControl}">
                         <Style.Triggers>
                             <DataTrigger
                                 Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -86,13 +87,13 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </view:WordControl.Style>
-            </view:WordControl>
+                </cardView:WordControl.Style>
+            </cardView:WordControl>
         </StackPanel>
         <DockPanel
             Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
             Grid.Row="2">
-            <view:AnswerControl
+            <cardView:AnswerControl
                 DockPanel.Dock="Right"
                 HorizontalAlignment="Right"
                 FontSize="{StaticResource MediumFontSize}" />
@@ -110,4 +111,4 @@
                 Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
-</window:AnimatedWindow>
+</animatedWindow:AnimatedWindow>

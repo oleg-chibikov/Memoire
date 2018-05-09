@@ -348,4 +348,10 @@
   <data name="ClearFilter" xml:space="preserve">
     <value>Очистить фильтр</value>
   </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="PreferredLanguage" xml:space="preserve">
+    <value>Предпочтительный язык</value>
+  </data>
 </root>

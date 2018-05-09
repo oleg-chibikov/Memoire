@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,8 +28,6 @@ namespace Remembrance.Core.Translation.Yandex
         {
             ContractResolver = new DetectionResultContractResolver()
         };
-
-        private readonly ConcurrentDictionary<string, Task<ListResult>> _cacheTasks = new ConcurrentDictionary<string, Task<ListResult>>();
 
         [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
@@ -82,43 +79,30 @@ namespace Remembrance.Core.Translation.Yandex
             }
         }
 
-        public async Task<ListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
+        public async Task<LanguageListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
         {
             if (ui == null)
             {
                 throw new ArgumentNullException(nameof(ui));
             }
 
-            return await _cacheTasks.GetOrAdd(
-                           ui,
-                           async x =>
-                           {
-                               var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
-                               try
-                               {
-                                   var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
-                                   if (!response.IsSuccessStatusCode)
-                                   {
-                                       throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
-                                   }
+            var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
+            try
+            {
+                var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                }
 
-                                   var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                                   return JsonConvert.DeserializeObject<ListResult>(result, ListResultSettings);
-                               }
-                               catch (Exception ex)
-                               {
-                                   _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
-                                   return new ListResult
-                                   {
-                                       Languages =
-                                       {
-                                           { Constants.EnLanguageTwoLetters, Constants.EnLanguage },
-                                           { Constants.RuLanguageTwoLetters, Constants.RuLanguage }
-                                       }
-                                   };
-                               }
-                           })
-                       .ConfigureAwait(false);
+                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return JsonConvert.DeserializeObject<LanguageListResult>(result, ListResultSettings);
+            }
+            catch (Exception ex)
+            {
+                _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
+                return null;
+            }
         }
     }
 }

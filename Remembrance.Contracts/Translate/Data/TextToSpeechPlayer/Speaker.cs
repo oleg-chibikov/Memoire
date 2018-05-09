@@ -3,6 +3,11 @@ namespace Remembrance.Contracts.Translate.Data.TextToSpeechPlayer
     public enum Speaker
     {
         /// <summary>
+        /// Alyss voice.
+        /// </summary>
+        Alyss,
+
+        /// <summary>
         /// Jane voice.
         /// </summary>
         Jane,
@@ -11,11 +16,6 @@ namespace Remembrance.Contracts.Translate.Data.TextToSpeechPlayer
         /// Oksana voice.
         /// </summary>
         Oksana,
-
-        /// <summary>
-        /// Alyss voice.
-        /// </summary>
-        Alyss,
 
         /// <summary>
         /// Omazh voice.

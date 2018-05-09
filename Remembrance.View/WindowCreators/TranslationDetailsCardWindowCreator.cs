@@ -11,17 +11,18 @@ using Scar.Common.WPF.View.Contracts;
 namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
+
     // ReSharper disable once StyleCop.SA1009
     internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IWindow window, TranslationInfo translationInfo)>
     {
         [NotNull]
-        private readonly Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
+        private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
         private readonly Func<TranslationInfo, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
 
         [NotNull]
-        private readonly SynchronizationContext _synchronizationContext;
+        private readonly Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
 
         public TranslationDetailsCardWindowCreator(
             [NotNull] Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> translationDetailsCardWindowFactory,

@@ -79,7 +79,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
             catch (Exception ex)
             {
-                _messageHub.Publish(Errors.CannotTranslate.ToError(ex));
+                _messageHub.Publish(string.Format(Errors.CannotTranslate, text + $" [{from}->{to}]").ToError(ex));
                 return null;
             }
         }

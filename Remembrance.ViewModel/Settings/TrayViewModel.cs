@@ -37,9 +37,6 @@ namespace Remembrance.ViewModel.Settings
         private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
         [NotNull]
-        private readonly IPauseManager _pauseManager;
-
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
@@ -47,6 +44,9 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         private readonly IMessageHub _messageHub;
+
+        [NotNull]
+        private readonly IPauseManager _pauseManager;
 
         [NotNull]
         private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
@@ -111,6 +111,9 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         public string CardShowFrequency { get; private set; } = string.Empty;
 
+        [CanBeNull]
+        public string CardVisiblePauseTime { get; private set; }
+
         public DateTime CurrentTime { get; private set; }
 
         [NotNull]
@@ -134,9 +137,6 @@ namespace Remembrance.ViewModel.Settings
 
         [CanBeNull]
         public string PauseReasons { get; private set; }
-
-        [CanBeNull]
-        public string CardVisiblePauseTime { get; private set; }
 
         [NotNull]
         public ICommand ShowDictionaryCommand { get; }
@@ -193,8 +193,10 @@ namespace Remembrance.ViewModel.Settings
         private void SetTimesInfo()
         {
             TimeLeftToShowCard = Texts.TimeToShow + ": " + _cardShowTimeProvider.TimeLeftToShowCard.ToString(TimeSpanFormat);
-            LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToString(DateTimeFormat);
-            NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToString(DateTimeFormat);
+            LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null
+                ? null
+                : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
+            NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat);
             CardShowFrequency = Texts.CardShowFrequency + ": " + _cardShowTimeProvider.CardShowFrequency.ToString(TimeSpanFormat);
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);

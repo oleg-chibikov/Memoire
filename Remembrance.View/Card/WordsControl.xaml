@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:card="clr-namespace:Remembrance.View.Card"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     mc:Ignorable="d"
     x:Name="Control">
@@ -15,7 +15,7 @@
     </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>
-            <card:WordControl
+            <cardView:WordControl
                 x:Name="WordControl"
                 Margin="5 0 0 0"
                 FontSize="{Binding FontSize, Mode=OneTime, ElementName=Control}"

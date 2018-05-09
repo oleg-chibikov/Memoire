@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Settings.AddManualTranslationControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,23 +8,23 @@
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:settings="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
-    xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     HorizontalAlignment="Stretch"
-    d:DataContext="{d:DesignInstance d:Type=settings:EditManualTranslationsViewModel}">
-    <UserControl.Resources>
-        <view:DesignTimeResourceDictionary
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:EditManualTranslationsViewModel}">
+    <commonView:BaseControl.Resources>
+        <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </UserControl.Resources>
+    </commonView:BaseControl.Resources>
     <Grid
-        view:MarginSetter.Margin="{StaticResource CommonMargin}"
-        view:MarginSetter.Orientation="Horizontal">
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        commonView:MarginSetter.Orientation="Horizontal">
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="Auto" />
@@ -39,23 +39,23 @@
             Text="{lex:Loc AddTranslation}" />
 
         <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
-        <controls:CompletableTextBox
+        <autoComplete:CompletableTextBox
             Grid.Column="1"
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             HorizontalAlignment="Stretch"
             Text="{Binding ManualTranslationText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{StaticResource SuggestionProvider}">
-            <controls:CompletableTextBox.InputBindings>
+            <autoComplete:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding AddTranslationCommand, Mode=OneTime}"
                     Key="Enter" />
-            </controls:CompletableTextBox.InputBindings>
-        </controls:CompletableTextBox>
+            </autoComplete:CompletableTextBox.InputBindings>
+        </autoComplete:CompletableTextBox>
 
         <StackPanel
             Grid.Column="2"
             Orientation="Horizontal"
-            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
             <Button
                 IsDefault="True"
                 Style="{StaticResource ImageButton}"
@@ -66,4 +66,4 @@
             </Button>
         </StackPanel>
     </Grid>
-</UserControl>
+</commonView:BaseControl>

@@ -10,7 +10,8 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
     {
         protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
         {
-            { typeof(PartOfSpeech), new PartOfSpeechConverter() }
+            { typeof(PartOfSpeech), new PartOfSpeechConverter() },
+            { typeof(string), new CapitalizeConverter() }
         };
 
         protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>

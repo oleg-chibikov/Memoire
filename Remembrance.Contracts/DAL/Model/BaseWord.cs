@@ -24,7 +24,22 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public virtual PartOfSpeech PartOfSpeech { get; set; }
+        public PartOfSpeech PartOfSpeech { get; set; }
+
+        public bool Equals(BaseWord other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return StringComparer.InvariantCultureIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
+        }
 
         public static bool operator ==([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
         {
@@ -41,21 +56,6 @@ namespace Remembrance.Contracts.DAL.Model
             return !(obj1 == obj2);
         }
 
-        public bool Equals(BaseWord other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Text == other.Text && PartOfSpeech == other.PartOfSpeech;
-        }
-
         public override bool Equals(object obj)
         {
             return obj is BaseWord key && Equals(key);
@@ -65,7 +65,7 @@ namespace Remembrance.Contracts.DAL.Model
         {
             unchecked
             {
-                var hashCode = Text.GetHashCode();
+                var hashCode = StringComparer.InvariantCultureIgnoreCase.GetHashCode(Text);
                 hashCode = (hashCode * 397) ^ PartOfSpeech.GetHashCode();
                 return hashCode;
             }

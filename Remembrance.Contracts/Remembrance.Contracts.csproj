@@ -31,19 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.8.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6696.29507\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6627.19410, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6627.19410\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6696.20007, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6696.20007\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
@@ -78,17 +79,25 @@
     <Compile Include="CardManagement\Data\PauseReason.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
     <Compile Include="CardManagement\IAssessmentInfoProvider.cs" />
-    <Compile Include="DAL\Model\ISettings.cs" />
+    <Compile Include="DAL\Model\AvailableLanguagesInfo.cs" />
     <Compile Include="DAL\Model\LearningInfo.cs" />
+    <Compile Include="DAL\Model\Settings.cs" />
     <Compile Include="DAL\Model\TranslationEntryDeletion.cs" />
+    <Compile Include="DAL\Model\WordImageSearchIndex.cs" />
+    <Compile Include="DAL\Shared\ISharedRepository.cs" />
+    <Compile Include="Sync\ISharedRepositoryCloner.cs" />
     <Compile Include="DAL\Shared\ILearningInfoRepository.cs" />
     <Compile Include="DAL\Shared\ITranslationEntryDeletionRepository.cs" />
+    <Compile Include="DAL\Shared\IWordImageSearchIndexRepository.cs" />
     <Compile Include="Exchange\Data\ExchangeResult.cs" />
     <Compile Include="Exchange\ICardsExchanger.cs" />
     <Compile Include="Exchange\IFileExporter.cs" />
     <Compile Include="Exchange\IFileImporter.cs" />
     <Compile Include="CardManagement\ICardShowTimeProvider.cs" />
     <Compile Include="CardManagement\ITranslationDetailsCardManager.cs" />
+    <Compile Include="Languages\Data\LanguagesCollection.cs" />
+    <Compile Include="Languages\Data\Language.cs" />
+    <Compile Include="Languages\ILanguageManager.cs" />
     <Compile Include="ProcessMonitoring\Data\ProcessInfo.cs" />
     <Compile Include="ProcessMonitoring\IActiveProcessesProvider.cs" />
     <Compile Include="ProcessMonitoring\IActiveProcessMonitor.cs" />
@@ -101,9 +110,8 @@
     <Compile Include="DAL\Local\ITranslationDetailsRepository.cs" />
     <Compile Include="DAL\Shared\ITranslationEntryRepository.cs" />
     <Compile Include="DAL\Local\IPrepositionsInfoRepository.cs" />
-    <Compile Include="DAL\Local\IWordImagesInfoRepository.cs" />
+    <Compile Include="DAL\Local\IWordImageInfoRepository.cs" />
     <Compile Include="DAL\Model\PrepositionsInfo.cs" />
-    <Compile Include="DAL\Model\LocalSettings.cs" />
     <Compile Include="Processing\Data\TranslationEntryAdditionInfo.cs" />
     <Compile Include="DAL\Model\WordKey.cs" />
     <Compile Include="ImageSearch\Data\ImageInfoWithBitmap.cs" />
@@ -111,7 +119,6 @@
     <Compile Include="DAL\Model\PrepositionsCollection.cs" />
     <Compile Include="DAL\Model\RepeatType.cs" />
     <Compile Include="DAL\Model\RepeatTypeSettings.cs" />
-    <Compile Include="DAL\Model\Settings.cs" />
     <Compile Include="DAL\Model\TranslationDetails.cs" />
     <Compile Include="DAL\Model\TranslationEntry.cs" />
     <Compile Include="DAL\Model\TranslationEntryKey.cs" />
@@ -128,7 +135,7 @@
     <Compile Include="Sync\ISyncPostProcessor.cs" />
     <Compile Include="Sync\ISyncPreProcessor.cs" />
     <Compile Include="Translate\Data\LanguageDetector\DetectionResult.cs" />
-    <Compile Include="Translate\Data\LanguageDetector\ListResult.cs" />
+    <Compile Include="Translate\Data\LanguageDetector\LanguageListResult.cs" />
     <Compile Include="Translate\Data\Predictor\PredictionResult.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\Format.cs" />
     <Compile Include="Translate\Data\TextToSpeechPlayer\Speaker.cs" />
@@ -148,6 +155,7 @@
     <Compile Include="View\Card\ITranslationDetailsCardWindow.cs" />
     <Compile Include="View\Card\IAssessmentTextInputCardWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Settings\ILoadingWindow.cs" />
     <Compile Include="View\Settings\IMessageWindow.cs" />
     <Compile Include="View\Settings\IAddTranslationWindow.cs" />
     <Compile Include="View\Settings\IDictionaryWindow.cs" />

@@ -71,7 +71,7 @@ namespace Remembrance.Core.Sync
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
-            if (directoryPath == null || directoryPath == Paths.SharedDataPath)
+            if (directoryPath == null || directoryPath == RemembrancePaths.SharedDataPath)
             {
                 return;
             }
@@ -103,7 +103,8 @@ namespace Remembrance.Core.Sync
 
             if (!_synchronizers.ContainsKey(fileName))
             {
-                throw new NotSupportedException($"Unknown type of repository: {filePath}");
+                _logger.WarnFormat("Unknown type of repository: {0}", filePath);
+                return;
             }
 
             _synchronizers[fileName].SyncRepository(filePath);

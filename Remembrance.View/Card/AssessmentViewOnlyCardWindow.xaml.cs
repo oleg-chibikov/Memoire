@@ -13,7 +13,6 @@ namespace Remembrance.View.Card
     {
         public AssessmentViewOnlyCardWindow([NotNull] AssessmentViewOnlyCardViewModel viewModel, [CanBeNull] Window ownerWindow = null)
         {
-            // TODO: Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
             DataContext = viewModel;
             Owner = ownerWindow;
             InitializeComponent();

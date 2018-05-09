@@ -14,7 +14,8 @@ namespace Remembrance.ViewModel.Translation
         private readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsViewModel(
-            [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory, [NotNull] TranslationInfo translationInfo)
+            [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
+            [NotNull] TranslationInfo translationInfo)
         {
             if (translationResultViewModelFactory == null)
             {

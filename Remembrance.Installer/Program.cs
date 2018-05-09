@@ -13,7 +13,6 @@ namespace Remembrance.Installer
 
         private static void Main()
         {
-            // TODO: Stop previous before installing new version.
             var fileName = $"{nameof(Remembrance)}.exe";
             new InstallBuilder(nameof(Remembrance), nameof(Scar), BuildDir, UpgradeCode).WithIcon(ProductIcon)
                 .WithShortcut(fileName)

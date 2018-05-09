@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Card.TranslationDetailsCardControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,14 +9,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Card"
-    xmlns:various="clr-namespace:Remembrance.View.Various"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
+    xmlns:variousView="clr-namespace:Remembrance.View.Various"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}">
-    <UserControl.Resources>
+    <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </UserControl.Resources>
+    </commonView:BaseControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
@@ -28,7 +28,7 @@
             Orientation="Horizontal"
             Grid.Row="0"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-            <various:FavoriteButton
+            <variousView:FavoriteButton
                 IsFavorited="{Binding IsFavorited, Mode=OneWay}"
                 Command="{Binding FavoriteCommand, Mode=OneTime}" />
             <TextBlock
@@ -58,7 +58,7 @@
                             <StackPanel
                                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                                 Orientation="Horizontal">
-                                <view:WordControl
+                                <cardView:WordControl
                                     FontWeight="Bold"
                                     FontSize="{StaticResource BigFontSize}"
                                     DataContext="{Binding Mode=OneTime}" />
@@ -89,14 +89,14 @@
                                                     <TextBlock
                                                         FontSize="{StaticResource BigFontSize}"
                                                         Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
-                                                    <view:WordImageViewerControl
+                                                    <cardView:WordImageViewerControl
                                                         DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
-                                                    <view:WordControl
+                                                    <cardView:WordControl
                                                         DataContext="{Binding Mode=OneTime}" />
-                                                    <view:WordsControl
+                                                    <cardView:WordsControl
                                                         ItemsSource="{Binding Synonyms, Mode=OneTime}" />
                                                 </StackPanel>
-                                                <view:WordsControl
+                                                <cardView:WordsControl
                                                     Foreground="IndianRed"
                                                     HorizontalAlignment="Left"
                                                     FontSize="{StaticResource SmallFontSize}"
@@ -127,4 +127,4 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
-</UserControl>
+</commonView:BaseControl>

@@ -13,13 +13,16 @@ namespace Remembrance.Resources
         private static readonly Lazy<TimeSpan> MessageCloseTimeoutLazy = new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(MessageCloseTimeout)]));
 
         [NotNull]
-        private static readonly Lazy<TimeSpan> AssessmentCardSuccessCloseTimeoutLazy = new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(AssessmentCardSuccessCloseTimeout)]));
+        private static readonly Lazy<TimeSpan> AssessmentCardSuccessCloseTimeoutLazy =
+            new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(AssessmentCardSuccessCloseTimeout)]));
 
         [NotNull]
-        private static readonly Lazy<TimeSpan> AssessmentCardFailureCloseTimeoutLazy = new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(AssessmentCardFailureCloseTimeout)]));
+        private static readonly Lazy<TimeSpan> AssessmentCardFailureCloseTimeoutLazy =
+            new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(AssessmentCardFailureCloseTimeout)]));
 
         [NotNull]
-        private static readonly Lazy<TimeSpan> TranslationCardCloseTimeoutLazy = new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(TranslationCardCloseTimeout)]));
+        private static readonly Lazy<TimeSpan> TranslationCardCloseTimeoutLazy =
+            new Lazy<TimeSpan>(() => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(TranslationCardCloseTimeout)]));
 
         public static TimeSpan AssessmentCardFailureCloseTimeout => AssessmentCardFailureCloseTimeoutLazy.Value;
 

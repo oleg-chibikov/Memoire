@@ -33,15 +33,28 @@ namespace Remembrance.Core.CardManagement
             var randomTranslation = repeatType >= RepeatType.Proficiency;
             var isReverse = IsReverse(repeatType);
             var translationResult = translationInfo.TranslationDetails.TranslationResult;
-            var filteredPriorityPartOfSpeechTranslations = FilterPriorityPartOfSpeechTranslations(translationResult, translationInfo.TranslationEntry);
+            var filteredPriorityPartOfSpeechTranslations =
+                GetPartOfSpeechTranslationsWithRespectToPriority(translationResult, translationInfo.TranslationEntry, out var hasPriorityItems);
             var partOfSpeechGroup = SelectSinglePartOfSpeechGroup(randomTranslation, filteredPriorityPartOfSpeechTranslations);
-            var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup, translationInfo.TranslationEntry);
+            var acceptedWordGroups = GetAcceptedWordGroups(partOfSpeechGroup, translationInfo.TranslationEntry, hasPriorityItems);
             return isReverse ? GetReverseAssessmentInfo(randomTranslation, acceptedWordGroups) : GetStraightAssessmentInfo(acceptedWordGroups);
         }
 
-        /// <summary>
-        /// Decide whether reverse translation is needed
-        /// </summary>
+        private static bool HasPriorityItems([NotNull] TranslationVariant translationVariant, [NotNull] TranslationEntry translationEntry)
+        {
+            return IsPriority(translationVariant, translationEntry) || translationVariant.Synonyms?.Any(synonym => IsPriority(synonym, translationEntry)) == true;
+        }
+
+        private static bool HasPriotityItems([NotNull] PartOfSpeechTranslation partOfSpeechTranslation, [NotNull] TranslationEntry translationEntry)
+        {
+            return partOfSpeechTranslation.TranslationVariants.Any(translationVariant => HasPriorityItems(translationVariant, translationEntry));
+        }
+
+        private static bool IsPriority([NotNull] BaseWord word, [NotNull] TranslationEntry translationEntry)
+        {
+            return translationEntry.PriorityWords?.Contains(word) == true;
+        }
+
         private static bool IsReverse(RepeatType repeatType)
         {
             var isReverse = false;
@@ -53,110 +66,85 @@ namespace Remembrance.Core.CardManagement
             return isReverse;
         }
 
-        private bool IsPriority([NotNull] Word word, [NotNull] TranslationEntry translationEntry)
-        {
-            return translationEntry.PriorityWords?.Contains(word) == true;
-        }
-
-        /// <summary>
-        /// If there are any priority translations - leave only them, otherwise leave all.
-        /// </summary>
         [NotNull]
-        private ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> FilterAcceptedWordsGroupsByPriority(
-            [NotNull] ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups,
-            [NotNull] TranslationEntry translationEntry)
-        {
-            _logger.Trace("Filtering accepted words groups by priority...");
-            var tmp = new List<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>>();
-
-            foreach (var acceptedWordGroup in acceptedWordGroups)
-            {
-                var lst = acceptedWordGroup.Value.ToList();
-                lst.RemoveAll(word => !IsPriority(word, translationEntry));
-                if (lst.Any())
-                {
-                    tmp.Add(new KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>(acceptedWordGroup.Key, lst.ToArray()));
-                }
-            }
-
-            if (tmp.Any())
-            {
-                _logger.DebugFormat("There are {0} groups that contain priority translations. Filtering was applied", tmp.Count);
-                return tmp.ToArray();
-            }
-
-            _logger.Debug("There are no groups that contain priority translations. Filtering was not applied");
-            return acceptedWordGroups;
-        }
-
-        /// <summary>
-        /// If there are any priority translations - leave only their part of speech groups, otherwise leave all.
-        /// </summary>
-        [NotNull]
-        private ICollection<PartOfSpeechTranslation> FilterPriorityPartOfSpeechTranslations([NotNull] TranslationResult translationResult, [NotNull] TranslationEntry translationEntry)
-        {
-            _logger.Trace("Filtering translations by priority...");
-            var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
-            priorityPartOfSpeechTranslations.RemoveAll(
-                partOfSpeechTranslation => !partOfSpeechTranslation.TranslationVariants.Any(
-                    translationVariant => IsPriority(translationVariant, translationEntry) || translationVariant.Synonyms?.Any(synonym => IsPriority(synonym, translationEntry)) == true));
-            var hasPriorityItems = priorityPartOfSpeechTranslations.Any();
-            if (hasPriorityItems)
-            {
-                _logger.DebugFormat("There are {0} priority translations. Filtering was applied", priorityPartOfSpeechTranslations.Count);
-                return priorityPartOfSpeechTranslations;
-            }
-
-            _logger.Debug("There are no priority translations. Filtering was not applied");
-            return translationResult.PartOfSpeechTranslations;
-        }
-
-        /// <summary>
-        /// Get all possible original word variants of this part of speech
-        /// </summary>
-        [NotNull]
-        private ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> GetAcceptedWordGroups(
+        private ICollection<GroupingInfo> GetAcceptedWordGroups(
             [NotNull] IGrouping<PartOfSpeech, PartOfSpeechTranslation> partOfSpeechGroup,
-            [NotNull] TranslationEntry translationEntry)
+            [NotNull] TranslationEntry translationEntry,
+            bool translationEntryHasPriorityItems)
         {
             _logger.TraceFormat("Getting accepted words groups for {0}...", partOfSpeechGroup.Key);
-            ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups = partOfSpeechGroup.SelectMany(
-                    partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(traslationVariant => GetPossibleTranslations(traslationVariant, partOfSpeechTranslation)))
+            var acceptedWordGroups = partOfSpeechGroup.SelectMany(
+                    partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(
+                            translationVariant =>
+                            {
+                                var hasPriorityItems = translationEntryHasPriorityItems && HasPriorityItems(translationVariant, translationEntry);
+                                return (TranslationVariant: translationVariant, HasPriorityItems: hasPriorityItems);
+                            })
+                        .Where(translationVariantWithPriorityInfo => !translationEntryHasPriorityItems || translationVariantWithPriorityInfo.HasPriorityItems)
+                        .Select(
+                            translationVariantWithPriorityInfo => new GroupingInfo(
+                                partOfSpeechTranslation,
+                                GetPossibleTranslations(translationVariantWithPriorityInfo, translationEntry))))
                 .ToArray();
+
             if (!acceptedWordGroups.Any())
             {
                 throw new LocalizableException(Errors.NoAssessmentTranslations, "No translations found");
             }
 
-            _logger.DebugFormat("There are {0} accepted words groups", acceptedWordGroups.Count);
-            acceptedWordGroups = FilterAcceptedWordsGroupsByPriority(acceptedWordGroups, translationEntry);
+            _logger.DebugFormat("There are {0} accepted words groups", acceptedWordGroups.Length);
 
-            return acceptedWordGroups.Select(acceptedWordGroup => new KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>(acceptedWordGroup.Key, acceptedWordGroup.Value)).ToArray();
+            return acceptedWordGroups;
         }
 
-        /// <summary>
-        /// Get all possible translations (including synonyms)
-        /// </summary>
-        private KeyValuePair<PartOfSpeechTranslation, ICollection<Word>> GetPossibleTranslations([NotNull] TranslationVariant traslationVariant, [NotNull] PartOfSpeechTranslation partOfSpeechTranslation)
+        [NotNull]
+        private ICollection<PartOfSpeechTranslation> GetPartOfSpeechTranslationsWithRespectToPriority(
+            [NotNull] TranslationResult translationResult,
+            [NotNull] TranslationEntry translationEntry,
+            out bool hasPriorityItems)
         {
-            _logger.TraceFormat("Getting accepted words groups for {0}...", traslationVariant);
-            var result = new Word[]
+            _logger.Trace("Getting translations with respect to priority...");
+            var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
+            priorityPartOfSpeechTranslations.RemoveAll(partOfSpeechTranslation => !HasPriotityItems(partOfSpeechTranslation, translationEntry));
+            hasPriorityItems = priorityPartOfSpeechTranslations.Any();
+            if (hasPriorityItems)
             {
-                traslationVariant
-            };
-            if (traslationVariant.Synonyms != null)
-            {
-                result = result.Concat(traslationVariant.Synonyms.Select(synonym => synonym)).ToArray();
+                _logger.DebugFormat("There are {0} priority translations", priorityPartOfSpeechTranslations.Count);
+                return priorityPartOfSpeechTranslations;
             }
 
-            return new KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>(partOfSpeechTranslation, result);
+            _logger.Debug("There are no priority translations");
+            return translationResult.PartOfSpeechTranslations;
         }
 
-        /// <summary>
-        /// Get the most suitable part of speech group according to POS priorities
-        /// </summary>
         [NotNull]
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> GetRandomPartOfSpeechGroup([NotNull] ICollection<IGrouping<PartOfSpeech, PartOfSpeechTranslation>> partOfSpeechGroups)
+        private ICollection<Word> GetPossibleTranslations(
+            (TranslationVariant TranslationVariant, bool HasPriorityItems) translationVariantWithPriorityInfo,
+            [NotNull] TranslationEntry translationEntry)
+        {
+            var translationVariant = translationVariantWithPriorityInfo.TranslationVariant;
+            _logger.TraceFormat("Getting accepted words groups for {0}...", translationVariant);
+            IEnumerable<Word> result = new Word[]
+            {
+                translationVariant
+            };
+            if (translationVariant.Synonyms != null)
+            {
+                result = result.Concat(translationVariant.Synonyms.Select(synonym => synonym));
+            }
+
+            if (translationVariantWithPriorityInfo.HasPriorityItems)
+            {
+                // true first
+                result = result.OrderByDescending(word => IsPriority(word, translationEntry));
+            }
+
+            return result.ToArray();
+        }
+
+        [NotNull]
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> GetRandomPartOfSpeechGroup(
+            [NotNull] ICollection<IGrouping<PartOfSpeech, PartOfSpeechTranslation>> partOfSpeechGroups)
         {
             _logger.Trace("Getting random part of speech group...");
             var randomPartOfSpeechGroupIndex = Random.Next(partOfSpeechGroups.Count);
@@ -164,26 +152,20 @@ namespace Remembrance.Core.CardManagement
             return result;
         }
 
-        /// <summary>
-        /// Decide whether the Word would be chosen randomly or not
-        /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, [NotNull] ICollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting reverse assessment info...");
             return needRandom ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups) : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
         }
 
-        /// <summary>
-        /// The first variant for part of speech will be selected and the first translation inside it
-        /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation([NotNull] ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation([NotNull] ICollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting info from first translation...");
             var acceptedWordGroup = acceptedWordGroups.First();
-            var translation = acceptedWordGroup.Value.First();
-            var correct = acceptedWordGroup.Key;
+            var translation = acceptedWordGroup.Words.First();
+            var correct = acceptedWordGroup.PartOfSpeechTranslation;
             return new AssessmentInfo(
                 new HashSet<Word>
                 {
@@ -194,18 +176,15 @@ namespace Remembrance.Core.CardManagement
                 true);
         }
 
-        /// <summary>
-        /// Random variant for part of speech will be selected and random translation inside it
-        /// </summary>
         [NotNull]
-        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation([NotNull] ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups)
+        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation([NotNull] ICollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting info from random translation...");
             var randomAcceptedWordGroupIndex = Random.Next(acceptedWordGroups.Count);
             var randomAcceptedWordGroup = acceptedWordGroups.ElementAt(randomAcceptedWordGroupIndex);
-            var randomTranslationIndex = Random.Next(randomAcceptedWordGroup.Value.Count);
-            var randomTranslation = randomAcceptedWordGroup.Value.ElementAt(randomTranslationIndex);
-            var correct = randomAcceptedWordGroup.Key;
+            var randomTranslationIndex = Random.Next(randomAcceptedWordGroup.Words.Count);
+            var randomTranslation = randomAcceptedWordGroup.Words.ElementAt(randomTranslationIndex);
+            var correct = randomAcceptedWordGroup.PartOfSpeechTranslation;
             return new AssessmentInfo(
                 new HashSet<Word>
                 {
@@ -216,24 +195,20 @@ namespace Remembrance.Core.CardManagement
                 true);
         }
 
-        /// <summary>
-        /// Settings the first variant in the group as the Word and all possible variants as the Acceptable answers
-        /// </summary>
         [NotNull]
-        private AssessmentInfo GetStraightAssessmentInfo([NotNull] ICollection<KeyValuePair<PartOfSpeechTranslation, ICollection<Word>>> acceptedWordGroups)
+        private AssessmentInfo GetStraightAssessmentInfo([NotNull] ICollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting straight assessment info...");
-            var accept = new HashSet<Word>(acceptedWordGroups.SelectMany(acceptedWordGroup => acceptedWordGroup.Value));
-            var word = acceptedWordGroups.First().Key;
-            var correct = accept.First();
-            return new AssessmentInfo(accept, word, correct, false);
+            var acceptedAnswers = new HashSet<Word>(acceptedWordGroups.SelectMany(acceptedWordGroup => acceptedWordGroup.Words));
+            var word = acceptedWordGroups.First().PartOfSpeechTranslation;
+            var correct = acceptedAnswers.First();
+            return new AssessmentInfo(acceptedAnswers, word, correct, false);
         }
 
-        /// <summary>
-        /// Choose the single part of speech group
-        /// </summary>
         [NotNull]
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(bool randomPossible, [NotNull] ICollection<PartOfSpeechTranslation> partOfSpeechTranslations)
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(
+            bool randomPossible,
+            [NotNull] ICollection<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             _logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = partOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
@@ -244,6 +219,21 @@ namespace Remembrance.Core.CardManagement
             }
 
             return partOfSpeechGroup;
+        }
+
+        private sealed class GroupingInfo
+        {
+            public GroupingInfo([NotNull] PartOfSpeechTranslation partOfSpeechTranslation, [NotNull] ICollection<Word> words)
+            {
+                PartOfSpeechTranslation = partOfSpeechTranslation ?? throw new ArgumentNullException(nameof(partOfSpeechTranslation));
+                Words = words ?? throw new ArgumentNullException(nameof(words));
+            }
+
+            [NotNull]
+            public PartOfSpeechTranslation PartOfSpeechTranslation { get; }
+
+            [NotNull]
+            public ICollection<Word> Words { get; }
         }
     }
 }

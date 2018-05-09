@@ -1,5 +1,4 @@
 using Scar.Common.DAL;
-using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.Sync
 {
@@ -8,9 +7,8 @@ namespace Remembrance.Contracts.Sync
         void OnSynchronizationFinished();
     }
 
-    public interface ISyncExtender<TEntity, TId, in TRepository> : ISyncExtender
-        where TEntity : IEntity<TId>, ITrackedEntity
-        where TRepository : ITrackedRepository<TEntity, TId>
+    public interface ISyncExtender<in TRepository> : ISyncExtender
+        where TRepository : ITrackedRepository
     {
         void OnSynchronizing(TRepository remoteRepository);
     }

@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.8.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
@@ -43,6 +43,7 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
@@ -52,13 +53,16 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6626.18955\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6696.29507\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6627.19410, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6627.19410\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6696.20007, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6696.20007\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Notification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Notification.1.0.5\lib\net47\Scar.Common.Notification.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6703.17679, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6703.17679\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.1\lib\net462\Scar.Common.WPF.Localization.dll</HintPath>
@@ -90,6 +94,7 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Languages\LanguageManager.cs" />
     <Compile Include="ProcessMonitoring\ActiveProcessMonitor.cs" />
     <Compile Include="CardManagement\AssessmentCardManager.cs" />
     <Compile Include="CardManagement\BaseCardManager.cs" />
@@ -117,6 +122,7 @@
     <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
     <Compile Include="Sync\SettingsSyncPostProcessor.cs" />
+    <Compile Include="Sync\SharedRepositoryCloner.cs" />
     <Compile Include="Sync\SharedRepositoryPathsProvider.cs" />
     <Compile Include="Sync\DeletionEventsSyncExtender.cs" />
     <Compile Include="Sync\TranslationEntryDeletionSyncPreProcessor.cs" />
@@ -129,6 +135,7 @@
     <Compile Include="Translation\Yandex\ContractResolvers\ListResultContractResolver.cs" />
     <Compile Include="Translation\Yandex\ContractResolvers\PredictionResultContractResolver.cs" />
     <Compile Include="Translation\Yandex\ContractResolvers\TranslationResultContractResolver.cs" />
+    <Compile Include="Translation\Yandex\JsonConverters\CapitalizeConverter.cs" />
     <Compile Include="Translation\Yandex\JsonConverters\PartOfSpeechConverter.cs" />
     <Compile Include="Translation\Yandex\Predictor.cs" />
     <Compile Include="Translation\Yandex\LanguageDetector.cs" />

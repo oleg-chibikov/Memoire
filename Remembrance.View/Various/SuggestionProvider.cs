@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Translate;
+using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 
 namespace Remembrance.View.Various
 {

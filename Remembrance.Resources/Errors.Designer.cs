@@ -106,7 +106,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot import {0}..
+        ///   Looks up a localized string similar to Cannot import word &apos;{0}&apos;..
         /// </summary>
         public static string CannotImportWord {
             get {
@@ -196,6 +196,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The languages pair {0} -&gt; {1} is unsupported..
+        /// </summary>
+        public static string InvalidTargetLanguage {
+            get {
+                return ResourceManager.GetString("InvalidTargetLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No translations have been found for the word..
         /// </summary>
         public static string NoAssessmentTranslations {
@@ -205,7 +214,7 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Image cannot be found for the word {0}..
+        ///   Looks up a localized string similar to Image cannot be found for the word &apos;{0}&apos;..
         /// </summary>
         public static string NoMoreImages {
             get {

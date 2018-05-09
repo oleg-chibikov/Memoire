@@ -1,16 +1,16 @@
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
+using Scar.Common.IO;
 
 namespace Remembrance.DAL.Local
 {
     [UsedImplicitly]
-    internal sealed class WordImagesInfoRepository : LiteDbRepository<WordImageInfo, WordKey>, IWordImagesInfoRepository
+    internal sealed class WordImageInfoRepository : LiteDbRepository<WordImageInfo, WordKey>, IWordImageInfoRepository
     {
-        public WordImagesInfoRepository()
-            : base(Paths.SettingsPath)
+        public WordImageInfoRepository()
+            : base(CommonPaths.SettingsPath)
         {
             Collection.EnsureIndex(x => x.Id.Word.Text);
             Collection.EnsureIndex(x => x.Id.Word.PartOfSpeech);

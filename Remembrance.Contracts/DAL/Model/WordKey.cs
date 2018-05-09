@@ -15,7 +15,13 @@ namespace Remembrance.Contracts.DAL.Model
 
         public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] BaseWord word)
         {
-            Word = word ?? throw new ArgumentNullException(nameof(word));
+            if (word == null)
+            {
+                throw new ArgumentNullException(nameof(word));
+            }
+
+            // Creating a new copy to ensure word has the only necessary fields (the WordKeys are stored in DB)
+            Word = new BaseWord(word);
             TranslationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
         }
 
@@ -24,22 +30,6 @@ namespace Remembrance.Contracts.DAL.Model
 
         [NotNull]
         public BaseWord Word { get; set; }
-
-        public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
-        {
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1?.Equals(obj2) == true;
-        }
-
-        // this is second one '!='
-        public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
-        {
-            return !(obj1 == obj2);
-        }
 
         public bool Equals(WordKey other)
         {
@@ -54,6 +44,21 @@ namespace Remembrance.Contracts.DAL.Model
             }
 
             return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
+        }
+
+        public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1?.Equals(obj2) == true;
+        }
+
+        public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            return !(obj1 == obj2);
         }
 
         public override bool Equals(object obj)

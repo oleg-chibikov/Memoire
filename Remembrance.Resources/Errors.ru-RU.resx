@@ -121,7 +121,7 @@
     <value>Remembrance уже запущен.</value>
   </data>
   <data name="NoMoreImages" xml:space="preserve">
-    <value>Изображение не найдено для слова {0}.</value>
+    <value>Изображение не найдено для слова '{0}'.</value>
   </data>
   <data name="CannotSynchronize" xml:space="preserve">
     <value>Не получилось синхнизировать {0} в {1}.</value>
@@ -142,7 +142,7 @@
     <value>Некоторые слова не были импортированы</value>
   </data>
   <data name="CannotImportWord" xml:space="preserve">
-    <value>Не удалось импортировать слово {0}.</value>
+    <value>Не удалось импортировать слово '{0}'.</value>
   </data>
   <data name="CannotDetectLanguage" xml:space="preserve">
     <value>Не получилось определить язык.</value>
@@ -179,5 +179,8 @@
   </data>
   <data name="NoTranslations" xml:space="preserve">
     <value>Не найдено ни одного перевода для слова '{0}'.</value>
+  </data>
+  <data name="InvalidTargetLanguage" xml:space="preserve">
+    <value>Пара языков {0} -> {1} не поддерживается.</value>
   </data>
 </root>

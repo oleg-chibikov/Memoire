@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
@@ -19,9 +20,12 @@ namespace Remembrance.Core.Sync
 {
     [UsedImplicitly]
     internal sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
-        where TRepository : ITrackedRepository<TEntity, TId>
+        where TRepository : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
+        [NotNull]
+        private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
+
         [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
@@ -32,13 +36,10 @@ namespace Remembrance.Core.Sync
         private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
-
-        [NotNull]
         private readonly TRepository _ownRepository;
 
         [NotNull]
-        private readonly ICollection<ISyncExtender<TEntity, TId, TRepository>> _syncExtenders;
+        private readonly ICollection<ISyncExtender<TRepository>> _syncExtenders;
 
         [CanBeNull]
         private readonly ISyncPostProcessor<TEntity> _syncPostProcessor;
@@ -52,7 +53,7 @@ namespace Remembrance.Core.Sync
             [NotNull] TRepository ownRepository,
             [NotNull] IMessageHub messageHub,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ICollection<ISyncExtender<TEntity, TId, TRepository>> syncExtenders,
+            [NotNull] ICollection<ISyncExtender<TRepository>> syncExtenders,
             [CanBeNull] ISyncPreProcessor<TEntity> syncPreProcessor = null,
             [CanBeNull] ISyncPostProcessor<TEntity> syncPostProcessor = null)
         {
@@ -84,13 +85,13 @@ namespace Remembrance.Core.Sync
 
             // Copy is needed because LiteDB changes the remote file when creation a repository over it and it could lead to the conflicts.
             var newDirectoryPath = Path.GetTempPath();
-            var newFileName = Path.Combine(newDirectoryPath, fileName + extension);
-            if (File.Exists(newFileName))
+            var newFilePath = Path.Combine(newDirectoryPath, fileName + extension);
+            if (File.Exists(newFilePath))
             {
-                File.Delete(newFileName);
+                File.Delete(newFilePath);
             }
 
-            File.Copy(filePath, newFileName);
+            File.Copy(filePath, newFilePath);
             var parameters = new Parameter[]
             {
                 new PositionalParameter(0, newDirectoryPath),
@@ -106,14 +107,20 @@ namespace Remembrance.Core.Sync
                 action(remoteRepository);
             }
 
-            File.Delete(newFileName);
+            File.Delete(newFilePath);
         }
 
         private void SyncInternal([NotNull] TRepository remoteRepository)
         {
-            var lastSyncTime = _localSettingsRepository.GetSyncTime(FileName);
+            var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
 
-            var changed = remoteRepository.GetModifiedAfter(lastSyncTime);
+            var changed = remoteRepository.GetModifiedAfter(lastSyncedRecordModifiedTime).Cast<TEntity>().ToArray();
+            if (!changed.Any())
+            {
+                return;
+            }
+
+            var maxLastModified = changed.Max(x => x.ModifiedDate);
             Parallel.ForEach(
                 changed,
                 async remoteEntity =>
@@ -147,12 +154,12 @@ namespace Remembrance.Core.Sync
 
                         if (insert)
                         {
-                            _ownRepository.Insert(remoteEntity);
+                            _ownRepository.Insert(remoteEntity, true);
                             _logger.InfoFormat("{0} inserted", remoteEntity);
                         }
                         else
                         {
-                            _ownRepository.Update(remoteEntity);
+                            _ownRepository.Update(remoteEntity, true);
                             _logger.InfoFormat("{0} updated", remoteEntity);
                         }
 
@@ -164,11 +171,15 @@ namespace Remembrance.Core.Sync
                     catch (Exception ex)
                     {
                         _messageHub.Publish(
-                            string.Format(Errors.CannotSynchronize, remoteEntity, Path.Combine(remoteRepository.DbDirectoryPath, $"{remoteRepository.DbFileName}{remoteRepository.DbFileExtension}")).ToError(ex));
+                            string.Format(
+                                    Errors.CannotSynchronize,
+                                    remoteEntity,
+                                    Path.Combine(remoteRepository.DbDirectoryPath, $"{remoteRepository.DbFileName}{remoteRepository.DbFileExtension}"))
+                                .ToError(ex));
                     }
                 });
 
-            _localSettingsRepository.AddOrUpdateSyncTime(FileName, DateTimeOffset.UtcNow);
+            _localSettingsRepository.AddOrUpdateSyncTime(FileName, maxLastModified);
         }
     }
 }

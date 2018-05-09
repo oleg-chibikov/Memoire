@@ -78,6 +78,11 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                 Process.Start($"https://www.qwant.com/?q={text}&t=images");
                                 _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
                                 _captchaPassing = true;
+
+                                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
+                                await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+                                _captchaPassing = false;
+                                _semaphore.Release();
                             }
 
                             _semaphore.Release();
@@ -87,13 +92,6 @@ namespace Remembrance.Core.ImageSearch.Qwant
                     }
 
                     throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
-                }
-
-                if (_captchaPassing)
-                {
-                    await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                    _captchaPassing = false;
-                    _semaphore.Release();
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

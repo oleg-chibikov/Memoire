@@ -10,11 +10,11 @@ namespace Remembrance.Core.Sync
     [UsedImplicitly]
     internal sealed class SharedRepositoryPathsProvider : ISharedRepositoryPathsProvider
     {
-        public string BaseDirectoryPath { get; } = Directory.GetParent(Paths.SharedDataPath).FullName;
+        public string BaseDirectoryPath { get; } = Directory.GetParent(RemembrancePaths.SharedDataPath).FullName;
 
         public ICollection<string> GetSharedRepositoriesPaths()
         {
-            return Directory.GetDirectories(BaseDirectoryPath).Where(directoryPath => directoryPath != Paths.SharedDataPath).SelectMany(Directory.GetFiles).ToArray();
+            return Directory.GetDirectories(BaseDirectoryPath).Where(directoryPath => directoryPath != RemembrancePaths.SharedDataPath).SelectMany(Directory.GetFiles).ToArray();
         }
     }
 }

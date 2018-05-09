@@ -1,4 +1,4 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Card.AssessmentViewOnlyCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,25 +6,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Card"
+    xmlns:cardViewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
+    d:DataContext="{d:DesignInstance cardViewModel:AssessmentViewOnlyCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
     Icon="../IconAlt.ico"
     Title="{Binding Word, Mode=OneTime}">
-    <window:AnimatedWindow.Resources>
+    <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </window:AnimatedWindow.Resources>
+    </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger
             EventName="Closed">
@@ -35,17 +35,19 @@
 
     <StackPanel
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <TextBlock Text="{Binding RepeatType, Mode=OneTime, Converter={StaticResource RepeatTypeConverter}}"/>
+        <TextBlock Text="{Binding RepeatType, Mode=OneTime, Converter={StaticResource RepeatTypeConverter}}" />
         <Expander
             Header="{lex:Loc Details}"
             ExpandDirection="Up">
-            <view:TranslationDetailsCardControl
+            <cardView:TranslationDetailsCardControl
                 DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
         </Expander>
         <StackPanel
             Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-            <view:WordControl
+            <cardView:WordImageViewerControl
+                DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
+            <cardView:WordControl
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
@@ -59,10 +61,10 @@
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 Text="-" />
-            <view:WordControl
+            <cardView:WordControl
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding CorrectAnswer, Mode=OneTime}" />
         </StackPanel>
     </StackPanel>
-</window:AnimatedWindow>
+</animatedWindow:AnimatedWindow>

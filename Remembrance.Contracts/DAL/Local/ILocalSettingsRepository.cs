@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
+using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Local
 {
@@ -19,13 +20,18 @@ namespace Remembrance.Contracts.DAL.Local
         [NotNull]
         string UiLanguage { get; set; }
 
-        void AddOrUpdateSyncTime([NotNull] string repository, DateTimeOffset syncTime);
+        [CanBeNull]
+        AvailableLanguagesInfo AvailableLanguages { get; set; }
 
-        DateTimeOffset GetSyncTime([NotNull] string repository);
+        DateTime? AvailableLanguagesModifiedDate { get; }
 
         void AddOrUpdatePauseInfo(PauseReason pauseReason, [CanBeNull] PauseInfoCollection pauseInfo);
 
+        void AddOrUpdateSyncTime([NotNull] string repository, DateTime syncTime);
+
         [NotNull]
         PauseInfoCollection GetPauseInfo(PauseReason pauseReason);
+
+        DateTime GetSyncTime([NotNull] string repository);
     }
 }

@@ -11,6 +11,7 @@ using Scar.Common.WPF.View.Contracts;
 namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
+
     // ReSharper disable once StyleCop.SA1009
     internal sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IWindow window, TranslationInfo translationInfo)>
     {

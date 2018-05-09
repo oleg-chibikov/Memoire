@@ -9,11 +9,11 @@ using Scar.Common.DAL.Model;
 namespace Remembrance.Core.Sync
 {
     [UsedImplicitly]
-    internal sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TEntity, TId, TRepository>
-        where TEntity : IEntity<TId>, ITrackedEntity
+    internal sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
+        where TEntity : IEntity<TId>
         where TDeletionEntity : IEntity<TId>, ITrackedEntity
-        where TRepository : ITrackedRepository<TEntity, TId>
-        where TDeletionEventRepository : class, ITrackedRepository<TDeletionEntity, TId>
+        where TRepository : IRepository<TEntity, TId>, ITrackedRepository
+        where TDeletionEventRepository : class, IRepository<TDeletionEntity, TId>
     {
         private readonly object _locker = new object();
 

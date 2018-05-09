@@ -27,7 +27,9 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationResult));
             }
 
-            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry)).ToArray();
+            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations
+                .Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry))
+                .ToArray();
         }
 
         [NotNull]

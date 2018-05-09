@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.View", "Remembr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Core", "Remembrance.Core\Remembrance.Core.csproj", "{A10C7E6D-D616-4B99-8BB2-A43035346099}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.WPF.Controls.AutoCompleteTextBox", "..\..\Libraries\Common.WPF.Controls.AutoCompleteTextBox\Common.WPF.Controls.AutoCompleteTextBox.csproj", "{19FC56EC-9859-4473-9941-E04FC5CC1B56}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remembrance.Test", "Remembrance.Test\Remembrance.Test.csproj", "{3BA8BF52-7125-401E-BE18-16650135AA4A}"
 EndProject
 Global
@@ -79,10 +77,6 @@ Global
 		{A10C7E6D-D616-4B99-8BB2-A43035346099}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A10C7E6D-D616-4B99-8BB2-A43035346099}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A10C7E6D-D616-4B99-8BB2-A43035346099}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19FC56EC-9859-4473-9941-E04FC5CC1B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19FC56EC-9859-4473-9941-E04FC5CC1B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19FC56EC-9859-4473-9941-E04FC5CC1B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19FC56EC-9859-4473-9941-E04FC5CC1B56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3BA8BF52-7125-401E-BE18-16650135AA4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BA8BF52-7125-401E-BE18-16650135AA4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BA8BF52-7125-401E-BE18-16650135AA4A}.Release|Any CPU.ActiveCfg = Release|Any CPU

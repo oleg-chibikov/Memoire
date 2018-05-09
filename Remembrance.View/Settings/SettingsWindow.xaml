@@ -1,4 +1,4 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Settings.SettingsWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,19 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
-    xmlns:processes="clr-namespace:Remembrance.View.Settings.Processes"
+    xmlns:processesView="clr-namespace:Remembrance.View.Settings.Processes"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:SettingsViewModel}"
     SizeToContent="Height"
     Width="700"
     Icon="../IconAlt.ico">
@@ -29,7 +29,7 @@
                 Command="{Binding WindowClosingCommand, Mode=OneTime}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <window:AnimatedWindow.Resources>
+    <animatedWindow:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <commonView:DesignTimeResourceDictionary
@@ -38,17 +38,17 @@
                     Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </window:AnimatedWindow.Resources>
-    <window:AnimatedWindow.TaskbarItemInfo>
+    </animatedWindow:AnimatedWindow.Resources>
+    <animatedWindow:AnimatedWindow.TaskbarItemInfo>
         <TaskbarItemInfo
             ProgressState="{Binding ProgressState, Mode=OneWay}"
             Description="{Binding ProgressDescription, Mode=OneWay}"
             ProgressValue="{Binding Progress, Mode=OneWay, Converter={StaticResource PercentageIntToDoubleConverter}}" />
-    </window:AnimatedWindow.TaskbarItemInfo>
+    </animatedWindow:AnimatedWindow.TaskbarItemInfo>
     <materialDesign:DialogHost
         IsOpen="{Binding ProcessBlacklistViewModel.IsActiveProcessesDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
-            <processes:ActiveProcessesDialog
+            <processesView:ActiveProcessesDialog
                 DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
         </materialDesign:DialogHost.DialogContent>
         <Grid>
@@ -63,6 +63,8 @@
                 commonView:MarginSetter.Orientation="Vertical"
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                 <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="Auto" />
                     <RowDefinition
                         Height="Auto" />
                     <RowDefinition
@@ -92,7 +94,7 @@
                     <ComboBox
                         IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding AvailableUiLanguages, Mode=OneTime}"
-                        SelectedItem="{Binding UiLanguage, Mode=TwoWay}"
+                        SelectedValue="{Binding UiLanguage, Mode=TwoWay}"
                         SelectedValuePath="Code"
                         DisplayMemberPath="DisplayName" />
                     <StackPanel
@@ -126,26 +128,17 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
-                    Text="{lex:Loc TtsSpeaker}" />
+                    Text="{lex:Loc PreferredLanguage}" />
 
                 <DockPanel
-                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-                    commonView:MarginSetter.Orientation="Horizontal"
                     Grid.Row="1"
                     Grid.Column="1">
                     <ComboBox
                         IsSynchronizedWithCurrentItem="True"
-                        ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
-                        SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
-                        SelectedValuePath="Key"
-                        DisplayMemberPath="Value" />
-                    <ComboBox
-                        HorizontalAlignment="Left"
-                        IsSynchronizedWithCurrentItem="True"
-                        ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
-                        SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
-                        SelectedValuePath="Key"
-                        DisplayMemberPath="Value" />
+                        ItemsSource="{Binding AvailableTranslationLanguages, Mode=OneTime}"
+                        SelectedValue="{Binding SelectedPreferredLanguage, Mode=TwoWay}"
+                        SelectedValuePath="Code"
+                        DisplayMemberPath="DisplayName" />
                     <StackPanel
                         commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                         Orientation="Horizontal"
@@ -172,10 +165,35 @@
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
+                    Text="{lex:Loc TtsSpeaker}" />
+
+                <DockPanel
+                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                    commonView:MarginSetter.Orientation="Horizontal"
+                    Grid.Row="2"
+                    Grid.Column="1">
+                    <ComboBox
+                        IsSynchronizedWithCurrentItem="True"
+                        ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
+                        SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
+                        SelectedValuePath="Key"
+                        DisplayMemberPath="Value" />
+                    <ComboBox
+                        HorizontalAlignment="Left"
+                        IsSynchronizedWithCurrentItem="True"
+                        ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
+                        SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
+                        SelectedValuePath="Key"
+                        DisplayMemberPath="Value" />
+                </DockPanel>
+
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
                     Text="{lex:Loc CardShowFrequency}" />
 
                 <Slider
-                    Grid.Row="2"
+                    Grid.Row="3"
                     Grid.Column="1"
                     Minimum="0.08333"
                     Maximum="120"
@@ -186,19 +204,18 @@
                     AutoToolTipPlacement="None"
                     ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
-
                 <TextBlock
-                    Grid.Row="3"
+                    Grid.Row="4"
                     Grid.Column="0"
                     Text="{lex:Loc ProcessesBlacklist}" />
 
-                <processes:ProcessesBlacklistControl
-                    Grid.Row="3"
+                <processesView:ProcessesBlacklistControl
+                    Grid.Row="4"
                     Grid.Column="1"
                     DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
 
                 <StackPanel
-                    Grid.Row="4"
+                    Grid.Row="5"
                     Grid.Column="1"
                     Orientation="Horizontal"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -209,12 +226,6 @@
                         Command="{Binding SaveCommand, Mode=OneTime}"
                         CommandParameter="{Binding SelectedItems, ElementName=DataGrid, Mode=OneWay}"
                         Content="{lex:Loc Save}" />
-                    <Button
-                        IsCancel="True"
-                        Command="{Binding CancelCommand, Mode=OneTime}"
-                        Width="100"
-                        Background="OrangeRed"
-                        Content="{lex:Loc Cancel}" />
                 </StackPanel>
 
                 <Grid.Style>
@@ -290,4 +301,4 @@
             </Border>
         </Grid>
     </materialDesign:DialogHost>
-</window:AnimatedWindow>
+</animatedWindow:AnimatedWindow>

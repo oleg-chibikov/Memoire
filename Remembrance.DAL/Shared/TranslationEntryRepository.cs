@@ -9,8 +9,8 @@ namespace Remembrance.DAL.Shared
     [UsedImplicitly]
     internal sealed class TranslationEntryRepository : TrackedLiteDbRepository<TranslationEntry, TranslationEntryKey>, ITranslationEntryRepository
     {
-        public TranslationEntryRepository([CanBeNull] string directoryPath = null, [CanBeNull] string fileName = null, bool shrink = true)
-            : base(directoryPath ?? Paths.SharedDataPath, fileName, shrink)
+        public TranslationEntryRepository([CanBeNull] string directoryPath = null, bool shrink = true)
+            : base(directoryPath ?? RemembrancePaths.LocalSharedDataPath, null, shrink)
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);

@@ -12,12 +12,12 @@ namespace Remembrance.Core.CardManagement.Data
             Translation = translation;
         }
 
-        [JsonProperty("Word", Required = Required.Always)]
-        public string Text { get; }
-
         [CanBeNull]
         [JsonProperty("Translation", Required = Required.Always)]
         public string Translation { get; }
+
+        [JsonProperty("Word", Required = Required.Always)]
+        public string Text { get; }
 
         public override string ToString()
         {

@@ -1,4 +1,4 @@
-<window:AnimatedWindow
+<animatedWindow:AnimatedWindow
     x:Class="Remembrance.View.Settings.DictionaryWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,13 +8,13 @@
     mc:Ignorable="d"
     Title="{lex:Loc Title}"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:window="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View.Settings"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:settingsView="clr-namespace:Remembrance.View.Settings"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    MinWidth="1200"
+    MinWidth="1250"
     MinHeight="300"
     Width="1200"
     Height="400"
@@ -25,12 +25,12 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:DictionaryViewModel}"
     Icon="../IconAlt.ico">
-    <window:AnimatedWindow.Resources>
+    <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-    </window:AnimatedWindow.Resources>
+    </animatedWindow:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -47,7 +47,7 @@
     <materialDesign:DialogHost
         IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
-            <view:EditManualTranslationsDialog
+            <settingsView:EditManualTranslationsDialog
                 DataContext="{Binding EditManualTranslationsViewModel, Mode=OneTime}" />
         </materialDesign:DialogHost.DialogContent>
         <Grid
@@ -65,11 +65,11 @@
             </Grid.RowDefinitions>
             <DockPanel
                 Grid.Row="0">
-                <view:SearchControl
+                <settingsView:SearchControl
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center" />
             </DockPanel>
-            <view:TranslationsGridControl
+            <settingsView:TranslationsGridControl
                 Width="Auto"
                 Grid.Row="1" />
             <DockPanel
@@ -91,7 +91,7 @@
                     Text="{lex:Loc Total}" />
                 <TextBlock
                     Text="{Binding Count, Mode=OneWay}" />
-                <view:AddTranslationControl
+                <settingsView:AddTranslationControl
                     Width="900"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
@@ -100,4 +100,4 @@
             </DockPanel>
         </Grid>
     </materialDesign:DialogHost>
-</window:AnimatedWindow>
+</animatedWindow:AnimatedWindow>

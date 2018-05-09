@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:controls="clr-namespace:Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
-    xmlns:card="clr-namespace:Remembrance.View.Card">
+    xmlns:cardView="clr-namespace:Remembrance.View.Card"
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox">
 
     <system:Double
         x:Key="CommonMargin">
@@ -102,14 +102,14 @@
     </Style>
 
     <Style
-        TargetType="card:WordControl">
+        TargetType="cardView:WordControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
-        TargetType="card:WordsControl">
+        TargetType="cardView:WordsControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
@@ -130,7 +130,7 @@
     </Style>
 
     <Style
-        TargetType="controls:CompletableTextBox"
+        TargetType="autoComplete:CompletableTextBox"
         BasedOn="{StaticResource {x:Type TextBox}}" />
 
     <Style

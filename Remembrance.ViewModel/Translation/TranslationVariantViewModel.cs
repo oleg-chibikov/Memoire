@@ -27,7 +27,7 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] IMessageHub messageHub,
             [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModel,
+            [NotNull] Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryRepository translationEntryRepository)
             : base(translationEntry, translationVariant, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, wordViewModelFactory, translationEntryRepository)
@@ -37,22 +37,18 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             }
 
-            if (wordImageViewerViewModel == null)
+            if (wordImageViewerViewModelFactory == null)
             {
-                throw new ArgumentNullException(nameof(wordImageViewerViewModel));
+                throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
             }
 
-            Synonyms = translationVariant.Synonyms
-                ?.Select(synonym => priorityWordViewModelFactory(synonym, translationEntry))
-                .ToArray();
+            Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationEntry)).ToArray();
 
-            Meanings = translationVariant.Meanings
-                ?.Select(meaning => wordViewModelFactory(meaning, translationEntry.Id.SourceLanguage))
-                .ToArray();
+            Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationEntry.Id.SourceLanguage)).ToArray();
 
             Examples = translationVariant.Examples;
 
-            WordImageViewerViewModel = wordImageViewerViewModel(new WordKey(translationEntry.Id, new BaseWord(this)), parentText);
+            WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationEntry.Id, Word), parentText);
         }
 
         [CanBeNull]

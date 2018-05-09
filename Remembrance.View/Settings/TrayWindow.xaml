@@ -1,4 +1,4 @@
-<view:BaseWindow
+<commonView:BaseWindow
     x:Class="Remembrance.View.Settings.TrayWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     mc:Ignorable="d"
@@ -20,10 +20,10 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
+    d:DataContext="{d:DesignInstance d:Type=settingsViewModel:TrayViewModel}"
     Icon="../IconAlt.ico">
     <Window.Resources>
-        <view:DesignTimeResourceDictionary
+        <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </Window.Resources>
     <Grid>
@@ -176,7 +176,7 @@
                     CornerRadius="4"
                     Padding="15">
                     <StackPanel
-                        view:MarginSetter.Margin="15">
+                        commonView:MarginSetter.Margin="15">
                         <StackPanel.Resources>
                             <Style
                                 TargetType="TextBlock"
@@ -199,7 +199,7 @@
                             FontWeight="Bold"
                             Text="{Binding TimeLeftToShowCard, Mode=OneWay}" />
                         <StackPanel
-                            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <TextBlock
                                 Text="{Binding CardShowFrequency, Mode=OneWay}" />
                             <TextBlock
@@ -215,7 +215,7 @@
                                 Text="{Binding PauseReasons, Mode=OneWay}" />
                         </StackPanel>
                         <StackPanel
-                            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <Separator />
                             <TextBlock
                                 HorizontalAlignment="Right"
@@ -226,4 +226,4 @@
             </tb:TaskbarIcon.TrayToolTip>
         </tb:TaskbarIcon>
     </Grid>
-</view:BaseWindow>
+</commonView:BaseWindow>

@@ -1,16 +1,16 @@
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using JetBrains.Annotations;
 using Microsoft.Win32;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.View.Settings;
+using Remembrance.Core;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
@@ -19,12 +19,19 @@ using Remembrance.View.Card;
 using Remembrance.ViewModel.Card;
 using Remembrance.ViewModel.Settings;
 using Remembrance.WebApi;
+using Scar.Common;
 using Scar.Common.Async;
+using Scar.Common.DAL;
+using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
+using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.View;
 
 namespace Remembrance
 {
+    // TODO: Feature Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
+    // TODO: Feature: if the word level is low, replace textbox with dropdown
+
     /// <summary>
     /// The app.
     /// </summary>
@@ -49,39 +56,29 @@ namespace Remembrance
                 });
             Container.Resolve<ITrayWindow>().ShowDialog();
 
-            // no await here
-            // ReSharper disable once AssignmentIsFullyDiscarded
-            _ = ResolveInSeparateTaskAsync<ISynchronizationManager>();
-
-            // no await here
-            // ReSharper disable once AssignmentIsFullyDiscarded
-            _ = ResolveInSeparateTaskAsync<ApiHoster>();
-
-            // no await here
-            // ReSharper disable once AssignmentIsFullyDiscarded
-            _ = ResolveInSeparateTaskAsync<IAssessmentCardManager>();
-
-            // no await here
-            // ReSharper disable once AssignmentIsFullyDiscarded
-            _ = ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
+            ResolveInSeparateTaskAsync<ISynchronizationManager>();
+            ResolveInSeparateTaskAsync<ApiHoster>();
+            ResolveInSeparateTaskAsync<IAssessmentCardManager>();
+            ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
+            ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
         }
 
         protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
         {
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterType<IAutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
-            RegisterNamed<SettingsRepository, ISettingsRepository>(builder);
-            RegisterNamed<LearningInfoRepository, ILearningInfoRepository>(builder);
-            RegisterNamed<TranslationEntryRepository, ITranslationEntryRepository>(builder);
-            RegisterNamed<TranslationEntryDeletionRepository, ITranslationEntryDeletionRepository>(builder);
+            RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
+            RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository, TranslationEntryRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository, TranslationEntryDeletionRepository>(builder);
+            RegisterRepositorySynchronizer<WordImageSearchIndex, WordKey, IWordImageSearchIndexRepository, WordImageSearchIndexRepository>(builder);
 
-            builder.RegisterType(typeof(RepositorySynhronizer<Settings, string, ISettingsRepository>)).SingleInstance().AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository>)).SingleInstance().AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository>)).SingleInstance().AsImplementedInterfaces();
-            builder.RegisterType(typeof(RepositorySynhronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository>)).SingleInstance().AsImplementedInterfaces();
-            builder.RegisterType(typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository, ITranslationEntryDeletionRepository>))
+            builder.RegisterType(
+                    typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository,
+                            ITranslationEntryDeletionRepository>
+                    ))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 
@@ -89,8 +86,6 @@ namespace Remembrance
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
 
-            // TODO: move autocomplete to library and nuget
-            // builder.RegisterType<SuggestionProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterInstance(
                     new OpenFileDialog
                     {
@@ -112,9 +107,19 @@ namespace Remembrance
                     })
                 .AsSelf()
                 .SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).AsSelf().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody").AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
+        }
+
+        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>([NotNull] ContainerBuilder builder)
+            where TRepository : TRepositoryInterface, IChangeableRepository
+            where TRepositoryInterface : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
+            where TEntity : IEntity<TId>, ITrackedEntity
+        {
+            builder.RegisterType(typeof(RepositorySynhronizer<TEntity, TId, TRepositoryInterface>)).SingleInstance().AsImplementedInterfaces();
+            RegisterNamed<TRepository, TRepositoryInterface>(builder);
         }
 
         protected override void ShowMessage(Message message)
@@ -134,14 +139,12 @@ namespace Remembrance
         private static void RegisterNamed<T, TInterface>([NotNull] ContainerBuilder builder)
             where T : TInterface
         {
-            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).As<TInterface>().InstancePerDependency();
         }
 
-        [ItemNotNull]
-        [NotNull]
-        private async Task<T> ResolveInSeparateTaskAsync<T>()
+        private void ResolveInSeparateTaskAsync<T>()
         {
-            return await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
+            Task.Run(() => Container.Resolve<T>());
         }
     }
 }

@@ -133,7 +133,7 @@
     <value>Cannot delete the manual translation because it will lead to the abscence of translations.</value>
   </data>
   <data name="NoMoreImages" xml:space="preserve">
-    <value>Image cannot be found for the word {0}.</value>
+    <value>Image cannot be found for the word '{0}'.</value>
   </data>
   <data name="DefaultError" xml:space="preserve">
     <value>An error has occured.</value>
@@ -154,7 +154,7 @@
     <value>Cannot predict possible options.</value>
   </data>
   <data name="CannotImportWord" xml:space="preserve">
-    <value>Cannot import {0}.</value>
+    <value>Cannot import word '{0}'.</value>
   </data>
   <data name="CannotSynchronize" xml:space="preserve">
     <value>Cannot synchronize {0} in {1}.</value>
@@ -179,5 +179,8 @@
   </data>
   <data name="NoTranslations" xml:space="preserve">
     <value>No translations have been found for the word '{0}'.</value>
+  </data>
+  <data name="InvalidTargetLanguage" xml:space="preserve">
+    <value>The languages pair {0} -> {1} is unsupported.</value>
   </data>
 </root>

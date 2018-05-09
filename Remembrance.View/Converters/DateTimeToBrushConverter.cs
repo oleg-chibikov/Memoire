@@ -1,9 +1,8 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 using JetBrains.Annotations;
-using Brush = System.Windows.Media.Brush;
-using Brushes = System.Windows.Media.Brushes;
 
 namespace Remembrance.View.Converters
 {

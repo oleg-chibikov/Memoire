@@ -117,7 +117,8 @@ namespace Remembrance.ViewModel.Settings
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
-                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(_translationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(_translationEntryKey, ManualTranslations, CancellationToken.None)
+                    .ConfigureAwait(false);
 
                 // if non manual translations not exist
                 if (translationDetails.TranslationResult.PartOfSpeechTranslations.All(t => t.IsManual))
@@ -158,7 +159,8 @@ namespace Remembrance.ViewModel.Settings
         {
             _logger.Trace("Saving...");
             IsManualTranslationsDialogOpen = false;
-            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(_translationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
+            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(_translationEntryKey, ManualTranslations, CancellationToken.None)
+                .ConfigureAwait(false);
             _messageHub.Publish(translationInfo.TranslationEntry);
         }
     }

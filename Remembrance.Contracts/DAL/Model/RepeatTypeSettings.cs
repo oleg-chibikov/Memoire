@@ -9,15 +9,15 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new Dictionary<RepeatType, TimeSpan>
         {
-            { RepeatType.Elementary, TimeSpan.FromSeconds(5) },
-            { RepeatType.Beginner, TimeSpan.FromMinutes(30) },
-            { RepeatType.Novice, TimeSpan.FromHours(1) },
-            { RepeatType.PreIntermediate, TimeSpan.FromDays(0.5) },
-            { RepeatType.Intermediate, TimeSpan.FromDays(1) },
-            { RepeatType.UpperIntermediate, TimeSpan.FromDays(3.5) },
-            { RepeatType.Advanced, TimeSpan.FromDays(7) },
-            { RepeatType.Proficiency, TimeSpan.FromDays(15) },
-            { RepeatType.Expert, TimeSpan.FromDays(30) }
+            { RepeatType.Elementary, TimeSpan.FromMinutes(5) },
+            { RepeatType.Beginner, TimeSpan.FromHours(6) },
+            { RepeatType.Novice, TimeSpan.FromHours(12) },
+            { RepeatType.PreIntermediate, TimeSpan.FromDays(2) },
+            { RepeatType.Intermediate, TimeSpan.FromDays(5) },
+            { RepeatType.UpperIntermediate, TimeSpan.FromDays(10) },
+            { RepeatType.Advanced, TimeSpan.FromDays(30) },
+            { RepeatType.Proficiency, TimeSpan.FromDays(50) },
+            { RepeatType.Expert, TimeSpan.FromDays(100) }
         };
 
         [NotNull]

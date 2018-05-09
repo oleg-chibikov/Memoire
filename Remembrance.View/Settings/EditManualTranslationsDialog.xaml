@@ -1,4 +1,4 @@
-<UserControl
+<commonView:BaseControl
     x:Class="Remembrance.View.Settings.EditManualTranslationsDialog"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,35 +8,21 @@
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
+    xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:settings="clr-namespace:Remembrance.View.Settings"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:settingsView="clr-namespace:Remembrance.View.Settings"
     mc:Ignorable="d"
-    PreviewLostKeyboardFocus="EditManualTranslationsDialog_OnPreviewLostKeyboardFocus"
     Width="800"
-    d:DataContext="{d:DesignInstance Type=viewModel:EditManualTranslationsViewModel, IsDesignTimeCreatable=False}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <view:DesignTimeResourceDictionary
-                    Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-                <ResourceDictionary>
-                    <Style
-                        TargetType="{x:Type xcdg:DataCell}"
-                        BasedOn="{StaticResource {x:Type xcdg:DataCell}}">
-                        <EventSetter
-                            Event="LostFocus"
-                            Handler="DataCell_OnLostFocus" />
-                    </Style>
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+    d:DataContext="{d:DesignInstance Type=settingsViewModel:EditManualTranslationsViewModel, IsDesignTimeCreatable=False}">
+    <commonView:BaseControl.Resources>
+        <commonView:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+    </commonView:BaseControl.Resources>
     <Grid
         Margin="5"
-        view:MarginSetter.Margin="{StaticResource CommonMargin}"
-        view:MarginSetter.Orientation="Vertical">
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        commonView:MarginSetter.Orientation="Vertical">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -45,7 +31,7 @@
             <RowDefinition
                 Height="Auto" />
         </Grid.RowDefinitions>
-        <settings:AddManualTranslationControl
+        <settingsView:AddManualTranslationControl
             Grid.Row="0" />
         <xceed:XceedAutoFitColumnGrid
             Grid.Row="1"
@@ -96,7 +82,7 @@
                             <xcdg:CellEditor.EditTemplate>
                                 <DataTemplate>
                                     <ComboBox
-                                        ItemsSource="{Binding Path=DataContext.AvailablePartsOfSpeech, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        ItemsSource="{Binding Path=DataContext.AvailablePartsOfSpeech, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type settingsView:EditManualTranslationsDialog}}}"
                                         SelectedValue="{xcdg:CellEditorBinding}"
                                         IsEditable="True"
                                         Foreground="Black"
@@ -143,7 +129,7 @@
             Grid.Row="2"
             Orientation="Horizontal"
             HorizontalAlignment="Right"
-            view:MarginSetter.Margin="{StaticResource CommonMargin}">
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
             <Button
                 IsDefault="True"
                 Width="100"
@@ -157,4 +143,4 @@
                 Content="{lex:Loc Cancel}" />
         </StackPanel>
     </Grid>
-</UserControl>
+</commonView:BaseControl>

@@ -51,6 +51,14 @@ namespace Remembrance.Core
             }
         }
 
+        public void Dispose()
+        {
+            lock (_lockObject)
+            {
+                ApplyToEveryPauseReason(pauseReason => _localSettingsRepository.AddOrUpdatePauseInfo(pauseReason, _pauseInfos[pauseReason]));
+            }
+        }
+
         public bool IsPaused
         {
             get
@@ -59,14 +67,6 @@ namespace Remembrance.Core
                 {
                     return _pauseInfos.Values.Any(pauseInfoCollection => pauseInfoCollection.IsPaused());
                 }
-            }
-        }
-
-        public void Dispose()
-        {
-            lock (_lockObject)
-            {
-                ApplyToEveryPauseReason(pauseReason => _localSettingsRepository.AddOrUpdatePauseInfo(pauseReason, _pauseInfos[pauseReason]));
             }
         }
 

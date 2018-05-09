@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,18 +23,16 @@ namespace Remembrance.Contracts.Processing
 
         [ItemNotNull]
         [NotNull]
-        Task<string> GetDefaultTargetLanguageAsync([NotNull] string sourceLanguage, CancellationToken cancellationToken);
-
-        [ItemNotNull]
-        [NotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
             [CanBeNull] ICollection<ManualTranslation> manualTranslations,
-            CancellationToken cancellationToken,
-            [CanBeNull] Action<TranslationDetails> processNonReloaded = null);
+            CancellationToken cancellationToken);
 
         [ItemNotNull]
         [NotNull]
-        Task<TranslationInfo> UpdateManualTranslationsAsync([NotNull] TranslationEntryKey translationEntryKey, [CanBeNull] ICollection<ManualTranslation> manualTranslations, CancellationToken cancellationToken);
+        Task<TranslationInfo> UpdateManualTranslationsAsync(
+            [NotNull] TranslationEntryKey translationEntryKey,
+            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
+            CancellationToken cancellationToken);
     }
 }

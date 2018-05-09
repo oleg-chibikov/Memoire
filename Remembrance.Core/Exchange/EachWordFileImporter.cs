@@ -8,8 +8,8 @@ using Easy.MessageHub;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Translate;
 using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
@@ -26,18 +26,18 @@ namespace Remembrance.Core.Exchange
         };
 
         [NotNull]
-        private readonly ILanguageDetector _languageDetector;
+        private readonly ILanguageManager _languageManager;
 
         public EachWordFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messenger,
-            [NotNull] ILanguageDetector languageDetector,
+            [NotNull] ILanguageManager languageManager,
             [NotNull] ILearningInfoRepository learningInfoRepository)
             : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
-            _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
+            _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
         }
 
         protected override ICollection<BaseWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
@@ -53,9 +53,8 @@ namespace Remembrance.Core.Exchange
 
         protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(EachWordExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            var detectionResult = await _languageDetector.DetectLanguageAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
-            var sourceLanguage = detectionResult.Language;
-            var targetLanguage = await TranslationEntryProcessor.GetDefaultTargetLanguageAsync(sourceLanguage, cancellationToken).ConfigureAwait(false);
+            var sourceLanguage = await _languageManager.GetSourceAutoSubstituteAsync(exchangeEntry.Text, cancellationToken).ConfigureAwait(false);
+            var targetLanguage = _languageManager.GetTargetAutoSubstitute(sourceLanguage);
             return new TranslationEntryKey(exchangeEntry.Text, sourceLanguage, targetLanguage);
         }
 

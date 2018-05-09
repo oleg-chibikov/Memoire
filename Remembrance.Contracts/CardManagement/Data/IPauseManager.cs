@@ -8,13 +8,13 @@ namespace Remembrance.Contracts.CardManagement.Data
 
         PauseInfoCollection GetPauseInfo(PauseReason pauseReason);
 
-        void Pause(PauseReason pauseReason, [CanBeNull] string description = null);
+        [CanBeNull]
+        string GetPauseReasons();
 
-        void Resume(PauseReason pauseReason);
+        void Pause(PauseReason pauseReason, [CanBeNull] string description = null);
 
         void ResetPauseTimes();
 
-        [CanBeNull]
-        string GetPauseReasons();
+        void Resume(PauseReason pauseReason);
     }
 }

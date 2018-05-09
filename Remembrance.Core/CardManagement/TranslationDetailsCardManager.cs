@@ -37,7 +37,9 @@ namespace Remembrance.Core.CardManagement
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
 
             // ReSharper disable once StyleCop.SA1009
-            var translationDetailsCardWindow = await _scopedWindowProvider.GetScopedWindowAsync<ITranslationDetailsCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None).ConfigureAwait(false);
+            var translationDetailsCardWindow = await _scopedWindowProvider
+                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                .ConfigureAwait(false);
             SynchronizationContext.Send(
                 x =>
                 {
