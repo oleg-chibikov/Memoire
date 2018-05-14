@@ -13,9 +13,9 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:cardView="clr-namespace:Remembrance.View.Card"
     xmlns:settingsViewModel="clr-namespace:Remembrance.ViewModel.Settings;assembly=Remembrance.ViewModel"
-    xmlns:contracts="clr-namespace:Remembrance.Contracts.DAL.Model;assembly=Remembrance.Contracts"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:variousView="clr-namespace:Remembrance.View.Various"
+    xmlns:translationViewModel="clr-namespace:Remembrance.ViewModel.Translation;assembly=Remembrance.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -55,26 +55,23 @@
                 <TextBlock
                     Text="{Binding StringFormat=dd MMM HH:mm, Mode=OneWay}" />
             </DataTemplate>
-            <DataTemplate
-                DataType="{x:Type contracts:RepeatType}">
-                <TextBlock
-                    Text="{Binding Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
-            </DataTemplate>
         </xceed:XceedAutoFitColumnGrid.Resources>
         <xceed:XceedAutoFitColumnGrid.Columns>
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 Title="{lex:Loc Remembrance.Resources:Texts:IsFavorited}"
-                FieldName="IsFavorited"
+                FieldName="LearningInfoViewModel.IsFavorited"
                 AllowGroup="True"
                 AllowSort="True">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
-                        <variousView:FavoriteButton
-                            IsFavorited="{Binding Mode=OneWay}"
-                            Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}, Mode=OneTime}"
-                            CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
+                        <StackPanel
+                            d:DataContext="{d:DesignInstance d:Type=translationViewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}">
+                            <variousView:FavoriteButton
+                                DataContext="{Binding LearningInfoViewModel, Mode=OneWay}" />
+                        </StackPanel>
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -87,9 +84,10 @@
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <cardView:WordControl
+                            d:DataContext="{d:DesignInstance d:Type=translationViewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                             HorizontalAlignment="Stretch"
-                            SpeakerAlignment="Right"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}" />
+                            SpeakerAlignment="Right" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -104,26 +102,28 @@
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <StackPanel
+                            d:DataContext="{d:DesignInstance d:Type=translationViewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                             Orientation="Horizontal"
                             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                             Background="Transparent"
                             Cursor="Hand">
                             <StackPanel.InputBindings>
                                 <MouseBinding
-                                    CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                    CommandParameter="{Binding Mode=OneWay}"
                                     Command="{Binding DataContext.OpenDetailsCommand,Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
                                     MouseAction="LeftDoubleClick" />
                             </StackPanel.InputBindings>
                             <Button
                                 Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc OpenDetails}"
-                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                CommandParameter="{Binding Mode=OneWay}"
                                 Command="{Binding DataContext.OpenDetailsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="FileDocument" />
                             </Button>
                             <cardView:WordsControl
-                                ItemsSource="{Binding Mode=OneWay}"
+                                ItemsSource="{Binding Translations, Mode=OneWay}"
                                 MaxWidth="Infinity" />
                         </StackPanel>
                     </DataTemplate>
@@ -142,18 +142,33 @@
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="RepeatType"
-                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}" />
+                FieldName="LearningInfoViewModel.RepeatType"
+                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            d:DataContext="{d:DesignInstance d:Type=translationViewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                            Orientation="Horizontal"
+                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+                            <TextBlock
+                                Text="{Binding LearningInfoViewModel.RepeatType,Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
+                            <variousView:DemoteButton
+                                DataContext="{Binding LearningInfoViewModel, Mode=OneWay}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </xcdg:Column.CellContentTemplate>
+            </xcdg:Column>
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="LastCardShowTime"
+                FieldName="LearningInfoViewModel.LastCardShowTime"
                 Title="{lex:Loc Remembrance.Resources:Texts:LastCardShowTime}"
                 AllowGroup="False" />
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="NextCardShowTime"
+                FieldName="LearningInfoViewModel.NextCardShowTime"
                 Title="{lex:Loc Remembrance.Resources:Texts:NextCardShowTime}"
                 AllowGroup="False">
                 <xcdg:Column.CellContentTemplate>
@@ -168,7 +183,7 @@
             <xcdg:Column
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="ShowCount"
+                FieldName="LearningInfoViewModel.ShowCount"
                 Title="{lex:Loc Remembrance.Resources:Texts:ShowCount}"
                 AllowGroup="True" />
             <xcdg:UnboundColumn
@@ -178,12 +193,14 @@
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
                         <StackPanel
+                            d:DataContext="{d:DesignInstance d:Type=translationViewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
                             Orientation="Horizontal"
                             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <Button
                                 Style="{StaticResource ImageButton}"
                                 ToolTip="{lex:Loc EditManualTranslations}"
-                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                CommandParameter="{Binding Mode=OneWay}"
                                 Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="TooltipEdit" />
@@ -192,7 +209,7 @@
                                 Style="{StaticResource ImageButton}"
                                 Background="OrangeRed"
                                 ToolTip="{lex:Loc DeleteTranslation}"
-                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                                CommandParameter="{Binding Mode=OneWay}"
                                 Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
                                 <materialDesign:PackIcon
                                     Kind="Delete" />

@@ -13,6 +13,7 @@ using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.ViewModel.Card;
 
 namespace Remembrance.ViewModel.Translation
 {
@@ -32,6 +33,9 @@ namespace Remembrance.ViewModel.Translation
         [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
+        [NotNull]
+        public LearningInfoViewModel LearningInfoViewModel { get; }
+
         public TranslationEntryViewModel(
             [NotNull] TranslationEntry translationEntry,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
@@ -40,7 +44,8 @@ namespace Remembrance.ViewModel.Translation
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            [NotNull] ILearningInfoRepository learningInfoRepository,
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
             : base(
                 new Word
                 {
@@ -55,6 +60,11 @@ namespace Remembrance.ViewModel.Translation
                 throw new ArgumentNullException(nameof(translationEntry));
             }
 
+            if (learningInfoViewModelFactory == null)
+            {
+                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
+            }
+
             _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -62,7 +72,7 @@ namespace Remembrance.ViewModel.Translation
             Id = translationEntry.Id;
             CanLearnWord = false;
             var learningInfo = learningInfoRepository.GetOrInsert(Id);
-            UpdateLearningInfo(learningInfo);
+            LearningInfoViewModel = learningInfoViewModelFactory(learningInfo);
 
             // no await here
             ConstructionTask = ReloadTranslationsAsync(translationEntry);
@@ -71,18 +81,8 @@ namespace Remembrance.ViewModel.Translation
         [DoNotNotify]
         public TranslationEntryKey Id { get; }
 
-        public bool IsFavorited { get; set; }
-
         [NotNull]
         public override string Language => Id.SourceLanguage;
-
-        public DateTime LastCardShowTime { get; set; }
-
-        public DateTime NextCardShowTime { get; set; }
-
-        public RepeatType RepeatType { get; set; }
-
-        public int ShowCount { get; set; }
 
         [NotNull]
         public string TargetLanguage => Id.TargetLanguage;
@@ -92,10 +92,6 @@ namespace Remembrance.ViewModel.Translation
 
         [NotNull]
         internal Task ConstructionTask { get; }
-
-        // A hack to raise NotifyPropertyChanged for other properties
-        [AlsoNotifyFor(nameof(NextCardShowTime))]
-        private bool ReRenderNextCardShowTimeSwitch { get; set; }
 
         public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
         {
@@ -155,23 +151,9 @@ namespace Remembrance.ViewModel.Translation
                 null);
         }
 
-        public void ReRenderNextCardShowTime()
-        {
-            ReRenderNextCardShowTimeSwitch = !ReRenderNextCardShowTimeSwitch;
-        }
-
         public override string ToString()
         {
             return Id.ToString();
-        }
-
-        public void UpdateLearningInfo([NotNull] LearningInfo learningInfo)
-        {
-            IsFavorited = learningInfo.IsFavorited;
-            LastCardShowTime = learningInfo.LastCardShowTime;
-            NextCardShowTime = learningInfo.NextCardShowTime;
-            RepeatType = learningInfo.RepeatType;
-            ShowCount = learningInfo.ShowCount;
         }
 
         private void ProcessNonPriority([NotNull] WordKey wordKey)

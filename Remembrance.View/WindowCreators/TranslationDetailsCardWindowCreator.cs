@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel.Card;
@@ -13,38 +14,44 @@ namespace Remembrance.View.WindowCreators
     [UsedImplicitly]
 
     // ReSharper disable once StyleCop.SA1009
-    internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IWindow window, TranslationInfo translationInfo)>
+    internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IWindow Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
-        private readonly Func<TranslationInfo, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
+        private readonly Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
+
+        [NotNull]
+        private readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
 
         [NotNull]
         private readonly Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
 
         public TranslationDetailsCardWindowCreator(
             [NotNull] Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> translationDetailsCardWindowFactory,
-            [NotNull] Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
+            [NotNull] Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             [NotNull] SynchronizationContext synchronizationContext)
         {
             _translationDetailsCardWindowFactory = translationDetailsCardWindowFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardWindowFactory));
             _translationDetailsCardViewModelFactory = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+            _learningInfoViewModelFactory = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
         }
 
         [NotNull]
-        public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IWindow window, TranslationInfo translationInfo) param, CancellationToken cancellationToken)
+        public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            if (param.translationInfo == null)
+            if (param.TranslationInfo == null)
             {
-                throw new ArgumentNullException(nameof(param.translationInfo));
+                throw new ArgumentNullException(nameof(param.TranslationInfo));
             }
 
-            var translationDetailsCardViewModel = _translationDetailsCardViewModelFactory(param.translationInfo);
+            var learningInfoViewModel = _learningInfoViewModelFactory(param.TranslationInfo.LearningInfo);
+            var translationDetailsCardViewModel = _translationDetailsCardViewModelFactory(param.TranslationInfo, learningInfoViewModel);
             ITranslationDetailsCardWindow window = null;
-            _synchronizationContext.Send(x => window = _translationDetailsCardWindowFactory(param.window, translationDetailsCardViewModel), null);
+            _synchronizationContext.Send(x => window = _translationDetailsCardWindowFactory(param.Window, translationDetailsCardViewModel), null);
             return Task.FromResult(window);
         }
     }

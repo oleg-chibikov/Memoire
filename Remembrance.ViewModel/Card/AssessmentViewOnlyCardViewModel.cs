@@ -26,8 +26,9 @@ namespace Remembrance.ViewModel.Card
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
             [NotNull] IPauseManager pauseManager,
-            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory)
-            : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory)
+            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
+            : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory, learningInfoViewModelFactory)
         {
             if (translationDetailsCardViewModelFactory == null)
             {

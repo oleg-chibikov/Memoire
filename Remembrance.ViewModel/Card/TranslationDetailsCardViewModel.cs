@@ -4,18 +4,15 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.ViewModel.Translation;
-using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
 
 namespace Remembrance.ViewModel.Card
@@ -24,9 +21,6 @@ namespace Remembrance.ViewModel.Card
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsCardViewModel : IDisposable
     {
-        [NotNull]
-        private readonly ILearningInfoRepository _learningInfoRepository;
-
         [NotNull]
         private readonly ILog _logger;
 
@@ -43,16 +37,19 @@ namespace Remembrance.ViewModel.Card
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         [NotNull]
-        private readonly TranslationEntry _translationEntry;
+        private readonly TranslationEntryKey _translationEntryKey;
+
+        [NotNull]
+        public LearningInfoViewModel LearningInfoViewModel { get; }
 
         public TranslationDetailsCardViewModel(
-            [NotNull] Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
             [NotNull] TranslationInfo translationInfo,
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            [NotNull] Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
             [NotNull] ILog logger,
             [NotNull] IMessageHub messageHub,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] IPredictor predictor,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            [NotNull] IPredictor predictor)
         {
             if (translationDetailsViewModelFactory == null)
             {
@@ -64,21 +61,22 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(translationInfo));
             }
 
+            if (learningInfoViewModelFactory == null)
+            {
+                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
+            }
+
             var translationDetails = translationDetailsViewModelFactory(translationInfo);
-
+            _translationEntryKey = translationInfo.TranslationEntryKey;
             TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
-
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
-            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
-
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            LearningInfoViewModel = learningInfoViewModelFactory(translationInfo.LearningInfo);
 
-            _translationEntry = translationInfo.TranslationEntry;
-            IsFavorited = translationInfo.LearningInfo.IsFavorited;
             Word = translationInfo.TranslationEntryKey.Text;
+            LanguagePair = $"{translationInfo.TranslationEntryKey.SourceLanguage} -> {translationInfo.TranslationEntryKey.TargetLanguage}";
 
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
@@ -86,19 +84,37 @@ namespace Remembrance.ViewModel.Card
 
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChanged));
-            FavoriteCommand = new CorrelationCommand(Favorite);
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
         }
 
-        [NotNull]
-        public ICommand FavoriteCommand { get; }
+        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
+        {
+            if (learningInfo == null)
+            {
+                throw new ArgumentNullException(nameof(learningInfo));
+            }
 
-        public bool IsFavorited { get; private set; }
+            if (!learningInfo.Id.Equals(_translationEntryKey))
+            {
+                return;
+            }
+
+            _logger.DebugFormat("Received {0} from external source", learningInfo);
+
+            await Task.Run(
+                    () => LearningInfoViewModel.UpdateLearningInfo(learningInfo),
+                    CancellationToken.None)
+                .ConfigureAwait(false);
+        }
 
         [CanBeNull]
         public PrepositionsCollection PrepositionsCollection { get; private set; }
 
         [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
+
+        [NotNull]
+        public string LanguagePair { get; }
 
         [NotNull]
         public string Word { get; }
@@ -111,14 +127,6 @@ namespace Remembrance.ViewModel.Card
             }
 
             _subscriptionTokens.Clear();
-        }
-
-        private void Favorite()
-        {
-            _logger.TraceFormat("{0} {1}...", IsFavorited ? "Unfavoriting" : "Favoriting", TranslationDetails);
-            var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntry.Id);
-            learningInfo.IsFavorited = IsFavorited = !IsFavorited;
-            _learningInfoRepository.Update(learningInfo);
         }
 
         [ItemCanBeNull]
@@ -165,7 +173,7 @@ namespace Remembrance.ViewModel.Card
                 throw new ArgumentNullException(nameof(priorityWordKey));
             }
 
-            if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntry.Id))
+            if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
             {
                 return;
             }

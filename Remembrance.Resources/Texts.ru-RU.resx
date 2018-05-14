@@ -354,4 +354,7 @@
   <data name="PreferredLanguage" xml:space="preserve">
     <value>Предпочтительный язык</value>
   </data>
+  <data name="Demote" xml:space="preserve">
+    <value>Понизить уровень изучения</value>
+  </data>
 </root>

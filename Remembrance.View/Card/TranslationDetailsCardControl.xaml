@@ -10,7 +10,11 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel.Card;assembly=Remembrance.ViewModel"
     xmlns:cardView="clr-namespace:Remembrance.View.Card"
-    xmlns:variousView="clr-namespace:Remembrance.View.Various"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}">
     <commonView:BaseControl.Resources>
@@ -28,9 +32,8 @@
             Orientation="Horizontal"
             Grid.Row="0"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-            <variousView:FavoriteButton
-                IsFavorited="{Binding IsFavorited, Mode=OneWay}"
-                Command="{Binding FavoriteCommand, Mode=OneTime}" />
+            <cardView:LearningInfoActionsControl
+                DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
@@ -38,6 +41,8 @@
             <TextBlock
                 Foreground="DimGray"
                 Text="{Binding PrepositionsCollection, Mode=OneWay}" />
+            <TextBlock
+                Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
         </StackPanel>
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"

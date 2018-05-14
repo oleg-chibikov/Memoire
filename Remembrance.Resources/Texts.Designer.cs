@@ -196,6 +196,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Demote learning rank.
+        /// </summary>
+        public static string Demote {
+            get {
+                return ResourceManager.GetString("Demote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translation details.
         /// </summary>
         public static string Details {

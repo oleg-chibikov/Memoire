@@ -13,7 +13,7 @@ namespace Remembrance.View.WindowCreators
     [UsedImplicitly]
 
     // ReSharper disable once StyleCop.SA1009
-    internal sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IWindow window, TranslationInfo translationInfo)>
+    internal sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IWindow Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]
         private readonly Func<TranslationInfo, AssessmentTextInputCardViewModel> _assessmentTextInputCardViewModelFactory;
@@ -29,22 +29,22 @@ namespace Remembrance.View.WindowCreators
             [NotNull] Func<IWindow, AssessmentTextInputCardViewModel, IAssessmentTextInputCardWindow> assessmentTextInputCardWindowFactory,
             [NotNull] SynchronizationContext synchronizationContext)
         {
-            _assessmentTextInputCardViewModelFactory = assessmentTextInputCardViewModelFactory;
-            _assessmentTextInputCardWindowFactory = assessmentTextInputCardWindowFactory;
+            _assessmentTextInputCardViewModelFactory = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
+            _assessmentTextInputCardWindowFactory = assessmentTextInputCardWindowFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardWindowFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
         }
 
         [NotNull]
-        public Task<IAssessmentTextInputCardWindow> CreateWindowAsync((IWindow window, TranslationInfo translationInfo) param, CancellationToken cancellationToken)
+        public Task<IAssessmentTextInputCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            if (param.translationInfo == null)
+            if (param.TranslationInfo == null)
             {
-                throw new ArgumentNullException(nameof(param.translationInfo));
+                throw new ArgumentNullException(nameof(param.TranslationInfo));
             }
 
-            var assessmentViewModel = _assessmentTextInputCardViewModelFactory(param.translationInfo);
+            var assessmentViewModel = _assessmentTextInputCardViewModelFactory(param.TranslationInfo);
             IAssessmentTextInputCardWindow window = null;
-            _synchronizationContext.Send(x => window = _assessmentTextInputCardWindowFactory(param.window, assessmentViewModel), null);
+            _synchronizationContext.Send(x => window = _assessmentTextInputCardWindowFactory(param.Window, assessmentViewModel), null);
             return Task.FromResult(window);
         }
     }

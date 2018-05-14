@@ -35,13 +35,14 @@
 
     <StackPanel
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <TextBlock Text="{Binding RepeatType, Mode=OneTime, Converter={StaticResource RepeatTypeConverter}}" />
         <Expander
             Header="{lex:Loc Details}"
             ExpandDirection="Up">
             <cardView:TranslationDetailsCardControl
                 DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
         </Expander>
+        <cardView:LearningInfoActionsControl
+            DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
         <StackPanel
             Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">

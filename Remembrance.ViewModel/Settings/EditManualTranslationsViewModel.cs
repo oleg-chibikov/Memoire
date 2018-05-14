@@ -37,7 +37,7 @@ namespace Remembrance.ViewModel.Settings
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         [NotNull]
-        private TranslationEntryKey _translationEntryKey = new TranslationEntryKey();
+        public TranslationEntryKey TranslationEntryKey { get; private set; } = new TranslationEntryKey();
 
         public EditManualTranslationsViewModel(
             [NotNull] ILog logger,
@@ -117,7 +117,7 @@ namespace Remembrance.ViewModel.Settings
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
-                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(_translationEntryKey, ManualTranslations, CancellationToken.None)
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None)
                     .ConfigureAwait(false);
 
                 // if non manual translations not exist
@@ -138,11 +138,11 @@ namespace Remembrance.ViewModel.Settings
                 throw new ArgumentNullException(nameof(translationEntryViewModel));
             }
 
-            _translationEntryKey = translationEntryViewModel.Id;
+            TranslationEntryKey = translationEntryViewModel.Id;
             ManualTranslations.Clear();
             IsManualTranslationsDialogOpen = true;
             ManualTranslationText = null;
-            var translationEntry = _translationEntryRepository.GetById(_translationEntryKey);
+            var translationEntry = _translationEntryRepository.GetById(TranslationEntryKey);
             if (translationEntry.ManualTranslations == null)
             {
                 return;
@@ -159,7 +159,7 @@ namespace Remembrance.ViewModel.Settings
         {
             _logger.Trace("Saving...");
             IsManualTranslationsDialogOpen = false;
-            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(_translationEntryKey, ManualTranslations, CancellationToken.None)
+            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None)
                 .ConfigureAwait(false);
             _messageHub.Publish(translationInfo.TranslationEntry);
         }

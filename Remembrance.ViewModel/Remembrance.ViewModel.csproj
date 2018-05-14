@@ -102,6 +102,7 @@
     <Compile Include="Card\BaseAssessmentCardViewModel.cs" />
     <Compile Include="Card\AssessmentViewOnlyCardViewModel.cs" />
     <Compile Include="Card\AssessmentTextInputCardViewModel.cs" />
+    <Compile Include="Card\LearningInfoViewModel.cs" />
     <Compile Include="Settings\ProcessBlacklistViewModel.cs" />
     <Compile Include="Settings\EditManualTranslationsViewModel.cs" />
     <Compile Include="Settings\MessageViewModel.cs" />

@@ -31,8 +31,13 @@
             <RowDefinition
                 Height="Auto" />
         </Grid.RowDefinitions>
-        <settingsView:AddManualTranslationControl
-            Grid.Row="0" />
+        <StackPanel
+            Grid.Row="0"
+            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <TextBlock
+                Text="{Binding TranslationEntryKey, Mode=OneWay}" />
+            <settingsView:AddManualTranslationControl />
+        </StackPanel>
         <xceed:XceedAutoFitColumnGrid
             Grid.Row="1"
             ItemsSource="{Binding ManualTranslations, Mode=OneWay}"

@@ -16,7 +16,8 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance cardViewModel:AssessmentTextInputCardViewModel}" x:ClassModifier="internal">
+    d:DataContext="{d:DesignInstance cardViewModel:AssessmentTextInputCardViewModel}"
+    x:ClassModifier="internal">
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />

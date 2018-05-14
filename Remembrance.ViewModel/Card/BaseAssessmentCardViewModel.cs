@@ -46,6 +46,9 @@ namespace Remembrance.ViewModel.Card
         [NotNull]
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
 
+        [NotNull]
+        public LearningInfoViewModel LearningInfoViewModel { get; }
+
         protected BaseAssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
             [NotNull] IMessageHub messageHub,
@@ -53,11 +56,17 @@ namespace Remembrance.ViewModel.Card
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
             [NotNull] IPauseManager pauseManager,
-            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory)
+            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
         {
             if (assessmentInfoProvider == null)
             {
                 throw new ArgumentNullException(nameof(assessmentInfoProvider));
+            }
+
+            if (learningInfoViewModelFactory == null)
+            {
+                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             }
 
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -65,12 +74,12 @@ namespace Remembrance.ViewModel.Card
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
+            LearningInfoViewModel = learningInfoViewModelFactory(translationInfo.LearningInfo);
 
             var assessmentInfo = assessmentInfoProvider.ProvideAssessmentInfo(translationInfo);
             var sourceLanguage = assessmentInfo.IsReverse ? TranslationInfo.TranslationEntryKey.TargetLanguage : TranslationInfo.TranslationEntryKey.SourceLanguage;
             var targetLanguage = assessmentInfo.IsReverse ? TranslationInfo.TranslationEntryKey.SourceLanguage : TranslationInfo.TranslationEntryKey.TargetLanguage;
             LanguagePair = $"{sourceLanguage} -> {targetLanguage}";
-            RepeatType = translationInfo.LearningInfo.RepeatType;
             AcceptedAnswers = assessmentInfo.AcceptedAnswers;
             var wordViewModel = wordViewModelFactory(assessmentInfo.Word, sourceLanguage);
             PrepareVerb(sourceLanguage, wordViewModel.Word);
@@ -94,6 +103,27 @@ namespace Remembrance.ViewModel.Card
             WindowClosedCommand = new CorrelationCommand(WindowClosed);
 
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
+        }
+
+        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
+        {
+            if (learningInfo == null)
+            {
+                throw new ArgumentNullException(nameof(learningInfo));
+            }
+
+            if (!learningInfo.Id.Equals(TranslationInfo.TranslationEntryKey))
+            {
+                return;
+            }
+
+            Logger.DebugFormat("Received {0} from external source", learningInfo);
+
+            await Task.Run(
+                    () => LearningInfoViewModel.UpdateLearningInfo(learningInfo),
+                    CancellationToken.None)
+                .ConfigureAwait(false);
         }
 
         [NotNull]
@@ -101,8 +131,6 @@ namespace Remembrance.ViewModel.Card
 
         [NotNull]
         public string LanguagePair { get; }
-
-        public RepeatType RepeatType { get; }
 
         [CanBeNull]
         public string Tooltip { get; }

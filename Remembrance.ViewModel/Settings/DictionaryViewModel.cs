@@ -53,6 +53,7 @@ namespace Remembrance.ViewModel.Settings
         [NotNull]
         private readonly IRateLimiter _rateLimiter;
 
+        [NotNull]
         private readonly IScopedWindowProvider _scopedWindowProvider;
 
         [NotNull]
@@ -117,7 +118,6 @@ namespace Remembrance.ViewModel.Settings
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
 
-            FavoriteCommand = new CorrelationCommand<TranslationEntryViewModel>(Favorite);
             DeleteCommand = new AsyncCorrelationCommand<TranslationEntryViewModel>(DeleteAsync);
             OpenDetailsCommand = new AsyncCorrelationCommand<TranslationEntryViewModel>(OpenDetailsAsync);
             OpenSettingsCommand = new AsyncCorrelationCommand(OpenSettingsAsync);
@@ -157,9 +157,6 @@ namespace Remembrance.ViewModel.Settings
 
         [NotNull]
         public EditManualTranslationsViewModel EditManualTranslationsViewModel { get; }
-
-        [NotNull]
-        public ICommand FavoriteCommand { get; }
 
         [NotNull]
         public ICommand OpenDetailsCommand { get; }
@@ -224,15 +221,6 @@ namespace Remembrance.ViewModel.Settings
             {
                 Logger.DebugFormat("{0} has been deleted from the list", translationEntryViewModel);
             }
-        }
-
-        private void Favorite([NotNull] TranslationEntryViewModel translationEntryViewModel)
-        {
-            Logger.TraceFormat("{0} {1}...", translationEntryViewModel.IsFavorited ? "Unfavoriting" : "Favoriting", translationEntryViewModel);
-            translationEntryViewModel.IsFavorited = !translationEntryViewModel.IsFavorited;
-            var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryViewModel.Id);
-            learningInfo.IsFavorited = translationEntryViewModel.IsFavorited;
-            _learningInfoRepository.Update(learningInfo);
         }
 
         [NotNull]
@@ -311,10 +299,9 @@ namespace Remembrance.ViewModel.Settings
                         }
 
                         Logger.TraceFormat("Updating LearningInfo for {0} in the list...", translationEntryViewModel);
-                        translationEntryViewModel.UpdateLearningInfo(learningInfo);
-
-                        _synchronizationContext.Post(x => View.MoveCurrentTo(translationEntryViewModel), null);
+                        translationEntryViewModel.LearningInfoViewModel.UpdateLearningInfo(learningInfo);
                         Logger.DebugFormat("LearningInfo for {0} has been updated in the list", translationEntryViewModel);
+                        ScrollTo(translationEntryViewModel);
                     },
                     CancellationTokenSource.Token)
                 .ConfigureAwait(false);
@@ -343,9 +330,22 @@ namespace Remembrance.ViewModel.Settings
                         }
 
                         translationEntryViewModel.ProcessPriorityChange(priorityWordKey);
+                        ScrollTo(translationEntryViewModel);
                     },
                     CancellationTokenSource.Token)
                 .ConfigureAwait(false);
+        }
+
+        private void ScrollTo(TranslationEntryViewModel translationEntryViewModel)
+        {
+            _synchronizationContext.Post(x =>
+            {
+                if (View.CurrentItem == translationEntryViewModel)
+                {
+                    View.MoveCurrentTo(null);
+                }
+                View.MoveCurrentTo(translationEntryViewModel);
+            }, null);
         }
 
         [NotNull]
@@ -359,30 +359,25 @@ namespace Remembrance.ViewModel.Settings
             {
                 Logger.TraceFormat("Updating {0} in the list...", existingTranslationEntryViewModel);
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
-                existingTranslationEntryViewModel.UpdateLearningInfo(learningInfo);
+                existingTranslationEntryViewModel.LearningInfoViewModel.UpdateLearningInfo(learningInfo);
 
                 // no await here
                 // ReSharper disable once AssignmentIsFullyDiscarded
                 _ = existingTranslationEntryViewModel.ReloadTranslationsAsync(translationEntry);
 
-                _synchronizationContext.Post(x => View.MoveCurrentTo(existingTranslationEntryViewModel), null);
                 Logger.DebugFormat("{0} has been updated in the list", existingTranslationEntryViewModel);
+                ScrollTo(existingTranslationEntryViewModel);
             }
             else
             {
                 Logger.TraceFormat("Adding {0} to the list...", translationEntry);
                 var translationEntryViewModel = _translationEntryViewModelFactory(translationEntry);
                 await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-                _synchronizationContext.Send(
-                    x =>
-                    {
-                        _translationList.Insert(0, translationEntryViewModel);
-                        _semaphore.Release();
+                _synchronizationContext.Send(x => _translationList.Insert(0, translationEntryViewModel), null);
+                _semaphore.Release();
 
-                        Logger.DebugFormat("{0} has been added to the list...", translationEntryViewModel);
-                        View.MoveCurrentTo(translationEntryViewModel);
-                    },
-                    null);
+                Logger.DebugFormat("{0} has been added to the list...", translationEntryViewModel);
+                ScrollTo(translationEntryViewModel);
             }
         }
 
@@ -510,10 +505,10 @@ namespace Remembrance.ViewModel.Settings
         {
             foreach (var translation in _translationList)
             {
-                var time = translation.NextCardShowTime;
+                var time = translation.LearningInfoViewModel.NextCardShowTime;
                 if (time > DateTime.Now)
                 {
-                    translation.ReRenderNextCardShowTime();
+                    translation.LearningInfoViewModel.ReRenderNextCardShowTime();
                 }
             }
         }

@@ -1,11 +1,11 @@
 namespace Remembrance.View.Various
 {
     /// <summary>
-    /// The favorite button.
+    /// The demote button.
     /// </summary>
-    internal sealed partial class FavoriteButton
+    internal sealed partial class DemoteButton
     {
-        public FavoriteButton()
+        public DemoteButton()
         {
             InitializeComponent();
         }

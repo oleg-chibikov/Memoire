@@ -354,4 +354,7 @@
   <data name="Reload" xml:space="preserve">
     <value>Reload</value>
   </data>
+  <data name="Demote" xml:space="preserve">
+    <value>Demote learning rank</value>
+  </data>
 </root>
