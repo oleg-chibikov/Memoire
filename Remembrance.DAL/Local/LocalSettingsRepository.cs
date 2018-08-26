@@ -23,6 +23,14 @@ namespace Remembrance.DAL.Local
         {
         }
 
+        public AvailableLanguagesInfo AvailableLanguages
+        {
+            get => TryGetValue<AvailableLanguagesInfo>(nameof(AvailableLanguages));
+            set => RemoveUpdateOrInsert(nameof(AvailableLanguages), value);
+        }
+
+        public DateTime? AvailableLanguagesModifiedDate => TryGetById(nameof(AvailableLanguages))?.ModifiedDate;
+
         public bool IsActive
         {
             get => TryGetValue(nameof(IsActive), true);
@@ -66,27 +74,19 @@ namespace Remembrance.DAL.Local
             set => RemoveUpdateOrInsert(nameof(UiLanguage), value);
         }
 
-        public AvailableLanguagesInfo AvailableLanguages
-        {
-            get => TryGetValue<AvailableLanguagesInfo>(nameof(AvailableLanguages));
-            set => RemoveUpdateOrInsert(nameof(AvailableLanguages), value);
-        }
-
-        public DateTime? AvailableLanguagesModifiedDate => TryGetById(nameof(AvailableLanguages))?.ModifiedDate;
-
         public void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoCollection pauseInfo)
         {
             RemoveUpdateOrInsert(PauseTimeKey + pauseReason, pauseInfo);
         }
 
-        public PauseInfoCollection GetPauseInfo(PauseReason pauseReason)
-        {
-            return TryGetValue(PauseTimeKey + pauseReason, () => new PauseInfoCollection());
-        }
-
         public void AddOrUpdateSyncTime(string repository, DateTime syncTime)
         {
             RemoveUpdateOrInsert(SyncTimeKey + repository, syncTime);
+        }
+
+        public PauseInfoCollection GetPauseInfo(PauseReason pauseReason)
+        {
+            return TryGetValue(PauseTimeKey + pauseReason, () => new PauseInfoCollection());
         }
 
         public DateTime GetSyncTime(string repository)

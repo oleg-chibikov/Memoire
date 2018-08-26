@@ -135,7 +135,6 @@ namespace Remembrance.Core.CardManagement
 
             if (translationVariantWithPriorityInfo.HasPriorityItems)
             {
-                // true first
                 result = result.OrderByDescending(word => IsPriority(word, translationEntry));
             }
 

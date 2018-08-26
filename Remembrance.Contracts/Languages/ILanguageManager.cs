@@ -7,13 +7,6 @@ namespace Remembrance.Contracts.Languages
 {
     public interface ILanguageManager
     {
-        [NotNull]
-        [ItemNotNull]
-        Task<string> GetSourceAutoSubstituteAsync([NotNull] string text, CancellationToken cancellationToken);
-
-        [NotNull]
-        string GetTargetAutoSubstitute([NotNull] string sourceLanguage);
-
         bool CheckTargetLanguageIsValid([NotNull] string sourceLanguage, string targetLanguage);
 
         [NotNull]
@@ -21,5 +14,12 @@ namespace Remembrance.Contracts.Languages
 
         [NotNull]
         LanguagesCollection GetAvailableTargetLanguages([NotNull] string sourceLanguage);
+
+        [NotNull]
+        [ItemNotNull]
+        Task<string> GetSourceAutoSubstituteAsync([NotNull] string text, CancellationToken cancellationToken);
+
+        [NotNull]
+        string GetTargetAutoSubstitute([NotNull] string sourceLanguage);
     }
 }

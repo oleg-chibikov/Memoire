@@ -357,4 +357,7 @@
   <data name="Demote" xml:space="preserve">
     <value>Demote learning rank</value>
   </data>
+  <data name="ModifiedDate" xml:space="preserve">
+    <value>Сhanged</value>
+  </data>
 </root>

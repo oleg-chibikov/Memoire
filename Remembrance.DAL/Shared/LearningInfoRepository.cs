@@ -11,6 +11,8 @@ namespace Remembrance.DAL.Shared
     [UsedImplicitly]
     internal sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
     {
+        private readonly Random _rand = new Random();
+
         public LearningInfoRepository([CanBeNull] string directoryPath = null, bool shrink = true)
             : base(directoryPath ?? RemembrancePaths.LocalSharedDataPath, null, shrink)
         {
@@ -22,8 +24,9 @@ namespace Remembrance.DAL.Shared
 
         public LearningInfo GetMostSuitable()
         {
-            return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to show
-                .OrderByDescending(x => x.IsFavorited) // favorited are shown first
+            var chooseIsFavoritedFirstProbability = _rand.Next(100);
+            return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to be shown
+                .OrderByDescending(x => chooseIsFavoritedFirstProbability > 60 || x.IsFavorited) // favorited are shown first with 60% probability
                 .ThenBy(x => x.ShowCount) // the lower the value, the greater the priority
                 .ThenBy(x => Guid.NewGuid()) // similar values are ordered randomly
                 .FirstOrDefault();

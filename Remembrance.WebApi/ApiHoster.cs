@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Common.Logging;
@@ -10,15 +10,13 @@ namespace Remembrance.WebApi
     [UsedImplicitly]
     public sealed class ApiHoster : AutofacApiHoster
     {
-        public ApiHoster(ILog logger, ILifetimeScope lifetimeScope)
+        public ApiHoster([NotNull] ILog logger, [NotNull] ILifetimeScope lifetimeScope)
             : base(logger, lifetimeScope)
         {
         }
 
-        [NotNull]
         protected override string BaseAddress => "http://localhost:2053/";
 
-        [NotNull]
         protected override Assembly ControllersAssembly => Assembly.GetExecutingAssembly();
 
         protected override void RegisterRoutes(HttpRouteCollection routes)

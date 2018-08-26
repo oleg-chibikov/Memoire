@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Remembrance.ViewModel.Translation;
+using Remembrance.ViewModel;
 
 namespace Remembrance.View.Converters
 {

@@ -9,8 +9,8 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
-    xmlns:cardView="clr-namespace:Remembrance.View.Card"
-    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox">
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
+    xmlns:view="clr-namespace:Remembrance.View">
 
     <system:Double
         x:Key="CommonMargin">
@@ -102,14 +102,14 @@
     </Style>
 
     <Style
-        TargetType="cardView:WordControl">
+        TargetType="view:WordControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
-        TargetType="cardView:WordsControl">
+        TargetType="view:WordsControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
-using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel;
 using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
 
@@ -17,13 +17,13 @@ namespace Remembrance.View.WindowCreators
     internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IWindow Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]
+        private readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
+
+        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
         [NotNull]
         private readonly Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
-
-        [NotNull]
-        private readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
 
         [NotNull]
         private readonly Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
@@ -40,7 +40,6 @@ namespace Remembrance.View.WindowCreators
             _learningInfoViewModelFactory = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
         }
 
-        [NotNull]
         public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
             if (param.TranslationInfo == null)

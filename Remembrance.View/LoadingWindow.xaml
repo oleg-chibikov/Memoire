@@ -1,0 +1,24 @@
+<baseWindow:BaseWindow
+    x:Class="Remembrance.View.LoadingWindow"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+    Topmost="True"
+    WindowStyle="None"
+    Background="Transparent"
+    AllowsTransparency="True"
+    ShowInTaskbar="False"
+    ShowActivated="False"
+    Focusable="False"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterScreen">
+    <baseWindow:BaseWindow.Resources>
+        <ResourceDictionary
+            Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
+    </baseWindow:BaseWindow.Resources>
+    <Control
+        ToolTip="{lex:Loc Remembrance.Resources:Texts:Loading}"
+        Style="{StaticResource BusyAnimationStyle}" />
+</baseWindow:BaseWindow>

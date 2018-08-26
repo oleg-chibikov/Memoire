@@ -34,10 +34,10 @@ namespace Remembrance.Core.Exchange
         private readonly IMessageHub _messenger;
 
         [NotNull]
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
         [NotNull]
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+        private readonly ITranslationEntryRepository _translationEntryRepository;
 
         protected BaseFileImporter(
             [NotNull] ITranslationEntryRepository translationEntryRepository,
@@ -48,7 +48,7 @@ namespace Remembrance.Core.Exchange
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
+            _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
         }
@@ -166,7 +166,7 @@ namespace Remembrance.Core.Exchange
             [NotNull] TranslationEntryKey translationEntryKey,
             [CanBeNull] ICollection<ManualTranslation> manualTranslations)
         {
-            return await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
+            return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
                     cancellationToken,
                     null,
@@ -218,7 +218,7 @@ namespace Remembrance.Core.Exchange
             }
 
             var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, learningInfo);
-            var priorityTranslationsUpdated = UpdatePrioirityTranslationsAsync(exchangeEntry, translationEntry);
+            var priorityTranslationsUpdated = UpdatePriorityTranslationsAsync(exchangeEntry, translationEntry);
             changed |= priorityTranslationsUpdated;
             _logger.InfoFormat("Imported {0}", exchangeEntry.Text);
             if (changed)
@@ -247,7 +247,7 @@ namespace Remembrance.Core.Exchange
             _messenger.Publish(priorityWordKey);
         }
 
-        private bool UpdatePrioirityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
+        private bool UpdatePriorityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
             if (priorityTranslations?.Any() != true)

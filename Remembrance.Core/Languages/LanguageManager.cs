@@ -54,41 +54,6 @@ namespace Remembrance.Core.Languages
             _availableLanguages = cachedLanguages ?? ReloadAvailableLanguagesAsync().Result;
         }
 
-        public async Task<string> GetSourceAutoSubstituteAsync(string text, CancellationToken cancellationToken)
-        {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
-            return detectionResult.Language;
-        }
-
-        public string GetTargetAutoSubstitute(string sourceLanguage)
-        {
-            if (sourceLanguage == null)
-            {
-                throw new ArgumentNullException(nameof(sourceLanguage));
-            }
-
-            var availableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
-
-            if (!availableTargetLanguages.Any())
-            {
-                throw new InvalidOperationException("No target languages available");
-            }
-
-            var ordered = availableTargetLanguages.OrderBy(
-                languageCode => GetLanguageOrder(
-                    languageCode,
-                    _settingsRepository.PreferredLanguage,
-                    CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName,
-                    _localSettingsRepository.LastUsedTargetLanguage));
-
-            return ordered.First();
-        }
-
         public bool CheckTargetLanguageIsValid(string sourceLanguage, [NotNull] string targetLanguage)
         {
             if (sourceLanguage == null)
@@ -166,6 +131,41 @@ namespace Remembrance.Core.Languages
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
             return new LanguagesCollection(ordered, toSelect);
+        }
+
+        public async Task<string> GetSourceAutoSubstituteAsync(string text, CancellationToken cancellationToken)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
+            return detectionResult.Language;
+        }
+
+        public string GetTargetAutoSubstitute(string sourceLanguage)
+        {
+            if (sourceLanguage == null)
+            {
+                throw new ArgumentNullException(nameof(sourceLanguage));
+            }
+
+            var availableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
+
+            if (!availableTargetLanguages.Any())
+            {
+                throw new InvalidOperationException("No target languages available");
+            }
+
+            var ordered = availableTargetLanguages.OrderBy(
+                languageCode => GetLanguageOrder(
+                    languageCode,
+                    _settingsRepository.PreferredLanguage,
+                    CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName,
+                    _localSettingsRepository.LastUsedTargetLanguage));
+
+            return ordered.First();
         }
 
         private static int GetLanguageOrder([NotNull] string languageCode, [NotNull] string preferred, [NotNull] string currentCultureLanguage, [CanBeNull] string lastUsed)

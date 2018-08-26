@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using JetBrains.Annotations;
-using Remembrance.ViewModel.Translation;
+using Remembrance.ViewModel;
 
 namespace Remembrance.View.Converters
 {

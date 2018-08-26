@@ -15,9 +15,8 @@ using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
 using Remembrance.Resources;
-using Remembrance.View.Card;
-using Remembrance.ViewModel.Card;
-using Remembrance.ViewModel.Settings;
+using Remembrance.View;
+using Remembrance.ViewModel;
 using Remembrance.WebApi;
 using Scar.Common;
 using Scar.Common.Async;
@@ -43,9 +42,9 @@ namespace Remembrance
         [NotNull]
         private static readonly string DefaultFilePattern = $"{nameof(Remembrance)}.json";
 
-        protected override string AlreadyRunningMessage { get; } = Errors.AlreadyRunning;
+        protected override string AlreadyRunningCaption { get; } = Errors.DefaultError;
 
-        protected override string AppGuid { get; } = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+        protected override string AlreadyRunningMessage { get; } = Errors.AlreadyRunning;
 
         protected override void OnStartup()
         {
@@ -77,13 +76,15 @@ namespace Remembrance
 
             builder.RegisterType(
                     typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository,
-                            ITranslationEntryDeletionRepository>
-                    ))
-                .SingleInstance()
-                .AsImplementedInterfaces();
+                    ITranslationEntryDeletionRepository>))
+            .SingleInstance()
+            .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
 
             builder.RegisterInstance(
@@ -113,20 +114,12 @@ namespace Remembrance
             builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
         }
 
-        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>([NotNull] ContainerBuilder builder)
-            where TRepository : TRepositoryInterface, IChangeableRepository
-            where TRepositoryInterface : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
-            where TEntity : IEntity<TId>, ITrackedEntity
-        {
-            builder.RegisterType(typeof(RepositorySynhronizer<TEntity, TId, TRepositoryInterface>)).SingleInstance().AsImplementedInterfaces();
-            RegisterNamed<TRepository, TRepositoryInterface>(builder);
-        }
-
         protected override void ShowMessage(Message message)
         {
             var nestedLifeTimeScope = Container.BeginLifetimeScope();
             var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
-            SynchronizationContext.Post(
+            var synchronizationContext = SynchronizationContext ?? throw new InvalidOperationException();
+            synchronizationContext.Post(
                 x =>
                 {
                     var window = nestedLifeTimeScope.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel));
@@ -140,6 +133,15 @@ namespace Remembrance
             where T : TInterface
         {
             builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).As<TInterface>().InstancePerDependency();
+        }
+
+        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>([NotNull] ContainerBuilder builder)
+            where TRepository : TRepositoryInterface, IChangeableRepository
+            where TRepositoryInterface : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
+            where TEntity : IEntity<TId>, ITrackedEntity
+        {
+            builder.RegisterType(typeof(RepositorySynhronizer<TEntity, TId, TRepositoryInterface>)).SingleInstance().AsImplementedInterfaces();
+            RegisterNamed<TRepository, TRepositoryInterface>(builder);
         }
 
         private void ResolveInSeparateTaskAsync<T>()

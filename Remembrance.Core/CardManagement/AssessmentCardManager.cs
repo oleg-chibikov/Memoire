@@ -75,7 +75,7 @@ namespace Remembrance.Core.CardManagement
                 throw new ArgumentNullException(nameof(settingsRepository));
             }
 
-            // just to assign the field in the costructor
+            // just to assign the field in the constructor
             _interval = Disposable.Empty;
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
@@ -116,7 +116,7 @@ namespace Remembrance.Core.CardManagement
         {
             foreach (var subscriptionToken in _subscriptionTokens)
             {
-                _messageHub.UnSubscribe(subscriptionToken);
+                _messageHub.Unsubscribe(subscriptionToken);
             }
 
             _subscriptionTokens.Clear();
@@ -263,6 +263,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
+        [NotNull]
         private IDisposable ProvideInterval(TimeSpan delay)
         {
             return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);

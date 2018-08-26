@@ -1,0 +1,69 @@
+<ItemsControl
+    x:Class="Remembrance.View.WordsControl"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:view="clr-namespace:Remembrance.View"
+    mc:Ignorable="d"
+    x:Name="Control">
+    <ItemsControl.Resources>
+        <commonView:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+    </ItemsControl.Resources>
+    <ItemsControl.ItemTemplate>
+        <DataTemplate>
+            <view:WordControl
+                x:Name="WordControl"
+                Margin="5 0 0 0"
+                FontSize="{Binding FontSize, Mode=OneTime, ElementName=Control}"
+                FontWeight="{Binding FontWeight, Mode=OneTime, ElementName=Control}"
+                DataContext="{Binding Mode=OneTime}" />
+            <DataTemplate.Triggers>
+                <DataTrigger
+                    Binding="{Binding Mode=OneTime, RelativeSource={RelativeSource PreviousData}}"
+                    Value="{x:Null}">
+                    <Setter
+                        TargetName="WordControl"
+                        Property="Margin"
+                        Value="0" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </ItemsControl.ItemTemplate>
+    <ItemsControl.Style>
+        <Style
+            TargetType="ItemsControl">
+            <Setter
+                Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            MaxWidth="{Binding MaxWidth, Mode=OneTime, ElementName=Control}" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding MaxWidth, Mode=OneTime, ElementName=Control}"
+                    Value="Infinity">
+                    <Setter
+                        Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <DockPanel
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ItemsControl.Style>
+</ItemsControl>

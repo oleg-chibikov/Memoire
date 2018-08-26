@@ -26,21 +26,6 @@ namespace Remembrance.Contracts.DAL.Model
 
         public PartOfSpeech PartOfSpeech { get; set; }
 
-        public bool Equals(BaseWord other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return StringComparer.InvariantCultureIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
-        }
-
         public static bool operator ==([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
         {
             if (ReferenceEquals(obj1, obj2))
@@ -54,6 +39,21 @@ namespace Remembrance.Contracts.DAL.Model
         public static bool operator !=([CanBeNull] BaseWord obj1, [CanBeNull] BaseWord obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public bool Equals(BaseWord other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return StringComparer.InvariantCultureIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
         }
 
         public override bool Equals(object obj)

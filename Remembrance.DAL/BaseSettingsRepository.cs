@@ -33,13 +33,13 @@ namespace Remembrance.DAL
             }
         }
 
-        protected TValue TryGetValue<TValue>(string key, Func<TValue> defaultValueProvider)
+        protected TValue TryGetValue<TValue>([NotNull] string key, Func<TValue> defaultValueProvider)
         {
             var entry = TryGetById(key);
             return entry == null ? defaultValueProvider() : JsonConvert.DeserializeObject<TValue>(entry.ValueJson);
         }
 
-        protected TValue TryGetValue<TValue>(string key, TValue defaultValue = default(TValue))
+        protected TValue TryGetValue<TValue>([NotNull] string key, TValue defaultValue = default(TValue))
         {
             var entry = TryGetById(key);
             return entry == null ? defaultValue : JsonConvert.DeserializeObject<TValue>(entry.ValueJson);

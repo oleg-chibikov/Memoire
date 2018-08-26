@@ -15,7 +15,8 @@ namespace Remembrance.Installer
         {
             var fileName = $"{nameof(Remembrance)}.exe";
             new InstallBuilder(nameof(Remembrance), nameof(Scar), BuildDir, UpgradeCode).WithIcon(ProductIcon)
-                .WithShortcut(fileName)
+                .WithDesktopShortcut(fileName)
+                .WithProgramMenuShortcut(fileName)
                 .WithAutostart(fileName)
                 .OpenFolderAfterInstallation()
                 .LaunchAfterInstallation(fileName)

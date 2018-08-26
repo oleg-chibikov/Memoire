@@ -7,6 +7,11 @@ namespace Remembrance.Contracts.DAL.Local
 {
     public interface ILocalSettingsRepository
     {
+        [CanBeNull]
+        AvailableLanguagesInfo AvailableLanguages { get; set; }
+
+        DateTime? AvailableLanguagesModifiedDate { get; }
+
         bool IsActive { get; set; }
 
         DateTime? LastCardShowTime { get; set; }
@@ -19,11 +24,6 @@ namespace Remembrance.Contracts.DAL.Local
 
         [NotNull]
         string UiLanguage { get; set; }
-
-        [CanBeNull]
-        AvailableLanguagesInfo AvailableLanguages { get; set; }
-
-        DateTime? AvailableLanguagesModifiedDate { get; }
 
         void AddOrUpdatePauseInfo(PauseReason pauseReason, [CanBeNull] PauseInfoCollection pauseInfo);
 

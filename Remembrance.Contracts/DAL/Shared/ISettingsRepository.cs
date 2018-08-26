@@ -15,10 +15,10 @@ namespace Remembrance.Contracts.DAL.Shared
 
         TimeSpan CardShowFrequency { get; set; }
 
+        string PreferredLanguage { get; set; }
+
         Speaker TtsSpeaker { get; set; }
 
         VoiceEmotion TtsVoiceEmotion { get; set; }
-
-        string PreferredLanguage { get; set; }
     }
 }

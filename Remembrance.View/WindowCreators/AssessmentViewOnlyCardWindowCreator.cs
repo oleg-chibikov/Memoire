@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
-using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel;
 using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
 
@@ -34,7 +34,6 @@ namespace Remembrance.View.WindowCreators
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
         }
 
-        [NotNull]
         public Task<IAssessmentViewOnlyCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
             if (param.TranslationInfo == null)

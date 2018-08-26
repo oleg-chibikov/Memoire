@@ -29,6 +29,12 @@ namespace Remembrance.DAL.Shared
             set => RemoveUpdateOrInsert(nameof(CardShowFrequency), value);
         }
 
+        public string PreferredLanguage
+        {
+            get => TryGetValue(nameof(PreferredLanguage), Constants.EnLanguageTwoLetters);
+            set => RemoveUpdateOrInsert(nameof(PreferredLanguage), value);
+        }
+
         public Speaker TtsSpeaker
         {
             get => TryGetValue<Speaker>(nameof(TtsSpeaker));
@@ -39,12 +45,6 @@ namespace Remembrance.DAL.Shared
         {
             get => TryGetValue<VoiceEmotion>(nameof(TtsVoiceEmotion));
             set => RemoveUpdateOrInsert(nameof(TtsVoiceEmotion), value);
-        }
-
-        public string PreferredLanguage
-        {
-            get => TryGetValue(nameof(PreferredLanguage), Constants.EnLanguageTwoLetters);
-            set => RemoveUpdateOrInsert(nameof(PreferredLanguage), value);
         }
     }
 }

@@ -162,7 +162,7 @@ namespace Remembrance.Core.Processing
                 var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
                 if (needPostProcess)
                 {
-                    //No await here
+                    // no await here
                     // ReSharper disable once AssignmentIsFullyDiscarded
                     _ = PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
                 }
@@ -425,7 +425,6 @@ namespace Remembrance.Core.Processing
 
             if (translationResult == null)
             {
-                // Manual translations should not be the only translations if there is an error (network error) - the user should retry to get a proper translation
                 return null;
             }
 

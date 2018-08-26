@@ -59,6 +59,16 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs> Progress;
 
+        public void Dispose()
+        {
+            foreach (var importer in _importers)
+            {
+                importer.Progress -= ImporterExporter_Progress;
+            }
+
+            _exporter.Progress -= ImporterExporter_Progress;
+        }
+
         public async Task ExportAsync(CancellationToken cancellationToken)
         {
             var fileName = ShowSaveFileDialog();
@@ -136,16 +146,6 @@ namespace Remembrance.Core.Exchange
             {
                 OnProgress(1, 1);
             }
-        }
-
-        public void Dispose()
-        {
-            foreach (var importer in _importers)
-            {
-                importer.Progress -= ImporterExporter_Progress;
-            }
-
-            _exporter.Progress -= ImporterExporter_Progress;
         }
 
         private void ImporterExporter_Progress(object sender, ProgressEventArgs e)

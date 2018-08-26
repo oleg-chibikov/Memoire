@@ -33,60 +33,50 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.8.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.8.0\lib\net45\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Easy.MessageHub, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Easy.MessageHub.3.3.0\lib\net35\Easy.MessageHub.dll</HintPath>
+    <Reference Include="Easy.MessageHub, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Easy.MessageHub.3.4.0\lib\net35\Easy.MessageHub.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PropertyChanged, Version=2.5.5.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.5.5\lib\net452\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=2.5.9.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.9\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6696.29507\lib\net47\Scar.Common.dll</HintPath>
+      <HintPath>..\packages\Scar.Common.1.0.6811.31514\lib\net47\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Async, Version=1.0.6694.37769, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Async.1.0.6694.37769\lib\net47\Scar.Common.Async.dll</HintPath>
+    <Reference Include="Scar.Common.Async, Version=1.0.6719.22381, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Async.1.0.6719.22381\lib\net47\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6696.20007, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6696.20007\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.6768.19463, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.6768.19463\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6703.17679, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6703.17679\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
+    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6789.21362, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6789.21362\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6616.21909, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6616.21909\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6753.27805, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6753.27805\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.5\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.8\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6719.21680, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6719.21680\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6642.31884, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6642.31884\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6812.20901, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6812.20901\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.2\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.6719.21806, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.6719.21806\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WPFLocalizeExtension.3.1.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
@@ -99,29 +89,29 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Card\BaseAssessmentCardViewModel.cs" />
-    <Compile Include="Card\AssessmentViewOnlyCardViewModel.cs" />
-    <Compile Include="Card\AssessmentTextInputCardViewModel.cs" />
-    <Compile Include="Card\LearningInfoViewModel.cs" />
-    <Compile Include="Settings\ProcessBlacklistViewModel.cs" />
-    <Compile Include="Settings\EditManualTranslationsViewModel.cs" />
-    <Compile Include="Settings\MessageViewModel.cs" />
-    <Compile Include="Card\WordImageViewerViewModel.cs" />
-    <Compile Include="Translation\PartOfSpeechTranslationViewModel.cs" />
-    <Compile Include="Translation\PriorityWordViewModel.cs" />
-    <Compile Include="Settings\AddTranslationViewModel.cs" />
-    <Compile Include="Settings\BaseViewModelWithAddTranslationControl.cs" />
-    <Compile Include="Settings\DictionaryViewModel.cs" />
-    <Compile Include="Settings\SettingsViewModel.cs" />
-    <Compile Include="Settings\TrayViewModel.cs" />
+    <Compile Include="BaseAssessmentCardViewModel.cs" />
+    <Compile Include="AssessmentViewOnlyCardViewModel.cs" />
+    <Compile Include="AssessmentTextInputCardViewModel.cs" />
+    <Compile Include="LearningInfoViewModel.cs" />
+    <Compile Include="ProcessBlacklistViewModel.cs" />
+    <Compile Include="EditManualTranslationsViewModel.cs" />
+    <Compile Include="MessageViewModel.cs" />
+    <Compile Include="WordImageViewerViewModel.cs" />
+    <Compile Include="PartOfSpeechTranslationViewModel.cs" />
+    <Compile Include="PriorityWordViewModel.cs" />
+    <Compile Include="AddTranslationViewModel.cs" />
+    <Compile Include="BaseViewModelWithAddTranslationControl.cs" />
+    <Compile Include="DictionaryViewModel.cs" />
+    <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="TrayViewModel.cs" />
     <Compile Include="TextChangedEventArgs.cs" />
-    <Compile Include="Translation\TranslationDetailsViewModel.cs" />
-    <Compile Include="Translation\TranslationEntryViewModel.cs" />
-    <Compile Include="Translation\TranslationResultViewModel.cs" />
-    <Compile Include="Translation\TranslationVariantViewModel.cs" />
-    <Compile Include="Translation\WordViewModel.cs" />
+    <Compile Include="TranslationDetailsViewModel.cs" />
+    <Compile Include="TranslationEntryViewModel.cs" />
+    <Compile Include="TranslationResultViewModel.cs" />
+    <Compile Include="TranslationVariantViewModel.cs" />
+    <Compile Include="WordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Card\TranslationDetailsCardViewModel.cs" />
+    <Compile Include="TranslationDetailsCardViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
@@ -142,12 +132,12 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Fody.3.0.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.0.3\build\Fody.targets')" />
+  <Import Project="..\packages\Fody.3.1.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.3.0.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.0.3\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.1.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.1.4\build\Fody.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

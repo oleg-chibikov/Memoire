@@ -19,12 +19,12 @@ namespace Remembrance.Core.CardManagement.Data
         [JsonProperty("LearningInfo", Required = Required.Always)]
         public LearningInfo LearningInfo { get; }
 
+        [JsonIgnore]
+        public string Text => TranslationEntry.Id.Text;
+
         [NotNull]
         [JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
-
-        [JsonIgnore]
-        public string Text => TranslationEntry.Id.Text;
 
         public override string ToString()
         {

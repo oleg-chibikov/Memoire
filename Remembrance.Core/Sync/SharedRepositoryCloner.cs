@@ -13,13 +13,13 @@ namespace Remembrance.Core.Sync
     [UsedImplicitly]
     internal sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
     {
-        private readonly IDictionary<ISharedRepository, IRateLimiter> _clonableRepositoriesWithRateLimiters;
+        private readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
 
-        public SharedRepositoryCloner([NotNull] ICollection<ISharedRepository> clonableRepositories, [NotNull] Func<IRateLimiter> rateLimiterFactory)
+        public SharedRepositoryCloner([NotNull] ICollection<ISharedRepository> cloneableRepositories, [NotNull] Func<IRateLimiter> rateLimiterFactory)
         {
-            if (clonableRepositories == null)
+            if (cloneableRepositories == null)
             {
-                throw new ArgumentNullException(nameof(clonableRepositories));
+                throw new ArgumentNullException(nameof(cloneableRepositories));
             }
 
             if (rateLimiterFactory == null)
@@ -27,9 +27,9 @@ namespace Remembrance.Core.Sync
                 throw new ArgumentNullException(nameof(rateLimiterFactory));
             }
 
-            _clonableRepositoriesWithRateLimiters = clonableRepositories.ToDictionary(clonableRepository => clonableRepository, clonableRepository => rateLimiterFactory());
+            _cloneableRepositoriesWithRateLimiters = cloneableRepositories.ToDictionary(cloneableRepository => cloneableRepository, cloneableRepository => rateLimiterFactory());
 
-            foreach (var repository in clonableRepositories)
+            foreach (var repository in cloneableRepositories)
             {
                 repository.Changed += Repository_Changed;
             }
@@ -37,7 +37,7 @@ namespace Remembrance.Core.Sync
 
         public void Dispose()
         {
-            foreach (var repository in _clonableRepositoriesWithRateLimiters.Keys)
+            foreach (var repository in _cloneableRepositoriesWithRateLimiters.Keys)
             {
                 repository.Changed -= Repository_Changed;
             }
@@ -46,7 +46,7 @@ namespace Remembrance.Core.Sync
         private void Repository_Changed([NotNull] object sender, EventArgs e)
         {
             var repository = (ISharedRepository)sender;
-            var rateLimiter = _clonableRepositoriesWithRateLimiters[repository];
+            var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];
             rateLimiter.Throttle(
                 TimeSpan.FromMinutes(1),
                 () =>

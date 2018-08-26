@@ -13,6 +13,7 @@ using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Core.ImageSearch.Qwant.ContractResolvers;
 using Remembrance.Core.ImageSearch.Qwant.Data;
 using Remembrance.Resources;
+using Scar.Common;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
@@ -42,13 +43,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
         [NotNull]
         private readonly IMessageHub _messageHub;
 
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        [NotNull]
+        private readonly IRateLimiter _rateLimiter;
 
-        private bool _captchaPassing;
-
-        public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messageHub)
+        public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messageHub, [NotNull] IRateLimiter rateLimiter)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -59,8 +60,8 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 throw new ArgumentNullException(nameof(text));
             }
 
-            language = language != null ? $"&lang={language}_{language}" : null;
-            var uriPart = $"images?count={count}&offset={skip}&q={text}{language}";
+            language = language != null ? $"&locale={language}_{language}" : null;
+            var uriPart = $"images?count={count}&offset={skip}&q={text.ToLowerInvariant()}&t=images{language}&uiv=4";
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try
             {
@@ -69,24 +70,15 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 {
                     if ((int)response.StatusCode == 429)
                     {
-                        if (!_captchaPassing)
-                        {
-                            await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                            if (!_captchaPassing)
+                        _rateLimiter.Throttle(
+                            TimeSpan.FromSeconds(10),
+                            () =>
                             {
                                 _logger.TraceFormat("Opening browser at Qwant.com to solve the captcha...");
                                 Process.Start($"https://www.qwant.com/?q={text}&t=images");
                                 _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
-                                _captchaPassing = true;
-
-                                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
-                                await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                                _captchaPassing = false;
-                                _semaphore.Release();
-                            }
-
-                            _semaphore.Release();
-                        }
+                            },
+                            skipLast: true);
 
                         return null;
                     }

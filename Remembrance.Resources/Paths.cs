@@ -14,9 +14,9 @@ namespace Remembrance.Resources
         }
 
         [NotNull]
-        public static string SharedDataPath { get; }
+        public static string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");
 
         [NotNull]
-        public static string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");
+        public static string SharedDataPath { get; }
     }
 }

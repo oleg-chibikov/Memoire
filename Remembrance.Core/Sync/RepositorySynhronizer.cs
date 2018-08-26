@@ -134,7 +134,6 @@ namespace Remembrance.Core.Sync
                         {
                             if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
                             {
-                                // _logger.DebugFormat("Existing entity {0} is newer than the remote one {1}", existingEntity, remoteEntity);
                                 return;
                             }
                         }

@@ -14,7 +14,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
-using Remembrance.ViewModel.Card;
+using Remembrance.ViewModel;
 using Scar.Common.Async;
 using Scar.Common.Messages;
 
@@ -24,30 +24,6 @@ namespace Remembrance.Test
     [Apartment(ApartmentState.STA)]
     internal sealed class WordImageViewerViewModelTest
     {
-        [SetUp]
-        public void SetUp()
-        {
-            _autoMock = AutoMock.GetLoose();
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
-                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
-                .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
-            _key = _autoMock.Create<WordKey>();
-            var word = _key.Word;
-            word.Text = FallbackSearchText;
-            _imageInfoWithBitmap = _autoMock.Create<ImageInfoWithBitmap>();
-            _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
-            _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Assert.That(_sut.IsLoading, Is.False, "IsLoading should be false after each kind of processing");
-            _autoMock.Dispose();
-        }
-
         private const string FallbackSearchText = "foo";
 
         private const string ParentText = "bar";
@@ -61,105 +37,6 @@ namespace Remembrance.Test
         private WordKey _key;
 
         private WordImageViewerViewModel _sut;
-
-        [ItemNotNull]
-        [NotNull]
-        private async Task<WordImageViewerViewModel> CreateViewModelAsync(bool reset = true, bool wait = true)
-        {
-            _sut = _autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), _key));
-            if (wait)
-            {
-                await _sut.ConstructionTask.ConfigureAwait(false);
-            }
-
-            if (reset)
-            {
-                Reset();
-            }
-
-            return _sut;
-        }
-
-        private void Reset()
-        {
-            _autoMock.Mock<IImageSearcher>().ResetCalls();
-            _autoMock.Mock<IImageDownloader>().ResetCalls();
-        }
-
-        private void VerifyDownloadCount([NotNull] Func<Times> times)
-        {
-            _autoMock.Mock<IImageDownloader>().Verify(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), times);
-        }
-
-        private void VerifyImagesSearch([NotNull] Func<Times> times, [CanBeNull] string searchText = null)
-        {
-            _autoMock.Mock<IImageSearcher>()
-                .Verify(
-                    x => x.SearchImagesAsync(
-                        It.Is<string>(s => searchText == null || s == searchText),
-                        It.IsAny<CancellationToken>(),
-                        It.IsAny<int>(),
-                        It.IsAny<int>(),
-                        It.IsAny<string>()),
-                    times);
-        }
-
-        private void VerifyMessage([NotNull] Func<Times> times)
-        {
-            _autoMock.Mock<IMessageHub>().Verify(x => x.Publish(It.IsAny<Message>()), times);
-        }
-
-        private void WithImageSearchError([CanBeNull] string searchText = null)
-        {
-            WithImageSearchResult(null, searchText);
-        }
-
-        private void WithImageSearchResult([CanBeNull] ICollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
-        {
-            _autoMock.Mock<IImageSearcher>()
-                .Setup(
-                    x => x.SearchImagesAsync(
-                        It.Is<string>(s => searchText == null || s == searchText),
-                        It.IsAny<CancellationToken>(),
-                        It.IsAny<int>(),
-                        It.IsAny<int>(),
-                        It.IsAny<string>()))
-                .ReturnsAsync(imageInfos);
-        }
-
-        private void WithInitialEmptyImage()
-        {
-            var image = _autoMock.Create<ImageInfoWithBitmap>();
-            image.ImageInfo = _autoMock.Create<ImageInfo>();
-            WithInitialImage(customImage: image);
-        }
-
-        private void WithInitialImage(
-            int searchIndex = 0,
-            bool isAlternate = false,
-            [CanBeNull] int?[] notAvailableIndexes = null,
-            [CanBeNull] ImageInfoWithBitmap customImage = null)
-        {
-            _autoMock.Mock<IWordImageInfoRepository>()
-                .Setup(x => x.TryGetById(_key))
-                .Returns(new WordImageInfo(_key, customImage ?? _imageInfoWithBitmap, notAvailableIndexes ?? new int?[2]));
-            _autoMock.Mock<IWordImageSearchIndexRepository>().Setup(x => x.TryGetById(_key)).Returns(new WordImageSearchIndex(_key, searchIndex, isAlternate));
-        }
-
-        private void WithNoImageFound([CanBeNull] string searchText = null)
-        {
-            WithImageSearchResult(new ImageInfo[0], searchText);
-        }
-
-        private void WithSuccessfulImageSearch([CanBeNull] string searchText = null)
-        {
-            WithImageSearchResult(
-                new[]
-                {
-                    _autoMock.Create<ImageInfo>()
-                },
-                searchText);
-        }
 
         [Test]
         [NotNull]
@@ -223,8 +100,32 @@ namespace Remembrance.Test
             await runningTask.ConfigureAwait(false);
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _autoMock = AutoMock.GetLoose();
+            _autoMock.Mock<ICancellationTokenSourceProvider>()
+                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
+            _key = _autoMock.Create<WordKey>();
+            var word = _key.Word;
+            word.Text = FallbackSearchText;
+            _imageInfoWithBitmap = _autoMock.Create<ImageInfoWithBitmap>();
+            _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
+            _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
+            _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
+            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Assert.That(_sut.IsLoading, Is.False, "IsLoading should be false after each kind of processing");
+            _autoMock.Dispose();
+        }
+
         [Test]
-        public void When_Cancelled_Throws()
+        public void When_Canceled_Throws()
         {
             // Arrange
             _autoMock.Mock<ICancellationTokenSourceProvider>()
@@ -575,6 +476,105 @@ namespace Remembrance.Test
             Assert.That(_sut.SearchIndex, Is.EqualTo(2));
             Assert.That(_sut.IsAlternate, Is.True);
             Assert.That(_sut.Image, Is.Not.Null);
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        private async Task<WordImageViewerViewModel> CreateViewModelAsync(bool reset = true, bool wait = true)
+        {
+            _sut = _autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), _key));
+            if (wait)
+            {
+                await _sut.ConstructionTask.ConfigureAwait(false);
+            }
+
+            if (reset)
+            {
+                Reset();
+            }
+
+            return _sut;
+        }
+
+        private void Reset()
+        {
+            _autoMock.Mock<IImageSearcher>().Invocations.Clear();
+            _autoMock.Mock<IImageDownloader>().Invocations.Clear();
+        }
+
+        private void VerifyDownloadCount([NotNull] Func<Times> times)
+        {
+            _autoMock.Mock<IImageDownloader>().Verify(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), times);
+        }
+
+        private void VerifyImagesSearch([NotNull] Func<Times> times, [CanBeNull] string searchText = null)
+        {
+            _autoMock.Mock<IImageSearcher>()
+                .Verify(
+                    x => x.SearchImagesAsync(
+                        It.Is<string>(s => searchText == null || s == searchText),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
+                        It.IsAny<string>()),
+                    times);
+        }
+
+        private void VerifyMessage([NotNull] Func<Times> times)
+        {
+            _autoMock.Mock<IMessageHub>().Verify(x => x.Publish(It.IsAny<Message>()), times);
+        }
+
+        private void WithImageSearchError([CanBeNull] string searchText = null)
+        {
+            WithImageSearchResult(null, searchText);
+        }
+
+        private void WithImageSearchResult([CanBeNull] ICollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
+        {
+            _autoMock.Mock<IImageSearcher>()
+                .Setup(
+                    x => x.SearchImagesAsync(
+                        It.Is<string>(s => searchText == null || s == searchText),
+                        It.IsAny<CancellationToken>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
+                        It.IsAny<string>()))
+                .ReturnsAsync(imageInfos);
+        }
+
+        private void WithInitialEmptyImage()
+        {
+            var image = _autoMock.Create<ImageInfoWithBitmap>();
+            image.ImageInfo = _autoMock.Create<ImageInfo>();
+            WithInitialImage(customImage: image);
+        }
+
+        private void WithInitialImage(
+            int searchIndex = 0,
+            bool isAlternate = false,
+            [CanBeNull] int?[] notAvailableIndexes = null,
+            [CanBeNull] ImageInfoWithBitmap customImage = null)
+        {
+            _autoMock.Mock<IWordImageInfoRepository>()
+                .Setup(x => x.TryGetById(_key))
+                .Returns(new WordImageInfo(_key, customImage ?? _imageInfoWithBitmap, notAvailableIndexes ?? new int?[2]));
+            _autoMock.Mock<IWordImageSearchIndexRepository>().Setup(x => x.TryGetById(_key)).Returns(new WordImageSearchIndex(_key, searchIndex, isAlternate));
+        }
+
+        private void WithNoImageFound([CanBeNull] string searchText = null)
+        {
+            WithImageSearchResult(new ImageInfo[0], searchText);
+        }
+
+        private void WithSuccessfulImageSearch([CanBeNull] string searchText = null)
+        {
+            WithImageSearchResult(
+                new[]
+                {
+                    _autoMock.Create<ImageInfo>()
+                },
+                searchText);
         }
     }
 }

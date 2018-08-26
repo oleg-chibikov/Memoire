@@ -29,21 +29,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public string Text { get; set; }
 
-        public bool Equals(TranslationEntryKey other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
-        }
-
         public static bool operator ==([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
         {
             if (ReferenceEquals(obj1, obj2))
@@ -58,6 +43,21 @@ namespace Remembrance.Contracts.DAL.Model
         public static bool operator !=([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public bool Equals(TranslationEntryKey other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
         public override bool Equals(object obj)
