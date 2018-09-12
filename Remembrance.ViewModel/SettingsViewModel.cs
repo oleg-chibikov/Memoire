@@ -80,7 +80,7 @@ namespace Remembrance.ViewModel
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             ProcessBlacklistViewModel = processBlacklistViewModel ?? throw new ArgumentNullException(nameof(processBlacklistViewModel));
 
-            var blacklistedProcesses = _settingsRepository.BlacklistedProcesses;
+            var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
             if (blacklistedProcesses != null)
             {
                 foreach (var processInfo in blacklistedProcesses)
@@ -275,7 +275,7 @@ namespace Remembrance.ViewModel
                 _localSettingsRepository.SyncBus = SyncBus;
             }
 
-            _settingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
+            _localSettingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
 
             _saved = true;
 

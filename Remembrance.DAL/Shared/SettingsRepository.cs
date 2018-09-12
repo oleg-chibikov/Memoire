@@ -17,12 +17,6 @@ namespace Remembrance.DAL.Shared
         {
         }
 
-        public IReadOnlyCollection<ProcessInfo> BlacklistedProcesses
-        {
-            get => TryGetValue<IReadOnlyCollection<ProcessInfo>>(nameof(BlacklistedProcesses));
-            set => RemoveUpdateOrInsert(nameof(BlacklistedProcesses), value);
-        }
-
         public TimeSpan CardShowFrequency
         {
             get => TryGetValue(nameof(CardShowFrequency), TimeSpan.FromMinutes(1));

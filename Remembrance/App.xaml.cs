@@ -80,6 +80,7 @@ namespace Remembrance
         }
 
         private static void RegisterLiteDbReadonlyCollection<T>()
+            where T : class
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
                 o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
@@ -87,6 +88,7 @@ namespace Remembrance
         }
 
         private static void RegisterLiteDbSet<T>()
+            where T : class
         {
             BsonMapper.Global.RegisterType<ISet<T>>(
                 o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),

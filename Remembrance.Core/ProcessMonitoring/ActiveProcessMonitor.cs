@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Timers;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.ProcessMonitoring;
 
 namespace Remembrance.Core.ProcessMonitoring
@@ -17,15 +17,15 @@ namespace Remembrance.Core.ProcessMonitoring
         private readonly IPauseManager _pauseManager;
 
         [NotNull]
-        private readonly ISettingsRepository _settingsRepository;
+        private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
         private readonly Timer _timer;
 
-        public ActiveProcessMonitor([NotNull] IPauseManager pauseManager, [NotNull] ISettingsRepository settingsRepository)
+        public ActiveProcessMonitor([NotNull] IPauseManager pauseManager, [NotNull] ILocalSettingsRepository localSettingsRepository)
         {
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             CheckActiveProcess();
 
             // Adding additional mechanizm to check active process since Automation can be unresponsive sometimes
@@ -81,7 +81,7 @@ namespace Remembrance.Core.ProcessMonitoring
 
         private void PauseOrResumeProcess(Process process)
         {
-            var blacklistedProcesses = _settingsRepository.BlacklistedProcesses;
+            var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
 
             if (blacklistedProcesses?.Select(processInfo => processInfo.Name).Contains(process.ProcessName, StringComparer.InvariantCultureIgnoreCase) == true)
             {

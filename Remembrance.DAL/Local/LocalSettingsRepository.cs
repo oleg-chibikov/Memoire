@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.ProcessMonitoring.Data;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
 using Scar.Common.IO;
@@ -63,6 +65,12 @@ namespace Remembrance.DAL.Local
                     nameof(SyncBus),
                     () => RemembrancePaths.DropBoxPath != null ? SyncBus.Dropbox : (RemembrancePaths.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync));
             set => RemoveUpdateOrInsert(nameof(SyncBus), (SyncBus?)value);
+        }
+
+        public IReadOnlyCollection<ProcessInfo> BlacklistedProcesses
+        {
+            get => TryGetValue<IReadOnlyCollection<ProcessInfo>>(nameof(BlacklistedProcesses));
+            set => RemoveUpdateOrInsert(nameof(BlacklistedProcesses), value);
         }
 
         public string UiLanguage
