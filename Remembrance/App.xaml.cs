@@ -69,35 +69,35 @@ namespace Remembrance
 
         private static void RegisterLiteDbCustomTypes()
         {
-            RegisterReadonlyCollectionLiteDb<PartOfSpeechTranslation>();
-            RegisterReadonlyCollectionLiteDb<TranslationVariant>();
-            RegisterReadonlyCollectionLiteDb<Example>();
-            RegisterReadonlyCollectionLiteDb<TextEntry>();
-            RegisterReadonlyCollectionLiteDb<Word>();
-            RegisterReadonlyCollectionLiteDb<ManualTranslation>();
-            RegisterReadonlyCollectionLiteDbValue<string>();
-            RegisterSetLiteDb<BaseWord>();
+            RegisterLiteDbReadonlyCollection<PartOfSpeechTranslation>();
+            RegisterLiteDbReadonlyCollection<TranslationVariant>();
+            RegisterLiteDbReadonlyCollection<Example>();
+            RegisterLiteDbReadonlyCollection<TextEntry>();
+            RegisterLiteDbReadonlyCollection<Word>();
+            RegisterLiteDbReadonlyCollection<ManualTranslation>();
+            RegisterLiteDbStringReadonlyCollection();
+            RegisterLiteDbSet<BaseWord>();
         }
 
-        private static void RegisterReadonlyCollectionLiteDb<T>()
+        private static void RegisterLiteDbReadonlyCollection<T>()
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
                 o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
                 m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
         }
 
-        private static void RegisterReadonlyCollectionLiteDbValue<T>()
-        {
-            BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
-                o => new BsonValue(o.Select(x => new BsonValue(x))),
-                m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
-        }
-
-        private static void RegisterSetLiteDb<T>()
+        private static void RegisterLiteDbSet<T>()
         {
             BsonMapper.Global.RegisterType<ISet<T>>(
                 o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
                 m => new HashSet<T>(m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument))));
+        }
+
+        private static void RegisterLiteDbStringReadonlyCollection()
+        {
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(
+                o => new BsonValue(o.Select(x => new BsonValue(x))),
+                m => m.AsArray.Select(item => item.AsString).ToArray());
         }
 
         protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
