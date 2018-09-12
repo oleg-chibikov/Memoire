@@ -196,11 +196,7 @@ namespace Remembrance.ViewModel
         [NotNull]
         private async Task DeleteAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            if (translationEntryViewModel == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryViewModel));
-            }
-
+            _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             if (!_dialogService.ConfirmDialog(string.Format(Texts.AreYouSureDelete, translationEntryViewModel)))
             {
                 return;
@@ -278,11 +274,7 @@ namespace Remembrance.ViewModel
 
         private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             Logger.DebugFormat("Received {0} from external source", learningInfo);
 
             await Task.Run(
@@ -308,11 +300,7 @@ namespace Remembrance.ViewModel
 
         private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
         {
-            if (priorityWordKey == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordKey));
-            }
-
+            _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
 
             await Task.Run(
@@ -337,11 +325,7 @@ namespace Remembrance.ViewModel
 
         private async void OnTranslationEntriesBatchReceivedAsync([NotNull] ICollection<TranslationEntry> translationEntries)
         {
-            if (translationEntries == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntries));
-            }
-
+            _ = translationEntries ?? throw new ArgumentNullException(nameof(translationEntries));
             Logger.DebugFormat("Received a batch of translations ({0} items) from the external source...", translationEntries.Count);
 
             await Task.Run(
@@ -358,11 +342,7 @@ namespace Remembrance.ViewModel
 
         private async void OnTranslationEntryReceivedAsync([NotNull] TranslationEntry translationEntry)
         {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
-
+            _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             Logger.DebugFormat("Received {0} from external source", translationEntry);
 
             await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
@@ -403,11 +383,7 @@ namespace Remembrance.ViewModel
 
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            if (cultureInfo == null)
-            {
-                throw new ArgumentNullException(nameof(cultureInfo));
-            }
-
+            _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(
@@ -430,11 +406,7 @@ namespace Remembrance.ViewModel
         [NotNull]
         private async Task OpenDetailsAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
-            if (translationEntryViewModel == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryViewModel));
-            }
-
+            _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             Logger.TraceFormat("Opening details for {0}...", translationEntryViewModel);
 
             var translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);

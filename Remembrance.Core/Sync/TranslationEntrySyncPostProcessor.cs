@@ -20,11 +20,7 @@ namespace Remembrance.Core.Sync
 
         public Task AfterEntityChangedAsync(TranslationEntry oldValue, TranslationEntry newValue)
         {
-            if (newValue == null)
-            {
-                throw new ArgumentNullException(nameof(newValue));
-            }
-
+            _ = newValue ?? throw new ArgumentNullException(nameof(newValue));
             _messageHub.Publish(newValue);
             return Task.CompletedTask;
         }

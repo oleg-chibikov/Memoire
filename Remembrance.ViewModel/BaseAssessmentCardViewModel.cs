@@ -55,16 +55,8 @@ namespace Remembrance.ViewModel
             [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
         {
-            if (assessmentInfoProvider == null)
-            {
-                throw new ArgumentNullException(nameof(assessmentInfoProvider));
-            }
-
-            if (learningInfoViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
-            }
-
+            _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
+            _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -160,11 +152,7 @@ namespace Remembrance.ViewModel
 
         private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(TranslationInfo.TranslationEntryKey))
             {
                 return;
@@ -177,11 +165,7 @@ namespace Remembrance.ViewModel
 
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            if (cultureInfo == null)
-            {
-                throw new ArgumentNullException(nameof(cultureInfo));
-            }
-
+            _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(

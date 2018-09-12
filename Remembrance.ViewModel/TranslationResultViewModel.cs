@@ -17,16 +17,8 @@ namespace Remembrance.ViewModel
             [NotNull] TranslationEntry translationEntry,
             [NotNull] Func<PartOfSpeechTranslation, TranslationEntry, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory)
         {
-            if (partOfSpeechTranslationViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(partOfSpeechTranslationViewModelFactory));
-            }
-
-            if (translationResult == null)
-            {
-                throw new ArgumentNullException(nameof(translationResult));
-            }
-
+            _ = partOfSpeechTranslationViewModelFactory ?? throw new ArgumentNullException(nameof(partOfSpeechTranslationViewModelFactory));
+            _ = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
             PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations
                 .Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry))
                 .ToArray();

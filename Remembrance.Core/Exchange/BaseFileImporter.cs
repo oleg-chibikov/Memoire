@@ -58,11 +58,7 @@ namespace Remembrance.Core.Exchange
         [NotNull]
         public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken cancellationToken)
         {
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
-
+            _ = fileName ?? throw new ArgumentNullException(nameof(fileName));
             var deserialized = Deserialize(fileName);
 
             if (deserialized == null)

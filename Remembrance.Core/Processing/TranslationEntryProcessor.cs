@@ -112,11 +112,7 @@ namespace Remembrance.Core.Processing
             bool needPostProcess,
             ICollection<ManualTranslation> manualTranslations)
         {
-            if (translationEntryAdditionInfo == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
-            }
-
+            _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
 
             IWindow loadingWindow = null;
@@ -178,11 +174,7 @@ namespace Remembrance.Core.Processing
 
         public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord)
         {
-            if (translationEntryKey == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryKey));
-            }
-
+            _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             _logger.TraceFormat("Deleting {0}{1}...", translationEntryKey, needDeletionRecord ? " with creating deletion event" : null);
             _prepositionsInfoRepository.Delete(translationEntryKey);
             _translationDetailsRepository.Delete(translationEntryKey);
@@ -212,11 +204,7 @@ namespace Remembrance.Core.Processing
             CancellationToken cancellationToken)
         {
             _logger.TraceFormat("Updating manual translations for {0}...", translationEntryKey);
-            if (translationEntryKey == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryKey));
-            }
-
+            _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             if (!manualTranslations?.Any() == true)
             {
                 manualTranslations = null;

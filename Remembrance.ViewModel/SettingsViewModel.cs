@@ -67,11 +67,7 @@ namespace Remembrance.ViewModel
             [NotNull] ProcessBlacklistViewModel processBlacklistViewModel,
             [NotNull] ILanguageManager languageManager)
         {
-            if (languageManager == null)
-            {
-                throw new ArgumentNullException(nameof(languageManager));
-            }
-
+            _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

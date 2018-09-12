@@ -30,16 +30,8 @@ namespace Remembrance.ViewModel
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor)
         {
-            if (textToSpeechPlayer == null)
-            {
-                throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            }
-
-            if (translationEntryProcessor == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryProcessor));
-            }
-
+            _ = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            _ = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Language = language ?? throw new ArgumentNullException(nameof(language));
             Word = word ?? throw new ArgumentNullException(nameof(word));
 

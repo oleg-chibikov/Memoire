@@ -10,11 +10,7 @@ namespace Remembrance.Contracts.DAL.Model
     {
         public BaseWord([NotNull] BaseWord word)
         {
-            if (word == null)
-            {
-                throw new ArgumentNullException(nameof(word));
-            }
-
+            _ = word ?? throw new ArgumentNullException(nameof(word));
             PartOfSpeech = word.PartOfSpeech;
             Text = word.Text;
         }

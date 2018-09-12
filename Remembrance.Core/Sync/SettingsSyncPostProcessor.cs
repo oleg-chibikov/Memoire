@@ -21,11 +21,7 @@ namespace Remembrance.Core.Sync
 
         public Task AfterEntityChangedAsync(Settings oldValue, Settings newValue)
         {
-            if (newValue == null)
-            {
-                throw new ArgumentNullException(nameof(newValue));
-            }
-
+            _ = newValue ?? throw new ArgumentNullException(nameof(newValue));
             if (newValue.Id != nameof(ISettingsRepository.CardShowFrequency))
             {
                 return Task.CompletedTask;

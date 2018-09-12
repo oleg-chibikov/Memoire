@@ -36,11 +36,7 @@ namespace Remembrance.View.WindowCreators
 
         public Task<IAssessmentTextInputCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            if (param.TranslationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(param.TranslationInfo));
-            }
-
+            _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
             var assessmentViewModel = _assessmentTextInputCardViewModelFactory(param.TranslationInfo);
             IAssessmentTextInputCardWindow window = null;
             _synchronizationContext.Send(x => window = _assessmentTextInputCardWindowFactory(param.Window, assessmentViewModel), null);

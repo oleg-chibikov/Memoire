@@ -42,11 +42,7 @@ namespace Remembrance.Core.Translation.Yandex
 
         public async Task<PredictionResult> PredictAsync(string text, int limit, CancellationToken cancellationToken)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
+            _ = text ?? throw new ArgumentNullException(nameof(text));
             var lang = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
 
             var uriPart = $"complete?key={YandexConstants.PredictorApiKey}&q={text}&lang={lang.Language}&limit={limit}";

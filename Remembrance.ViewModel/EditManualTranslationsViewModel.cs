@@ -108,11 +108,7 @@ namespace Remembrance.ViewModel
         [NotNull]
         private async Task DeleteAsync([NotNull] ManualTranslation manualTranslation)
         {
-            if (manualTranslation == null)
-            {
-                throw new ArgumentNullException(nameof(manualTranslation));
-            }
-
+            _ = manualTranslation ?? throw new ArgumentNullException(nameof(manualTranslation));
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
@@ -132,11 +128,7 @@ namespace Remembrance.ViewModel
         private void EditManualTranslations([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             _logger.TraceFormat("Editing manual translation for {0}...", translationEntryViewModel);
-            if (translationEntryViewModel == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntryViewModel));
-            }
-
+            _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             TranslationEntryKey = translationEntryViewModel.Id;
             ManualTranslations.Clear();
             IsManualTranslationsDialogOpen = true;

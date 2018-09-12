@@ -43,16 +43,8 @@ namespace Remembrance.ViewModel
             [NotNull] ITranslationEntryRepository translationEntryRepository)
             : base(word, translationEntry.Id.TargetLanguage, textToSpeechPlayer, translationEntryProcessor)
         {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
-
-            if (wordViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(wordViewModelFactory));
-            }
-
+            _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
+            _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;
             _translationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));

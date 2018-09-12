@@ -95,11 +95,7 @@ namespace Remembrance.ViewModel
 
         private void AddFromActiveProcesses([NotNull] IList processesList)
         {
-            if (processesList == null)
-            {
-                throw new ArgumentNullException(nameof(processesList));
-            }
-
+            _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             var processInfos = processesList.Cast<ProcessInfo>();
 
             foreach (var processInfo in processInfos)
@@ -150,11 +146,7 @@ namespace Remembrance.ViewModel
 
         private void Delete([NotNull] ProcessInfo processInfo)
         {
-            if (processInfo == null)
-            {
-                throw new ArgumentNullException(nameof(processInfo));
-            }
-
+            _ = processInfo ?? throw new ArgumentNullException(nameof(processInfo));
             _logger.TraceFormat("Deleting process info {0} from the blacklist...", processInfo);
 
             BlacklistedProcesses.Remove(processInfo);
@@ -162,11 +154,7 @@ namespace Remembrance.ViewModel
 
         private void DeleteBatch([NotNull] IList processesList)
         {
-            if (processesList == null)
-            {
-                throw new ArgumentNullException(nameof(processesList));
-            }
-
+            _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             _logger.Trace("Deleting multiple process infos from the blacklist...");
 
             var processInfos = processesList.Cast<ProcessInfo>().ToArray();

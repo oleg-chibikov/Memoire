@@ -56,16 +56,8 @@ namespace Remembrance.Core.Languages
 
         public bool CheckTargetLanguageIsValid(string sourceLanguage, [NotNull] string targetLanguage)
         {
-            if (sourceLanguage == null)
-            {
-                throw new ArgumentNullException(nameof(sourceLanguage));
-            }
-
-            if (targetLanguage == null)
-            {
-                throw new ArgumentNullException(nameof(targetLanguage));
-            }
-
+            _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
+            _ = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
             var availableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
             return availableTargetLanguages.Contains(targetLanguage);
         }
@@ -99,11 +91,7 @@ namespace Remembrance.Core.Languages
 
         public LanguagesCollection GetAvailableTargetLanguages(string sourceLanguage)
         {
-            if (sourceLanguage == null)
-            {
-                throw new ArgumentNullException(nameof(sourceLanguage));
-            }
-
+            _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             IDictionary<string, string> languages;
 
             if (sourceLanguage == Constants.AutoDetectLanguage)
@@ -135,22 +123,14 @@ namespace Remembrance.Core.Languages
 
         public async Task<string> GetSourceAutoSubstituteAsync(string text, CancellationToken cancellationToken)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
+            _ = text ?? throw new ArgumentNullException(nameof(text));
             var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
             return detectionResult.Language;
         }
 
         public string GetTargetAutoSubstitute(string sourceLanguage)
         {
-            if (sourceLanguage == null)
-            {
-                throw new ArgumentNullException(nameof(sourceLanguage));
-            }
-
+            _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             var availableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
 
             if (!availableTargetLanguages.Any())

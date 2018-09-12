@@ -45,11 +45,7 @@ namespace Remembrance.Core.Translation.Yandex
 
         public async Task<DetectionResult> DetectLanguageAsync(string text, CancellationToken cancellationToken)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
+            _ = text ?? throw new ArgumentNullException(nameof(text));
             try
             {
                 var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&options=1";
@@ -81,11 +77,7 @@ namespace Remembrance.Core.Translation.Yandex
 
         public async Task<LanguageListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
         {
-            if (ui == null)
-            {
-                throw new ArgumentNullException(nameof(ui));
-            }
-
+            _ = ui ?? throw new ArgumentNullException(nameof(ui));
             var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";
             try
             {

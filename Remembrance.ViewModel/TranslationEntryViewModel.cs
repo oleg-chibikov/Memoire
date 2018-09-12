@@ -52,16 +52,8 @@ namespace Remembrance.ViewModel
                 textToSpeechPlayer,
                 translationEntryProcessor)
         {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
-
-            if (learningInfoViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
-            }
-
+            _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
+            _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -98,11 +90,7 @@ namespace Remembrance.ViewModel
 
         public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
         {
-            if (priorityWordKey == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordKey));
-            }
-
+            _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (priorityWordKey.IsPriority)
             {
                 ProcessPriority(priorityWordKey.WordKey);
@@ -116,11 +104,7 @@ namespace Remembrance.ViewModel
         [NotNull]
         public async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
         {
-            if (translationEntry == null)
-            {
-                throw new ArgumentNullException(nameof(translationEntry));
-            }
-
+            _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             var isPriority = translationEntry.PriorityWords?.Any() == true;
             IEnumerable<Word> words;
             if (isPriority)
@@ -161,11 +145,7 @@ namespace Remembrance.ViewModel
 
         public void Update([NotNull] LearningInfo learningInfo, DateTime translationEntryModifiedDate)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             LearningInfoViewModel.UpdateLearningInfo(learningInfo);
             UpdateModifiedDate(learningInfo, translationEntryModifiedDate);
         }

@@ -55,11 +55,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
         public async Task<ICollection<ImageInfo>> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
+            _ = text ?? throw new ArgumentNullException(nameof(text));
             language = language != null ? $"&locale={language}_{language}" : null;
             var uriPart = $"images?count={count}&offset={skip}&q={text.ToLowerInvariant()}&t=images{language}&uiv=4";
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);

@@ -24,11 +24,7 @@ namespace Remembrance.WebApi.Controllers
         [NotNull]
         public async Task PutAsync([NotNull] [FromBody] string word)
         {
-            if (word == null)
-            {
-                throw new ArgumentNullException(nameof(word));
-            }
-
+            _ = word ?? throw new ArgumentNullException(nameof(word));
             await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
         }
     }

@@ -47,21 +47,9 @@ namespace Remembrance.ViewModel
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
             [NotNull] IPredictor predictor)
         {
-            if (translationDetailsViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
-            }
-
-            if (translationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(translationInfo));
-            }
-
-            if (learningInfoViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
-            }
-
+            _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
+            _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             var translationDetails = translationDetailsViewModelFactory(translationInfo);
             _translationEntryKey = translationInfo.TranslationEntryKey;
             TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
@@ -147,11 +135,7 @@ namespace Remembrance.ViewModel
 
         private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(_translationEntryKey))
             {
                 return;
@@ -164,11 +148,7 @@ namespace Remembrance.ViewModel
 
         private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
         {
-            if (priorityWordKey == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordKey));
-            }
-
+            _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
             {
                 return;
@@ -205,11 +185,7 @@ namespace Remembrance.ViewModel
 
         private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
         {
-            if (cultureInfo == null)
-            {
-                throw new ArgumentNullException(nameof(cultureInfo));
-            }
-
+            _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(

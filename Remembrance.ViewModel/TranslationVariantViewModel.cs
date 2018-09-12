@@ -31,16 +31,8 @@ namespace Remembrance.ViewModel
             [NotNull] ITranslationEntryRepository translationEntryRepository)
             : base(translationEntry, translationVariant, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, wordViewModelFactory, translationEntryRepository)
         {
-            if (priorityWordViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
-            }
-
-            if (wordImageViewerViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
-            }
-
+            _ = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
+            _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
             Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationEntry)).ToArray();
 
             Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationEntry.Id.SourceLanguage)).ToArray();

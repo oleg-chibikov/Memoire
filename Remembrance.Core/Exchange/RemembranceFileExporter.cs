@@ -50,11 +50,7 @@ namespace Remembrance.Core.Exchange
 
         public Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
-
+            _ = fileName ?? throw new ArgumentNullException(nameof(fileName));
             var translationEntries = _translationEntryRepository.GetAll();
             var learningInfos = _learningInfoRepository.GetAll().ToDictionary(x => x.Id, x => x);
             var exportEntries = new List<RemembranceExchangeEntry>(translationEntries.Count);

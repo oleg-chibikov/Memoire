@@ -42,11 +42,7 @@ namespace Remembrance.View.WindowCreators
 
         public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            if (param.TranslationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(param.TranslationInfo));
-            }
-
+            _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
             var learningInfoViewModel = _learningInfoViewModelFactory(param.TranslationInfo.LearningInfo);
             var translationDetailsCardViewModel = _translationDetailsCardViewModelFactory(param.TranslationInfo, learningInfoViewModel);
             ITranslationDetailsCardWindow window = null;

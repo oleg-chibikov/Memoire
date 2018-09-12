@@ -47,16 +47,8 @@ namespace Remembrance.Core.Translation.Yandex
 
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            if (lang == null)
-            {
-                throw new ArgumentNullException(nameof(lang));
-            }
-
+            _ = text ?? throw new ArgumentNullException(nameof(text));
+            _ = lang ?? throw new ArgumentNullException(nameof(lang));
             _logger.TraceFormat("Starting speaking {0}...", text);
             var reset = new AutoResetEvent(false);
             var uriPart =

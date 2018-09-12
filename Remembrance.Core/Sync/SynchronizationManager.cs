@@ -34,11 +34,7 @@ namespace Remembrance.Core.Sync
             [NotNull] ISharedRepositoryPathsProvider sharedRepositoryPathsProvider,
             [NotNull] ICollection<ISyncExtender> syncExtenders)
         {
-            if (synchronizers == null)
-            {
-                throw new ArgumentNullException(nameof(synchronizers));
-            }
-
+            _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!synchronizers.Any())
             {
                 throw new ArgumentNullException(nameof(synchronizers));

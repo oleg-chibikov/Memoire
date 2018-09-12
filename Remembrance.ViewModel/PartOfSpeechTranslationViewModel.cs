@@ -19,16 +19,8 @@ namespace Remembrance.ViewModel
             [NotNull] ITranslationEntryProcessor translationEntryProcessor)
             : base(partOfSpeechTranslation, translationEntry.Id.SourceLanguage, textToSpeechPlayer, translationEntryProcessor)
         {
-            if (partOfSpeechTranslation == null)
-            {
-                throw new ArgumentNullException(nameof(partOfSpeechTranslation));
-            }
-
-            if (translationVariantViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(translationVariantViewModelFactory));
-            }
-
+            _ = partOfSpeechTranslation ?? throw new ArgumentNullException(nameof(partOfSpeechTranslation));
+            _ = translationVariantViewModelFactory ?? throw new ArgumentNullException(nameof(translationVariantViewModelFactory));
             Transcription = partOfSpeechTranslation.Transcription;
             TranslationVariants = partOfSpeechTranslation.TranslationVariants
                 .Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Word.Text))

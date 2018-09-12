@@ -15,11 +15,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public WordKey([NotNull] TranslationEntryKey translationEntryKey, [NotNull] BaseWord word)
         {
-            if (word == null)
-            {
-                throw new ArgumentNullException(nameof(word));
-            }
-
+            _ = word ?? throw new ArgumentNullException(nameof(word));
             // Creating a new copy to ensure word has the only necessary fields (the WordKeys are stored in DB)
             Word = new BaseWord(word);
             TranslationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));

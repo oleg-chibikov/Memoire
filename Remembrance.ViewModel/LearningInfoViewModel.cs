@@ -39,11 +39,7 @@ namespace Remembrance.ViewModel
             [NotNull] IMessageHub messageHub,
             [NotNull] SynchronizationContext synchronizationContext)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -93,11 +89,7 @@ namespace Remembrance.ViewModel
 
         public void UpdateLearningInfo([NotNull] LearningInfo learningInfo)
         {
-            if (learningInfo == null)
-            {
-                throw new ArgumentNullException(nameof(learningInfo));
-            }
-
+            _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             IsFavorited = learningInfo.IsFavorited;
             LastCardShowTime = learningInfo.LastCardShowTime;
             NextCardShowTime = learningInfo.NextCardShowTime;

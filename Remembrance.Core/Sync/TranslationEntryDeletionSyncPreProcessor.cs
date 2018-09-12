@@ -20,11 +20,7 @@ namespace Remembrance.Core.Sync
 
         public Task<bool> BeforeEntityChangedAsync(TranslationEntryDeletion oldValue, TranslationEntryDeletion newValue)
         {
-            if (newValue == null)
-            {
-                throw new ArgumentNullException(nameof(newValue));
-            }
-
+            _ = newValue ?? throw new ArgumentNullException(nameof(newValue));
             _translationEntryProcessor.DeleteTranslationEntry(newValue.Id, false);
             return Task.FromResult(false);
         }

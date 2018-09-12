@@ -29,11 +29,7 @@ namespace Remembrance.ViewModel
             [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
             : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory, learningInfoViewModelFactory)
         {
-            if (translationDetailsCardViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
-            }
-
+            _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
             TranslationDetailsCardViewModel = translationDetailsCardViewModel ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
 

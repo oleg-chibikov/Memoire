@@ -17,16 +17,8 @@ namespace Remembrance.ViewModel
             [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
             [NotNull] TranslationInfo translationInfo)
         {
-            if (translationResultViewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(translationResultViewModelFactory));
-            }
-
-            if (translationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(translationInfo));
-            }
-
+            _ = translationResultViewModelFactory ?? throw new ArgumentNullException(nameof(translationResultViewModelFactory));
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _translationEntryKey = translationInfo.TranslationEntryKey;
             TranslationResult = translationResultViewModelFactory(translationInfo.TranslationDetails.TranslationResult, translationInfo.TranslationEntry);
         }

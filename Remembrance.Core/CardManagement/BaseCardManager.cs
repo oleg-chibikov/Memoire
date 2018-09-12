@@ -33,11 +33,7 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IWindow ownerWindow)
         {
-            if (translationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(translationInfo));
-            }
-
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             var window = await TryCreateWindowAsync(translationInfo, ownerWindow).ConfigureAwait(false);
             if (window == null)
             {
