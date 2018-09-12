@@ -351,9 +351,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="IconAlt.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <Resource Include="Champagne &amp; Limousines.ttf" />
     <None Include="packages.config" />

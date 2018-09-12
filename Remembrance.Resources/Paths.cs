@@ -1,22 +1,25 @@
 using System;
 using System.IO;
 using JetBrains.Annotations;
+using Remembrance.Contracts.Sync;
 using Scar.Common.IO;
 
 namespace Remembrance.Resources
 {
     public static class RemembrancePaths
     {
-        static RemembrancePaths()
-        {
-            var baseSharedPath = CommonPaths.GetDropboxPath() ?? CommonPaths.GetOneDrivePath();
-            SharedDataPath = baseSharedPath == null ? CommonPaths.SettingsPath : Path.Combine(baseSharedPath, CommonPaths.ProgramName, Environment.MachineName.SanitizePath());
-        }
-
         [NotNull]
         public static string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");
 
+        public static readonly string OneDrivePath = CommonPaths.GetOneDrivePath();
+
+        public static readonly string DropBoxPath = CommonPaths.GetDropboxPath();
+
         [NotNull]
-        public static string SharedDataPath { get; }
+        public static string GetSharedPath(SyncBus syncBus)
+        {
+            var basePath = syncBus == SyncBus.OneDrive ? OneDrivePath : DropBoxPath;
+            return Path.Combine(basePath, CommonPaths.ProgramName, Environment.MachineName.SanitizePath());
+        }
     }
 }

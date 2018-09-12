@@ -90,7 +90,7 @@ namespace Remembrance.ViewModel
             ToolTipOpenCommand = new CorrelationCommand(ToolTipOpen);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
             ExitCommand = new CorrelationCommand(Exit);
-            OpenSharedFolderCommand = new CorrelationCommand(ProcessCommands.OpenSharedFolder);
+            OpenSharedFolderCommand = new CorrelationCommand(() => ProcessCommands.OpenSharedFolder(_localSettingsRepository.SyncBus));
             OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
             ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
             IsActive = _localSettingsRepository.IsActive;

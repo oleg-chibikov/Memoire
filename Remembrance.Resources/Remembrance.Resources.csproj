@@ -116,6 +116,12 @@
     <Resource Include="Images\IconPaused.ico" />
     <Resource Include="Images\IconPaused.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
+      <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
+      <Name>Remembrance.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

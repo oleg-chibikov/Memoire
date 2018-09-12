@@ -13,6 +13,6 @@
     SizeToContent="WidthAndHeight"
     ShowActivated="false"
     Focusable="False"
-    Icon="../IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
     <view:TranslationDetailsCardControl />
 </animatedWindow:AnimatedWindow>

@@ -19,7 +19,7 @@
     d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
-    Icon="../IconAlt.ico"
+    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico"
     Title="{Binding Word, Mode=OneTime}">
     <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary

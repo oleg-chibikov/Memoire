@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
 using Scar.Common.IO;
 using Scar.Common.WPF.Localization;
@@ -53,6 +54,15 @@ namespace Remembrance.DAL.Local
         {
             get => TryGetValue<string>(nameof(LastUsedTargetLanguage));
             set => RemoveUpdateOrInsert(nameof(LastUsedTargetLanguage), value);
+        }
+
+        public SyncBus SyncBus
+        {
+            get =>
+                TryGetValue(
+                    nameof(SyncBus),
+                    () => RemembrancePaths.DropBoxPath != null ? SyncBus.Dropbox : (RemembrancePaths.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync));
+            set => RemoveUpdateOrInsert(nameof(SyncBus), (SyncBus?)value);
         }
 
         public string UiLanguage

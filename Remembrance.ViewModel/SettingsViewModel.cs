@@ -16,6 +16,7 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
+using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
 using Scar.Common.Events;
@@ -54,6 +55,8 @@ namespace Remembrance.ViewModel
 
         private bool _saved;
 
+        public IReadOnlyCollection<SyncBus> SyncBuses { get; }
+
         private string _uiLanguage;
 
         public SettingsViewModel(
@@ -86,13 +89,28 @@ namespace Remembrance.ViewModel
                 }
             }
 
+            IList<SyncBus> syncBuses = new List<SyncBus>
+            {
+                SyncBus.NoSync
+            };
+            if (RemembrancePaths.DropBoxPath != null)
+            {
+                syncBuses.Add(SyncBus.Dropbox);
+            }
+            if (RemembrancePaths.OneDrivePath != null)
+            {
+                syncBuses.Add(SyncBus.OneDrive);
+            }
+
+            SyncBuses = syncBuses.ToArray();
             AvailableTranslationLanguages = languageManager.GetAvailableSourceLanguages(false);
             SelectedPreferredLanguage = _settingsRepository.PreferredLanguage;
             TtsSpeaker = _settingsRepository.TtsSpeaker;
             UiLanguage = _localSettingsRepository.UiLanguage;
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
-            OpenSharedFolderCommand = new CorrelationCommand(ProcessCommands.OpenSharedFolder);
+            SyncBus = _localSettingsRepository.SyncBus;
+            OpenSharedFolderCommand = new CorrelationCommand(() => ProcessCommands.OpenSharedFolder(_localSettingsRepository.SyncBus));
             OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
             ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
             SaveCommand = new CorrelationCommand(Save);
@@ -151,6 +169,8 @@ namespace Remembrance.ViewModel
         public string SelectedPreferredLanguage { get; set; }
 
         public Speaker TtsSpeaker { get; set; }
+
+        public SyncBus SyncBus { get; set; }
 
         public VoiceEmotion TtsVoiceEmotion { get; set; }
 
@@ -223,18 +243,39 @@ namespace Remembrance.ViewModel
         private void Save()
         {
             _logger.Trace("Saving settings...");
+            if (_settingsRepository.PreferredLanguage != SelectedPreferredLanguage)
+            {
+                _settingsRepository.PreferredLanguage = SelectedPreferredLanguage;
+            }
+
+            if (_settingsRepository.TtsSpeaker != TtsSpeaker)
+            {
+                _settingsRepository.TtsSpeaker = TtsSpeaker;
+            }
+
+            if (_settingsRepository.TtsVoiceEmotion != TtsVoiceEmotion)
+            {
+                _settingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
+            }
+
+            if (_localSettingsRepository.UiLanguage != UiLanguage)
+            {
+                _localSettingsRepository.UiLanguage = UiLanguage;
+            }
+
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
-            var prevFreq = _settingsRepository.CardShowFrequency;
-            _settingsRepository.PreferredLanguage = SelectedPreferredLanguage;
-            _settingsRepository.CardShowFrequency = freq;
-            _settingsRepository.TtsSpeaker = TtsSpeaker;
-            _settingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
-            _settingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
-            _localSettingsRepository.UiLanguage = UiLanguage;
-            if (prevFreq != freq)
+            if (_settingsRepository.CardShowFrequency != freq)
             {
                 _messageHub.Publish(freq);
+                _settingsRepository.CardShowFrequency = freq;
             }
+            if (_localSettingsRepository.SyncBus != SyncBus)
+            {
+                _messageHub.Publish(SyncBus);
+                _localSettingsRepository.SyncBus = SyncBus;
+            }
+
+            _settingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
 
             _saved = true;
 

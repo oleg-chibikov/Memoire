@@ -85,6 +85,7 @@
     <Compile Include="DAL\Model\TranslationEntryDeletion.cs" />
     <Compile Include="DAL\Model\WordImageSearchIndex.cs" />
     <Compile Include="DAL\Shared\ISharedRepository.cs" />
+    <Compile Include="Sync\SyncBus.cs" />
     <Compile Include="Sync\ISharedRepositoryCloner.cs" />
     <Compile Include="DAL\Shared\ILearningInfoRepository.cs" />
     <Compile Include="DAL\Shared\ITranslationEntryDeletionRepository.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="ImageSearch\IImageDownloader.cs" />
     <Compile Include="ImageSearch\IImageSearcher.cs" />
     <Compile Include="Sync\IRepositorySynhronizer.cs" />
-    <Compile Include="Sync\ISharedRepositoryPathsProvider.cs" />
     <Compile Include="Sync\ISyncExtender.cs" />
     <Compile Include="Sync\ISynchronizationManager.cs" />
     <Compile Include="Sync\ISyncPostProcessor.cs" />

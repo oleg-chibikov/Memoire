@@ -2,6 +2,7 @@ using System;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Contracts.DAL.Local
 {
@@ -21,6 +22,8 @@ namespace Remembrance.Contracts.DAL.Local
 
         [CanBeNull]
         string LastUsedTargetLanguage { get; set; }
+
+        SyncBus SyncBus { get; set; }
 
         [NotNull]
         string UiLanguage { get; set; }

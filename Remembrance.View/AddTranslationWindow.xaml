@@ -21,7 +21,7 @@
     WindowStartupLocation="Manual"
     Draggable="False"
     Width="900"
-    Icon="../IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
     <view:AddTranslationControl
         VerticalAlignment="Center"
         VerticalContentAlignment="Center" />

@@ -75,6 +75,7 @@ namespace Remembrance
             RegisterReadonlyCollectionLiteDb<TextEntry>();
             RegisterReadonlyCollectionLiteDb<Word>();
             RegisterReadonlyCollectionLiteDb<ManualTranslation>();
+            RegisterReadonlyCollectionLiteDbValue<string>();
             RegisterSetLiteDb<BaseWord>();
         }
 
@@ -82,6 +83,13 @@ namespace Remembrance
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
                 o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
+                m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
+        }
+
+        private static void RegisterReadonlyCollectionLiteDbValue<T>()
+        {
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
+                o => new BsonValue(o.Select(x => new BsonValue(x))),
                 m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
         }
 

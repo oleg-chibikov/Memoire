@@ -360,4 +360,7 @@
   <data name="ModifiedDate" xml:space="preserve">
     <value>Сhanged</value>
   </data>
+  <data name="SyncBus" xml:space="preserve">
+    <value>Sync using</value>
+  </data>
 </root>

@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Logging;
+using Easy.MessageHub;
 using JetBrains.Annotations;
+using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
 
@@ -20,19 +22,22 @@ namespace Remembrance.Core.Sync
         private readonly ILog _logger;
 
         [NotNull]
-        private readonly ISharedRepositoryPathsProvider _sharedRepositoryPathsProvider;
-
-        [NotNull]
         private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
 
         [NotNull]
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
+        [NotNull]
+        private readonly IMessageHub _messageHub;
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
         public SynchronizationManager(
             [NotNull] ILog logger,
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
-            [NotNull] ISharedRepositoryPathsProvider sharedRepositoryPathsProvider,
-            [NotNull] IReadOnlyCollection<ISyncExtender> syncExtenders)
+            [NotNull] IReadOnlyCollection<ISyncExtender> syncExtenders,
+            [NotNull] IMessageHub messageHub)
         {
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!synchronizers.Any())
@@ -40,12 +45,13 @@ namespace Remembrance.Core.Sync
                 throw new ArgumentNullException(nameof(synchronizers));
             }
 
+            _ = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
+
             _synchronizers = synchronizers.ToDictionary(x => x.FileName, x => x);
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _sharedRepositoryPathsProvider = sharedRepositoryPathsProvider ?? throw new ArgumentNullException(nameof(sharedRepositoryPathsProvider));
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
-            SynchronizeExistingRepositories();
-            _fileSystemWatcher = new FileSystemWatcher(sharedRepositoryPathsProvider.BaseDirectoryPath)
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _fileSystemWatcher = new FileSystemWatcher
             {
                 IncludeSubdirectories = true,
                 InternalBufferSize = 64 * 1024,
@@ -53,6 +59,26 @@ namespace Remembrance.Core.Sync
             };
             _fileSystemWatcher.Created += FileSystemWatcher_Changed;
             _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
+            OnSyncBusChanged(localSettingsRepository.SyncBus);
+
+            _subscriptionTokens.Add(messageHub.Subscribe<SyncBus>(OnSyncBusChanged));
+        }
+
+        private void OnSyncBusChanged(SyncBus syncBus)
+        {
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            if (syncBus == SyncBus.NoSync)
+            {
+                _allMachinesSharedBasePath = _thisMachineSharedPath = null;
+                return;
+            }
+            {
+                _thisMachineSharedPath = RemembrancePaths.GetSharedPath(syncBus);
+                _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
+                _fileSystemWatcher.Path = _allMachinesSharedBasePath;
+            }
+
+            SynchronizeExistingRepositories();
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
@@ -61,13 +87,19 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.Created -= FileSystemWatcher_Changed;
             _fileSystemWatcher.Changed -= FileSystemWatcher_Changed;
             _fileSystemWatcher.Dispose();
+            foreach (var subscriptionToken in _subscriptionTokens)
+            {
+                _messageHub.Unsubscribe(subscriptionToken);
+            }
+
+            _subscriptionTokens.Clear();
         }
 
         private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
-            if (directoryPath == null || directoryPath == RemembrancePaths.SharedDataPath)
+            if (directoryPath == null || directoryPath == _thisMachineSharedPath)
             {
                 return;
             }
@@ -77,9 +109,18 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
+        [CanBeNull]
+        private string _thisMachineSharedPath;
+        [CanBeNull]
+        private string _allMachinesSharedBasePath;
+
         private void SynchronizeExistingRepositories()
         {
-            var paths = _sharedRepositoryPathsProvider.GetSharedRepositoriesPaths();
+            if (_allMachinesSharedBasePath == null)
+            {
+                return;
+            }
+            var paths = Directory.GetDirectories(_allMachinesSharedBasePath).Where(directoryPath => directoryPath != _thisMachineSharedPath).SelectMany(Directory.GetFiles);
             Parallel.ForEach(
                 paths,
                 filePath =>

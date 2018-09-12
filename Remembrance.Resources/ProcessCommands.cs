@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Remembrance.Contracts.Sync;
 using Scar.Common.IO;
 
 namespace Remembrance.Resources
@@ -11,9 +12,15 @@ namespace Remembrance.Resources
             Process.Start($@"{CommonPaths.SettingsPath}");
         }
 
-        public static void OpenSharedFolder()
+        public static void OpenSharedFolder(SyncBus syncBus)
         {
-            Process.Start($@"{RemembrancePaths.SharedDataPath}");
+            if (syncBus == SyncBus.NoSync)
+            {
+                OpenSettingsFolder();
+                return;
+            }
+
+            Process.Start($@"{RemembrancePaths.GetSharedPath(syncBus)}");
         }
 
         public static void ViewLogs()

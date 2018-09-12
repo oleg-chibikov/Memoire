@@ -664,6 +664,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sync using.
+        /// </summary>
+        public static string SyncBus {
+            get {
+                return ResourceManager.GetString("SyncBus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time left to show card.
         /// </summary>
         public static string TimeToShow {

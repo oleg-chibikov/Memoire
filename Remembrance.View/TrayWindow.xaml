@@ -22,7 +22,7 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
-    Icon="../IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
     <Window.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />

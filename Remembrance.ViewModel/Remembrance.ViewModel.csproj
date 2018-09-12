@@ -56,6 +56,9 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.6768.19463, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.6768.19463\lib\net47\Scar.Common.DAL.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.IO, Version=1.0.6662.42670, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.IO.1.0.6662.42670\lib\net47\Scar.Common.IO.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.6789.21362, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6789.21362\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
     </Reference>
