@@ -9,6 +9,6 @@ namespace Remembrance.Contracts.Sync
         string BaseDirectoryPath { get; }
 
         [NotNull]
-        ICollection<string> GetSharedRepositoriesPaths();
+        IReadOnlyCollection<string> GetSharedRepositoriesPaths();
     }
 }

@@ -32,6 +32,6 @@ namespace Remembrance.ViewModel
         public string Transcription { get; }
 
         [NotNull]
-        public ICollection<TranslationVariantViewModel> TranslationVariants { get; }
+        public IReadOnlyCollection<TranslationVariantViewModel> TranslationVariants { get; }
     }
 }

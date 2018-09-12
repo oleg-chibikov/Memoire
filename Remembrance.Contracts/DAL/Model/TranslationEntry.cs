@@ -18,10 +18,10 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [CanBeNull]
-        public ICollection<ManualTranslation> ManualTranslations { get; set; }
+        public IReadOnlyCollection<ManualTranslation> ManualTranslations { get; set; }
 
         [CanBeNull]
-        public ICollection<BaseWord> PriorityWords { get; set; }
+        public ISet<BaseWord> PriorityWords { get; set; }
 
         public override string ToString()
         {

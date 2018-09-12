@@ -142,7 +142,7 @@ namespace Remembrance.ViewModel
 
             _subscriptionTokens.Add(messageHub.Subscribe<TranslationEntry>(OnTranslationEntryReceivedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<ICollection<TranslationEntry>>(OnTranslationEntriesBatchReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<IReadOnlyCollection<TranslationEntry>>(OnTranslationEntriesBatchReceivedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
 
@@ -323,7 +323,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnTranslationEntriesBatchReceivedAsync([NotNull] ICollection<TranslationEntry> translationEntries)
+        private async void OnTranslationEntriesBatchReceivedAsync([NotNull] IReadOnlyCollection<TranslationEntry> translationEntries)
         {
             _ = translationEntries ?? throw new ArgumentNullException(nameof(translationEntries));
             Logger.DebugFormat("Received a batch of translations ({0} items) from the external source...", translationEntries.Count);

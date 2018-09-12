@@ -5,6 +5,6 @@ namespace Remembrance.Core.ImageSearch.Qwant.Data
 {
     internal sealed class QwantResult
     {
-        public ICollection<ImageInfo> Items { get; set; }
+        public IReadOnlyCollection<ImageInfo> Items { get; set; }
     }
 }

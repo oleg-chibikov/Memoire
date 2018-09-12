@@ -53,7 +53,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<ICollection<ImageInfo>> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
+        public async Task<IReadOnlyCollection<ImageInfo>> SearchImagesAsync(string text, CancellationToken cancellationToken, int skip, int count, string language)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             language = language != null ? $"&locale={language}_{language}" : null;

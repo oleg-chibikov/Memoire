@@ -10,6 +10,6 @@ namespace Remembrance.Contracts.Translate.Data.Predictor
 
         public int Position { get; set; }
 
-        public ICollection<string> PredictionVariants { get; set; }
+        public IReadOnlyCollection<string> PredictionVariants { get; set; }
     }
 }

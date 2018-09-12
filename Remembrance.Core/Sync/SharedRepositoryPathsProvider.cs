@@ -12,7 +12,7 @@ namespace Remembrance.Core.Sync
     {
         public string BaseDirectoryPath { get; } = Directory.GetParent(RemembrancePaths.SharedDataPath).FullName;
 
-        public ICollection<string> GetSharedRepositoriesPaths()
+        public IReadOnlyCollection<string> GetSharedRepositoriesPaths()
         {
             return Directory.GetDirectories(BaseDirectoryPath).Where(directoryPath => directoryPath != RemembrancePaths.SharedDataPath).SelectMany(Directory.GetFiles).ToArray();
         }

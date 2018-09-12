@@ -5,7 +5,7 @@ namespace Remembrance.Contracts.Exchange.Data
 {
     public sealed class ExchangeResult
     {
-        public ExchangeResult(bool success, [CanBeNull] ICollection<string> errors, int count)
+        public ExchangeResult(bool success, [CanBeNull] IReadOnlyCollection<string> errors, int count)
         {
             Success = success;
             Errors = errors;
@@ -15,7 +15,7 @@ namespace Remembrance.Contracts.Exchange.Data
         public int Count { get; }
 
         [CanBeNull]
-        public ICollection<string> Errors { get; }
+        public IReadOnlyCollection<string> Errors { get; }
 
         public bool Success { get; }
     }

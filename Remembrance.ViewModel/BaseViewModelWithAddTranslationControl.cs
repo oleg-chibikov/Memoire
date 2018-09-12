@@ -66,7 +66,7 @@ namespace Remembrance.ViewModel
         }
 
         [NotNull]
-        public ICollection<Language> AvailableSourceLanguages { get; }
+        public IReadOnlyCollection<Language> AvailableSourceLanguages { get; }
 
         [NotNull]
         public ObservableCollection<Language> AvailableTargetLanguages { get; }

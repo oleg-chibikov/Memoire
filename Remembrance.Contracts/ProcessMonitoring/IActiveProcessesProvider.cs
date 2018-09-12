@@ -7,6 +7,6 @@ namespace Remembrance.Contracts.ProcessMonitoring
     public interface IActiveProcessesProvider
     {
         [NotNull]
-        ICollection<ProcessInfo> GetActiveProcesses();
+        IReadOnlyCollection<ProcessInfo> GetActiveProcesses();
     }
 }

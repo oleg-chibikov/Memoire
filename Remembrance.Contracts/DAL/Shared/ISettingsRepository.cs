@@ -11,7 +11,7 @@ namespace Remembrance.Contracts.DAL.Shared
     public interface ISettingsRepository : IRepository<Settings, string>, ISharedRepository, IDisposable
     {
         [CanBeNull]
-        ICollection<ProcessInfo> BlacklistedProcesses { get; set; }
+        IReadOnlyCollection<ProcessInfo> BlacklistedProcesses { get; set; }
 
         TimeSpan CardShowFrequency { get; set; }
 

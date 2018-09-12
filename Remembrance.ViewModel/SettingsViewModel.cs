@@ -105,13 +105,13 @@ namespace Remembrance.ViewModel
         public event EventHandler RequestClose;
 
         [NotNull]
-        public ICollection<Language> AvailableTranslationLanguages { get; }
+        public IReadOnlyCollection<Language> AvailableTranslationLanguages { get; }
 
         [NotNull]
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
         [NotNull]
-        public ICollection<Language> AvailableUiLanguages { get; } = new[]
+        public IReadOnlyCollection<Language> AvailableUiLanguages { get; } = new[]
         {
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")

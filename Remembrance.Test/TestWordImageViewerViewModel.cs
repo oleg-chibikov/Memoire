@@ -530,7 +530,7 @@ namespace Remembrance.Test
             WithImageSearchResult(null, searchText);
         }
 
-        private void WithImageSearchResult([CanBeNull] ICollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
+        private void WithImageSearchResult([CanBeNull] IReadOnlyCollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
         {
             _autoMock.Mock<IImageSearcher>()
                 .Setup(

@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using JetBrains.Annotations;
+using LiteDB;
 using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
+using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core;
 using Remembrance.Core.CardManagement;
@@ -48,6 +52,7 @@ namespace Remembrance
 
         protected override void OnStartup()
         {
+            RegisterLiteDbCustomTypes();
             Current.Resources.MergedDictionaries.Add(
                 new ResourceDictionary
                 {
@@ -60,6 +65,31 @@ namespace Remembrance
             ResolveInSeparateTaskAsync<IAssessmentCardManager>();
             ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
             ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
+        }
+
+        private static void RegisterLiteDbCustomTypes()
+        {
+            RegisterReadonlyCollectionLiteDb<PartOfSpeechTranslation>();
+            RegisterReadonlyCollectionLiteDb<TranslationVariant>();
+            RegisterReadonlyCollectionLiteDb<Example>();
+            RegisterReadonlyCollectionLiteDb<TextEntry>();
+            RegisterReadonlyCollectionLiteDb<Word>();
+            RegisterReadonlyCollectionLiteDb<ManualTranslation>();
+            RegisterSetLiteDb<BaseWord>();
+        }
+
+        private static void RegisterReadonlyCollectionLiteDb<T>()
+        {
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
+                o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
+                m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
+        }
+
+        private static void RegisterSetLiteDb<T>()
+        {
+            BsonMapper.Global.RegisterType<ISet<T>>(
+                o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
+                m => new HashSet<T>(m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument))));
         }
 
         protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
@@ -76,9 +106,10 @@ namespace Remembrance
 
             builder.RegisterType(
                     typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository,
-                    ITranslationEntryDeletionRepository>))
-            .SingleInstance()
-            .AsImplementedInterfaces();
+                            ITranslationEntryDeletionRepository>
+                    ))
+                .SingleInstance()
+                .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();

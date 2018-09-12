@@ -13,6 +13,6 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         public string Transcription { get; set; }
 
         [NotNull]
-        public ICollection<TranslationVariant> TranslationVariants { get; set; }
+        public IReadOnlyCollection<TranslationVariant> TranslationVariants { get; set; }
     }
 }

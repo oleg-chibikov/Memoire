@@ -11,7 +11,7 @@ namespace Remembrance.Core.ProcessMonitoring
     [UsedImplicitly]
     internal sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {
-        public ICollection<ProcessInfo> GetActiveProcesses()
+        public IReadOnlyCollection<ProcessInfo> GetActiveProcesses()
         {
             using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, ExecutablePath FROM Win32_Process"))
             using (var results = searcher.Get())

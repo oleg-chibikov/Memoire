@@ -15,7 +15,7 @@ namespace Remembrance.Core.Sync
     {
         private readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
 
-        public SharedRepositoryCloner([NotNull] ICollection<ISharedRepository> cloneableRepositories, [NotNull] Func<IRateLimiter> rateLimiterFactory)
+        public SharedRepositoryCloner([NotNull] IReadOnlyCollection<ISharedRepository> cloneableRepositories, [NotNull] Func<IRateLimiter> rateLimiterFactory)
         {
             _ = cloneableRepositories ?? throw new ArgumentNullException(nameof(cloneableRepositories));
             _ = rateLimiterFactory ?? throw new ArgumentNullException(nameof(rateLimiterFactory));

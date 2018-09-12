@@ -23,16 +23,16 @@ namespace Remembrance.Core.Sync
         private readonly ISharedRepositoryPathsProvider _sharedRepositoryPathsProvider;
 
         [NotNull]
-        private readonly ICollection<ISyncExtender> _syncExtenders;
+        private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
 
         [NotNull]
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
         public SynchronizationManager(
             [NotNull] ILog logger,
-            [NotNull] ICollection<IRepositorySynhronizer> synchronizers,
+            [NotNull] IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
             [NotNull] ISharedRepositoryPathsProvider sharedRepositoryPathsProvider,
-            [NotNull] ICollection<ISyncExtender> syncExtenders)
+            [NotNull] IReadOnlyCollection<ISyncExtender> syncExtenders)
         {
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!synchronizers.Any())

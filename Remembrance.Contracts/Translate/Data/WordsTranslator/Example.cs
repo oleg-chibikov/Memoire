@@ -7,6 +7,6 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
     public sealed class Example : TextEntry
     {
         [CanBeNull]
-        public ICollection<TextEntry> Translations { get; set; }
+        public IReadOnlyCollection<TextEntry> Translations { get; set; }
     }
 }

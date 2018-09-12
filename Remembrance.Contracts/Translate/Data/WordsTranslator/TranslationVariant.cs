@@ -7,12 +7,12 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
     public sealed class TranslationVariant : Word
     {
         [CanBeNull]
-        public ICollection<Example> Examples { get; set; }
+        public IReadOnlyCollection<Example> Examples { get; set; }
 
         [CanBeNull]
-        public ICollection<Word> Meanings { get; set; }
+        public IReadOnlyCollection<Word> Meanings { get; set; }
 
         [CanBeNull]
-        public ICollection<Word> Synonyms { get; set; }
+        public IReadOnlyCollection<Word> Synonyms { get; set; }
     }
 }

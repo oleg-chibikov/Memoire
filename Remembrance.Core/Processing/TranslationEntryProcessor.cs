@@ -110,7 +110,7 @@ namespace Remembrance.Core.Processing
             CancellationToken cancellationToken,
             IWindow ownerWindow,
             bool needPostProcess,
-            ICollection<ManualTranslation> manualTranslations)
+            IReadOnlyCollection<ManualTranslation> manualTranslations)
         {
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
@@ -192,7 +192,7 @@ namespace Remembrance.Core.Processing
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             TranslationEntryKey translationEntryKey,
-            ICollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken)
         {
             return (await ReloadTranslationDetailsIfNeededInternalAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false)).TranslationDetails;
@@ -200,7 +200,7 @@ namespace Remembrance.Core.Processing
 
         public async Task<TranslationInfo> UpdateManualTranslationsAsync(
             TranslationEntryKey translationEntryKey,
-            ICollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken)
         {
             _logger.TraceFormat("Updating manual translations for {0}...", translationEntryKey);
@@ -233,7 +233,7 @@ namespace Remembrance.Core.Processing
             return new TranslationInfo(translationEntry, translationDetails, learningInfo);
         }
 
-        private static void CapitalizeManualTranslations([CanBeNull] ICollection<ManualTranslation> manulTranslations)
+        private static void CapitalizeManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation> manulTranslations)
         {
             if (manulTranslations == null)
             {
@@ -251,7 +251,7 @@ namespace Remembrance.Core.Processing
         [NotNull]
         private static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
             [NotNull] string text,
-            [NotNull] ICollection<ManualTranslation> manualTranslations,
+            [NotNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
             [NotNull] IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             var groups = manualTranslations.GroupBy(x => x.PartOfSpeech);
@@ -292,7 +292,7 @@ namespace Remembrance.Core.Processing
 
         private void DeleteFromPriority(
             [NotNull] TranslationEntry translationEntry,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
             [NotNull] TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
@@ -367,7 +367,7 @@ namespace Remembrance.Core.Processing
         // ReSharper disable once StyleCop.SA1009
         private async Task<(TranslationDetails TranslationDetails, bool AlreadyExists)> ReloadTranslationDetailsIfNeededInternalAsync(
             TranslationEntryKey translationEntryKey,
-            ICollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken)
         {
             if (!manualTranslations?.Any() == true)
@@ -399,7 +399,7 @@ namespace Remembrance.Core.Processing
         [NotNull]
         private async Task<TranslationResult> TranslateAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken)
         {
             // Used En as ui language to simplify conversion of common words to the enums

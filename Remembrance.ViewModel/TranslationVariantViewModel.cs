@@ -43,13 +43,13 @@ namespace Remembrance.ViewModel
         }
 
         [CanBeNull]
-        public ICollection<Example> Examples { get; }
+        public IReadOnlyCollection<Example> Examples { get; }
 
         [CanBeNull]
-        public ICollection<WordViewModel> Meanings { get; }
+        public IReadOnlyCollection<WordViewModel> Meanings { get; }
 
         [CanBeNull]
-        public ICollection<PriorityWordViewModel> Synonyms { get; }
+        public IReadOnlyCollection<PriorityWordViewModel> Synonyms { get; }
 
         [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
@@ -24,14 +25,14 @@ namespace Remembrance.Core.Exchange
         {
         }
 
-        protected override ICollection<ManualTranslation> GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override IReadOnlyCollection<ManualTranslation> GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.ManualTranslations;
         }
 
-        protected override ICollection<BaseWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override IReadOnlyCollection<BaseWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
-            return exchangeEntry.TranslationEntry.PriorityWords;
+            return exchangeEntry.TranslationEntry.PriorityWords?.ToArray();
         }
 
         protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)

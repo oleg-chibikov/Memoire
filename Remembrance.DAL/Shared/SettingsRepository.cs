@@ -17,9 +17,9 @@ namespace Remembrance.DAL.Shared
         {
         }
 
-        public ICollection<ProcessInfo> BlacklistedProcesses
+        public IReadOnlyCollection<ProcessInfo> BlacklistedProcesses
         {
-            get => TryGetValue<ICollection<ProcessInfo>>(nameof(BlacklistedProcesses));
+            get => TryGetValue<IReadOnlyCollection<ProcessInfo>>(nameof(BlacklistedProcesses));
             set => RemoveUpdateOrInsert(nameof(BlacklistedProcesses), value);
         }
 

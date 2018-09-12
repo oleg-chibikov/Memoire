@@ -39,7 +39,7 @@ namespace Remembrance.Core.Sync
         private readonly TRepository _ownRepository;
 
         [NotNull]
-        private readonly ICollection<ISyncExtender<TRepository>> _syncExtenders;
+        private readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
 
         [CanBeNull]
         private readonly ISyncPostProcessor<TEntity> _syncPostProcessor;
@@ -53,7 +53,7 @@ namespace Remembrance.Core.Sync
             [NotNull] TRepository ownRepository,
             [NotNull] IMessageHub messageHub,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ICollection<ISyncExtender<TRepository>> syncExtenders,
+            [NotNull] IReadOnlyCollection<ISyncExtender<TRepository>> syncExtenders,
             [CanBeNull] ISyncPreProcessor<TEntity> syncPreProcessor = null,
             [CanBeNull] ISyncPostProcessor<TEntity> syncPostProcessor = null)
         {

@@ -17,7 +17,7 @@ namespace Remembrance.Contracts.Processing
             CancellationToken cancellationToken,
             [CanBeNull] IWindow ownerWindow = null,
             bool needPostProcess = true,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations = null);
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations = null);
 
         void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
 
@@ -25,14 +25,14 @@ namespace Remembrance.Contracts.Processing
         [NotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken);
 
         [ItemNotNull]
         [NotNull]
         Task<TranslationInfo> UpdateManualTranslationsAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
             CancellationToken cancellationToken);
     }
 }

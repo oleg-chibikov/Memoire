@@ -53,7 +53,7 @@ namespace Remembrance.ViewModel
         }
 
         [NotNull]
-        public static ICollection<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
+        public static IReadOnlyCollection<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
 
         [NotNull]
         public ICommand AddTranslationCommand { get; }

@@ -25,6 +25,6 @@ namespace Remembrance.ViewModel
         }
 
         [NotNull]
-        public ICollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; }
+        public IReadOnlyCollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; }
     }
 }

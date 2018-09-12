@@ -104,13 +104,13 @@ namespace Remembrance.Core.Exchange
         }
 
         [CanBeNull]
-        protected virtual ICollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
+        protected virtual IReadOnlyCollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
         {
             return null;
         }
 
         [CanBeNull]
-        protected abstract ICollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
+        protected abstract IReadOnlyCollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
 
         [ItemNotNull]
         [NotNull]
@@ -118,7 +118,7 @@ namespace Remembrance.Core.Exchange
 
         protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
 
-        private static bool UpdateManualTranslations([CanBeNull] ICollection<ManualTranslation> manualTranslations, [NotNull] TranslationEntry translationEntry)
+        private static bool UpdateManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations, [NotNull] TranslationEntry translationEntry)
         {
             if (manualTranslations == null)
             {
@@ -160,7 +160,7 @@ namespace Remembrance.Core.Exchange
         private async Task<TranslationInfo> ImportNewEntry(
             CancellationToken cancellationToken,
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] ICollection<ManualTranslation> manualTranslations)
+            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations)
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),

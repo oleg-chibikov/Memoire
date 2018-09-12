@@ -8,12 +8,12 @@ using Scar.Common.WPF.Converters;
 
 namespace Remembrance.View.Converters
 {
-    [ValueConversion(typeof(ICollection<TextEntry>), typeof(string))]
+    [ValueConversion(typeof(IReadOnlyCollection<TextEntry>), typeof(string))]
     internal sealed class WordConcatConverter : EnumerableConcatConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is ICollection<TextEntry> words))
+            if (!(value is IReadOnlyCollection<TextEntry> words))
             {
                 return null;
             }
