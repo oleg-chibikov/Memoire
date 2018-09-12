@@ -27,21 +27,6 @@ namespace Remembrance.Contracts.DAL.Model
         [NotNull]
         public BaseWord Word { get; set; }
 
-        public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
-        {
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1?.Equals(obj2) == true;
-        }
-
-        public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
-        {
-            return !(obj1 == obj2);
-        }
-
         public bool Equals(WordKey other)
         {
             if (other is null)
@@ -55,6 +40,21 @@ namespace Remembrance.Contracts.DAL.Model
             }
 
             return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
+        }
+
+        public static bool operator ==([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1?.Equals(obj2) == true;
+        }
+
+        public static bool operator !=([CanBeNull] WordKey obj1, [CanBeNull] WordKey obj2)
+        {
+            return !(obj1 == obj2);
         }
 
         public override bool Equals(object obj)

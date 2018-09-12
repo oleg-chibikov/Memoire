@@ -25,6 +25,12 @@ namespace Remembrance.ViewModel
     public abstract class BaseAssessmentCardViewModel : IRequestCloseViewModel, IDisposable
     {
         [NotNull]
+        private readonly IPauseManager _pauseManager;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
+        [NotNull]
         protected readonly HashSet<Word> AcceptedAnswers;
 
         [NotNull]
@@ -38,12 +44,6 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
-
-        [NotNull]
-        private readonly IPauseManager _pauseManager;
-
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         protected BaseAssessmentCardViewModel(
             [NotNull] TranslationInfo translationInfo,
@@ -94,8 +94,6 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
         }
 
-        public event EventHandler RequestClose;
-
         [NotNull]
         public WordViewModel CorrectAnswer { get; protected set; }
 
@@ -126,6 +124,8 @@ namespace Remembrance.ViewModel
 
             _subscriptionTokens.Clear();
         }
+
+        public event EventHandler RequestClose;
 
         protected async void CloseWindowWithTimeout(TimeSpan closeTimeout)
         {

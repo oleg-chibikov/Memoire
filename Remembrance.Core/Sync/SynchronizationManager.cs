@@ -22,15 +22,22 @@ namespace Remembrance.Core.Sync
         private readonly ILog _logger;
 
         [NotNull]
+        private readonly IMessageHub _messageHub;
+
+        [NotNull]
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
+        [NotNull]
         private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
 
         [NotNull]
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
-        [NotNull]
-        private readonly IMessageHub _messageHub;
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        [CanBeNull]
+        private string _allMachinesSharedBasePath;
+
+        [CanBeNull]
+        private string _thisMachineSharedPath;
 
         public SynchronizationManager(
             [NotNull] ILog logger,
@@ -64,24 +71,6 @@ namespace Remembrance.Core.Sync
             _subscriptionTokens.Add(messageHub.Subscribe<SyncBus>(OnSyncBusChanged));
         }
 
-        private void OnSyncBusChanged(SyncBus syncBus)
-        {
-            _fileSystemWatcher.EnableRaisingEvents = false;
-            if (syncBus == SyncBus.NoSync)
-            {
-                _allMachinesSharedBasePath = _thisMachineSharedPath = null;
-                return;
-            }
-            {
-                _thisMachineSharedPath = RemembrancePaths.GetSharedPath(syncBus);
-                _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
-                _fileSystemWatcher.Path = _allMachinesSharedBasePath;
-            }
-
-            SynchronizeExistingRepositories();
-            _fileSystemWatcher.EnableRaisingEvents = true;
-        }
-
         public void Dispose()
         {
             _fileSystemWatcher.Created -= FileSystemWatcher_Changed;
@@ -93,6 +82,25 @@ namespace Remembrance.Core.Sync
             }
 
             _subscriptionTokens.Clear();
+        }
+
+        private void OnSyncBusChanged(SyncBus syncBus)
+        {
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            if (syncBus == SyncBus.NoSync)
+            {
+                _allMachinesSharedBasePath = _thisMachineSharedPath = null;
+                return;
+            }
+
+            {
+                _thisMachineSharedPath = RemembrancePaths.GetSharedPath(syncBus);
+                _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
+                _fileSystemWatcher.Path = _allMachinesSharedBasePath;
+            }
+
+            SynchronizeExistingRepositories();
+            _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
         private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
@@ -109,17 +117,13 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        [CanBeNull]
-        private string _thisMachineSharedPath;
-        [CanBeNull]
-        private string _allMachinesSharedBasePath;
-
         private void SynchronizeExistingRepositories()
         {
             if (_allMachinesSharedBasePath == null)
             {
                 return;
             }
+
             var paths = Directory.GetDirectories(_allMachinesSharedBasePath).Where(directoryPath => directoryPath != _thisMachineSharedPath).SelectMany(Directory.GetFiles);
             Parallel.ForEach(
                 paths,

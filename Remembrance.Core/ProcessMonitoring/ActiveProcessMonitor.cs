@@ -14,10 +14,10 @@ namespace Remembrance.Core.ProcessMonitoring
     internal sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
     {
         [NotNull]
-        private readonly IPauseManager _pauseManager;
+        private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        private readonly IPauseManager _pauseManager;
 
         [NotNull]
         private readonly Timer _timer;

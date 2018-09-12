@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
-using Remembrance.Contracts.ProcessMonitoring.Data;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
 

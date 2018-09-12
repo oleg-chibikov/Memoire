@@ -19,10 +19,10 @@ namespace Remembrance.ViewModel
     public class WordViewModel
     {
         [NotNull]
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
+        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         [NotNull]
-        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         public WordViewModel(
             [NotNull] Word word,

@@ -8,12 +8,12 @@ namespace Remembrance.Resources
 {
     public static class RemembrancePaths
     {
-        [NotNull]
-        public static string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");
-
         public static readonly string OneDrivePath = CommonPaths.GetOneDrivePath();
 
         public static readonly string DropBoxPath = CommonPaths.GetDropboxPath();
+
+        [NotNull]
+        public static string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");
 
         [NotNull]
         public static string GetSharedPath(SyncBus syncBus)

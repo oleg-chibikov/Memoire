@@ -10,6 +10,11 @@ namespace Remembrance.Contracts.ImageSearch
     {
         [ItemCanBeNull]
         [NotNull]
-        Task<IReadOnlyCollection<ImageInfo>> SearchImagesAsync([NotNull] string text, CancellationToken cancellationToken, int skip = 0, int count = 1, [CanBeNull] string language = null);
+        Task<IReadOnlyCollection<ImageInfo>> SearchImagesAsync(
+            [NotNull] string text,
+            CancellationToken cancellationToken,
+            int skip = 0,
+            int count = 1,
+            [CanBeNull] string language = null);
     }
 }

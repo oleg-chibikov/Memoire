@@ -22,6 +22,12 @@ namespace Remembrance.ViewModel
     public abstract class BaseViewModelWithAddTranslationControl : IDisposable
     {
         [NotNull]
+        private readonly ILanguageManager _languageManager;
+
+        [NotNull]
+        private readonly ILocalSettingsRepository _localSettingsRepository;
+
+        [NotNull]
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
         [NotNull]
@@ -29,12 +35,6 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
-
-        [NotNull]
-        private readonly ILanguageManager _languageManager;
-
-        [NotNull]
-        private readonly ILocalSettingsRepository _localSettingsRepository;
 
         [NotNull]
         private string _selectedSourceLanguage;

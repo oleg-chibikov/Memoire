@@ -55,8 +55,6 @@ namespace Remembrance.ViewModel
 
         private bool _saved;
 
-        public IReadOnlyCollection<SyncBus> SyncBuses { get; }
-
         private string _uiLanguage;
 
         public SettingsViewModel(
@@ -97,6 +95,7 @@ namespace Remembrance.ViewModel
             {
                 syncBuses.Add(SyncBus.Dropbox);
             }
+
             if (RemembrancePaths.OneDrivePath != null)
             {
                 syncBuses.Add(SyncBus.OneDrive);
@@ -120,7 +119,7 @@ namespace Remembrance.ViewModel
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
-        public event EventHandler RequestClose;
+        public IReadOnlyCollection<SyncBus> SyncBuses { get; }
 
         [NotNull]
         public IReadOnlyCollection<Language> AvailableTranslationLanguages { get; }
@@ -194,6 +193,8 @@ namespace Remembrance.ViewModel
         {
             _cardsExchanger.Progress -= CardsExchanger_Progress;
         }
+
+        public event EventHandler RequestClose;
 
         private void BeginProgress()
         {
@@ -269,6 +270,7 @@ namespace Remembrance.ViewModel
                 _messageHub.Publish(freq);
                 _settingsRepository.CardShowFrequency = freq;
             }
+
             if (_localSettingsRepository.SyncBus != SyncBus)
             {
                 _messageHub.Publish(SyncBus);

@@ -19,7 +19,9 @@ namespace Remembrance.Core.Sync
         private readonly ILocalSettingsRepository _localSettingsRepository;
         private readonly ILog _logger;
 
-        public SharedRepositoryCloner([NotNull] IReadOnlyCollection<ISharedRepository> cloneableRepositories, [NotNull] Func<IRateLimiter> rateLimiterFactory,
+        public SharedRepositoryCloner(
+            [NotNull] IReadOnlyCollection<ISharedRepository> cloneableRepositories,
+            [NotNull] Func<IRateLimiter> rateLimiterFactory,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger)
         {
