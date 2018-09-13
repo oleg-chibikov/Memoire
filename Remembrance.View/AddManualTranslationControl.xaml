@@ -38,13 +38,12 @@
             Grid.Column="0"
             Text="{lex:Loc AddTranslation}" />
 
-        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <autoComplete:CompletableTextBox
             Grid.Column="1"
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             HorizontalAlignment="Stretch"
             Text="{Binding ManualTranslationText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            DataProvider="{StaticResource SuggestionProvider}">
+            DataProvider="{DynamicResource SuggestionProvider}">
             <autoComplete:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding AddTranslationCommand, Mode=OneTime}"

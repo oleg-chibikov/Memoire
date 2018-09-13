@@ -30,7 +30,7 @@
             FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
             ToolTip="{lex:Loc MistakesTooltip}" />
-        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+
         <commonControls:CompletableTextBox
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             Width="200"
@@ -38,7 +38,7 @@
             FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
             ToolTip="{Binding Tooltip, Mode=OneTime}"
             Text="{Binding ProvidedAnswer, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
-            DataProvider="{StaticResource SuggestionProvider}">
+            DataProvider="{DynamicResource SuggestionProvider}">
             <commonControls:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding ProvideAnswerCommand, Mode=OneTime}"

@@ -24,12 +24,11 @@
         Orientation="Horizontal"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
 
-        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <autoComplete:CompletableTextBox
             x:Name="SearchTextBox"
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            DataProvider="{StaticResource SuggestionProvider}">
+            DataProvider="{DynamicResource SuggestionProvider}">
             <autoComplete:CompletableTextBox.InputBindings>
                 <KeyBinding
                     Command="{Binding SearchCommand, Mode=OneTime}"
