@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Easy.MessageHub;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Sync;
@@ -27,8 +28,8 @@ namespace Remembrance.Core.Sync
                 return Task.CompletedTask;
             }
 
-            var prevFreq = oldValue;
-            var newFreq = newValue;
+            var prevFreq = oldValue == null ? TimeSpan.MinValue : JsonConvert.DeserializeObject<TimeSpan>(oldValue.ValueJson);
+            var newFreq = JsonConvert.DeserializeObject<TimeSpan>(newValue.ValueJson);
 
             if (prevFreq != newFreq)
             {
