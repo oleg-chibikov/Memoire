@@ -61,15 +61,6 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remembrance is already running..
-        /// </summary>
-        public static string AlreadyRunning {
-            get {
-                return ResourceManager.GetString("AlreadyRunning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cannot delete the manual translation because it will lead to the abscence of translations..
         /// </summary>
         public static string CannotDeleteManual {

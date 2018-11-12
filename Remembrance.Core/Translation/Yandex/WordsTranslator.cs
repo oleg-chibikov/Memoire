@@ -52,10 +52,7 @@ namespace Remembrance.Core.Translation.Yandex
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
-                    }
+                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

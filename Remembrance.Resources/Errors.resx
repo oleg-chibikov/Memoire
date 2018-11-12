@@ -174,9 +174,6 @@
   <data name="TranslationIsPresent" xml:space="preserve">
     <value>Such translation is already added to the list.</value>
   </data>
-  <data name="AlreadyRunning" xml:space="preserve">
-    <value>Remembrance is already running.</value>
-  </data>
   <data name="NoTranslations" xml:space="preserve">
     <value>No translations have been found for the word '{0}'.</value>
   </data>

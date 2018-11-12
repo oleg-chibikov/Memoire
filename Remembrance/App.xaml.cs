@@ -28,6 +28,7 @@ using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
+using Scar.Common.WPF.Startup;
 using Scar.Common.WPF.View;
 
 namespace Remembrance
@@ -48,7 +49,7 @@ namespace Remembrance
 
         protected override string AlreadyRunningCaption { get; } = Errors.DefaultError;
 
-        protected override string AlreadyRunningMessage { get; } = Errors.AlreadyRunning;
+        protected override NewInstanceHandling NewInstanceHandling => NewInstanceHandling.Restart;
 
         protected override void OnStartup()
         {
