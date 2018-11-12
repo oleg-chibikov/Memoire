@@ -121,8 +121,8 @@
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6862.19133, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6862.19133\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6890.23681, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6890.23681\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.AutofacScopedWindowProvider, Version=1.0.6812.21429, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.AutofacScopedWindowProvider.1.0.6812.21429\lib\net47\Scar.Common.WPF.View.AutofacScopedWindowProvider.dll</HintPath>
