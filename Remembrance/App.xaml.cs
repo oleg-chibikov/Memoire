@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
+using Common.Logging;
 using JetBrains.Annotations;
 using LiteDB;
 using Microsoft.Win32;
@@ -59,7 +60,13 @@ namespace Remembrance
                 {
                     { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
                 });
-            Container.Resolve<ITrayWindow>().ShowDialog();
+
+            // First the tray ico
+            var trayWindow = Container.Resolve<ITrayWindow>();
+            trayWindow.ShowDialog();
+            trayWindow.LoadingTask.Wait();
+
+            Logger.Info("Tray window is loaded");
 
             ResolveInSeparateTaskAsync<ISynchronizationManager>();
             ResolveInSeparateTaskAsync<ApiHoster>();
