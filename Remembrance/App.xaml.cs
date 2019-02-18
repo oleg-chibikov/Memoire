@@ -61,10 +61,9 @@ namespace Remembrance
                     { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
                 });
 
-            // First the tray ico
+            // First the tray icon should be loaded, the rest can be loaded later
             var trayWindow = Container.Resolve<ITrayWindow>();
             trayWindow.ShowDialog();
-            trayWindow.LoadingTask.Wait();
 
             Logger.Info("Tray window is loaded");
 

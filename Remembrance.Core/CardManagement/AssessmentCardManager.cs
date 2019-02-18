@@ -71,7 +71,7 @@ namespace Remembrance.Core.CardManagement
         {
             logger.Trace("Starting showing cards...");
             _ = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-            // just to assign the field in the constructor
+            // Just to assign the field in the constructor
             _interval = Disposable.Empty;
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));

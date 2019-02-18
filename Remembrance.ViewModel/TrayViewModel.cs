@@ -31,7 +31,7 @@ namespace Remembrance.ViewModel
         private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         [NotNull]
-        private readonly ICardShowTimeProvider _cardShowTimeProvider;
+        private readonly Func<ICardShowTimeProvider> _cardShowTimeProviderFactory;
 
         [NotNull]
         private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
@@ -60,6 +60,9 @@ namespace Remembrance.ViewModel
         [NotNull]
         private readonly DispatcherTimer _timer;
 
+        [CanBeNull]
+        private ICardShowTimeProvider _cardShowTimeProvider;
+
         private bool _isToolTipOpened;
 
         public TrayViewModel(
@@ -69,11 +72,11 @@ namespace Remembrance.ViewModel
             [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory,
             [NotNull] IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
-            [NotNull] ICardShowTimeProvider cardShowTimeProvider,
+            [NotNull] Func<ICardShowTimeProvider> cardShowTimeProviderFactory,
             [NotNull] IPauseManager pauseManager,
             [NotNull] IMessageHub messageHub)
         {
-            _cardShowTimeProvider = cardShowTimeProvider ?? throw new ArgumentNullException(nameof(cardShowTimeProvider));
+            _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
@@ -99,7 +102,6 @@ namespace Remembrance.ViewModel
                 Interval = TimeSpan.FromSeconds(1)
             };
             _timer.Start();
-            SetTimesInfo();
             _timer.Tick += Timer_Tick;
 
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
@@ -192,12 +194,13 @@ namespace Remembrance.ViewModel
 
         private void SetTimesInfo()
         {
-            TimeLeftToShowCard = Texts.TimeToShow + ": " + _cardShowTimeProvider.TimeLeftToShowCard.ToString(TimeSpanFormat);
-            LastCardShowTime = _cardShowTimeProvider.LastCardShowTime == null
+            var provider = _cardShowTimeProvider ?? (_cardShowTimeProvider = _cardShowTimeProviderFactory());
+            TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat);
+            LastCardShowTime = provider.LastCardShowTime == null
                 ? null
-                : Texts.LastCardShowTime + ": " + _cardShowTimeProvider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
-            NextCardShowTime = Texts.NextCardShowTime + ": " + _cardShowTimeProvider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat);
-            CardShowFrequency = Texts.CardShowFrequency + ": " + _cardShowTimeProvider.CardShowFrequency.ToString(TimeSpanFormat);
+                : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
+            NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat);
+            CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat);
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);
             PauseReasons = _pauseManager.GetPauseReasons();
