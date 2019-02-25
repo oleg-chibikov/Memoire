@@ -10,7 +10,7 @@
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
     xmlns:commonControls="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
-    xmlns:view="clr-namespace:Remembrance.View"
+    xmlns:controls="clr-namespace:Remembrance.View.Controls"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -27,15 +27,15 @@
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
         <TextBlock
             Text="{lex:Loc EnterTheAnswer}"
-            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
-            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=controls:AnswerControl}, Mode=OneTime}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=controls:AnswerControl}, Mode=OneTime}"
             ToolTip="{lex:Loc MistakesTooltip}" />
 
         <commonControls:CompletableTextBox
             behaviors:KeyboardFocusBehavior.On="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime}"
             Width="200"
-            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
-            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=view:AnswerControl}, Mode=OneTime}"
+            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=controls:AnswerControl}, Mode=OneTime}"
+            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=controls:AnswerControl}, Mode=OneTime}"
             ToolTip="{Binding Tooltip, Mode=OneTime}"
             Text="{Binding ProvidedAnswer, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
             DataProvider="{DynamicResource SuggestionProvider}">

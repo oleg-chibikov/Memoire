@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:view="clr-namespace:Remembrance.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     lex:LocalizeDictionary.DesignCulture="en"

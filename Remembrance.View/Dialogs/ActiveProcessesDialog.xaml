@@ -54,7 +54,6 @@
                 Grid.Column="2"
                 Style="{StaticResource ImageButton}"
                 Command="{Binding ClearFilterCommand, Mode=OneTime}"
-                Background="Transparent"
                 ToolTip="{lex:Loc ClearFilter}">
                 <materialDesign:PackIcon
                     Kind="FilterRemoveOutline" />

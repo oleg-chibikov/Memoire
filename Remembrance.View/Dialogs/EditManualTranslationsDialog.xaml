@@ -10,7 +10,6 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:view="clr-namespace:Remembrance.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"

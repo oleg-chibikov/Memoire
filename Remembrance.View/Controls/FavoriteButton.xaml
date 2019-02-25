@@ -11,7 +11,6 @@
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:LearningInfoViewModel}"
-    Background="Transparent"
     ToolTip="{lex:Loc Favorite}"
     Command="{Binding FavoriteCommand, Mode=OneTime}">
     <Button.Resources>

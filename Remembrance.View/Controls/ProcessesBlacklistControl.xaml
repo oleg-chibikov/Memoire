@@ -11,7 +11,6 @@
     xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:view="clr-namespace:Remembrance.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     lex:LocalizeDictionary.DesignCulture="en"
