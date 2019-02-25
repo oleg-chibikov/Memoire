@@ -22,8 +22,8 @@
     d:DesignHeight="200"
     d:DesignWidth="1000">
     <commonView:BaseControl.Resources>
-    <commonView:DesignTimeResourceDictionary
-        Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <xceed:XceedAutoFitColumnGrid
         ItemsSource="{Binding View, Mode=OneTime}"
@@ -121,12 +121,12 @@
                 ReadOnly="True"
                 FieldName="TargetLanguage"
                 Title="{lex:Loc Remembrance.Resources:Texts:ToCap}" />
-            <xcdg:Column
+            <xcdg:UnboundColumn
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="LearningInfoViewModel.RepeatType"
-                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}">
-                <xcdg:Column.CellContentTemplate>
+                FieldName="DemoteColumn"
+                Title="">
+                <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
                         <StackPanel
                             d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
@@ -135,9 +135,21 @@
                             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                             <controls:DemoteButton
                                 DataContext="{Binding LearningInfoViewModel, Mode=OneWay}" />
-                            <TextBlock
-                                Text="{Binding LearningInfoViewModel.RepeatType,Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
                         </StackPanel>
+                    </DataTemplate>
+                </xcdg:UnboundColumn.CellContentTemplate>
+            </xcdg:UnboundColumn>
+            <xcdg:Column
+                CellVerticalContentAlignment="Center"
+                ReadOnly="True"
+                FieldName="LearningInfoViewModel.RepeatType"
+                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}">
+                <xcdg:Column.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                            Text="{Binding LearningInfoViewModel.RepeatType,Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
             </xcdg:Column>
@@ -177,32 +189,41 @@
             <xcdg:UnboundColumn
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                FieldName="Id">
+                FieldName="EditManualTranslationsColumn"
+                Title="">
                 <xcdg:UnboundColumn.CellContentTemplate>
                     <DataTemplate>
-                        <StackPanel
+                        <Button
                             d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
                             DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Orientation="Horizontal"
-                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-                            <Button
-                                Style="{StaticResource ImageButton}"
-                                ToolTip="{lex:Loc EditManualTranslations}"
-                                CommandParameter="{Binding Mode=OneWay}"
-                                Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
-                                <materialDesign:PackIcon
-                                    Kind="TooltipEdit" />
-                            </Button>
-                            <Button
-                                Style="{StaticResource ImageButton}"
-                                Foreground="{StaticResource Red}"
-                                ToolTip="{lex:Loc DeleteTranslation}"
-                                CommandParameter="{Binding Mode=OneWay}"
-                                Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
-                                <materialDesign:PackIcon
-                                    Kind="Delete" />
-                            </Button>
-                        </StackPanel>
+                            Style="{StaticResource ImageButton}"
+                            ToolTip="{lex:Loc EditManualTranslations}"
+                            CommandParameter="{Binding Mode=OneWay}"
+                            Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                            <materialDesign:PackIcon
+                                Kind="TooltipEdit" />
+                        </Button>
+                    </DataTemplate>
+                </xcdg:UnboundColumn.CellContentTemplate>
+            </xcdg:UnboundColumn>
+            <xcdg:UnboundColumn
+                CellVerticalContentAlignment="Center"
+                ReadOnly="True"
+                FieldName="DeleteColumn"
+                Title="">
+                <xcdg:UnboundColumn.CellContentTemplate>
+                    <DataTemplate>
+                        <Button
+                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
+                            Style="{StaticResource ImageButton}"
+                            Foreground="{StaticResource Red}"
+                            ToolTip="{lex:Loc DeleteTranslation}"
+                            CommandParameter="{Binding Mode=OneWay}"
+                            Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}">
+                            <materialDesign:PackIcon
+                                Kind="Delete" />
+                        </Button>
                     </DataTemplate>
                 </xcdg:UnboundColumn.CellContentTemplate>
             </xcdg:UnboundColumn>

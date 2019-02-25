@@ -164,7 +164,7 @@
             Value="Transparent" />
         <Setter
             Property="Foreground"
-            Value="White" />
+            Value="{StaticResource Foreground}" />
         <Setter
             Property="BorderThickness"
             Value="0" />
@@ -227,7 +227,18 @@
             Value="{StaticResource MediumFontSize}" />
         <Setter
             Property="Foreground"
-            Value="White" />
+            Value="{StaticResource Foreground}" />
+    </Style>
+
+    <Style
+        TargetType="Expander"
+        BasedOn="{StaticResource {x:Type Expander}}">
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <Setter
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
     </Style>
 
     <Style
