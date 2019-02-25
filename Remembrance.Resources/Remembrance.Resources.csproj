@@ -85,9 +85,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <Resource Include="Images\Logo.png" />
-    <None Include="Fonts\cubic.zip" />
-    <None Include="Fonts\techno_hideo.zip" />
     <Resource Include="Images\IconAlt.ico" />
     <Resource Include="Images\IconAlt.png" />
     <Resource Include="Images\Icon.ico" />

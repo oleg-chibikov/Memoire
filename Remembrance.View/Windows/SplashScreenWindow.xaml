@@ -1,0 +1,25 @@
+<baseWindow:BaseWindow
+    x:Class="Remembrance.View.Windows.SplashScreenWindow"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    Topmost="True"
+    WindowStyle="None"
+    Background="Transparent"
+    AllowsTransparency="True"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
+    WindowStartupLocation="CenterScreen">
+    <TextBlock
+        Style="{StaticResource Logo}"
+        FontSize="40"
+        Text="Remembrance"
+        Foreground="{StaticResource DarkerBackground}"
+        DockPanel.Dock="Left" />
+    <baseWindow:BaseWindow.Resources>
+        <commonView:DesignTimeResourceDictionary
+            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+    </baseWindow:BaseWindow.Resources>
+</baseWindow:BaseWindow>

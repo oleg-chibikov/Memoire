@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using Common.Logging;
 using JetBrains.Annotations;
 using LiteDB;
 using Microsoft.Win32;
@@ -20,7 +19,7 @@ using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
 using Remembrance.Resources;
-using Remembrance.View;
+using Remembrance.View.Windows;
 using Remembrance.ViewModel;
 using Remembrance.WebApi;
 using Scar.Common;
@@ -37,9 +36,6 @@ namespace Remembrance
     // TODO: Feature Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
     // TODO: Feature: if the word level is low, replace textbox with dropdown
 
-    /// <summary>
-    /// The app.
-    /// </summary>
     internal sealed partial class App
     {
         [NotNull]
@@ -54,6 +50,7 @@ namespace Remembrance
 
         protected override void OnStartup()
         {
+            Logger.Trace("Starting...");
             RegisterLiteDbCustomTypes();
             Current.Resources.MergedDictionaries.Add(
                 new ResourceDictionary

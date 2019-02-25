@@ -63,6 +63,9 @@ namespace Remembrance.ViewModel
         [CanBeNull]
         private ICardShowTimeProvider _cardShowTimeProvider;
 
+        [NotNull]
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
         private bool _isToolTipOpened;
 
         public TrayViewModel(
@@ -86,11 +89,12 @@ namespace Remembrance.ViewModel
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
+            IsLoading = true;
             AddTranslationCommand = new AsyncCorrelationCommand(AddTranslationAsync);
             ShowSettingsCommand = new AsyncCorrelationCommand(ShowSettingsAsync);
             ShowDictionaryCommand = new AsyncCorrelationCommand(ShowDictionaryAsync);
             ToggleActiveCommand = new CorrelationCommand(ToggleActive);
-            ToolTipOpenCommand = new CorrelationCommand(ToolTipOpen);
+            ToolTipOpenCommand = new AsyncCorrelationCommand(ToolTipOpenAsync);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
             ExitCommand = new CorrelationCommand(Exit);
             OpenSharedFolderCommand = new CorrelationCommand(() => ProcessCommands.OpenSharedFolder(_localSettingsRepository.SyncBus));
@@ -106,6 +110,8 @@ namespace Remembrance.ViewModel
 
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
         }
+
+        public bool IsLoading { get; private set; }
 
         [NotNull]
         public ICommand AddTranslationCommand { get; }
@@ -192,9 +198,15 @@ namespace Remembrance.ViewModel
             IsPaused = _pauseManager.IsPaused;
         }
 
-        private void SetTimesInfo()
+        private async Task SetTimesInfoAsync()
         {
-            var provider = _cardShowTimeProvider ?? (_cardShowTimeProvider = _cardShowTimeProviderFactory());
+            CurrentTime = DateTime.Now;
+            PauseReasons = _pauseManager.GetPauseReasons();
+
+            await _semaphore.WaitAsync();
+            var provider = _cardShowTimeProvider ?? await SetupCardShowTimeProviderAsync();
+            _semaphore.Release();
+
             TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat);
             LastCardShowTime = provider.LastCardShowTime == null
                 ? null
@@ -203,8 +215,13 @@ namespace Remembrance.ViewModel
             CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat);
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);
-            PauseReasons = _pauseManager.GetPauseReasons();
-            CurrentTime = DateTime.Now;
+        }
+
+        private async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
+        {
+            var provider = _cardShowTimeProvider = await Task.Run(() => _cardShowTimeProviderFactory());
+            IsLoading = false;
+            return provider;
         }
 
         [NotNull]
@@ -228,7 +245,8 @@ namespace Remembrance.ViewModel
                 return;
             }
 
-            SetTimesInfo();
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = SetTimesInfoAsync();
         }
 
         private void ToggleActive()
@@ -252,9 +270,9 @@ namespace Remembrance.ViewModel
             _isToolTipOpened = false;
         }
 
-        private void ToolTipOpen()
+        private async Task ToolTipOpenAsync()
         {
-            SetTimesInfo();
+            await SetTimesInfoAsync();
             _isToolTipOpened = true;
         }
     }

@@ -64,8 +64,8 @@
     <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.6662.31587, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.6662.31587\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.6789.22307, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.6789.22307\lib\net47\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.6995.37007, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.6995.37007\lib\net47\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6719.22053, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6719.22053\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
@@ -76,8 +76,8 @@
     <Reference Include="Scar.Common.WPF.View, Version=1.0.6812.21943, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.1.0.6812.21943\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6812.22141, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.6812.22141\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6995.36992, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.6995.36992\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.6812.22025, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.6812.22025\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>
@@ -132,22 +132,25 @@
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AnswerControl.xaml.cs">
+    <Compile Include="Controls\TrayToolTipControl.xaml.cs">
+      <DependentUpon>TrayToolTipControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AnswerControl.xaml.cs">
       <DependentUpon>AnswerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AssessmentViewOnlyCardWindow.xaml.cs">
+    <Compile Include="Windows\AssessmentViewOnlyCardWindow.xaml.cs">
       <DependentUpon>AssessmentViewOnlyCardWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AssessmentTextInputCardWindow.xaml.cs">
+    <Compile Include="Windows\AssessmentTextInputCardWindow.xaml.cs">
       <DependentUpon>AssessmentTextInputCardWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LearningInfoActionsControl.xaml.cs">
+    <Compile Include="Controls\LearningInfoActionsControl.xaml.cs">
       <DependentUpon>LearningInfoActionsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TranslationDetailsCardControl.xaml.cs">
+    <Compile Include="Controls\TranslationDetailsCardControl.xaml.cs">
       <DependentUpon>TranslationDetailsCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WordImageViewerControl.xaml.cs">
+    <Compile Include="Controls\WordImageViewerControl.xaml.cs">
       <DependentUpon>WordImageViewerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
@@ -158,69 +161,69 @@
     <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
-    <Compile Include="LoadingWindow.cs">
+    <Compile Include="Windows\LoadingWindow.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ActiveProcessesDialog.xaml.cs">
+    <Compile Include="Dialogs\ActiveProcessesDialog.xaml.cs">
       <DependentUpon>ActiveProcessesDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProcessesBlacklistControl.xaml.cs">
+    <Compile Include="Controls\ProcessesBlacklistControl.xaml.cs">
       <DependentUpon>ProcessesBlacklistControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AddProcessToBlacklistControl.xaml.cs">
+    <Compile Include="Controls\AddProcessToBlacklistControl.xaml.cs">
       <DependentUpon>AddProcessToBlacklistControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DemoteButton.xaml.cs">
+    <Compile Include="Controls\DemoteButton.xaml.cs">
       <DependentUpon>DemoteButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowCreators\AssessmentTextInputCardWindowCreator.cs" />
     <Compile Include="WindowCreators\AssessmentViewOnlyCardWindowCreator.cs" />
     <Compile Include="WindowCreators\SettingsWindowCreator.cs" />
     <Compile Include="WindowCreators\TranslationDetailsCardWindowCreator.cs" />
-    <Compile Include="FavoriteButton.xaml.cs">
+    <Compile Include="Controls\FavoriteButton.xaml.cs">
       <DependentUpon>FavoriteButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationDetailsCardWindow.xaml.cs">
+    <Compile Include="Windows\TranslationDetailsCardWindow.xaml.cs">
       <DependentUpon>TranslationDetailsCardWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WordsControl.xaml.cs">
+    <Compile Include="Controls\WordsControl.xaml.cs">
       <DependentUpon>WordsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WordControl.xaml.cs">
+    <Compile Include="Controls\WordControl.xaml.cs">
       <DependentUpon>WordControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AddManualTranslationControl.xaml.cs">
+    <Compile Include="Controls\AddManualTranslationControl.xaml.cs">
       <DependentUpon>AddManualTranslationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AddTranslationControl.xaml.cs">
+    <Compile Include="Controls\AddTranslationControl.xaml.cs">
       <DependentUpon>AddTranslationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditManualTranslationsDialog.xaml.cs">
+    <Compile Include="Dialogs\EditManualTranslationsDialog.xaml.cs">
       <DependentUpon>EditManualTranslationsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MessageWindow.xaml.cs">
+    <Compile Include="Windows\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AddTranslationWindow.xaml.cs">
+    <Compile Include="Windows\AddTranslationWindow.xaml.cs">
       <DependentUpon>AddTranslationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DictionaryWindow.xaml.cs">
+    <Compile Include="Windows\DictionaryWindow.xaml.cs">
       <DependentUpon>DictionaryWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SearchControl.xaml.cs">
+    <Compile Include="Controls\SearchControl.xaml.cs">
       <DependentUpon>SearchControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SplashScreenWindow.xaml.cs">
+    <Compile Include="Windows\SplashScreenWindow.xaml.cs">
       <DependentUpon>SplashScreenWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TranslationsGridControl.xaml.cs">
+    <Compile Include="Controls\TranslationsGridControl.xaml.cs">
       <DependentUpon>TranslationsGridControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TrayWindow.xaml.cs">
+    <Compile Include="Windows\TrayWindow.xaml.cs">
       <DependentUpon>TrayWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Various\SuggestionProvider.cs" />
@@ -231,107 +234,111 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="AnswerControl.xaml">
+    <Page Include="Controls\TrayToolTipControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="AssessmentViewOnlyCardWindow.xaml">
+    <Page Include="Controls\AnswerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="AssessmentTextInputCardWindow.xaml">
+    <Page Include="Windows\AssessmentViewOnlyCardWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="LearningInfoActionsControl.xaml">
+    <Page Include="Windows\AssessmentTextInputCardWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TranslationDetailsCardControl.xaml">
+    <Page Include="Controls\LearningInfoActionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WordImageViewerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WordsControl.xaml">
+    <Page Include="Controls\TranslationDetailsCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TranslationDetailsCardWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WordControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ActiveProcessesDialog.xaml">
+    <Page Include="Controls\WordImageViewerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ProcessesBlacklistControl.xaml">
+    <Page Include="Controls\WordsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="AddProcessToBlacklistControl.xaml">
+    <Page Include="Windows\TranslationDetailsCardWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="LoadingWindow.xaml">
+    <Page Include="Controls\WordControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DemoteButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FavoriteButton.xaml">
+    <Page Include="Dialogs\ActiveProcessesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="AddManualTranslationControl.xaml">
+    <Page Include="Controls\ProcessesBlacklistControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="AddTranslationControl.xaml">
+    <Page Include="Controls\AddProcessToBlacklistControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="EditManualTranslationsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MessageWindow.xaml">
+    <Page Include="Windows\LoadingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="AddTranslationWindow.xaml">
+    <Page Include="Controls\DemoteButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DictionaryWindow.xaml">
+    <Page Include="Controls\FavoriteButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AddManualTranslationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SearchControl.xaml">
+    <Page Include="Controls\AddTranslationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Dialogs\EditManualTranslationsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MessageWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SplashScreenWindow.xaml">
+    <Page Include="Windows\AddTranslationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TranslationsGridControl.xaml">
+    <Page Include="Windows\DictionaryWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TrayWindow.xaml">
+    <Page Include="Controls\SearchControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SplashScreenWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TranslationsGridControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\TrayWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -356,7 +363,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Resource Include="Champagne &amp; Limousines.ttf" />
+    <Resource Include="Fonts\Champagne &amp; Limousines.ttf" />
+    <Resource Include="Fonts\cubic.ttf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

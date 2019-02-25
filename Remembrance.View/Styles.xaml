@@ -10,32 +10,101 @@
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
     xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
-    xmlns:view="clr-namespace:Remembrance.View">
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+    xmlns:controls="clr-namespace:Remembrance.View.Controls">
+
+    <Brush
+        x:Key="Selection">
+        DarkKhaki
+    </Brush>
+
+    <Brush
+        x:Key="Background">
+        #FF464646
+    </Brush>
+
+    <Brush
+        x:Key="DarkerBackground">
+        #FF363636
+    </Brush>
+
+    <Brush
+        x:Key="Border">
+        #FF262626
+    </Brush>
+
+    <Brush
+        x:Key="Favorite">
+        Gold
+    </Brush>
+
+    <Brush
+        x:Key="WordInfo">
+        Silver
+    </Brush>
+
+    <Brush
+        x:Key="Red">
+        OrangeRed
+    </Brush>
+
+    <Brush
+        x:Key="Green">
+        MediumSeaGreen
+    </Brush>
+
+    <Color
+        x:Key="GreenColor">
+        MediumSeaGreen
+    </Color>
+
+    <Brush
+        x:Key="Foreground">
+        White
+    </Brush>
 
     <system:Double
         x:Key="CommonMargin">
         5
     </system:Double>
+
     <system:Double
         x:Key="CommonButtonSize">
         25
     </system:Double>
+
     <system:Double
         x:Key="HugeFontSize">
         24
     </system:Double>
+
     <system:Double
         x:Key="BigFontSize">
         20
     </system:Double>
+
     <system:Double
         x:Key="MediumFontSize">
         16
     </system:Double>
+
     <system:Double
         x:Key="SmallFontSize">
         14
     </system:Double>
+
+    <FontFamily
+        x:Key="Font">
+        ./Fonts/#Champagne &amp; Limousines
+    </FontFamily>
+
+    <FontFamily
+        x:Key="LogoFont">
+        ./Fonts/#Cubic
+    </FontFamily>
 
     <system:String
         x:Key="AdditionalInfoFormat">
@@ -51,6 +120,12 @@
         <Setter
             Property="Padding"
             Value="0" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
     </Style>
 
     <Style
@@ -84,6 +159,18 @@
         <Setter
             Property="Height"
             Value="{StaticResource CommonButtonSize}" />
+        <Setter
+            Property="Background"
+            Value="Transparent" />
+        <Setter
+            Property="Foreground"
+            Value="White" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
     </Style>
 
     <Style
@@ -94,22 +181,33 @@
             Value="Center" />
         <Setter
             Property="FontFamily"
-            Value="./#Champagne &amp; Limousines" />
-
+            Value="{StaticResource Font}" />
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
-        TargetType="view:WordControl">
+        x:Key="Logo"
+        TargetType="TextBlock"
+        BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter
+            Property="FontFamily"
+            Value="{StaticResource LogoFont}" />
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource HugeFontSize}" />
+    </Style>
+
+    <Style
+        TargetType="controls:WordControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style
-        TargetType="view:WordsControl">
+        TargetType="controls:WordsControl">
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
@@ -123,24 +221,121 @@
             Value="Center" />
         <Setter
             Property="FontFamily"
-            Value="./#Champagne &amp; Limousines" />
+            Value="{StaticResource Font}" />
         <Setter
             Property="FontSize"
             Value="{StaticResource MediumFontSize}" />
+        <Setter
+            Property="Foreground"
+            Value="White" />
     </Style>
 
     <Style
         TargetType="autoComplete:CompletableTextBox"
         BasedOn="{StaticResource {x:Type TextBox}}" />
 
+    <!--ScrollBar-->
+    <!--Scrollbar Thumbs-->
+    <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid x:Name="Grid">
+                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                        <Border x:Name="Rectangle1" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
+                                Background="{TemplateBinding Background}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Tag" Value="Horizontal">
+                            <Setter TargetName="Rectangle1" Property="Width" Value="Auto" />
+                            <Setter TargetName="Rectangle1" Property="Height" Value="7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--ScrollBars-->
+    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.00001*" />
+                        </Grid.RowDefinitions>
+
+                        <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
+                            <Track.Thumb>
+                                <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                            </Track.DecreaseRepeatButton>
+                        </Track>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                            <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background" />
+                        </Trigger>
+                        <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                            <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Width" Value="Auto" />
+                            <Setter Property="Height" Value="8" />
+                            <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
+                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--End ScrollBar-->
+
     <Style
-        TargetType="xcdg:Cell">
+        TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
+        <!--Do not use lex:loc in the styles setter - can crash while switching language-->
         <Setter
-            Property="FontFamily"
-            Value="./#Champagne &amp; Limousines" />
+            Property="NoGroupContent"
+            Value="☩" />
         <Setter
-            Property="FontSize"
-            Value="{StaticResource MediumFontSize}" />
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <!--<Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />-->
     </Style>
 
     <DataTemplate
@@ -157,9 +352,130 @@
             Text="{xcdg:CellEditorBinding}" />
     </DataTemplate>
 
+    <Style
+        x:Key="ItemIndexSelectorStyle"
+        TargetType="{x:Type xcdg:RowSelector}">
+        <!--<Setter
+            Property="Content"
+            Value="{Binding RelativeSource={RelativeSource Self}, Path=ItemIndex}" />-->
+        <Setter
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
+    </Style>
+
+    <Style
+        TargetType="{x:Type xcdg:RowSelectorPane}">
+        <Setter
+            Property="Visibility"
+            Value="Collapsed" />
+    </Style>
+
+    <Style x:Key="Control"
+           TargetType="{x:Type commonView:BaseControl}">
+        <Setter
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
+    </Style>
+
+    <Style
+        TargetType="{x:Type commonView:BaseControl}"
+        BasedOn="{StaticResource {x:Type Control}}" />
+
+    <Style
+        TargetType="{x:Type baseWindow:BaseWindow}"
+        BasedOn="{StaticResource {x:Type Control}}" />
+
+    <Style
+        TargetType="{x:Type animatedWindow:AnimatedWindow}"
+        BasedOn="{StaticResource {x:Type Control}}" />
+
+    <Style
+        TargetType="{x:Type xcdg:DataRow}">
+        <Setter
+            Property="xcdg:RowSelector.RowSelectorStyle"
+            Value="{StaticResource ItemIndexSelectorStyle}" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
+        <Setter
+            Property="SelectionBackground"
+            Value="{StaticResource Selection}" />
+        <Setter Property="SelectionForeground" Value="{StaticResource Foreground}" />
+    </Style>
+
     <xcdg:CellEditor
         x:Key="CellEditor"
         EditTemplate="{StaticResource CellEditorTemplate}" />
+
+    <Style
+        TargetType="xceed:XceedAutoFitColumnGrid">
+        <Setter
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
+    </Style>
+
+    <Style
+        TargetType="xcdg:Cell">
+        <Setter
+            Property="FontFamily"
+            Value="{StaticResource Font}" />
+        <Setter
+            Property="FontSize"
+            Value="{StaticResource MediumFontSize}" />
+        <Setter
+            Property="Foreground"
+            Value="{StaticResource Foreground}" />
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+        <Setter
+            Property="BorderThickness"
+            Value="0" />
+        <Setter
+            Property="BorderBrush"
+            Value="Transparent" />
+
+        <Setter Property="CurrentBackground" Value="{StaticResource Selection}"/>
+        <Setter Property="CurrentForeground" Value="{StaticResource Foreground}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter
+                    Property="Background"
+                    Value="{StaticResource Selection}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
     <Style
         BasedOn="{StaticResource {x:Type xcdg:Cell}}"
