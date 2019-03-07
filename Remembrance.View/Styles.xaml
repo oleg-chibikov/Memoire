@@ -558,6 +558,8 @@
         x:Key="PriorityWordViewModelToBooleanConverter" />
     <converters:PartOfSpeechLocalizedConverter
         x:Key="PartOfSpeechLocalizedConverter" />
-    <converters:MessageTypeToBrushConverter
-        x:Key="MessageTypeToBrushConverter" />
+    <converters:MessageTypeToBackgroundBrushConverter
+        x:Key="MessageTypeToBackgroundBrushConverter" />
+    <converters:MessageTypeToForegroundBrushConverter
+        x:Key="MessageTypeToForegroundBrushConverter" />
 </ResourceDictionary>

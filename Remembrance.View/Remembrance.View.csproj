@@ -138,6 +138,7 @@
     <Compile Include="Controls\AnswerControl.xaml.cs">
       <DependentUpon>AnswerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\MessageTypeToForegroundBrushConverter.cs" />
     <Compile Include="Windows\AssessmentViewOnlyCardWindow.xaml.cs">
       <DependentUpon>AssessmentViewOnlyCardWindow.xaml</DependentUpon>
     </Compile>
@@ -154,7 +155,7 @@
       <DependentUpon>WordImageViewerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateTimeToBrushConverter.cs" />
-    <Compile Include="Converters\MessageTypeToBrushConverter.cs" />
+    <Compile Include="Converters\MessageTypeToBackgroundBrushConverter.cs" />
     <Compile Include="Converters\PartOfSpeechLocalizedConverter.cs" />
     <Compile Include="Converters\PartOfSpeechToVisibilityConverter.cs" />
     <Compile Include="Converters\PriorityWordViewModelToBooleanConverter.cs" />

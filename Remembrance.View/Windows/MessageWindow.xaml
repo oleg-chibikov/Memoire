@@ -34,8 +34,9 @@
         BorderThickness="2"
         BorderBrush="{StaticResource Border}"
         Padding="10"
-        Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBrushConverter}}">
+        Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBackgroundBrushConverter}}">
         <TextBlock
+            Foreground="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToForegroundBrushConverter}}"
             Text="{Binding Message.Text, Mode=OneTime}" />
     </Border>
 </animatedWindow:AnimatedWindow>
