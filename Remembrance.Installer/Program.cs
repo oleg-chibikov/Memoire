@@ -5,7 +5,7 @@ namespace Remembrance.Installer
 {
     internal static class Program
     {
-        private const string BuildDir = "Build";
+        private const string BuildDir = "..\\Build";
 
         private const string ProductIcon = "Icon.ico";
 
