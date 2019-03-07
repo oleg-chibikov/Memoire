@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="wix\$(ProjectName).g.wxs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -95,7 +96,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"Remembrance.Installer.exe"
+    <PostBuildEvent>"$(TargetDir)Remembrance.Installer.exe"
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" />
