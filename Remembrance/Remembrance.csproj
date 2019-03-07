@@ -294,7 +294,7 @@ foreach (var item in filesToCleanup)
     <Error Condition="!Exists('..\packages\Fody.4.0.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.4.0.2\build\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props'))" />
   </Target>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>del "$(SolutionDir)Release\Remembrance.Portable.7z"
 "$(SolutionDir)Tools\7za" a "$(SolutionDir)Release\Remembrance.Portable.7z" "$(SolutionDir)Build\*" -xr!*.xml -xr!*.dll.config -xr!*.pdb</PostBuildEvent>
   </PropertyGroup>

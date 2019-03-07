@@ -181,8 +181,8 @@
   </Target>
   <Import Project="..\packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('..\packages\Fody.4.0.2\build\Fody.targets')" />
   <Import Project="..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>del "$(SolutionDir)Release\Remembrance.Installer.7z"
-"$(SolutionDir)Tools\7za" a "$(SolutionDir)Release\Remembrance.Installer.7z" "$(SolutionDir)BuildInstallerUI\*" -xr!*.xml -xr!*.dll.config -xr!*.pdb -xr!nbsbuilder.exe</PostBuildEvent>
+"$(SolutionDir)Tools\7za" a "$(SolutionDir)Release\Remembrance.Installer.7z" "$(SolutionDir)BuildInstallerUI\*" -xr!*.xml -xr!*.dll.config -xr!*.pdb -xr!*nbsbuilder.exe</PostBuildEvent>
   </PropertyGroup>
 </Project>
