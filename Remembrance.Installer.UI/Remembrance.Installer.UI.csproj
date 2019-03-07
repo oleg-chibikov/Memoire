@@ -169,7 +169,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>move "$(SolutionDir)BuildInstaller\Remembrance.msi" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent>copy /Y "$(SolutionDir)BuildInstaller\Remembrance.msi" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

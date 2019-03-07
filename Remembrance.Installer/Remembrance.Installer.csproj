@@ -57,8 +57,8 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
       <HintPath>..\packages\WixSharp.bin.1.9.4\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Installer, Version=1.0.6995.36936, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Installer.1.0.6995.36936\lib\net47\Scar.Common.Installer.dll</HintPath>
+    <Reference Include="Scar.Common.Installer, Version=1.0.7005.35921, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Installer.1.0.7005.35921\lib\net47\Scar.Common.Installer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,8 +96,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetDir)Remembrance.Installer.exe"
-</PostBuildEvent>
+    <PostBuildEvent>"$(TargetDir)Remembrance.Installer.exe"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -116,4 +115,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <SetEnvVar Values="WIXSHARP_WIXDIR=$(SolutionDir)packages\WixSharp.wix.bin.3.11.0\tools\bin" />
+  </Target>
 </Project>

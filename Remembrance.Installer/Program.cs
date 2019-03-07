@@ -21,7 +21,7 @@ namespace Remembrance.Installer
                 .OpenFolderAfterInstallation()
                 .LaunchAfterInstallation(fileName)
                 .WithProcessTermination(fileName)
-                .Build();
+                .Build(wixBinariesLocation: @"..\packages\WixSharp.wix.bin.3.11.0\tools\bin");
         }
     }
 }
