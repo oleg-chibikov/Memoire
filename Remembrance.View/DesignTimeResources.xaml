@@ -6,5 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/ScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
