@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Scar.Common.WPF.Localization;
@@ -45,11 +46,13 @@ namespace Remembrance.ViewModel
             [NotNull] ILog logger,
             [NotNull] IMessageHub messageHub,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] IPredictor predictor)
+            [NotNull] IPredictor predictor,
+            [NotNull] ILanguageManager languageManager)
         {
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
+            _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             var translationDetails = translationDetailsViewModelFactory(translationInfo);
             _translationEntryKey = translationInfo.TranslationEntryKey;
             TranslationDetails = translationDetails ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
@@ -61,7 +64,10 @@ namespace Remembrance.ViewModel
 
             Word = translationInfo.TranslationEntryKey.Text;
             LanguagePair = $"{translationInfo.TranslationEntryKey.SourceLanguage} -> {translationInfo.TranslationEntryKey.TargetLanguage}";
-
+            var allLanguages = languageManager.GetAvailableLanguages();
+            var sourceLanguageName = allLanguages[translationInfo.TranslationEntryKey.SourceLanguage].ToLowerInvariant();
+            var targetLanguageName = allLanguages[translationInfo.TranslationEntryKey.TargetLanguage].ToLowerInvariant();
+            ReversoContextLink = $"https://context.reverso.net/translation/{sourceLanguageName}-{targetLanguageName}/{Word}";
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
@@ -73,6 +79,9 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         public string LanguagePair { get; }
+
+        [NotNull]
+        public string ReversoContextLink { get; }
 
         [NotNull]
         public LearningInfoViewModel LearningInfoViewModel { get; }

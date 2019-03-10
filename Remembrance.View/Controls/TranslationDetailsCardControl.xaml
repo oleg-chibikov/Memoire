@@ -11,6 +11,7 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -43,6 +44,12 @@
                 Text="{Binding PrepositionsCollection, Mode=OneWay}" />
             <TextBlock
                 Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
+            <TextBlock>
+                <externalBrowserHyperlink:ExternalBrowserHyperlink
+                    NavigateUri="{Binding ReversoContextLink, Mode=OneTime}">
+                    Reverso Context
+                </externalBrowserHyperlink:ExternalBrowserHyperlink>
+            </TextBlock>
         </StackPanel>
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"

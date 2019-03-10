@@ -61,6 +61,9 @@
     <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.6998.22355, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.6998.22355\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink, Version=1.0.7008.19827, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.1.0.7008.19827\lib\net47\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.7008.17071, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.7008.17071\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
     </Reference>

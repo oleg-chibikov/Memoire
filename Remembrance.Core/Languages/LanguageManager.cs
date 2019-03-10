@@ -62,6 +62,10 @@ namespace Remembrance.Core.Languages
             return availableTargetLanguages.Contains(targetLanguage);
         }
 
+        public IReadOnlyDictionary<string, string> GetAvailableLanguages() =>
+            _availableLanguages.Languages.Where(availableLanguage => _availableLanguages.Directions.Keys.Contains(availableLanguage.Key))
+                .ToDictionary(language => language.Key, language => language.Value);
+
         public LanguagesCollection GetAvailableSourceLanguages(bool addAuto)
         {
             var languages = _availableLanguages.Languages.Where(availableLanguage => _availableLanguages.Directions.Keys.Contains(availableLanguage.Key))

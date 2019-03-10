@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -8,6 +9,9 @@ namespace Remembrance.Contracts.Languages
     public interface ILanguageManager
     {
         bool CheckTargetLanguageIsValid([NotNull] string sourceLanguage, string targetLanguage);
+
+        [NotNull]
+        IReadOnlyDictionary<string, string> GetAvailableLanguages();
 
         [NotNull]
         LanguagesCollection GetAvailableSourceLanguages(bool addAuto = true);
