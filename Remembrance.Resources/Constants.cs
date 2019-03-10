@@ -18,5 +18,8 @@ namespace Remembrance.Resources
 
         [NotNull]
         public const string RuLanguageTwoLetters = "ru";
+
+        [NotNull]
+        public const string ReversoContextUrlTemplate = "https://context.reverso.net/translation/{0}-{1}/{2}";
     }
 }

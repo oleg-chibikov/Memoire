@@ -10,6 +10,6 @@ namespace Remembrance.Contracts.Translate.Data.LanguageDetector
         public IReadOnlyCollection<string> Directions { get; set; } = new string[0];
 
         [NotNull]
-        public IDictionary<string, string> Languages { get; set; } = new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> Languages { get; set; } = new Dictionary<string, string>();
     }
 }

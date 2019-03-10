@@ -14,6 +14,7 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
@@ -121,6 +122,24 @@
                 ReadOnly="True"
                 FieldName="TargetLanguage"
                 Title="{lex:Loc Remembrance.Resources:Texts:ToCap}" />
+            <xcdg:UnboundColumn
+                CellVerticalContentAlignment="Center"
+                ReadOnly="True"
+                FieldName="ReversoContextColumn"
+                Title="">
+                <xcdg:UnboundColumn.CellContentTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
+                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}">
+                            <externalBrowserHyperlink:ExternalBrowserHyperlink
+                                NavigateUri="{Binding ReversoContextLink, Mode=OneWay}">
+                                Reverso
+                            </externalBrowserHyperlink:ExternalBrowserHyperlink>
+                        </TextBlock>
+                    </DataTemplate>
+                </xcdg:UnboundColumn.CellContentTemplate>
+            </xcdg:UnboundColumn>
             <xcdg:UnboundColumn
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"

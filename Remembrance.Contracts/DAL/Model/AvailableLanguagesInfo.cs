@@ -8,9 +8,9 @@ namespace Remembrance.Contracts.DAL.Model
     public sealed class AvailableLanguagesInfo
     {
         [NotNull]
-        public IDictionary<string, HashSet<string>> Directions { get; set; }
+        public IReadOnlyDictionary<string, HashSet<string>> Directions { get; set; }
 
         [NotNull]
-        public IDictionary<string, string> Languages { get; set; }
+        public IReadOnlyDictionary<string, string> Languages { get; set; }
     }
 }

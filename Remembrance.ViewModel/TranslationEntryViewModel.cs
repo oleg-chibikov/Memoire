@@ -9,10 +9,12 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Resources;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.ViewModel
@@ -42,7 +44,8 @@ namespace Remembrance.ViewModel
             [NotNull] ITranslationEntryRepository translationEntryRepository,
             [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            [NotNull] ILanguageManager languageManager)
             : base(
                 new Word
                 {
@@ -52,6 +55,7 @@ namespace Remembrance.ViewModel
                 textToSpeechPlayer,
                 translationEntryProcessor)
         {
+            _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
@@ -62,6 +66,10 @@ namespace Remembrance.ViewModel
             CanLearnWord = false;
             var learningInfo = learningInfoRepository.GetOrInsert(Id);
             LearningInfoViewModel = learningInfoViewModelFactory(learningInfo);
+            var allLanguages = languageManager.GetAvailableLanguages();
+            var sourceLanguageName = allLanguages[Language].ToLowerInvariant();
+            var targetLanguageName = allLanguages[TargetLanguage].ToLowerInvariant();
+            ReversoContextLink = string.Format(Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.Text.ToLowerInvariant());
             UpdateModifiedDate(learningInfo, translationEntry.ModifiedDate);
 
             // no await here
@@ -81,6 +89,9 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         public string TargetLanguage => Id.TargetLanguage;
+
+        [NotNull]
+        public string ReversoContextLink { get; }
 
         [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations { get; } = new ObservableCollection<PriorityWordViewModel>();

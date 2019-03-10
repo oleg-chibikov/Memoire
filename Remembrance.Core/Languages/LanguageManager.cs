@@ -62,9 +62,7 @@ namespace Remembrance.Core.Languages
             return availableTargetLanguages.Contains(targetLanguage);
         }
 
-        public IReadOnlyDictionary<string, string> GetAvailableLanguages() =>
-            _availableLanguages.Languages.Where(availableLanguage => _availableLanguages.Directions.Keys.Contains(availableLanguage.Key))
-                .ToDictionary(language => language.Key, language => language.Value);
+        public IReadOnlyDictionary<string, string> GetAvailableLanguages() => _availableLanguages.Languages;
 
         public LanguagesCollection GetAvailableSourceLanguages(bool addAuto)
         {
@@ -100,7 +98,7 @@ namespace Remembrance.Core.Languages
 
             if (sourceLanguage == Constants.AutoDetectLanguage)
             {
-                languages = _availableLanguages.Languages;
+                languages = _availableLanguages.Languages.ToDictionary(x => x.Key, x => x.Value);
             }
             else
             {

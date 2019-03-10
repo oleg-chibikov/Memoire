@@ -13,6 +13,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
+using Remembrance.Resources;
 using Scar.Common.WPF.Localization;
 
 namespace Remembrance.ViewModel
@@ -67,7 +68,7 @@ namespace Remembrance.ViewModel
             var allLanguages = languageManager.GetAvailableLanguages();
             var sourceLanguageName = allLanguages[translationInfo.TranslationEntryKey.SourceLanguage].ToLowerInvariant();
             var targetLanguageName = allLanguages[translationInfo.TranslationEntryKey.TargetLanguage].ToLowerInvariant();
-            ReversoContextLink = $"https://context.reverso.net/translation/{sourceLanguageName}-{targetLanguageName}/{Word}";
+            ReversoContextLink = string.Format(Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.ToLowerInvariant());
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
