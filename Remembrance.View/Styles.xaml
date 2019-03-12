@@ -17,6 +17,48 @@
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink">
 
+    <commonConverters:NotNullToVisibilityConverter
+        x:Key="NotNullToVisibilityConverter" />
+    <commonConverters:NullToVisibilityConverter
+        x:Key="NullToVisibilityConverter" />
+    <commonConverters:BoolToVisibilityConverter
+        x:Key="BoolToVisibilityConverter" />
+    <commonConverters:NullToBooleanConverter
+        x:Key="NullToBooleanConverter" />
+    <commonConverters:ReverseBoolToVisibilityConverter
+        x:Key="ReverseBoolToVisibilityConverter" />
+    <commonConverters:StringToVisibilityConverter
+        x:Key="StringToVisibilityConverter" />
+    <commonConverters:AddValueConverter
+        x:Key="AddValueConverter" />
+    <commonConverters:CollectionToVisibilityConverter
+        x:Key="CollectionToVisibilityConverter" />
+    <commonConverters:PercentageIntToDoubleConverter
+        x:Key="PercentageIntToDoubleConverter" />
+    <commonConverters:DoubleToTextTimeSpanConverter
+        x:Key="DoubleToTextTimeSpanConverter" />
+    <commonConverters:FilePathToIconImageSourceConverter
+        x:Key="FilePathToIconImageSourceConverter" />
+    <converters:RepeatTypeConverter
+        x:Key="RepeatTypeConverter" />
+    <converters:DateTimeToBrushConverter
+        x:Key="DateTimeToBrushConverter" />
+    <converters:WordConcatConverter
+        x:Key="WordConcatConverter" />
+    <converters:PartOfSpeechToVisibilityConverter
+        x:Key="PartOfSpeechToVisibilityConverter" />
+    <converters:PriorityWordViewModelToVisibilityConverter
+        x:Key="PriorityWordViewModelToVisibilityConverter" />
+    <converters:PriorityWordViewModelToBooleanConverter
+        x:Key="PriorityWordViewModelToBooleanConverter" />
+    <converters:PartOfSpeechLocalizedConverter
+        x:Key="PartOfSpeechLocalizedConverter" />
+    <converters:MessageTypeToBackgroundBrushConverter
+        x:Key="MessageTypeToBackgroundBrushConverter" />
+    <converters:MessageTypeToForegroundBrushConverter
+        x:Key="MessageTypeToForegroundBrushConverter" />
+    <xcdg:IndexToOddConverter x:Key="RowIndexConverter"/>
+
     <Brush
         x:Key="Foreground">
         White
@@ -38,8 +80,18 @@
     </Brush>
 
     <Brush
-        x:Key="Selection">
-        DarkKhaki
+        x:Key="SelectionRow">
+        #FF565656
+    </Brush>
+
+    <Brush
+        x:Key="SelectionCell">
+        #FF666666
+    </Brush>
+
+    <Brush
+        x:Key="Hyperlink">
+        #bdb76b
     </Brush>
 
     <Brush
@@ -239,7 +291,7 @@
         BasedOn="{StaticResource {x:Type Hyperlink}}">
         <Setter
             Property="Foreground"
-            Value="{StaticResource Selection}" />
+            Value="{StaticResource Hyperlink}" />
     </Style>
 
     <Style
@@ -362,8 +414,24 @@
             Value="Transparent" />
         <Setter
             Property="SelectionBackground"
-            Value="{StaticResource Selection}" />
+            Value="{StaticResource SelectionRow}" />
+        <Setter
+            Property="InactiveSelectionBackground"
+            Value="{StaticResource SelectionRow}" />
         <Setter Property="SelectionForeground" Value="{StaticResource Foreground}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},
+                                       Path=(xcdg:DataGridVirtualizingPanel.ItemIndex),
+                                       Converter={StaticResource RowIndexConverter}}"
+                         Value="True">
+                <Setter Property="Background" Value="{StaticResource DarkerBackground}" />
+            </DataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter
+                    Property="Background"
+                    Value="{StaticResource SelectionRow}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <xcdg:CellEditor
@@ -398,23 +466,20 @@
             Property="Foreground"
             Value="{StaticResource Foreground}" />
         <Setter
-            Property="Background"
-            Value="{StaticResource Background}" />
-        <Setter
             Property="BorderThickness"
             Value="0" />
         <Setter
             Property="BorderBrush"
             Value="Transparent" />
 
-        <Setter Property="CurrentBackground" Value="{StaticResource Selection}"/>
+        <Setter Property="CurrentBackground" Value="{StaticResource SelectionCell}"/>
         <Setter Property="CurrentForeground" Value="{StaticResource Foreground}"/>
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter
                     Property="Background"
-                    Value="{StaticResource Selection}" />
+                    Value="{StaticResource SelectionCell}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -425,46 +490,9 @@
 
     <Style
         BasedOn="{StaticResource {x:Type xcdg:Cell}}"
-        TargetType="xcdg:ColumnManagerCell" />
-
-    <commonConverters:NotNullToVisibilityConverter
-        x:Key="NotNullToVisibilityConverter" />
-    <commonConverters:NullToVisibilityConverter
-        x:Key="NullToVisibilityConverter" />
-    <commonConverters:BoolToVisibilityConverter
-        x:Key="BoolToVisibilityConverter" />
-    <commonConverters:NullToBooleanConverter
-        x:Key="NullToBooleanConverter" />
-    <commonConverters:ReverseBoolToVisibilityConverter
-        x:Key="ReverseBoolToVisibilityConverter" />
-    <commonConverters:StringToVisibilityConverter
-        x:Key="StringToVisibilityConverter" />
-    <commonConverters:AddValueConverter
-        x:Key="AddValueConverter" />
-    <commonConverters:CollectionToVisibilityConverter
-        x:Key="CollectionToVisibilityConverter" />
-    <commonConverters:PercentageIntToDoubleConverter
-        x:Key="PercentageIntToDoubleConverter" />
-    <commonConverters:DoubleToTextTimeSpanConverter
-        x:Key="DoubleToTextTimeSpanConverter" />
-    <commonConverters:FilePathToIconImageSourceConverter
-        x:Key="FilePathToIconImageSourceConverter" />
-    <converters:RepeatTypeConverter
-        x:Key="RepeatTypeConverter" />
-    <converters:DateTimeToBrushConverter
-        x:Key="DateTimeToBrushConverter" />
-    <converters:WordConcatConverter
-        x:Key="WordConcatConverter" />
-    <converters:PartOfSpeechToVisibilityConverter
-        x:Key="PartOfSpeechToVisibilityConverter" />
-    <converters:PriorityWordViewModelToVisibilityConverter
-        x:Key="PriorityWordViewModelToVisibilityConverter" />
-    <converters:PriorityWordViewModelToBooleanConverter
-        x:Key="PriorityWordViewModelToBooleanConverter" />
-    <converters:PartOfSpeechLocalizedConverter
-        x:Key="PartOfSpeechLocalizedConverter" />
-    <converters:MessageTypeToBackgroundBrushConverter
-        x:Key="MessageTypeToBackgroundBrushConverter" />
-    <converters:MessageTypeToForegroundBrushConverter
-        x:Key="MessageTypeToForegroundBrushConverter" />
+        TargetType="xcdg:ColumnManagerCell" >
+        <Setter
+            Property="Background"
+            Value="{StaticResource Background}" />
+    </Style>
 </ResourceDictionary>

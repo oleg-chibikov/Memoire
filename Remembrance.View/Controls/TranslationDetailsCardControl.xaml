@@ -109,7 +109,7 @@
                                                         ItemsSource="{Binding Synonyms, Mode=OneTime}" />
                                                 </StackPanel>
                                                 <controls:WordsControl
-                                                    Foreground="{StaticResource Selection}"
+                                                    Foreground="{StaticResource SelectionCell}"
                                                     HorizontalAlignment="Left"
                                                     FontSize="{StaticResource SmallFontSize}"
                                                     ItemsSource="{Binding Meanings, Mode=OneTime}" />
