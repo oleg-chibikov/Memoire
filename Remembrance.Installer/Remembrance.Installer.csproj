@@ -57,8 +57,8 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
       <HintPath>..\packages\WixSharp.bin.1.9.4\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Installer, Version=1.0.7005.35921, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Installer.1.0.7005.35921\lib\net47\Scar.Common.Installer.dll</HintPath>
+    <Reference Include="Scar.Common.Installer, Version=1.0.7011.38508, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Installer.1.0.7011.38508\lib\net47\Scar.Common.Installer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

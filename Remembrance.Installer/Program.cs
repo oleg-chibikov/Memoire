@@ -13,14 +13,13 @@ namespace Remembrance.Installer
 
         private static void Main()
         {
-            var fileName = $"{nameof(Remembrance)}.exe";
             new InstallBuilder(nameof(Remembrance), nameof(Scar), BuildDir, UpgradeCode).WithIcon(ProductIcon)
-                .WithDesktopShortcut(fileName)
-                .WithProgramMenuShortcut(fileName)
-                .WithAutostart(fileName)
+                .WithDesktopShortcut()
+                .WithProgramMenuShortcut()
+                .WithAutostart()
                 .OpenFolderAfterInstallation()
-                .LaunchAfterInstallation(fileName)
-                .WithProcessTermination(fileName)
+                .LaunchAfterInstallation()
+                .WithProcessTermination()
                 .Build(wixBinariesLocation: @"..\packages\WixSharp.wix.bin.3.11.0\tools\bin");
         }
     }
