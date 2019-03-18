@@ -1,10 +1,8 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -14,6 +12,7 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch
 {
+    [UsedImplicitly]
     internal class ImageDownloader : IImageDownloader
     {
         private readonly HttpClient _httpClient = new HttpClient();
@@ -49,24 +48,6 @@ namespace Remembrance.Core.ImageSearch
                 _messageHub.Publish(Errors.CannotDownloadImage.ToError(ex));
                 return null;
             }
-        }
-
-        public BitmapImage LoadImage(byte[] imageBytes)
-        {
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageBytes))
-            {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
-            }
-
-            image.Freeze();
-            return image;
         }
     }
 }

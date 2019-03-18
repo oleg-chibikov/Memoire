@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
 
 namespace Remembrance.Contracts.Processing
 {
@@ -15,7 +15,7 @@ namespace Remembrance.Contracts.Processing
         Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
             [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            [CanBeNull] IWindow ownerWindow = null,
+            [CanBeNull] IDisplayable ownerWindow = null,
             bool needPostProcess = true,
             [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations = null);
 

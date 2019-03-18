@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Remembrance.Contracts.View.Settings;
-using Scar.Common.WPF.View;
+using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.View.WindowCreators
 {

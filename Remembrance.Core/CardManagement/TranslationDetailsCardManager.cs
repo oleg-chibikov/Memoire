@@ -5,12 +5,10 @@ using Common.Logging;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
-using Remembrance.Resources;
-using Scar.Common.WPF.View;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.Core.CardManagement
 {
@@ -23,29 +21,25 @@ namespace Remembrance.Core.CardManagement
         public TranslationDetailsCardManager(
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILog logger,
-            [NotNull] ISettingsRepository settingsRepository,
             [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] IScopedWindowProvider scopedWindowProvider)
-            : base(localSettingsRepository, logger, synchronizationContext)
+            [NotNull] IScopedWindowProvider scopedWindowProvider,
+            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
+            : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
         }
 
         [ItemNotNull]
-        protected override async Task<IWindow> TryCreateWindowAsync(TranslationInfo translationInfo, IWindow ownerWindow)
+        protected override async Task<IDisplayable> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable ownerWindow)
         {
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
 
             // ReSharper disable once StyleCop.SA1009
             var translationDetailsCardWindow = await _scopedWindowProvider
-                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                 .ConfigureAwait(false);
             SynchronizationContext.Send(
-                x =>
-                {
-                    translationDetailsCardWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
-                    translationDetailsCardWindow.AutoCloseTimeout = AppSettings.TranslationCardCloseTimeout;
-                },
+                x => WindowPositionAdjustmentManager.AdjustDetailsCardWindowPosition(translationDetailsCardWindow),
                 null);
             return translationDetailsCardWindow;
         }

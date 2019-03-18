@@ -49,11 +49,17 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6890.23536\lib\net47\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6789.21362, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6789.21362\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
+    <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.WindowFactory, Version=1.0.7016.39154, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.WindowFactory.1.0.7016.39154\lib\netstandard2.0\Scar.Common.View.WindowFactory.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox, Version=1.0.6789.21716, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.AutoCompleteTextBox.1.0.6789.21716\lib\net47\Scar.Common.WPF.Controls.AutoCompleteTextBox.dll</HintPath>
@@ -79,20 +85,17 @@
     <Reference Include="Scar.Common.WPF.View, Version=1.0.6812.21943, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.1.0.6812.21943\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.6995.36992, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.6995.36992\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7016.38970, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.7016.38970\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.6812.22025, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.6812.22025\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.7016.38933, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.7016.38933\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6719.21680, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6719.21680\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6812.20901, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6812.20901\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.6719.21806, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.6719.21806\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.7016.38534, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.7016.38534\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -165,6 +168,9 @@
     <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
+    <Compile Include="Windows\ConfirmationWindow.xaml.cs" >
+      <DependentUpon>ConfirmationWindow.xaml</DependentUpon>
+	</Compile>
     <Compile Include="Windows\LoadingWindow.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
@@ -267,6 +273,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\WordsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ConfirmationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -19,7 +19,7 @@ using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.Messages;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.Processing
 {
@@ -108,14 +108,14 @@ namespace Remembrance.Core.Processing
         public async Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            IWindow ownerWindow,
+            IDisplayable ownerWindow,
             bool needPostProcess,
             IReadOnlyCollection<ManualTranslation> manualTranslations)
         {
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
 
-            IWindow loadingWindow = null;
+            IDisplayable loadingWindow = null;
             _synchronizationContext.Send(
                 x =>
                 {
@@ -356,7 +356,7 @@ namespace Remembrance.Core.Processing
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
-        private async Task PostProcessWordAsync([CanBeNull] IWindow ownerWindow, [NotNull] TranslationInfo translationInfo, CancellationToken cancellationToken)
+        private async Task PostProcessWordAsync([CanBeNull] IDisplayable ownerWindow, [NotNull] TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             var playTtsTask = _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken);
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);

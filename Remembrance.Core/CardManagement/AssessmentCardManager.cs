@@ -5,7 +5,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -17,8 +16,8 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
-using Scar.Common.WPF.View;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.Core.CardManagement
 {
@@ -66,8 +65,9 @@ namespace Remembrance.Core.CardManagement
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] ILearningInfoRepository learningInfoRepository,
             [NotNull] IScopedWindowProvider scopedWindowProvider,
-            [NotNull] IPauseManager pauseManager)
-            : base(localSettingsRepository, logger, synchronizationContext)
+            [NotNull] IPauseManager pauseManager,
+            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
+            : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             logger.Trace("Starting showing cards...");
             _ = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
@@ -125,7 +125,7 @@ namespace Remembrance.Core.CardManagement
             Logger.Debug("Finished showing cards");
         }
 
-        protected override async Task<IWindow> TryCreateWindowAsync(TranslationInfo translationInfo, IWindow ownerWindow)
+        protected override async Task<IDisplayable> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable ownerWindow)
         {
             if (_hasOpenWindows)
             {
@@ -135,7 +135,7 @@ namespace Remembrance.Core.CardManagement
 
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
             var learningInfo = translationInfo.LearningInfo;
-            IWindow window;
+            IDisplayable window;
             switch (learningInfo.RepeatType)
             {
                 case RepeatType.Elementary:
@@ -144,7 +144,7 @@ namespace Remembrance.Core.CardManagement
                 {
                     // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }
@@ -155,7 +155,7 @@ namespace Remembrance.Core.CardManagement
                 {
                     // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }
@@ -166,7 +166,7 @@ namespace Remembrance.Core.CardManagement
                 {
                     // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }
@@ -268,7 +268,7 @@ namespace Remembrance.Core.CardManagement
         private void Window_Closed(object sender, EventArgs e)
         {
             _hasOpenWindows = false;
-            ((Window)sender).Closed -= Window_Closed;
+            ((IDisplayable)sender).Closed -= Window_Closed;
         }
     }
 }

@@ -14,21 +14,22 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
+using Remembrance.Contracts.View;
 using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.DAL;
+using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowFactory;
 using Scar.Common.WPF.Commands;
 using Scar.Common.WPF.Localization;
-using Scar.Common.WPF.View;
 using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.ViewModel
@@ -38,7 +39,10 @@ namespace Remembrance.ViewModel
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
         [NotNull]
-        private readonly IDialogService _dialogService;
+        private readonly Func<string, bool, ConfirmationViewModel> _confirmationViewModelFactory;
+
+        [NotNull]
+        private readonly Func<ConfirmationViewModel, IConfirmationWindow> _confirmationWindowFactory;
 
         [NotNull]
         private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
@@ -96,23 +100,25 @@ namespace Remembrance.ViewModel
             [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             [NotNull] IMessageHub messageHub,
             [NotNull] EditManualTranslationsViewModel editManualTranslationsViewModel,
-            [NotNull] IDialogService dialogService,
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] ILearningInfoRepository learningInfoRepository,
             [NotNull] Func<TranslationEntry, TranslationEntryViewModel> translationEntryViewModelFactory,
             [NotNull] IScopedWindowProvider scopedWindowProvider,
             [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory,
-            [NotNull] IRateLimiter rateLimiter)
+            [NotNull] IRateLimiter rateLimiter,
+            [NotNull] Func<string, bool, ConfirmationViewModel> confirmationViewModelFactory,
+            [NotNull] Func<ConfirmationViewModel, IConfirmationWindow> confirmationWindowFactory)
             : base(localSettingsRepository, languageManager, translationEntryProcessor, logger)
         {
             EditManualTranslationsViewModel = editManualTranslationsViewModel ?? throw new ArgumentNullException(nameof(editManualTranslationsViewModel));
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryViewModelFactory = translationEntryViewModelFactory ?? throw new ArgumentNullException(nameof(translationEntryViewModelFactory));
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
+            _confirmationViewModelFactory = confirmationViewModelFactory ?? throw new ArgumentNullException(nameof(confirmationViewModelFactory));
+            _confirmationWindowFactory = confirmationWindowFactory ?? throw new ArgumentNullException(nameof(confirmationWindowFactory));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -188,7 +194,7 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Clear();
         }
 
-        protected override async Task<IWindow> GetWindowAsync()
+        protected override async Task<IDisplayable> GetWindowAsync()
         {
             return await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationTokenSource.Token).ConfigureAwait(false);
         }
@@ -197,7 +203,7 @@ namespace Remembrance.ViewModel
         private async Task DeleteAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
         {
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
-            if (!_dialogService.ConfirmDialog(string.Format(Texts.AreYouSureDelete, translationEntryViewModel)))
+            if (!await ConfirmDeletionAsync(translationEntryViewModel.ToString()))
             {
                 return;
             }
@@ -417,12 +423,16 @@ namespace Remembrance.ViewModel
             var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
             var ownerWindow = await _dictionaryWindowFactory.GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             var window = await _scopedWindowProvider
-                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IWindow, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token)
+                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token)
                 .ConfigureAwait(false);
             _synchronizationContext.Send(
                 x =>
                 {
-                    window.ShowActivated = true;
+                    if (window is IWindow wpfWindow)
+                    {
+                        wpfWindow.ShowActivated = true;
+                    }
+
                     window.Restore();
                 },
                 null);
@@ -540,6 +550,20 @@ namespace Remembrance.ViewModel
         private async Task WindowContentRenderedAsync()
         {
             await LoadTranslationsAsync().ConfigureAwait(false);
+        }
+
+        private Task<bool> ConfirmDeletionAsync([NotNull] string name)
+        {
+            var confirmationViewModel = _confirmationViewModelFactory(string.Format(Texts.AreYouSureDelete, name), true);
+
+            _synchronizationContext.Send(
+                x =>
+                {
+                    var confirmationWindow = _confirmationWindowFactory(confirmationViewModel);
+                    confirmationWindow.ShowDialog();
+                },
+                null);
+            return confirmationViewModel.UserInput;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
 
 namespace Remembrance.Contracts.View.Settings
 {
-    public interface IDictionaryWindow : IWindow
+    public interface IDictionaryWindow : IDisplayable
     {
     }
 }

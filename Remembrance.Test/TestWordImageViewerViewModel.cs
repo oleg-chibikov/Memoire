@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Autofac;
 using Autofac.Extras.Moq;
 using Easy.MessageHub;
@@ -38,7 +37,7 @@ namespace Remembrance.Test
             _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
             _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
             _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
+            //_autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
         }
 
         [TearDown]
@@ -287,7 +286,7 @@ namespace Remembrance.Test
         public void When_ExceptionOccursDuringImageLoading_Throws()
         {
             // Arrange
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Throws(new InvalidOperationException());
+            //_autoMock.Mock<IImageDownloader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Throws(new InvalidOperationException());
             WithSuccessfulImageSearch();
 
             // Assert

@@ -1,13 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Common.Logging;
 using JetBrains.Annotations;
+using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Processing.Data;
-using Scar.Common.WPF.Localization;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
 {
@@ -23,15 +22,23 @@ namespace Remembrance.Core.CardManagement
         [NotNull]
         protected readonly SynchronizationContext SynchronizationContext;
 
-        protected BaseCardManager([NotNull] ILocalSettingsRepository localSettingsRepository, [NotNull] ILog logger, [NotNull] SynchronizationContext synchronizationContext)
+        [NotNull]
+        protected readonly IWindowPositionAdjustmentManager WindowPositionAdjustmentManager;
+
+        protected BaseCardManager(
+            [NotNull] ILocalSettingsRepository localSettingsRepository,
+            [NotNull] ILog logger,
+            [NotNull] SynchronizationContext synchronizationContext,
+            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+            WindowPositionAdjustmentManager = windowPositionAdjustmentManager ?? throw new ArgumentNullException(nameof(windowPositionAdjustmentManager));
             LocalSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
         }
 
         [NotNull]
-        public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IWindow ownerWindow)
+        public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable ownerWindow)
         {
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             var window = await TryCreateWindowAsync(translationInfo, ownerWindow).ConfigureAwait(false);
@@ -41,19 +48,11 @@ namespace Remembrance.Core.CardManagement
                 return;
             }
 
-            CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
+            //CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
             SynchronizationContext.Send(
                 x =>
                 {
-                    window.Draggable = false;
-                    window.WindowStartupLocation = WindowStartupLocation.Manual;
-                    if (window.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
-                    {
-                        window.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.BottomRight;
-                    }
-
-                    window.ShowActivated = false;
-                    window.Topmost = true;
+                    WindowPositionAdjustmentManager.AdjustAnyWindowPosition(window);
                     window.Restore();
                 },
                 null);
@@ -62,6 +61,6 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         [ItemCanBeNull]
-        protected abstract Task<IWindow> TryCreateWindowAsync([NotNull] TranslationInfo translationInfo, IWindow ownerWindow);
+        protected abstract Task<IDisplayable> TryCreateWindowAsync([NotNull] TranslationInfo translationInfo, IDisplayable ownerWindow);
     }
 }

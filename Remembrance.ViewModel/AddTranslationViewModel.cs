@@ -8,8 +8,8 @@ using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.View.Settings;
-using Scar.Common.WPF.View;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
@@ -31,7 +31,7 @@ namespace Remembrance.ViewModel
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
         }
 
-        protected override async Task<IWindow> GetWindowAsync()
+        protected override async Task<IDisplayable> GetWindowAsync()
         {
             return await _addTranslationWindowFactory.GetWindowIfExistsAsync(CancellationToken.None).ConfigureAwait(false);
         }

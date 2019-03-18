@@ -48,20 +48,26 @@
     <Reference Include="PropertyChanged, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.2.6.0\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6890.23536\lib\net47\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Async, Version=1.0.6862.19127, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Async.1.0.6862.19127\lib\net47\Scar.Common.Async.dll</HintPath>
+    <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6890.23552, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6890.23552\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.IO, Version=1.0.6662.42670, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.IO.1.0.6662.42670\lib\net47\Scar.Common.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6789.21362, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6789.21362\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
+    <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.WindowFactory, Version=1.0.7016.39154, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.WindowFactory.1.0.7016.39154\lib\netstandard2.0\Scar.Common.View.WindowFactory.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6753.27805, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6753.27805\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
@@ -69,14 +75,11 @@
     <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6719.21680, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6719.21680\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6812.20901, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6812.20901\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.6719.21806, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.6719.21806\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.7016.38534, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.7016.38534\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -100,6 +103,11 @@
     <Compile Include="BaseAssessmentCardViewModel.cs" />
     <Compile Include="AssessmentViewOnlyCardViewModel.cs" />
     <Compile Include="AssessmentTextInputCardViewModel.cs" />
+    <Compile Include="ConfirmationViewModel.cs" />
+    <Compile Include="DialogProviders\DialogProviderConstants.cs" />
+    <Compile Include="DialogProviders\OpenFileDialogProvider.cs" />
+    <Compile Include="DialogProviders\SaveFileDialogProvider.cs" />
+    <Compile Include="WindowPositionAdjustmentManager.cs" />
     <Compile Include="LearningInfoViewModel.cs" />
     <Compile Include="ProcessBlacklistViewModel.cs" />
     <Compile Include="EditManualTranslationsViewModel.cs" />

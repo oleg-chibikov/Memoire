@@ -6,7 +6,6 @@ using System.Windows;
 using Autofac;
 using JetBrains.Annotations;
 using LiteDB;
-using Microsoft.Win32;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -14,22 +13,24 @@ using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Contracts.View.Settings;
-using Remembrance.Core;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
 using Remembrance.Resources;
 using Remembrance.View.Windows;
 using Remembrance.ViewModel;
+using Remembrance.ViewModel.DialogProviders;
 using Remembrance.WebApi;
 using Scar.Common;
 using Scar.Common.Async;
+using Scar.Common.AutofacNamedInstancesFactory;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
+using Scar.Common.View;
+using Scar.Common.View.WindowFactory;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.Startup;
-using Scar.Common.WPF.View;
 
 namespace Remembrance
 {
@@ -38,12 +39,6 @@ namespace Remembrance
 
     internal sealed partial class App
     {
-        [NotNull]
-        private const string JsonFilesFilter = "Json files (*.json)|*.json;";
-
-        [NotNull]
-        private static readonly string DefaultFilePattern = $"{nameof(Remembrance)}.json";
-
         protected override string AlreadyRunningCaption { get; } = Errors.DefaultError;
 
         protected override NewInstanceHandling NewInstanceHandling => NewInstanceHandling.Restart;
@@ -111,6 +106,10 @@ namespace Remembrance
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<OpenFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<SaveFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
 
             RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
             RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
@@ -131,28 +130,6 @@ namespace Remembrance
             builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
-
-            builder.RegisterInstance(
-                    new OpenFileDialog
-                    {
-                        CheckFileExists = true,
-                        FileName = DefaultFilePattern,
-                        Filter = JsonFilesFilter,
-                        RestoreDirectory = true,
-                        Title = $"{Texts.Title}: {Texts.Import}"
-                    })
-                .AsSelf()
-                .SingleInstance();
-            builder.RegisterInstance(
-                    new SaveFileDialog
-                    {
-                        FileName = DefaultFilePattern,
-                        Filter = JsonFilesFilter,
-                        RestoreDirectory = true,
-                        Title = $"{Texts.Title}: {Texts.Export}"
-                    })
-                .AsSelf()
-                .SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody").AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();

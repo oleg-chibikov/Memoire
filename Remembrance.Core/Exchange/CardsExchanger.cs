@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
-using Microsoft.Win32;
+using Remembrance.Contracts;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Resources;
@@ -30,18 +30,18 @@ namespace Remembrance.Core.Exchange
         private readonly IMessageHub _messageHub;
 
         [NotNull]
-        private readonly OpenFileDialog _openFileDialog;
+        private readonly IOpenFileDialogProvider _openFileDialog;
 
         [NotNull]
-        private readonly SaveFileDialog _saveFileDialog;
+        private readonly ISaveFileDialogProvider _saveFileDialog;
 
         public CardsExchanger(
             [NotNull] ILog logger,
             [NotNull] IFileExporter exporter,
             [NotNull] IFileImporter[] importers,
             [NotNull] IMessageHub messageHub,
-            [NotNull] OpenFileDialog openFileDialog,
-            [NotNull] SaveFileDialog saveFileDialog)
+            [NotNull] IOpenFileDialogProvider openFileDialog,
+            [NotNull] ISaveFileDialogProvider saveFileDialog)
         {
             _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
             _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));

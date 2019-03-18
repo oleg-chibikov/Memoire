@@ -6,15 +6,15 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel;
-using Scar.Common.WPF.View;
-using Scar.Common.WPF.View.Contracts;
+using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
 
     // ReSharper disable once StyleCop.SA1009
-    internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IWindow Window, TranslationInfo TranslationInfo)>
+    internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]
         private readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
@@ -26,10 +26,10 @@ namespace Remembrance.View.WindowCreators
         private readonly Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
 
         [NotNull]
-        private readonly Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
+        private readonly Func<IDisplayable, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
 
         public TranslationDetailsCardWindowCreator(
-            [NotNull] Func<IWindow, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> translationDetailsCardWindowFactory,
+            [NotNull] Func<IDisplayable, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> translationDetailsCardWindowFactory,
             [NotNull] Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
             [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             [NotNull] SynchronizationContext synchronizationContext)
@@ -40,7 +40,7 @@ namespace Remembrance.View.WindowCreators
             _learningInfoViewModelFactory = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
         }
 
-        public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IWindow Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
+        public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
             _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
             var learningInfoViewModel = _learningInfoViewModelFactory(param.TranslationInfo.LearningInfo);

@@ -62,11 +62,11 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="Scar.Common.Async, Version=1.0.6862.19127, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Async.1.0.6862.19127\lib\net47\Scar.Common.Async.dll</HintPath>
+    <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6890.23552, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6890.23552\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.NonGeneric, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -336,7 +337,26 @@ namespace Remembrance.ViewModel
             _shouldRepeat = false;
             ImageName = wordImageInfo.Image.ImageInfo.Name;
             ImageUrl = wordImageInfo.Image.ImageInfo.Url;
-            Image = _imageDownloader.LoadImage(imageBytes);
+            Image = LoadImage(imageBytes);
+        }
+
+        [NotNull]
+        static BitmapImage LoadImage([NotNull] byte[] imageBytes)
+        {
+            var image = new BitmapImage();
+            using (var mem = new MemoryStream(imageBytes))
+            {
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+
+            image.Freeze();
+            return image;
         }
     }
 }

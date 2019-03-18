@@ -10,7 +10,6 @@ using Remembrance.Contracts.Translate.Data.LanguageDetector;
 using Remembrance.Core.Translation.Yandex.ContractResolvers;
 using Remembrance.Resources;
 using Scar.Common.Messages;
-using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Core.Translation.Yandex
 {
@@ -49,7 +48,7 @@ namespace Remembrance.Core.Translation.Yandex
             try
             {
                 var uriPart = $"detect?key={YandexConstants.ApiKey}&text={text}&options=1";
-                var currentCulture = CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName;
+                var currentCulture = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
                 if (currentCulture != Constants.EnLanguageTwoLetters)
                 {
                     uriPart += $"&hint={currentCulture}";

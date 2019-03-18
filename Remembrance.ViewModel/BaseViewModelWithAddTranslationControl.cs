@@ -13,8 +13,8 @@ using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
+using Scar.Common.View.Contracts;
 using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.ViewModel
 {
@@ -127,7 +127,7 @@ namespace Remembrance.ViewModel
 
         [ItemCanBeNull]
         [NotNull]
-        protected abstract Task<IWindow> GetWindowAsync();
+        protected abstract Task<IDisplayable> GetWindowAsync();
 
         [NotNull]
         private async Task SaveAsync()

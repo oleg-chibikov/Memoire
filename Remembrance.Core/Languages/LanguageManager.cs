@@ -12,7 +12,6 @@ using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
-using Scar.Common.WPF.Localization;
 
 namespace Remembrance.Core.Languages
 {
@@ -84,7 +83,7 @@ namespace Remembrance.Core.Languages
             }
 
             var ordered = languages
-                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, lastUsed))
+                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
 
@@ -117,7 +116,7 @@ namespace Remembrance.Core.Languages
             var lastUsed = _localSettingsRepository.LastUsedTargetLanguage;
             var toSelect = lastUsed != null && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
             var ordered = languages
-                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, lastUsed))
+                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
             return new LanguagesCollection(ordered, toSelect);
@@ -144,7 +143,7 @@ namespace Remembrance.Core.Languages
                 languageCode => GetLanguageOrder(
                     languageCode,
                     _settingsRepository.PreferredLanguage,
-                    CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName,
+                    Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName,
                     _localSettingsRepository.LastUsedTargetLanguage));
 
             return ordered.First();
@@ -164,7 +163,7 @@ namespace Remembrance.Core.Languages
         private async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
             _logger.Trace("Loading available languages...");
-            var languageListResult = await _languageDetector.ListLanguagesAsync(CultureUtilities.GetCurrentCulture().TwoLetterISOLanguageName, CancellationToken.None)
+            var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None)
                 .ConfigureAwait(false);
             if (languageListResult == null)
             {

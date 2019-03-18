@@ -31,43 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.9.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.9.1\lib\net45\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6890.23536\lib\net47\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6890.23552, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6890.23552\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6719.21680, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6719.21680\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
+    <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WPFLocalizeExtension, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFLocalizeExtension.3.3.1\lib\net452\WPFLocalizeExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="XAMLMarkupExtensions, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c726e0262981a1eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\XAMLMarkupExtensions.1.6.0\lib\net452\XAMLMarkupExtensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
@@ -80,12 +57,14 @@
     <Compile Include="CardManagement\Data\PauseReason.cs" />
     <Compile Include="CardManagement\IAssessmentCardManager.cs" />
     <Compile Include="CardManagement\IAssessmentInfoProvider.cs" />
+    <Compile Include="CardManagement\IWindowPositionAdjustmentManager.cs" />
     <Compile Include="DAL\Model\AvailableLanguagesInfo.cs" />
     <Compile Include="DAL\Model\LearningInfo.cs" />
     <Compile Include="DAL\Model\Settings.cs" />
     <Compile Include="DAL\Model\TranslationEntryDeletion.cs" />
     <Compile Include="DAL\Model\WordImageSearchIndex.cs" />
     <Compile Include="DAL\Shared\ISharedRepository.cs" />
+    <Compile Include="IDialogProvider.cs" />
     <Compile Include="Sync\SyncBus.cs" />
     <Compile Include="Sync\ISharedRepositoryCloner.cs" />
     <Compile Include="DAL\Shared\ILearningInfoRepository.cs" />
@@ -103,10 +82,8 @@
     <Compile Include="ProcessMonitoring\Data\ProcessInfo.cs" />
     <Compile Include="ProcessMonitoring\IActiveProcessesProvider.cs" />
     <Compile Include="ProcessMonitoring\IActiveProcessMonitor.cs" />
-    <Compile Include="IDialogService.cs" />
     <Compile Include="Processing\Data\PriorityWordKey.cs" />
     <Compile Include="Processing\ITranslationEntryProcessor.cs" />
-    <Compile Include="IAutofacNamedInstancesFactory.cs" />
     <Compile Include="DAL\Local\ILocalSettingsRepository.cs" />
     <Compile Include="DAL\Shared\ISettingsRepository.cs" />
     <Compile Include="DAL\Local\ITranslationDetailsRepository.cs" />
@@ -156,6 +133,7 @@
     <Compile Include="View\Card\ITranslationDetailsCardWindow.cs" />
     <Compile Include="View\Card\IAssessmentTextInputCardWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\IConfirmationWindow.cs" />
     <Compile Include="View\Settings\ILoadingWindow.cs" />
     <Compile Include="View\Settings\IMessageWindow.cs" />
     <Compile Include="View\Settings\IAddTranslationWindow.cs" />

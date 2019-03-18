@@ -14,8 +14,8 @@ using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
+using Scar.Common.View.WindowFactory;
 using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.View;
 
 namespace Remembrance.ViewModel
 {

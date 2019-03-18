@@ -91,23 +91,35 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.6890.23536\lib\net47\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Async, Version=1.0.6862.19127, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Async.1.0.6862.19127\lib\net47\Scar.Common.Async.dll</HintPath>
+    <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL, Version=1.0.6890.23552, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.1.0.6890.23552\lib\net47\Scar.Common.DAL.dll</HintPath>
+    <Reference Include="Scar.Common.AutofacNamedInstancesFactory, Version=1.0.7016.40674, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.AutofacNamedInstancesFactory.1.0.7016.40674\lib\netstandard2.0\Scar.Common.AutofacNamedInstancesFactory.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.6862.19127, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.6862.19127\lib\net47\Scar.Common.DAL.LiteDB.dll</HintPath>
+    <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.7016.37846, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.7016.37846\lib\netstandard2.0\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Logging, Version=1.0.6719.22279, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Logging.1.0.6719.22279\lib\net47\Scar.Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.RateLimiter, Version=1.0.6789.21362, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.6789.21362\lib\net47\Scar.Common.RateLimiter.dll</HintPath>
+    <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.AutofacScopedWindowProvider, Version=1.0.7016.39333, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.AutofacScopedWindowProvider.1.0.7016.39333\lib\netstandard2.0\Scar.Common.View.AutofacScopedWindowProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.View.WindowFactory, Version=1.0.7016.39154, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.View.WindowFactory.1.0.7016.39154\lib\netstandard2.0\Scar.Common.View.WindowFactory.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox, Version=1.0.6789.21716, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.AutoCompleteTextBox.1.0.6789.21716\lib\net47\Scar.Common.WPF.Controls.AutoCompleteTextBox.dll</HintPath>
@@ -130,14 +142,8 @@
     <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6890.23681, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6890.23681\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AutofacScopedWindowProvider, Version=1.0.6812.21429, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AutofacScopedWindowProvider.1.0.6812.21429\lib\net47\Scar.Common.WPF.View.AutofacScopedWindowProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.6719.21680, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.6719.21680\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.View.WindowFactory, Version=1.0.6812.20901, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.WindowFactory.1.0.6812.20901\lib\net47\Scar.Common.WPF.View.WindowFactory.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

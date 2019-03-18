@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
@@ -8,7 +9,6 @@ using Remembrance.Contracts.ProcessMonitoring.Data;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
 using Scar.Common.IO;
-using Scar.Common.WPF.Localization;
 
 namespace Remembrance.DAL.Local
 {
@@ -80,7 +80,7 @@ namespace Remembrance.DAL.Local
                     nameof(UiLanguage),
                     () =>
                     {
-                        var uiLanguage = CultureUtilities.GetCurrentCulture().Name;
+                        var uiLanguage = Thread.CurrentThread.CurrentUICulture.Name;
                         if (uiLanguage == Constants.EnLanguage || uiLanguage == Constants.RuLanguage)
                         {
                             return uiLanguage;
