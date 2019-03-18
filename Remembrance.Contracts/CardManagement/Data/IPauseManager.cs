@@ -11,7 +11,7 @@ namespace Remembrance.Contracts.CardManagement.Data
         [CanBeNull]
         string GetPauseReasons();
 
-        void Pause(PauseReason pauseReason, [CanBeNull] string description = null);
+        void Pause(PauseReason pauseReason, [CanBeNull] string? description = null);
 
         void ResetPauseTimes();
 

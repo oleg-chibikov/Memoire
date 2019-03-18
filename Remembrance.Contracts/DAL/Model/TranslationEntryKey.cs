@@ -44,14 +44,14 @@ namespace Remembrance.Contracts.DAL.Model
             return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
-        public static bool operator ==([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
+        public static bool operator ==([CanBeNull] TranslationEntryKey? obj1, [CanBeNull] TranslationEntryKey? obj2)
         {
             if (ReferenceEquals(obj1, obj2))
             {
                 return true;
             }
 
-            return obj1?.Equals(obj2) == true;
+            return obj1?.Equals(obj2!) == true;
         }
 
         // this is second one '!='

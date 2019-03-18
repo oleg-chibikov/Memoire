@@ -13,6 +13,6 @@ namespace Remembrance.Contracts.Translate
 
         [ItemCanBeNull]
         [NotNull]
-        Task<LanguageListResult> ListLanguagesAsync([NotNull] string ui, CancellationToken cancellationToken);
+        Task<LanguageListResult?> ListLanguagesAsync([NotNull] string ui, CancellationToken cancellationToken);
     }
 }

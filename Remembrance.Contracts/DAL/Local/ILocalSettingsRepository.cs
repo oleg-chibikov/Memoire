@@ -11,10 +11,10 @@ namespace Remembrance.Contracts.DAL.Local
     public interface ILocalSettingsRepository
     {
         [CanBeNull]
-        IReadOnlyCollection<ProcessInfo> BlacklistedProcesses { get; set; }
+        IReadOnlyCollection<ProcessInfo>? BlacklistedProcesses { get; set; }
 
         [CanBeNull]
-        AvailableLanguagesInfo AvailableLanguages { get; set; }
+        AvailableLanguagesInfo? AvailableLanguages { get; set; }
 
         DateTime? AvailableLanguagesModifiedDate { get; }
 
@@ -23,17 +23,17 @@ namespace Remembrance.Contracts.DAL.Local
         DateTime? LastCardShowTime { get; set; }
 
         [CanBeNull]
-        string LastUsedSourceLanguage { get; set; }
+        string? LastUsedSourceLanguage { get; set; }
 
         [CanBeNull]
-        string LastUsedTargetLanguage { get; set; }
+        string? LastUsedTargetLanguage { get; set; }
 
         SyncBus SyncBus { get; set; }
 
         [NotNull]
         string UiLanguage { get; set; }
 
-        void AddOrUpdatePauseInfo(PauseReason pauseReason, [CanBeNull] PauseInfoCollection pauseInfo);
+        void AddOrUpdatePauseInfo(PauseReason pauseReason, [CanBeNull] PauseInfoCollection? pauseInfo);
 
         void AddOrUpdateSyncTime([NotNull] string repository, DateTime syncTime);
 

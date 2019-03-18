@@ -8,6 +8,6 @@ namespace Remembrance.Contracts.ImageSearch
     {
         [ItemCanBeNull]
         [NotNull]
-        Task<byte[]> DownloadImageAsync([NotNull] string imageUrl, CancellationToken cancellationToken);
+        Task<byte[]?> DownloadImageAsync([NotNull] string imageUrl, CancellationToken cancellationToken);
     }
 }

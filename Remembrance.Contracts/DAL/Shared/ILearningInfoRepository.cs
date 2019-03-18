@@ -8,7 +8,7 @@ namespace Remembrance.Contracts.DAL.Shared
     public interface ILearningInfoRepository : IRepository<LearningInfo, TranslationEntryKey>, ISharedRepository, IDisposable
     {
         [CanBeNull]
-        LearningInfo GetMostSuitable();
+        LearningInfo? GetMostSuitable();
 
         [NotNull]
         LearningInfo GetOrInsert([NotNull] TranslationEntryKey translationEntryKey);

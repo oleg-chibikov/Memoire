@@ -6,14 +6,14 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
 {
     public sealed class ProcessInfo
     {
-        public ProcessInfo([NotNull] string name, [CanBeNull] string filePath = null)
+        public ProcessInfo([NotNull] string name, [CanBeNull] string? filePath = null)
         {
             Name = name.Capitalize() ?? throw new ArgumentNullException(nameof(name));
             FilePath = filePath;
         }
 
         [CanBeNull]
-        public string FilePath { get; }
+        public string? FilePath { get; }
 
         [NotNull]
         public string Name { get; }

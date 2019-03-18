@@ -8,6 +8,6 @@ namespace Remembrance.Contracts.CardManagement
     public interface ITranslationDetailsCardManager
     {
         [NotNull]
-        Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable ownerWindow = null);
+        Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable? ownerWindow = null);
     }
 }

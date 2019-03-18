@@ -9,6 +9,6 @@ namespace Remembrance.Contracts.Translate
     {
         [ItemCanBeNull]
         [NotNull]
-        Task<PredictionResult> PredictAsync([NotNull] string text, int limit, CancellationToken cancellationToken);
+        Task<PredictionResult?> PredictAsync([NotNull] string text, int limit, CancellationToken cancellationToken);
     }
 }

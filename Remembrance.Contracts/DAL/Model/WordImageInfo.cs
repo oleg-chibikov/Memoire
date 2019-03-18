@@ -13,7 +13,7 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public WordImageInfo([NotNull] WordKey wordKey, [CanBeNull] ImageInfoWithBitmap image, int?[] nonAvailableIndexes)
+        public WordImageInfo([NotNull] WordKey wordKey, [CanBeNull] ImageInfoWithBitmap? image, int?[] nonAvailableIndexes)
         {
             Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             Image = image;
@@ -21,10 +21,10 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         [CanBeNull]
-        public ImageInfoWithBitmap Image { get; set; }
+        public ImageInfoWithBitmap? Image { get; set; }
 
         [CanBeNull]
-        public int?[] NonAvailableIndexes { get; set; }
+        public int?[]? NonAvailableIndexes { get; set; }
 
         public override string ToString()
         {

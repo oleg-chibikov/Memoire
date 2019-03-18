@@ -12,12 +12,12 @@ namespace Remembrance.Contracts.Processing
     {
         [ItemCanBeNull]
         [NotNull]
-        Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
+        Task<Data.TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            [CanBeNull] IDisplayable ownerWindow = null,
+            [CanBeNull] IDisplayable? ownerWindow = null,
             bool needPostProcess = true,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations = null);
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations = null);
 
         void DeleteTranslationEntry([NotNull] TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
 
@@ -25,14 +25,14 @@ namespace Remembrance.Contracts.Processing
         [NotNull]
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken);
 
         [ItemNotNull]
         [NotNull]
-        Task<TranslationInfo> UpdateManualTranslationsAsync(
+        Task<Data.TranslationInfo> UpdateManualTranslationsAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken);
     }
 }

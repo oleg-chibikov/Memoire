@@ -1,11 +1,11 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using LiteDB;
 
 namespace Remembrance.DAL.Contracts.Model
 {
     public abstract class Entity
     {
-        [UsedImplicitly, BsonIndex(true)]
+        [UsedImplicitly]
         public int Id { get; set; }
 
         public bool IsNew()

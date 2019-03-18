@@ -7,7 +7,7 @@ namespace Remembrance.Contracts.DAL.Model
     public sealed class PrepositionsCollection
     {
         [CanBeNull]
-        public IReadOnlyCollection<string> Texts { get; set; }
+        public IReadOnlyCollection<string>? Texts { get; set; }
 
         public override string ToString()
         {

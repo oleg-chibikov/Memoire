@@ -10,7 +10,7 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
         public bool IsManual { get; set; }
 
         [CanBeNull]
-        public string Transcription { get; set; }
+        public string? Transcription { get; set; }
 
         [NotNull]
         public IReadOnlyCollection<TranslationVariant> TranslationVariants { get; set; }
