@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -31,6 +30,9 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         private readonly IImageDownloader _imageDownloader;
+
+        [NotNull]
+        private readonly IBitmapImageLoader _bitmapBitmapImageLoader;
 
         [NotNull]
         private readonly IImageSearcher _imageSearcher;
@@ -69,6 +71,7 @@ namespace Remembrance.ViewModel
             [NotNull] IImageSearcher imageSearcher,
             [NotNull] IMessageHub messageHub,
             [NotNull] IWordImageSearchIndexRepository wordImageSearchIndexRepository,
+            [NotNull] IBitmapImageLoader bitmapImageLoader,
             bool isReadonly = false)
         {
             _wordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
@@ -79,6 +82,7 @@ namespace Remembrance.ViewModel
             _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _wordImageSearchIndexRepository = wordImageSearchIndexRepository ?? throw new ArgumentNullException(nameof(wordImageSearchIndexRepository));
+            _bitmapBitmapImageLoader = bitmapImageLoader ?? throw new ArgumentNullException(nameof(bitmapImageLoader));
             SetNextImageCommand = new AsyncCorrelationCommand(SetNextImageAsync);
             SetPreviousImageCommand = new AsyncCorrelationCommand(SetPreviousImageAsync);
             ReloadImageCommand = new AsyncCorrelationCommand(ReloadImageAsync);
@@ -337,26 +341,7 @@ namespace Remembrance.ViewModel
             _shouldRepeat = false;
             ImageName = wordImageInfo.Image.ImageInfo.Name;
             ImageUrl = wordImageInfo.Image.ImageInfo.Url;
-            Image = LoadImage(imageBytes);
-        }
-
-        [NotNull]
-        static BitmapImage LoadImage([NotNull] byte[] imageBytes)
-        {
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageBytes))
-            {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
-            }
-
-            image.Freeze();
-            return image;
+            Image = _bitmapBitmapImageLoader.LoadImage(imageBytes);
         }
     }
 }

@@ -110,6 +110,7 @@ namespace Remembrance
             builder.RegisterType<OpenFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<SaveFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<BitmapImageLoader>().AsImplementedInterfaces().SingleInstance();
 
             RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
             RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);

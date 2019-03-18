@@ -103,10 +103,12 @@
     <Compile Include="BaseAssessmentCardViewModel.cs" />
     <Compile Include="AssessmentViewOnlyCardViewModel.cs" />
     <Compile Include="AssessmentTextInputCardViewModel.cs" />
+    <Compile Include="BitmapImageLoader.cs" />
     <Compile Include="ConfirmationViewModel.cs" />
     <Compile Include="DialogProviders\DialogProviderConstants.cs" />
     <Compile Include="DialogProviders\OpenFileDialogProvider.cs" />
     <Compile Include="DialogProviders\SaveFileDialogProvider.cs" />
+    <Compile Include="IBitmapImageLoader.cs" />
     <Compile Include="WindowPositionAdjustmentManager.cs" />
     <Compile Include="LearningInfoViewModel.cs" />
     <Compile Include="ProcessBlacklistViewModel.cs" />
