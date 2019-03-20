@@ -1,115 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="utf-16"?><Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E8CE927-1859-41A0-971A-DE6425AC6852}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Remembrance.Resources</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Company>Scar</Company>
+    <Authors>Scar</Authors>
+    <Description>Shared resources layer for Remembrance</Description>
+    <Version>1.0.7016.37681</Version>
     <AssemblyName>Remembrance.Resources</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <RootNamespace>Remembrance.Resources</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\BuildCommon\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;8618</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\BuildCommon\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.IO, Version=1.0.6662.42670, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.IO.1.0.6662.42670\lib\net47\Scar.Common.IO.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
+    <PackageReference Include="Scar.Common.IO" Version="1.0.7018.24639" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AppSettings.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Paths.cs" />
-    <Compile Include="ProcessCommands.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Errors.Designer.cs">
-      <DependentUpon>Errors.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="Texts.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Texts.resx</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <Resource Include="Images\IconAlt.ico" />
-    <Resource Include="Images\IconAlt.png" />
-    <Resource Include="Images\Icon.ico" />
-    <Resource Include="Images\Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Errors.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Errors.ru-RU.resx">
-      <DependentUpon>Errors.resx</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Texts.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Texts.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Texts.ru-RU.resx">
-      <SubType>Designer</SubType>
-      <LastGenOutput>Texts.ru-RU.Designer.cs</LastGenOutput>
-      <DependentUpon>Texts.resx</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\IconInactive.ico" />
-    <Resource Include="Images\IconInactive.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\IconPaused.ico" />
-    <Resource Include="Images\IconPaused.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Remembrance.Contracts.csproj">
-      <Project>{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}</Project>
-      <Name>Remembrance.Contracts</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>

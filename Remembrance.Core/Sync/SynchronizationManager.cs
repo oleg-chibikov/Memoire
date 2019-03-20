@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
-using Remembrance.Resources;
 
 namespace Remembrance.Core.Sync
 {
@@ -39,13 +39,17 @@ namespace Remembrance.Core.Sync
         [CanBeNull]
         private string _thisMachineSharedPath;
 
+        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+
         public SynchronizationManager(
             [NotNull] ILog logger,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
             [NotNull] IReadOnlyCollection<ISyncExtender> syncExtenders,
-            [NotNull] IMessageHub messageHub)
+            [NotNull] IMessageHub messageHub,
+            IRemembrancePathsProvider remembrancePathsProvider)
         {
+            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!synchronizers.Any())
             {
@@ -94,7 +98,7 @@ namespace Remembrance.Core.Sync
             }
 
             {
-                _thisMachineSharedPath = RemembrancePaths.GetSharedPath(syncBus);
+                _thisMachineSharedPath = _remembrancePathsProvider.GetSharedPath(syncBus);
                 _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
                 _fileSystemWatcher.Path = _allMachinesSharedBasePath;
             }

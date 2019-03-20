@@ -10,6 +10,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Shared;
@@ -53,6 +54,9 @@ namespace Remembrance.ViewModel
         [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
+        [NotNull]
+        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+
         private bool _saved;
 
         private string _uiLanguage;
@@ -66,7 +70,8 @@ namespace Remembrance.ViewModel
             [NotNull] SynchronizationContext synchronizationContext,
             [NotNull] IPauseManager pauseManager,
             [NotNull] ProcessBlacklistViewModel processBlacklistViewModel,
-            [NotNull] ILanguageManager languageManager)
+            [NotNull] ILanguageManager languageManager,
+            [NotNull] IRemembrancePathsProvider remembrancePathsProvider)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
@@ -77,6 +82,7 @@ namespace Remembrance.ViewModel
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             ProcessBlacklistViewModel = processBlacklistViewModel ?? throw new ArgumentNullException(nameof(processBlacklistViewModel));
+            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
 
             var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
             if (blacklistedProcesses != null)
@@ -91,12 +97,12 @@ namespace Remembrance.ViewModel
             {
                 SyncBus.NoSync
             };
-            if (RemembrancePaths.DropBoxPath != null)
+            if (_remembrancePathsProvider.DropBoxPath != null)
             {
                 syncBuses.Add(SyncBus.Dropbox);
             }
 
-            if (RemembrancePaths.OneDrivePath != null)
+            if (_remembrancePathsProvider.OneDrivePath != null)
             {
                 syncBuses.Add(SyncBus.OneDrive);
             }
@@ -109,9 +115,9 @@ namespace Remembrance.ViewModel
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
             SyncBus = _localSettingsRepository.SyncBus;
-            OpenSharedFolderCommand = new CorrelationCommand(() => ProcessCommands.OpenSharedFolder(_localSettingsRepository.SyncBus));
-            OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
-            ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
+            OpenSharedFolderCommand = new CorrelationCommand(() => _remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
+            OpenSettingsFolderCommand = new CorrelationCommand(_remembrancePathsProvider.OpenSettingsFolder);
+            ViewLogsCommand = new CorrelationCommand(_remembrancePathsProvider.ViewLogs);
             SaveCommand = new CorrelationCommand(Save);
             ExportCommand = new AsyncCorrelationCommand(ExportAsync);
             ImportCommand = new AsyncCorrelationCommand(ImportAsync);

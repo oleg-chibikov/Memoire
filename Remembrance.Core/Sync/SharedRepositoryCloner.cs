@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using Common.Logging;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Sync;
-using Remembrance.Resources;
 using Scar.Common;
 
 namespace Remembrance.Core.Sync
@@ -18,13 +18,16 @@ namespace Remembrance.Core.Sync
         private readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
         private readonly ILocalSettingsRepository _localSettingsRepository;
         private readonly ILog _logger;
+        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public SharedRepositoryCloner(
             [NotNull] IReadOnlyCollection<ISharedRepository> cloneableRepositories,
             [NotNull] Func<IRateLimiter> rateLimiterFactory,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILog logger)
+            [NotNull] ILog logger,
+            IRemembrancePathsProvider remembrancePathsProvider)
         {
+            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = cloneableRepositories ?? throw new ArgumentNullException(nameof(cloneableRepositories));
@@ -61,7 +64,7 @@ namespace Remembrance.Core.Sync
 
                     var fileName = repository.DbFileName + repository.DbFileExtension;
                     var oldFilePath = Path.Combine(repository.DbDirectoryPath, fileName);
-                    var newFilePath = Path.Combine(RemembrancePaths.GetSharedPath(syncBus), fileName);
+                    var newFilePath = Path.Combine(_remembrancePathsProvider.GetSharedPath(syncBus), fileName);
                     try
                     {
                         if (File.Exists(newFilePath))

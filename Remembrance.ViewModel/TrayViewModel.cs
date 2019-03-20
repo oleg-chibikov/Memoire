@@ -9,6 +9,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
@@ -77,7 +78,8 @@ namespace Remembrance.ViewModel
             [NotNull] IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
             [NotNull] Func<ICardShowTimeProvider> cardShowTimeProviderFactory,
             [NotNull] IPauseManager pauseManager,
-            [NotNull] IMessageHub messageHub)
+            [NotNull] IMessageHub messageHub,
+            [NotNull] IRemembrancePathsProvider remembrancePathsProvider)
         {
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
@@ -88,6 +90,7 @@ namespace Remembrance.ViewModel
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _ = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
 
             IsLoading = true;
             AddTranslationCommand = new AsyncCorrelationCommand(AddTranslationAsync);
@@ -97,9 +100,9 @@ namespace Remembrance.ViewModel
             ToolTipOpenCommand = new AsyncCorrelationCommand(ToolTipOpenAsync);
             ToolTipCloseCommand = new CorrelationCommand(ToolTipClose);
             ExitCommand = new CorrelationCommand(Exit);
-            OpenSharedFolderCommand = new CorrelationCommand(() => ProcessCommands.OpenSharedFolder(_localSettingsRepository.SyncBus));
-            OpenSettingsFolderCommand = new CorrelationCommand(ProcessCommands.OpenSettingsFolder);
-            ViewLogsCommand = new CorrelationCommand(ProcessCommands.ViewLogs);
+            OpenSharedFolderCommand = new CorrelationCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
+            OpenSettingsFolderCommand = new CorrelationCommand(remembrancePathsProvider.OpenSettingsFolder);
+            ViewLogsCommand = new CorrelationCommand(remembrancePathsProvider.ViewLogs);
             IsActive = _localSettingsRepository.IsActive;
             _timer = new DispatcherTimer
             {

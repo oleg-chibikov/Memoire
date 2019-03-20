@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
-using Remembrance.Resources;
 using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL.Shared
@@ -13,8 +13,8 @@ namespace Remembrance.DAL.Shared
     {
         private readonly Random _rand = new Random();
 
-        public LearningInfoRepository([CanBeNull] string directoryPath = null, bool shrink = true)
-            : base(directoryPath ?? RemembrancePaths.LocalSharedDataPath, null, shrink)
+        public LearningInfoRepository(IRemembrancePathsProvider remembrancePathsProvider, [CanBeNull] string? directoryPath = null, bool shrink = true)
+            : base(directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)), null, shrink)
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);
@@ -22,7 +22,7 @@ namespace Remembrance.DAL.Shared
             Collection.EnsureIndex(x => x.NextCardShowTime);
         }
 
-        public LearningInfo GetMostSuitable()
+        public LearningInfo? GetMostSuitable()
         {
             var chooseIsFavoritedFirstProbability = _rand.Next(100);
             return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to be shown

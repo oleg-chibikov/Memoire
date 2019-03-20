@@ -58,8 +58,14 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.IO, Version=1.0.7018.24639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.IO.1.0.7018.24639\lib\netstandard2.0\Scar.Common.IO.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.Sync, Version=1.0.7018.24626, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Sync.1.0.7018.24626\lib\netstandard2.0\Scar.Common.Sync.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
@@ -94,9 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
+    <Compile Include="InternalsVisibleTo.cs" />
     <Compile Include="Languages\LanguageManager.cs" />
     <Compile Include="ProcessMonitoring\ActiveProcessMonitor.cs" />
     <Compile Include="CardManagement\AssessmentCardManager.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exchange\TranslationEntryContractResolver.cs" />
     <Compile Include="CardManagement\TranslationDetailsCardManager.cs" />
+    <Compile Include="RemembrancePathsProviders.cs" />
     <Compile Include="Sync\SettingsSyncPostProcessor.cs" />
     <Compile Include="Sync\SharedRepositoryCloner.cs" />
     <Compile Include="Sync\DeletionEventsSyncExtender.cs" />

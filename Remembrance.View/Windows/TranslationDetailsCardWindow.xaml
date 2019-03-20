@@ -15,7 +15,7 @@
     ShowActivated="false"
     Focusable="False"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <controls:TranslationDetailsCardControl />
     <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary

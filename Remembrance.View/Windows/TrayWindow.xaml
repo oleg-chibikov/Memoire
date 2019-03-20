@@ -23,7 +23,7 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <Window.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
@@ -151,21 +151,21 @@
                     TargetType="tb:TaskbarIcon">
                     <Setter
                         Property="IconSource"
-                        Value="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico" />
+                        Value="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico" />
                     <Style.Triggers>
                         <DataTrigger
                             Binding="{Binding IsPaused, Mode=OneWay}"
                             Value="True">
                             <Setter
                                 Property="IconSource"
-                                Value="pack://application:,,/Remembrance.Resources;component/Images/IconPaused.ico" />
+                                Value="pack://application:,,/Remembrance.View;component/Images/IconPaused.ico" />
                         </DataTrigger>
                         <DataTrigger
                             Binding="{Binding IsActive, Mode=OneWay}"
                             Value="False">
                             <Setter
                                 Property="IconSource"
-                                Value="pack://application:,,/Remembrance.Resources;component/Images/IconInactive.ico" />
+                                Value="pack://application:,,/Remembrance.View;component/Images/IconInactive.ico" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

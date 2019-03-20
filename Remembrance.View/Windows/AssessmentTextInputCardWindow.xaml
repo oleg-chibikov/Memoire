@@ -21,7 +21,7 @@
     SizeToContent="WidthAndHeight"
     Title="{Binding Word, Mode=OneTime}"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />

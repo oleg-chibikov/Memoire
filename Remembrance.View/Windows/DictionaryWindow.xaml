@@ -28,7 +28,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     Background="{StaticResource DarkerBackground}"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico">
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
             Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />

@@ -9,7 +9,7 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     SizeToContent="WidthAndHeight"

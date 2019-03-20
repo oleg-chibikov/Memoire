@@ -135,7 +135,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
+    <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controls\TrayToolTipControl.xaml.cs">
@@ -168,9 +168,9 @@
     <Compile Include="Converters\PriorityWordViewModelToVisibilityConverter.cs" />
     <Compile Include="Converters\RepeatTypeConverter.cs" />
     <Compile Include="Converters\WordConcatConverter.cs" />
-    <Compile Include="Windows\ConfirmationWindow.xaml.cs" >
+    <Compile Include="Windows\ConfirmationWindow.xaml.cs">
       <DependentUpon>ConfirmationWindow.xaml</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Windows\LoadingWindow.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
@@ -379,6 +379,7 @@
     <None Include="app.config" />
     <Resource Include="Fonts\Champagne &amp; Limousines.ttf" />
     <Resource Include="Fonts\cubic.ttf" />
+    <Resource Include="Images\IconPaused.pdn" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -392,6 +393,30 @@
       <LastGenOutput>WordMetadata.ru-RU.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconAlt.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconAlt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconInactive.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconInactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconPaused.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\IconPaused.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

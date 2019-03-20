@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
@@ -10,8 +11,8 @@ namespace Remembrance.DAL.Shared
     [UsedImplicitly]
     internal sealed class SettingsRepository : BaseSettingsRepository, ISettingsRepository
     {
-        public SettingsRepository([CanBeNull] string directoryPath = null, bool shrink = true)
-            : base(directoryPath ?? RemembrancePaths.LocalSharedDataPath, nameof(Settings), shrink)
+        public SettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, [CanBeNull] string? directoryPath = null, bool shrink = true)
+            : base(directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)), nameof(Settings), shrink)
         {
         }
 

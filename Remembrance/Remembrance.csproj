@@ -112,6 +112,12 @@
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.Sync, Version=1.0.7018.24626, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Sync.1.0.7018.24626\lib\netstandard2.0\Scar.Common.Sync.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.Sync.Windows, Version=1.0.7018.27923, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Sync.Windows.1.0.7018.27923\lib\net47\Scar.Common.Sync.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.View.AutofacScopedWindowProvider, Version=1.0.7016.39333, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.View.AutofacScopedWindowProvider.1.0.7016.39333\lib\netstandard2.0\Scar.Common.View.AutofacScopedWindowProvider.dll</HintPath>
     </Reference>
@@ -147,14 +153,29 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.5.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -197,7 +218,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\Remembrance.Resources\Properties\SharedAssemblyInfo.cs">
+    <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">

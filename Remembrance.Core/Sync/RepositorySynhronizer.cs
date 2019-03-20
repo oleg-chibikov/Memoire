@@ -94,7 +94,7 @@ namespace Remembrance.Core.Sync
             File.Copy(filePath, newFilePath);
             var parameters = new Parameter[]
             {
-                new PositionalParameter(0, newDirectoryPath),
+                new TypedParameter(typeof(string), newDirectoryPath),
                 new TypedParameter(typeof(bool), false)
             };
             using (var remoteRepository = _autofacNamedInstancesFactory.GetInstance<TRepository>(parameters))

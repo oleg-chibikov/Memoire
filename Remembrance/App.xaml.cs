@@ -27,6 +27,7 @@ using Scar.Common.AutofacNamedInstancesFactory;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
+using Scar.Common.Sync.Windows;
 using Scar.Common.View;
 using Scar.Common.View.WindowFactory;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
@@ -111,6 +112,7 @@ namespace Remembrance
             builder.RegisterType<SaveFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<BitmapImageLoader>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<WindowsSyncSoftwarePathsProvider>().AsImplementedInterfaces().SingleInstance();
 
             RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
             RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);

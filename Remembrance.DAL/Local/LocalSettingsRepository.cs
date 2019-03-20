@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using JetBrains.Annotations;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -21,12 +22,15 @@ namespace Remembrance.DAL.Local
         [NotNull]
         private const string SyncTimeKey = "SyncTime_";
 
-        public LocalSettingsRepository()
+        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+
+        public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider)
             : base(CommonPaths.SettingsPath, nameof(Settings))
         {
+            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
         }
 
-        public AvailableLanguagesInfo AvailableLanguages
+        public AvailableLanguagesInfo? AvailableLanguages
         {
             get => TryGetValue<AvailableLanguagesInfo>(nameof(AvailableLanguages));
             set => RemoveUpdateOrInsert(nameof(AvailableLanguages), value);
@@ -46,13 +50,13 @@ namespace Remembrance.DAL.Local
             set => RemoveUpdateOrInsert(nameof(LastCardShowTime), value);
         }
 
-        public string LastUsedSourceLanguage
+        public string? LastUsedSourceLanguage
         {
             get => TryGetValue<string>(nameof(LastUsedSourceLanguage));
             set => RemoveUpdateOrInsert(nameof(LastUsedSourceLanguage), value);
         }
 
-        public string LastUsedTargetLanguage
+        public string? LastUsedTargetLanguage
         {
             get => TryGetValue<string>(nameof(LastUsedTargetLanguage));
             set => RemoveUpdateOrInsert(nameof(LastUsedTargetLanguage), value);
@@ -63,11 +67,11 @@ namespace Remembrance.DAL.Local
             get =>
                 TryGetValue(
                     nameof(SyncBus),
-                    () => RemembrancePaths.DropBoxPath != null ? SyncBus.Dropbox : (RemembrancePaths.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync));
+                    () => _remembrancePathsProvider.DropBoxPath != null ? SyncBus.Dropbox : (_remembrancePathsProvider.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync));
             set => RemoveUpdateOrInsert(nameof(SyncBus), (SyncBus?)value);
         }
 
-        public IReadOnlyCollection<ProcessInfo> BlacklistedProcesses
+        public IReadOnlyCollection<ProcessInfo>? BlacklistedProcesses
         {
             get => TryGetValue<IReadOnlyCollection<ProcessInfo>>(nameof(BlacklistedProcesses));
             set => RemoveUpdateOrInsert(nameof(BlacklistedProcesses), value);
@@ -92,7 +96,7 @@ namespace Remembrance.DAL.Local
             set => RemoveUpdateOrInsert(nameof(UiLanguage), value);
         }
 
-        public void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoCollection pauseInfo)
+        public void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoCollection? pauseInfo)
         {
             RemoveUpdateOrInsert(PauseTimeKey + pauseReason, pauseInfo);
         }

@@ -20,7 +20,7 @@
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Remembrance.Resources;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico"
     Title="{Binding Word, Mode=OneTime}">
     <animatedWindow:AnimatedWindow.Resources>
         <commonView:DesignTimeResourceDictionary
