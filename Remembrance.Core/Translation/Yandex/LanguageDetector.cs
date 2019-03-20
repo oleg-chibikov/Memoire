@@ -74,7 +74,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
         }
 
-        public async Task<LanguageListResult> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
+        public async Task<LanguageListResult?> ListLanguagesAsync(string ui, CancellationToken cancellationToken)
         {
             _ = ui ?? throw new ArgumentNullException(nameof(ui));
             var uriPart = $"getLangs?key={YandexConstants.ApiKey}&ui={ui}";

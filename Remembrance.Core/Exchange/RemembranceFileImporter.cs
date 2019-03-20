@@ -25,12 +25,12 @@ namespace Remembrance.Core.Exchange
         {
         }
 
-        protected override IReadOnlyCollection<ManualTranslation> GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override IReadOnlyCollection<ManualTranslation>? GetManualTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.ManualTranslations;
         }
 
-        protected override IReadOnlyCollection<BaseWord> GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
+        protected override IReadOnlyCollection<BaseWord>? GetPriorityTranslations(RemembranceExchangeEntry exchangeEntry)
         {
             return exchangeEntry.TranslationEntry.PriorityWords?.ToArray();
         }

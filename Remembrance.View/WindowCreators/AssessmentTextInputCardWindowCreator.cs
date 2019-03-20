@@ -12,7 +12,6 @@ namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
 
-    // ReSharper disable once StyleCop.SA1009
     internal sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]

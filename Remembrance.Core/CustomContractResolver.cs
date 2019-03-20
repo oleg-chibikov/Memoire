@@ -8,9 +8,9 @@ namespace Remembrance.Core
 {
     internal abstract class CustomContractResolver : DefaultContractResolver
     {
-        protected virtual Dictionary<Type, JsonConverter> PropertyConverters { get; } = null;
+        protected virtual IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = null;
 
-        protected abstract Dictionary<string, string> PropertyMappings { get; }
+        protected abstract IReadOnlyDictionary<string, string> PropertyMappings { get; }
 
         protected override JsonContract CreateContract(Type objectType)
         {

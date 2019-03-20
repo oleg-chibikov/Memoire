@@ -6,7 +6,7 @@ namespace Remembrance.Core.CardManagement.Data
 {
     internal sealed class EachWordExchangeEntry : IExchangeEntry
     {
-        public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string translation)
+        public EachWordExchangeEntry([NotNull] string text, [CanBeNull] string? translation)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Translation = translation;
@@ -14,7 +14,7 @@ namespace Remembrance.Core.CardManagement.Data
 
         [CanBeNull]
         [JsonProperty("Translation", Required = Required.Always)]
-        public string Translation { get; }
+        public string? Translation { get; }
 
         [JsonProperty("Word", Required = Required.Always)]
         public string Text { get; }

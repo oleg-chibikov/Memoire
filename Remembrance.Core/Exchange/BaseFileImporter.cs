@@ -104,13 +104,13 @@ namespace Remembrance.Core.Exchange
         }
 
         [CanBeNull]
-        protected virtual IReadOnlyCollection<ManualTranslation> GetManualTranslations([NotNull] T exchangeEntry)
+        protected virtual IReadOnlyCollection<ManualTranslation>? GetManualTranslations([NotNull] T exchangeEntry)
         {
             return null;
         }
 
         [CanBeNull]
-        protected abstract IReadOnlyCollection<BaseWord> GetPriorityTranslations([NotNull] T exchangeEntry);
+        protected abstract IReadOnlyCollection<BaseWord>? GetPriorityTranslations([NotNull] T exchangeEntry);
 
         [ItemNotNull]
         [NotNull]
@@ -118,7 +118,7 @@ namespace Remembrance.Core.Exchange
 
         protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
 
-        private static bool UpdateManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations, [NotNull] TranslationEntry translationEntry)
+        private static bool UpdateManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations, [NotNull] TranslationEntry translationEntry)
         {
             if (manualTranslations == null)
             {
@@ -135,9 +135,9 @@ namespace Remembrance.Core.Exchange
         }
 
         [CanBeNull]
-        private T[] Deserialize([NotNull] string fileName)
+        private T[]? Deserialize([NotNull] string fileName)
         {
-            T[] deserialized = null;
+            T[]? deserialized = null;
 
             try
             {
@@ -157,10 +157,10 @@ namespace Remembrance.Core.Exchange
         }
 
         [ItemCanBeNull]
-        private async Task<TranslationInfo> ImportNewEntry(
+        private async Task<TranslationInfo?> ImportNewEntry(
             CancellationToken cancellationToken,
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations)
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
@@ -172,7 +172,7 @@ namespace Remembrance.Core.Exchange
         }
 
         [ItemCanBeNull]
-        private async Task<TranslationEntry> ImportOneEntry(
+        private async Task<TranslationEntry?> ImportOneEntry(
             CancellationToken cancellationToken,
             [NotNull] T exchangeEntry,
             [NotNull] IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
@@ -181,7 +181,7 @@ namespace Remembrance.Core.Exchange
             cancellationToken.ThrowIfCancellationRequested();
             _logger.TraceFormat("Importing {0}...", exchangeEntry.Text);
             var translationEntryKey = await GetTranslationEntryKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
-            TranslationEntry translationEntry = null;
+            TranslationEntry? translationEntry = null;
             if (existingTranslationEntries.ContainsKey(translationEntryKey))
             {
                 translationEntry = existingTranslationEntries[translationEntryKey];
@@ -246,15 +246,17 @@ namespace Remembrance.Core.Exchange
         private bool UpdatePriorityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
-            if (priorityTranslations?.Any() != true)
+            if (priorityTranslations == null || priorityTranslations?.Any() != true)
             {
                 return false;
             }
 
             var result = false;
-            if (translationEntry.PriorityWords == null)
+            var priorityWords = translationEntry.PriorityWords;
+            if (priorityWords == null)
             {
-                translationEntry.PriorityWords = new HashSet<BaseWord>(priorityTranslations);
+                priorityWords = new HashSet<BaseWord>(priorityTranslations);
+                translationEntry.PriorityWords = priorityWords;
                 foreach (var priorityTranslation in priorityTranslations)
                 {
                     PublishPriorityWord(translationEntry, priorityTranslation);
@@ -264,9 +266,9 @@ namespace Remembrance.Core.Exchange
             }
             else
             {
-                foreach (var priorityTranslation in priorityTranslations.Where(priorityTranslation => !translationEntry.PriorityWords.Contains(priorityTranslation)))
+                foreach (var priorityTranslation in priorityTranslations.Where(priorityTranslation => !priorityWords.Contains(priorityTranslation)))
                 {
-                    translationEntry.PriorityWords.Add(priorityTranslation);
+                    priorityWords.Add(priorityTranslation);
                     PublishPriorityWord(translationEntry, priorityTranslation);
                     result = true;
                 }

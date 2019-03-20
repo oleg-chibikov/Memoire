@@ -13,7 +13,6 @@ namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
 
-    // ReSharper disable once StyleCop.SA1009
     internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]

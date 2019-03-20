@@ -12,7 +12,7 @@ namespace Remembrance.Contracts.Processing
     {
         [ItemCanBeNull]
         [NotNull]
-        Task<Data.TranslationInfo?> AddOrUpdateTranslationEntryAsync(
+        Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             [NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
             [CanBeNull] IDisplayable? ownerWindow = null,

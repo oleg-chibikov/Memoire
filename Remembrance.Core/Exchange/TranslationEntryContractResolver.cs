@@ -23,7 +23,7 @@ namespace Remembrance.Core.Exchange
         };
 
         [CanBeNull]
-        private Type _currentDeclaringType;
+        private Type? _currentDeclaringType;
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
@@ -40,7 +40,7 @@ namespace Remembrance.Core.Exchange
             return property;
         }
 
-        private bool ShouldExclude([NotNull] MemberInfo memberInfo, [CanBeNull] Type objectType)
+        private bool ShouldExclude([NotNull] MemberInfo memberInfo, [CanBeNull] Type? objectType)
         {
             if (objectType == null)
             {

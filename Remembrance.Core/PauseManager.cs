@@ -78,7 +78,7 @@ namespace Remembrance.Core
             }
         }
 
-        public string GetPauseReasons()
+        public string? GetPauseReasons()
         {
             lock (_lockObject)
             {
@@ -104,7 +104,7 @@ namespace Remembrance.Core
             }
         }
 
-        public void Pause(PauseReason pauseReason, string description)
+        public void Pause(PauseReason pauseReason, string? description)
         {
             lock (_lockObject)
             {

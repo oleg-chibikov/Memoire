@@ -34,10 +34,10 @@ namespace Remembrance.Core.Sync
         private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
         [CanBeNull]
-        private string _allMachinesSharedBasePath;
+        private string? _allMachinesSharedBasePath;
 
         [CanBeNull]
-        private string _thisMachineSharedPath;
+        private string? _thisMachineSharedPath;
 
         private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 

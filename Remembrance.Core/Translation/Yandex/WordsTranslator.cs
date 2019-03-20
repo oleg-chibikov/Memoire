@@ -39,7 +39,7 @@ namespace Remembrance.Core.Translation.Yandex
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken cancellationToken)
+        public async Task<TranslationResult?> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken cancellationToken)
         {
             _ = from ?? throw new ArgumentNullException(nameof(from));
             _ = to ?? throw new ArgumentNullException(nameof(to));
@@ -90,7 +90,7 @@ namespace Remembrance.Core.Translation.Yandex
         }
 
         [NotNull, ItemCanBeNull]
-        private async Task<TranslationResult> GetDictionaryResultAsync(string from, string to, string text, string ui)
+        private async Task<TranslationResult?> GetDictionaryResultAsync(string from, string to, string text, string ui)
         {
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
             var response = await dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
@@ -108,7 +108,7 @@ namespace Remembrance.Core.Translation.Yandex
 
         [ItemCanBeNull]
         [NotNull]
-        private async Task<string> GetTranslateResultAsync(string from, string to, string text)
+        private async Task<string?> GetTranslateResultAsync(string from, string to, string text)
         {
             var uriPart = $"translate?key={YandexConstants.ApiKey}&lang={from}-{to}&text={text}";
             var response = await translateClient.GetAsync(uriPart).ConfigureAwait(false);

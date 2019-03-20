@@ -5,7 +5,7 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal sealed class ListResultContractResolver : CustomContractResolver
     {
-        protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
+        protected override IReadOnlyDictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {
             { nameof(LanguageListResult.Directions), "dirs" },
             { nameof(LanguageListResult.Languages), "langs" }

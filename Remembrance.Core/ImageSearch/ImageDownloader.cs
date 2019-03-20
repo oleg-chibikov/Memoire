@@ -30,7 +30,7 @@ namespace Remembrance.Core.ImageSearch
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
-        public async Task<byte[]> DownloadImageAsync(string imageUrl, CancellationToken cancellationToken)
+        public async Task<byte[]?> DownloadImageAsync(string imageUrl, CancellationToken cancellationToken)
         {
             try
             {

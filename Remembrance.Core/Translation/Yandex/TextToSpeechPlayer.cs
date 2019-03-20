@@ -62,7 +62,7 @@ namespace Remembrance.Core.Translation.Yandex
                 }
 
                 var soundStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using (var waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                using (var waveOut = new WaveOutEvent())
                 using (var reader = new Mp3FileReader(soundStream))
                 {
                     waveOut.Init(reader);
@@ -70,7 +70,7 @@ namespace Remembrance.Core.Translation.Yandex
                     // Thread should be alive while playback is not stopped
                     void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                     {
-                        ((WaveOut)s).PlaybackStopped -= PlaybackStoppedHandler;
+                        ((WaveOutEvent)s).PlaybackStopped -= PlaybackStoppedHandler;
                         reset.Set();
                     }
 

@@ -125,7 +125,7 @@ namespace Remembrance.Core.CardManagement
             Logger.Debug("Finished showing cards");
         }
 
-        protected override async Task<IDisplayable> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable ownerWindow)
+        protected override async Task<IDisplayable?> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
             if (_hasOpenWindows)
             {
@@ -142,9 +142,8 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
                 {
-                    // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }
@@ -153,9 +152,8 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
                 {
-                    // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }
@@ -164,9 +162,8 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Proficiency:
                 case RepeatType.Expert:
                 {
-                    // ReSharper disable once StyleCop.SA1009
                     window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                         .ConfigureAwait(false);
                     break;
                 }

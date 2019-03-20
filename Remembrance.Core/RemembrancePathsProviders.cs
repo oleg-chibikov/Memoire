@@ -19,9 +19,9 @@ namespace Remembrance.Core
             DropBoxPath = dropBoxPathProvider.GetDropBoxPath();
         }
 
-        public string OneDrivePath { get; }
+        public string? OneDrivePath { get; }
 
-        public string DropBoxPath { get; }
+        public string? DropBoxPath { get; }
 
         [NotNull]
         public string LocalSharedDataPath { get; } = Path.Combine(CommonPaths.SettingsPath, "Shared");

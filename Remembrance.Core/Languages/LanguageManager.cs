@@ -149,7 +149,7 @@ namespace Remembrance.Core.Languages
             return ordered.First();
         }
 
-        private static int GetLanguageOrder([NotNull] string languageCode, [NotNull] string preferred, [NotNull] string currentCultureLanguage, [CanBeNull] string lastUsed)
+        private static int GetLanguageOrder([NotNull] string languageCode, [NotNull] string preferred, [NotNull] string currentCultureLanguage, [CanBeNull] string? lastUsed)
         {
             return languageCode == Constants.AutoDetectLanguage ? 1 :
                 languageCode == preferred ? 2 :

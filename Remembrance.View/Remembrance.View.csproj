@@ -49,8 +49,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>

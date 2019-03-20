@@ -105,17 +105,17 @@ namespace Remembrance.Core.Processing
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task<TranslationInfo> AddOrUpdateTranslationEntryAsync(
+        public async Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
             CancellationToken cancellationToken,
-            IDisplayable ownerWindow,
+            IDisplayable? ownerWindow,
             bool needPostProcess,
-            IReadOnlyCollection<ManualTranslation> manualTranslations)
+            IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
 
-            IDisplayable loadingWindow = null;
+            IDisplayable? loadingWindow = null;
             _synchronizationContext.Send(
                 x =>
                 {
@@ -192,7 +192,7 @@ namespace Remembrance.Core.Processing
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             return (await ReloadTranslationDetailsIfNeededInternalAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false)).TranslationDetails;
@@ -200,7 +200,7 @@ namespace Remembrance.Core.Processing
 
         public async Task<TranslationInfo> UpdateManualTranslationsAsync(
             TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             _logger.TraceFormat("Updating manual translations for {0}...", translationEntryKey);
@@ -233,14 +233,14 @@ namespace Remembrance.Core.Processing
             return new TranslationInfo(translationEntry, translationDetails, learningInfo);
         }
 
-        private static void CapitalizeManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation> manulTranslations)
+        private static void CapitalizeManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
-            if (manulTranslations == null)
+            if (manualTranslations == null)
             {
                 return;
             }
 
-            foreach (var manualTranslation in manulTranslations)
+            foreach (var manualTranslation in manualTranslations)
             {
                 manualTranslation.Text = manualTranslation.Text.Capitalize();
                 manualTranslation.Example = manualTranslation.Example.Capitalize();
@@ -292,7 +292,7 @@ namespace Remembrance.Core.Processing
 
         private void DeleteFromPriority(
             [NotNull] TranslationEntry translationEntry,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
             [NotNull] TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
@@ -324,7 +324,7 @@ namespace Remembrance.Core.Processing
 
         [ItemCanBeNull]
         [NotNull]
-        private async Task<TranslationEntryKey> GetTranslationKeyAsync([NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
+        private async Task<TranslationEntryKey?> GetTranslationKeyAsync([NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
         {
             var text = translationEntryAdditionInfo.Text;
             var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
@@ -356,7 +356,7 @@ namespace Remembrance.Core.Processing
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
-        private async Task PostProcessWordAsync([CanBeNull] IDisplayable ownerWindow, [NotNull] TranslationInfo translationInfo, CancellationToken cancellationToken)
+        private async Task PostProcessWordAsync([CanBeNull] IDisplayable? ownerWindow, [NotNull] TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             var playTtsTask = _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken);
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
@@ -364,10 +364,9 @@ namespace Remembrance.Core.Processing
             await Task.WhenAll(playTtsTask, showCardTask).ConfigureAwait(false);
         }
 
-        // ReSharper disable once StyleCop.SA1009
         private async Task<(TranslationDetails TranslationDetails, bool AlreadyExists)> ReloadTranslationDetailsIfNeededInternalAsync(
             TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation> manualTranslations,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             if (!manualTranslations?.Any() == true)
@@ -397,9 +396,9 @@ namespace Remembrance.Core.Processing
 
         [ItemCanBeNull]
         [NotNull]
-        private async Task<TranslationResult> TranslateAsync(
+        private async Task<TranslationResult?> TranslateAsync(
             [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
+            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             // Used En as ui language to simplify conversion of common words to the enums

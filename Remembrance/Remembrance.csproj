@@ -86,13 +86,16 @@
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0-preview2\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
@@ -105,6 +108,10 @@
     </Reference>
     <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.7016.37846, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.7016.37846\lib\netstandard2.0\Scar.Common.DAL.LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.IO, Version=1.0.6662.42670, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.IO.1.0.6662.42670\lib\net47\Scar.Common.IO.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Scar.Common.Logging, Version=1.0.6719.22279, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Logging.1.0.6719.22279\lib\net47\Scar.Common.Logging.dll</HintPath>
@@ -164,6 +171,12 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.1.3\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
@@ -176,7 +189,15 @@
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>

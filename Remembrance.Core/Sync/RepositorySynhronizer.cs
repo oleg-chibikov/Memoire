@@ -42,10 +42,10 @@ namespace Remembrance.Core.Sync
         private readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
 
         [CanBeNull]
-        private readonly ISyncPostProcessor<TEntity> _syncPostProcessor;
+        private readonly ISyncPostProcessor<TEntity>? _syncPostProcessor;
 
         [CanBeNull]
-        private readonly ISyncPreProcessor<TEntity> _syncPreProcessor;
+        private readonly ISyncPreProcessor<TEntity>? _syncPreProcessor;
 
         public RepositorySynhronizer(
             [NotNull] IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
@@ -54,8 +54,8 @@ namespace Remembrance.Core.Sync
             [NotNull] IMessageHub messageHub,
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] IReadOnlyCollection<ISyncExtender<TRepository>> syncExtenders,
-            [CanBeNull] ISyncPreProcessor<TEntity> syncPreProcessor = null,
-            [CanBeNull] ISyncPostProcessor<TEntity> syncPostProcessor = null)
+            [CanBeNull] ISyncPreProcessor<TEntity>? syncPreProcessor = null,
+            [CanBeNull] ISyncPostProcessor<TEntity>? syncPostProcessor = null)
         {
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));

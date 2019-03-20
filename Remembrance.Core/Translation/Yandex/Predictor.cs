@@ -40,7 +40,7 @@ namespace Remembrance.Core.Translation.Yandex
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task<PredictionResult> PredictAsync(string text, int limit, CancellationToken cancellationToken)
+        public async Task<PredictionResult?> PredictAsync(string text, int limit, CancellationToken cancellationToken)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             var lang = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);

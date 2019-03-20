@@ -8,13 +8,13 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
     internal sealed class TranslationResultContractResolver : CustomContractResolver
     {
-        protected override Dictionary<Type, JsonConverter> PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
+        protected override IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
         {
             { typeof(PartOfSpeech), new PartOfSpeechConverter() },
             { typeof(string), new CapitalizeConverter() }
         };
 
-        protected override Dictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
+        protected override IReadOnlyDictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {
             { nameof(TranslationResult.PartOfSpeechTranslations), "def" },
             { nameof(PartOfSpeechTranslation.Transcription), "ts" },

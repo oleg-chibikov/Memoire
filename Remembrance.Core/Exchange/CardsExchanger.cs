@@ -68,7 +68,7 @@ namespace Remembrance.Core.Exchange
             }
 
             _logger.TraceFormat("Performing export to {0}...", fileName);
-            ExchangeResult exchangeResult = null;
+            ExchangeResult? exchangeResult = null;
             OnProgress(0, 1);
             try
             {
@@ -80,7 +80,7 @@ namespace Remembrance.Core.Exchange
                 OnProgress(1, 1);
             }
 
-            if (exchangeResult.Success)
+            if (exchangeResult?.Success ?? throw new InvalidOperationException(nameof(ExchangeResult)))
             {
                 _logger.InfoFormat("Export to {0} has been performed", fileName);
                 _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
@@ -159,13 +159,13 @@ namespace Remembrance.Core.Exchange
         }
 
         [CanBeNull]
-        private string ShowOpenFileDialog()
+        private string? ShowOpenFileDialog()
         {
             return _openFileDialog.ShowDialog() == true ? _openFileDialog.FileName : null;
         }
 
         [CanBeNull]
-        private string ShowSaveFileDialog()
+        private string? ShowSaveFileDialog()
         {
             _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
             return _saveFileDialog.ShowDialog() == true ? _saveFileDialog.FileName : null;

@@ -30,13 +30,12 @@ namespace Remembrance.Core.CardManagement
         }
 
         [ItemNotNull]
-        protected override async Task<IDisplayable> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable ownerWindow)
+        protected override async Task<IDisplayable?> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
 
-            // ReSharper disable once StyleCop.SA1009
             var translationDetailsCardWindow = await _scopedWindowProvider
-                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                 .ConfigureAwait(false);
             SynchronizationContext.Send(
                 x => WindowPositionAdjustmentManager.AdjustDetailsCardWindowPosition(translationDetailsCardWindow),

@@ -80,8 +80,8 @@
     <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Installer.UI, Version=1.0.6812.22678, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Installer.UI.1.0.6812.22678\lib\net47\Scar.Common.Installer.UI.dll</HintPath>

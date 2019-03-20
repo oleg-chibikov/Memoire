@@ -45,7 +45,7 @@ namespace Remembrance.Core.ProcessMonitoring
         }
 
         [CanBeNull]
-        private static Process GetActiveProcess()
+        private static Process? GetActiveProcess()
         {
             var hwnd = GetForegroundWindow();
             return GetProcessByHandle(hwnd);
@@ -55,7 +55,7 @@ namespace Remembrance.Core.ProcessMonitoring
         private static extern IntPtr GetForegroundWindow();
 
         [CanBeNull]
-        private static Process GetProcessByHandle(IntPtr hwnd)
+        private static Process? GetProcessByHandle(IntPtr hwnd)
         {
             try
             {
@@ -76,7 +76,10 @@ namespace Remembrance.Core.ProcessMonitoring
         private void CheckActiveProcess()
         {
             var activeProcess = GetActiveProcess();
-            PauseOrResumeProcess(activeProcess);
+            if (activeProcess != null)
+            {
+                PauseOrResumeProcess(activeProcess);
+            }
         }
 
         private void PauseOrResumeProcess(Process process)

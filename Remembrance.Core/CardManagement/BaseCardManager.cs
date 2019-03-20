@@ -38,7 +38,7 @@ namespace Remembrance.Core.CardManagement
         }
 
         [NotNull]
-        public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable ownerWindow)
+        public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable? ownerWindow)
         {
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             var window = await TryCreateWindowAsync(translationInfo, ownerWindow).ConfigureAwait(false);
@@ -61,6 +61,6 @@ namespace Remembrance.Core.CardManagement
 
         [NotNull]
         [ItemCanBeNull]
-        protected abstract Task<IDisplayable> TryCreateWindowAsync([NotNull] TranslationInfo translationInfo, IDisplayable ownerWindow);
+        protected abstract Task<IDisplayable?> TryCreateWindowAsync([NotNull] TranslationInfo translationInfo, IDisplayable? ownerWindow);
     }
 }

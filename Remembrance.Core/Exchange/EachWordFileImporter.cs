@@ -40,7 +40,7 @@ namespace Remembrance.Core.Exchange
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
         }
 
-        protected override IReadOnlyCollection<BaseWord> GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
+        protected override IReadOnlyCollection<BaseWord>? GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)
         {
             return exchangeEntry.Translation?.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(

@@ -48,8 +48,8 @@
     <Reference Include="PropertyChanged, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.2.6.0\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common, Version=1.0.7016.37642, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.1.0.7016.37642\lib\netstandard2.0\Scar.Common.dll</HintPath>
+    <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
