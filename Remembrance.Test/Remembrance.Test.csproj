@@ -68,6 +68,12 @@
     <Reference Include="Scar.Common.DAL, Version=1.0.7016.37668, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.1.0.7016.37668\lib\netstandard2.0\Scar.Common.DAL.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.MVVM.Commands, Version=1.0.7021.22562, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.Commands.1.0.7021.22562\lib\netstandard2.0\Scar.Common.MVVM.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.ViewModel, Version=1.0.7021.23060, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.ViewModel.1.0.7021.23060\lib\netstandard2.0\Scar.Common.MVVM.ViewModel.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.NonGeneric, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.NonGeneric.4.3.0\lib\net46\System.Collections.NonGeneric.dll</HintPath>
@@ -121,6 +127,10 @@
     <ProjectReference Include="..\Remembrance.ViewModel\Remembrance.ViewModel.csproj">
       <Project>{75074E3A-94AF-42CA-B90A-B1F194D7D812}</Project>
       <Name>Remembrance.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Windows.Common\Remembrance.Windows.Common.csproj">
+      <Project>{24958824-6559-4EDE-9954-42E5A22B2144}</Project>
+      <Name>Remembrance.Windows.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

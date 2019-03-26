@@ -11,6 +11,7 @@ using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
@@ -40,8 +41,9 @@ namespace Remembrance.ViewModel
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILog logger,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] ITranslationEntryRepository translationEntryRepository)
-            : base(word, translationEntry.Id.TargetLanguage, textToSpeechPlayer, translationEntryProcessor)
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ICommandManager commandManager)
+            : base(word, translationEntry.Id.TargetLanguage, textToSpeechPlayer, translationEntryProcessor, commandManager)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));

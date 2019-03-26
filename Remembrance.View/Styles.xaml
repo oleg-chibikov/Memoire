@@ -57,7 +57,12 @@
         x:Key="MessageTypeToBackgroundBrushConverter" />
     <converters:MessageTypeToForegroundBrushConverter
         x:Key="MessageTypeToForegroundBrushConverter" />
-    <xcdg:IndexToOddConverter x:Key="RowIndexConverter"/>
+    <xcdg:IndexToOddConverter
+        x:Key="RowIndexConverter"/>
+    <converters:ProgressStateConverter
+        x:Key="ProgressStateConverter"/>
+    <converters:BytesToImageConverter
+        x:Key="BytesToImageConverter"/>
 
     <Brush
         x:Key="Foreground">

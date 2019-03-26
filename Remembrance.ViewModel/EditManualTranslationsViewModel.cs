@@ -15,13 +15,14 @@ using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Scar.Common.Exceptions;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class EditManualTranslationsViewModel
+    public sealed class EditManualTranslationsViewModel : BaseViewModel
     {
         [NotNull]
         private readonly ILog _logger;
@@ -39,17 +40,19 @@ namespace Remembrance.ViewModel
             [NotNull] ILog logger,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationEntryRepository translationEntryRepository)
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            EditManualTranslationsCommand = new CorrelationCommand<TranslationEntryViewModel>(EditManualTranslations);
-            DeleteCommand = new AsyncCorrelationCommand<ManualTranslation>(DeleteAsync);
-            CancelCommand = new CorrelationCommand(Cancel);
-            AddTranslationCommand = new CorrelationCommand(AddTranslation);
-            SaveCommand = new AsyncCorrelationCommand(SaveAsync);
+            EditManualTranslationsCommand = AddCommand<TranslationEntryViewModel>(EditManualTranslations);
+            DeleteCommand = AddCommand<ManualTranslation>(DeleteAsync);
+            CancelCommand = AddCommand(Cancel);
+            AddTranslationCommand = AddCommand(AddTranslation);
+            SaveCommand = AddCommand(SaveAsync);
         }
 
         [NotNull]
@@ -73,7 +76,7 @@ namespace Remembrance.ViewModel
         public ObservableCollection<ManualTranslation> ManualTranslations { get; } = new ObservableCollection<ManualTranslation>();
 
         [CanBeNull]
-        public string ManualTranslationText { get; set; }
+        public string? ManualTranslationText { get; set; }
 
         [NotNull]
         public ICommand SaveCommand { get; }

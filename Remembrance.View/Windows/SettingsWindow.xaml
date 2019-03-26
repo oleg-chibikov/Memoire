@@ -43,7 +43,7 @@
     </animatedWindow:AnimatedWindow.Resources>
     <animatedWindow:AnimatedWindow.TaskbarItemInfo>
         <TaskbarItemInfo
-            ProgressState="{Binding ProgressState, Mode=OneWay}"
+            ProgressState="{Binding ProgressState, Mode=OneWay, Converter={StaticResource ProgressStateConverter}}"
             Description="{Binding ProgressDescription, Mode=OneWay}"
             ProgressValue="{Binding Progress, Mode=OneWay, Converter={StaticResource PercentageIntToDoubleConverter}}" />
     </animatedWindow:AnimatedWindow.TaskbarItemInfo>

@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -15,13 +14,14 @@ using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Resources;
 using Scar.Common.Async;
 using Scar.Common.Messages;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class WordImageViewerViewModel
+    public sealed class WordImageViewerViewModel : BaseViewModel
     {
         internal const string DefaultSearchTextTemplate = "{0} {1}";
 
@@ -30,9 +30,6 @@ namespace Remembrance.ViewModel
 
         [NotNull]
         private readonly IImageDownloader _imageDownloader;
-
-        [NotNull]
-        private readonly IBitmapImageLoader _bitmapBitmapImageLoader;
 
         [NotNull]
         private readonly IImageSearcher _imageSearcher;
@@ -71,8 +68,9 @@ namespace Remembrance.ViewModel
             [NotNull] IImageSearcher imageSearcher,
             [NotNull] IMessageHub messageHub,
             [NotNull] IWordImageSearchIndexRepository wordImageSearchIndexRepository,
-            [NotNull] IBitmapImageLoader bitmapImageLoader,
+            [NotNull] ICommandManager commandManager,
             bool isReadonly = false)
+            : base(commandManager)
         {
             _wordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -82,10 +80,9 @@ namespace Remembrance.ViewModel
             _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _wordImageSearchIndexRepository = wordImageSearchIndexRepository ?? throw new ArgumentNullException(nameof(wordImageSearchIndexRepository));
-            _bitmapBitmapImageLoader = bitmapImageLoader ?? throw new ArgumentNullException(nameof(bitmapImageLoader));
-            SetNextImageCommand = new AsyncCorrelationCommand(SetNextImageAsync);
-            SetPreviousImageCommand = new AsyncCorrelationCommand(SetPreviousImageAsync);
-            ReloadImageCommand = new AsyncCorrelationCommand(ReloadImageAsync);
+            SetNextImageCommand = AddCommand(SetNextImageAsync);
+            SetPreviousImageCommand = AddCommand(SetPreviousImageAsync);
+            ReloadImageCommand = AddCommand(ReloadImageAsync);
 
             _thisAndParentSearchText = string.Format(DefaultSearchTextTemplate, wordKey.Word.Text, parentText);
             _isReadonly = isReadonly;
@@ -96,12 +93,12 @@ namespace Remembrance.ViewModel
         }
 
         [CanBeNull]
-        public BitmapSource Image { get; private set; }
+        public byte[]? ThumbnailBytes { get; private set; }
 
         public bool IsLoading { get; private set; } = true;
 
-        [DependsOn(nameof(Image), nameof(IsLoading))]
-        public bool IsReloadVisible => Image == null && !IsLoading;
+        [DependsOn(nameof(ThumbnailBytes), nameof(IsLoading))]
+        public bool IsReloadVisible => ThumbnailBytes == null && !IsLoading;
 
         public bool IsSetNextImageVisible => !_isReadonly;
 
@@ -119,7 +116,7 @@ namespace Remembrance.ViewModel
 
         [DependsOn(nameof(ImageName), nameof(ImageUrl), nameof(SearchIndex), nameof(SearchText), nameof(IsAlternate))]
         [CanBeNull]
-        public string ToolTip => _isReadonly ? null : $"{SearchIndex + 1}{AlternateInfo}. {SearchText}: {ImageName} ({ImageUrl})";
+        public string? ToolTip => _isReadonly ? null : $"{SearchIndex + 1}{AlternateInfo}. {SearchText}: {ImageName} ({ImageUrl})";
 
         [NotNull]
         internal Task ConstructionTask { get; }
@@ -129,13 +126,13 @@ namespace Remembrance.ViewModel
         internal int SearchIndex { get; private set; }
 
         [CanBeNull]
-        private string AlternateInfo => IsAlternate ? " (*)" : null;
+        private string? AlternateInfo => IsAlternate ? " (*)" : null;
 
         [CanBeNull]
-        private string ImageName { get; set; }
+        private string? ImageName { get; set; }
 
         [CanBeNull]
-        private string ImageUrl { get; set; }
+        private string? ImageUrl { get; set; }
 
         private bool IsFirst => SearchIndex == 0 && !IsAlternate;
 
@@ -262,7 +259,7 @@ namespace Remembrance.ViewModel
                                     throw new InvalidOperationException("Search should return only one image");
                                 }
 
-                                ImageInfoWithBitmap imageInfoWithBitmap = null;
+                                ImageInfoWithBitmap? imageInfoWithBitmap = null;
                                 if (imagesUrls.Any())
                                 {
                                     var imageDownloadTasks = imagesUrls.Select(
@@ -286,7 +283,7 @@ namespace Remembrance.ViewModel
 
                                 wordImageInfo = new WordImageInfo(_wordKey, imageInfoWithBitmap, _nonAvailableIndexes);
                                 _wordImageInfoRepository.Upsert(wordImageInfo);
-                                WordImageSearchIndex wordImageSearchIndex = null;
+                                WordImageSearchIndex? wordImageSearchIndex = null;
                                 if (index > 0 || IsAlternate)
                                 {
                                     wordImageSearchIndex = new WordImageSearchIndex(_wordKey, index, IsAlternate);
@@ -316,7 +313,7 @@ namespace Remembrance.ViewModel
         }
 
         [NotNull]
-        private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo, [CanBeNull] WordImageSearchIndex wordImageSearchIndex)
+        private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo, [CanBeNull] WordImageSearchIndex? wordImageSearchIndex)
         {
             if (wordImageSearchIndex != null)
             {
@@ -330,8 +327,9 @@ namespace Remembrance.ViewModel
             }
 
             _nonAvailableIndexes = wordImageInfo.NonAvailableIndexes;
-            var imageBytes = wordImageInfo.Image?.ThumbnailBitmap;
-            if (imageBytes == null || imageBytes.Length == 0)
+            var image = wordImageInfo.Image;
+            byte[]? thumbnailBytes;
+            if (image == null || (thumbnailBytes = image.ThumbnailBitmap) == null || thumbnailBytes.Length == 0)
             {
                 // Try to search the next image if the current image is not available, but has metadata
                 await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
@@ -339,9 +337,9 @@ namespace Remembrance.ViewModel
             }
 
             _shouldRepeat = false;
-            ImageName = wordImageInfo.Image.ImageInfo.Name;
-            ImageUrl = wordImageInfo.Image.ImageInfo.Url;
-            Image = _bitmapBitmapImageLoader.LoadImage(imageBytes);
+            ImageName = image.ImageInfo.Name;
+            ImageUrl = image.ImageInfo.Url;
+            ThumbnailBytes = thumbnailBytes;
         }
     }
 }

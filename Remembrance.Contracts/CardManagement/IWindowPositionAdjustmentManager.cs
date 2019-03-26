@@ -8,5 +8,7 @@ namespace Remembrance.Contracts.CardManagement
         void AdjustAnyWindowPosition([NotNull] IDisplayable window);
 
         void AdjustDetailsCardWindowPosition([NotNull] IDisplayable window);
+
+        void AdjustActivatedWindow([NotNull] IDisplayable window);
     }
 }

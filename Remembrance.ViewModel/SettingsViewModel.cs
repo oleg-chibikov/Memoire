@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Shell;
 using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
@@ -19,16 +18,17 @@ using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
+using Remembrance.Contracts.View;
 using Remembrance.Resources;
 using Scar.Common.Events;
-using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.ViewModel;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class SettingsViewModel : IRequestCloseViewModel, IDisposable
+    public sealed class SettingsViewModel : BaseViewModel
     {
         [NotNull]
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -54,9 +54,6 @@ namespace Remembrance.ViewModel
         [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
-        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
-
         private bool _saved;
 
         private string _uiLanguage;
@@ -71,7 +68,9 @@ namespace Remembrance.ViewModel
             [NotNull] IPauseManager pauseManager,
             [NotNull] ProcessBlacklistViewModel processBlacklistViewModel,
             [NotNull] ILanguageManager languageManager,
-            [NotNull] IRemembrancePathsProvider remembrancePathsProvider)
+            [NotNull] IRemembrancePathsProvider remembrancePathsProvider,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
@@ -82,7 +81,7 @@ namespace Remembrance.ViewModel
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             ProcessBlacklistViewModel = processBlacklistViewModel ?? throw new ArgumentNullException(nameof(processBlacklistViewModel));
-            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
+            _ = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
 
             var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
             if (blacklistedProcesses != null)
@@ -97,12 +96,12 @@ namespace Remembrance.ViewModel
             {
                 SyncBus.NoSync
             };
-            if (_remembrancePathsProvider.DropBoxPath != null)
+            if (remembrancePathsProvider.DropBoxPath != null)
             {
                 syncBuses.Add(SyncBus.Dropbox);
             }
 
-            if (_remembrancePathsProvider.OneDrivePath != null)
+            if (remembrancePathsProvider.OneDrivePath != null)
             {
                 syncBuses.Add(SyncBus.OneDrive);
             }
@@ -115,13 +114,13 @@ namespace Remembrance.ViewModel
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
             SyncBus = _localSettingsRepository.SyncBus;
-            OpenSharedFolderCommand = new CorrelationCommand(() => _remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
-            OpenSettingsFolderCommand = new CorrelationCommand(_remembrancePathsProvider.OpenSettingsFolder);
-            ViewLogsCommand = new CorrelationCommand(_remembrancePathsProvider.ViewLogs);
-            SaveCommand = new CorrelationCommand(Save);
-            ExportCommand = new AsyncCorrelationCommand(ExportAsync);
-            ImportCommand = new AsyncCorrelationCommand(ImportAsync);
-            WindowClosingCommand = new CorrelationCommand(WindowClosing);
+            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
+            OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
+            ViewLogsCommand = AddCommand(remembrancePathsProvider.ViewLogs);
+            SaveCommand = AddCommand(Save);
+            ExportCommand = AddCommand(ExportAsync);
+            ImportCommand = AddCommand(ImportAsync);
+            WindowClosingCommand = AddCommand(WindowClosing);
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
@@ -164,9 +163,9 @@ namespace Remembrance.ViewModel
         public int Progress { get; private set; }
 
         [CanBeNull]
-        public string ProgressDescription { get; private set; }
+        public string? ProgressDescription { get; private set; }
 
-        public TaskbarItemProgressState ProgressState { get; private set; }
+        public ProgressState ProgressState { get; private set; }
 
         [NotNull]
         public ICommand SaveCommand { get; }
@@ -195,16 +194,18 @@ namespace Remembrance.ViewModel
         [NotNull]
         public ICommand WindowClosingCommand { get; }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _cardsExchanger.Progress -= CardsExchanger_Progress;
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                _cardsExchanger.Progress -= CardsExchanger_Progress;
+            }
         }
-
-        public event EventHandler RequestClose;
 
         private void BeginProgress()
         {
-            ProgressState = TaskbarItemProgressState.Normal;
+            ProgressState = ProgressState.Normal;
             _pauseManager.Pause(PauseReason.OperationInProgress);
             ProgressDescription = "Caclulating...";
             Progress = 0;
@@ -231,7 +232,7 @@ namespace Remembrance.ViewModel
 
         private void EndProgress()
         {
-            ProgressState = TaskbarItemProgressState.None;
+            ProgressState = ProgressState.None;
             _pauseManager.Resume(PauseReason.OperationInProgress);
         }
 
@@ -287,7 +288,7 @@ namespace Remembrance.ViewModel
 
             _saved = true;
 
-            RequestClose?.Invoke(null, null);
+            CloseWindow();
             _logger.Info("Settings has been saved");
         }
 

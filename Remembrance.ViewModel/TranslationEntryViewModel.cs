@@ -16,6 +16,7 @@ using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Scar.Common.DAL.Model;
+using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
@@ -45,7 +46,8 @@ namespace Remembrance.ViewModel
             [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             [NotNull] ILearningInfoRepository learningInfoRepository,
             [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] ILanguageManager languageManager)
+            [NotNull] ILanguageManager languageManager,
+            [NotNull] ICommandManager commandManager)
             : base(
                 new Word
                 {
@@ -53,7 +55,8 @@ namespace Remembrance.ViewModel
                 },
                 translationEntry.Id.SourceLanguage,
                 textToSpeechPlayer,
-                translationEntryProcessor)
+                translationEntryProcessor,
+                commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));

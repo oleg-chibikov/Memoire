@@ -1,22 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
 using Common.Logging;
 using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.ProcessMonitoring.Data;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.CollectionView;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class ProcessBlacklistViewModel
+    public sealed class ProcessBlacklistViewModel : BaseViewModel
     {
         [NotNull]
         private readonly IActiveProcessesProvider _activeProcessesProvider;
@@ -28,22 +28,27 @@ namespace Remembrance.ViewModel
         private readonly ILog _logger;
 
         [CanBeNull]
-        private string _filter;
+        private string? _filter;
 
-        public ProcessBlacklistViewModel([NotNull] IActiveProcessesProvider activeProcessesProvider, [NotNull] ILog logger)
+        public ProcessBlacklistViewModel(
+            [NotNull] IActiveProcessesProvider activeProcessesProvider,
+            [NotNull] ILog logger,
+            [NotNull] ICommandManager commandManager,
+            [NotNull] ICollectionViewSource collectionViewSource)
+            : base(commandManager)
         {
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            OpenProcessesListCommand = new CorrelationCommand(OpenProcessesList);
-            AddFromActiveProcessesCommand = new CorrelationCommand<IList>(AddFromActiveProcesses);
-            AddTextCommand = new CorrelationCommand(AddText);
-            CancelAdditionCommand = new CorrelationCommand(CancelAddition);
-            DeleteCommand = new CorrelationCommand<ProcessInfo>(Delete);
-            DeleteBatchCommand = new CorrelationCommand<IList>(DeleteBatch);
-            ClearFilterCommand = new CorrelationCommand(ClearFilter);
-            AvailableProcessesView = CollectionViewSource.GetDefaultView(_availableProcesses);
-            BlacklistedProcessesView = CollectionViewSource.GetDefaultView(BlacklistedProcesses);
+            OpenProcessesListCommand = AddCommand(OpenProcessesList);
+            AddFromActiveProcessesCommand = AddCommand<IList>(AddFromActiveProcesses);
+            AddTextCommand = AddCommand(AddText);
+            CancelAdditionCommand = AddCommand(CancelAddition);
+            DeleteCommand = AddCommand<ProcessInfo>(Delete);
+            DeleteBatchCommand = AddCommand<IList>(DeleteBatch);
+            ClearFilterCommand = AddCommand(ClearFilter);
+            AvailableProcessesView = collectionViewSource.GetDefaultView(_availableProcesses);
+            BlacklistedProcessesView = collectionViewSource.GetDefaultView(BlacklistedProcesses);
             AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
@@ -75,7 +80,7 @@ namespace Remembrance.ViewModel
         public ICommand DeleteCommand { get; }
 
         [CanBeNull]
-        public string Filter
+        public string? Filter
         {
             get => _filter;
             set
@@ -91,7 +96,7 @@ namespace Remembrance.ViewModel
         public ICommand OpenProcessesListCommand { get; }
 
         [CanBeNull]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         private void AddFromActiveProcesses([NotNull] IList processesList)
         {

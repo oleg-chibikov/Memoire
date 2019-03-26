@@ -10,6 +10,7 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
@@ -28,8 +29,9 @@ namespace Remembrance.ViewModel
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
             [NotNull] Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             [NotNull] ILog logger,
-            [NotNull] ITranslationEntryRepository translationEntryRepository)
-            : base(translationEntry, translationVariant, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, wordViewModelFactory, translationEntryRepository)
+            [NotNull] ITranslationEntryRepository translationEntryRepository,
+            [NotNull] ICommandManager commandManager)
+            : base(translationEntry, translationVariant, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, wordViewModelFactory, translationEntryRepository, commandManager)
         {
             _ = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
@@ -43,13 +45,13 @@ namespace Remembrance.ViewModel
         }
 
         [CanBeNull]
-        public IReadOnlyCollection<Example> Examples { get; }
+        public IReadOnlyCollection<Example>? Examples { get; }
 
         [CanBeNull]
-        public IReadOnlyCollection<WordViewModel> Meanings { get; }
+        public IReadOnlyCollection<WordViewModel>? Meanings { get; }
 
         [CanBeNull]
-        public IReadOnlyCollection<PriorityWordViewModel> Synonyms { get; }
+        public IReadOnlyCollection<PriorityWordViewModel>? Synonyms { get; }
 
         [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }

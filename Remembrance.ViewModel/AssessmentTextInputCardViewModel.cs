@@ -5,16 +5,16 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
-using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Scar.Common;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
@@ -30,19 +30,30 @@ namespace Remembrance.ViewModel
             [NotNull] IMessageHub messageHub,
             [NotNull] ILog logger,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] ILearningInfoRepository learningInfoRepository,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
             [NotNull] IPauseManager pauseManager,
             [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
-            : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory, learningInfoViewModelFactory)
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            [NotNull] ICultureManager cultureManager,
+            [NotNull] ICommandManager commandManager)
+            : base(
+                translationInfo,
+                messageHub,
+                logger,
+                wordViewModelFactory,
+                assessmentInfoProvider,
+                pauseManager,
+                wordImageViewerViewModelFactory,
+                learningInfoViewModelFactory,
+                cultureManager,
+                commandManager)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
             Logger.Trace("Showing text input card...");
 
-            ProvideAnswerCommand = new CorrelationCommand(ProvideAnswer);
+            ProvideAnswerCommand = AddCommand(ProvideAnswer);
         }
 
         [CanBeNull]
@@ -52,7 +63,7 @@ namespace Remembrance.ViewModel
         public ICommand ProvideAnswerCommand { get; }
 
         [CanBeNull]
-        public string ProvidedAnswer { get; set; }
+        public string? ProvidedAnswer { get; set; }
 
         private TimeSpan ChangeRepeatType(Word mostSuitable, int currentMinDistance)
         {

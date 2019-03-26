@@ -17,14 +17,13 @@ namespace Remembrance.Contracts.DAL.Model
         {
             Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             Image = image;
-            NonAvailableIndexes = nonAvailableIndexes;
+            NonAvailableIndexes = nonAvailableIndexes ?? throw new ArgumentNullException(nameof(nonAvailableIndexes));
         }
 
         [CanBeNull]
         public ImageInfoWithBitmap? Image { get; set; }
 
-        [CanBeNull]
-        public int?[]? NonAvailableIndexes { get; set; }
+        public int?[] NonAvailableIndexes { get; set; }
 
         public override string ToString()
         {

@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BootstrapperCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\BootstrapperCore.dll</HintPath>
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\BootstrapperCore.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=3.3.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.3.2\lib\net40\Costura.dll</HintPath>
@@ -63,7 +63,7 @@
       <HintPath>..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -83,8 +83,14 @@
     <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.Installer.UI, Version=1.0.6812.22678, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.Installer.UI.1.0.6812.22678\lib\net47\Scar.Common.Installer.UI.dll</HintPath>
+    <Reference Include="Scar.Common.Installer.UI, Version=1.0.7021.23005, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Installer.UI.1.0.7021.23005\lib\net47\Scar.Common.Installer.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.Commands, Version=1.0.7021.22562, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.Commands.1.0.7021.22562\lib\netstandard2.0\Scar.Common.MVVM.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.ViewModel, Version=1.0.7021.23060, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.ViewModel.1.0.7021.23060\lib\netstandard2.0\Scar.Common.MVVM.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
@@ -92,26 +98,20 @@
     <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Commands, Version=1.0.6753.27805, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Commands.1.0.6753.27805\lib\net47\Scar.Common.WPF.Commands.dll</HintPath>
-    </Reference>
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6719.22053, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6719.22053\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.6812.21943, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.1.0.6812.21943\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7016.38970, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.7016.38970\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7021.22483, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.7021.22483\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.7016.38933, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.7016.38933\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.7021.22452, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.7021.22452\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.WPF.ViewModel, Version=1.0.7016.38534, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.ViewModel.1.0.7016.38534\lib\net47\Scar.Common.WPF.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -127,14 +127,14 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WixSharp, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.dll</HintPath>
+    <Reference Include="WixSharp, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.dll</HintPath>
     </Reference>
-    <Reference Include="WixSharp.Msi, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.Msi.dll</HintPath>
+    <Reference Include="WixSharp.Msi, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.Msi.dll</HintPath>
     </Reference>
-    <Reference Include="WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.UI.dll</HintPath>
+    <Reference Include="WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.UI.dll</HintPath>
     </Reference>
     <Reference Include="WPFLocalizeExtension, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WPFLocalizeExtension.3.3.1\lib\net452\WPFLocalizeExtension.dll</HintPath>
@@ -183,12 +183,12 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.4.0.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.4.0.2\build\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props'))" />
-    <Error Condition="!Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets'))" />
+    <Error Condition="!Exists('..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets'))" />
   </Target>
   <Import Project="..\packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('..\packages\Fody.4.0.2\build\Fody.targets')" />
-  <Import Project="..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" />
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>del "$(SolutionDir)Release\Remembrance.Installer.7z"
 "$(SolutionDir)Tools\7za" a "$(SolutionDir)Release\Remembrance.Installer.7z" "$(SolutionDir)BuildInstallerUI\*" -xr!*.xml -xr!*.dll.config -xr!*.pdb -xr!*nbsbuilder.exe</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets')" />
 </Project>

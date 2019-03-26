@@ -4,14 +4,17 @@ using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Resources;
 using Scar.Common.Messages;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class MessageViewModel
+    public sealed class MessageViewModel : BaseViewModel
     {
-        public MessageViewModel([NotNull] Message message, [NotNull] ILog logger)
+        public MessageViewModel([NotNull] Message message, [NotNull] ILog logger, [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             AutoCloseTimeout = AppSettings.MessageCloseTimeout;

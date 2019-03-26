@@ -15,6 +15,7 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.ViewModel;
+using Remembrance.Windows.Common;
 using Scar.Common.Async;
 using Scar.Common.Messages;
 
@@ -38,7 +39,6 @@ namespace Remembrance.Test
             _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
             _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
             _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
-            _autoMock.Mock<IBitmapImageLoader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Returns(new BitmapImage());
         }
 
         [TearDown]
@@ -199,7 +199,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
             Assert.That(_sut.IsReloadVisible, Is.False);
         }
 
@@ -261,7 +261,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(() => Times.Exactly(2));
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -280,24 +280,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Null);
-        }
-
-        [Test]
-        public void When_ExceptionOccursDuringImageLoading_Throws()
-        {
-            // Arrange
-            _autoMock.Mock<IBitmapImageLoader>().Setup(x => x.LoadImage(It.IsAny<byte[]>())).Throws(new InvalidOperationException());
-            WithSuccessfulImageSearch();
-
-            // Assert
-            Assert.That(
-                async () =>
-                {
-                    // Act
-                    _sut = await CreateViewModelAsync().ConfigureAwait(false);
-                },
-                Throws.Exception.TypeOf<InvalidOperationException>());
+            Assert.That(_sut.ThumbnailBytes, Is.Null);
         }
 
         [Test]
@@ -319,7 +302,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, FallbackSearchText);
                 Assert.That(_sut.SearchIndex, Is.EqualTo(i));
                 Assert.That(_sut.IsAlternate, Is.True);
-                Assert.That(_sut.Image, Is.Not.Null);
+                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
 
                 // Act
                 Reset();
@@ -329,7 +312,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, DefaultSearchText);
                 Assert.That(_sut.SearchIndex, Is.EqualTo(i));
                 Assert.That(_sut.IsAlternate, Is.False);
-                Assert.That(_sut.Image, Is.Not.Null);
+                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
             }
         }
 
@@ -352,7 +335,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, DefaultSearchText);
                 Assert.That(_sut.SearchIndex, Is.EqualTo(i));
                 Assert.That(_sut.IsAlternate, Is.False);
-                Assert.That(_sut.Image, Is.Not.Null);
+                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
 
                 // Act
                 Reset();
@@ -362,7 +345,7 @@ namespace Remembrance.Test
                 VerifyImagesSearch(Times.Once, FallbackSearchText);
                 Assert.That(_sut.SearchIndex, Is.EqualTo(i));
                 Assert.That(_sut.IsAlternate, Is.True);
-                Assert.That(_sut.Image, Is.Not.Null);
+                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
             }
         }
 
@@ -383,7 +366,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -397,7 +380,7 @@ namespace Remembrance.Test
             _sut = await CreateViewModelAsync().ConfigureAwait(false);
 
             // Assert
-            Assert.That(_sut.Image, Is.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Null);
             Assert.That(_sut.IsReloadVisible, Is.True);
         }
 
@@ -419,7 +402,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -439,7 +422,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -458,7 +441,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -477,7 +460,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Never);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -511,7 +494,7 @@ namespace Remembrance.Test
             VerifyMessage(Times.Once);
             Assert.That(_sut.SearchIndex, Is.Zero);
             Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.Image, Is.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Null);
         }
 
         [Test]
@@ -543,7 +526,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.EqualTo(2));
             Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
@@ -574,7 +557,7 @@ namespace Remembrance.Test
             VerifyDownloadCount(Times.Once);
             Assert.That(_sut.SearchIndex, Is.EqualTo(2));
             Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.Image, Is.Not.Null);
+            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
         }
     }
 }

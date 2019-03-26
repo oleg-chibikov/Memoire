@@ -109,12 +109,23 @@
     <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.7016.37846, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.7016.37846\lib\netstandard2.0\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.IO, Version=1.0.6662.42670, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.IO.1.0.6662.42670\lib\net47\Scar.Common.IO.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Scar.Common.IO, Version=1.0.7018.24639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.IO.1.0.7018.24639\lib\netstandard2.0\Scar.Common.IO.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Logging, Version=1.0.6719.22279, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Logging.1.0.6719.22279\lib\net47\Scar.Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.CollectionView, Version=1.0.7024.40951, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.CollectionView.1.0.7024.40951\lib\netstandard2.0\Scar.Common.MVVM.CollectionView.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.CollectionView.WPF, Version=1.0.7024.41200, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.CollectionView.WPF.1.0.7024.41200\lib\net47\Scar.Common.MVVM.CollectionView.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.Commands, Version=1.0.7021.22562, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.Commands.1.0.7021.22562\lib\netstandard2.0\Scar.Common.MVVM.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.MVVM.ViewModel, Version=1.0.7021.23060, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.MVVM.ViewModel.1.0.7021.23060\lib\netstandard2.0\Scar.Common.MVVM.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.RateLimiter, Version=1.0.7016.37702, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.RateLimiter.1.0.7016.37702\lib\netstandard2.0\Scar.Common.RateLimiter.dll</HintPath>
@@ -301,6 +312,10 @@
     <ProjectReference Include="..\Remembrance.WebApi\Remembrance.WebApi.csproj">
       <Project>{14958824-6559-4EDE-9954-42E5A22B2144}</Project>
       <Name>Remembrance.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remembrance.Windows.Common\Remembrance.Windows.Common.csproj">
+      <Project>{24958824-6559-4EDE-9954-42E5A22B2144}</Project>
+      <Name>Remembrance.Windows.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

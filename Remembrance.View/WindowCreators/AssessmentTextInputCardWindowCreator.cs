@@ -10,6 +10,7 @@ using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.View.WindowCreators
 {
+    //TODO: Move to viewModel
     [UsedImplicitly]
 
     internal sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>

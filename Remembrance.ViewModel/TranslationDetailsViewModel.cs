@@ -4,18 +4,22 @@ using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationDetailsViewModel
+    public sealed class TranslationDetailsViewModel : BaseViewModel
     {
         private readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsViewModel(
             [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
-            [NotNull] TranslationInfo translationInfo)
+            [NotNull] TranslationInfo translationInfo,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _ = translationResultViewModelFactory ?? throw new ArgumentNullException(nameof(translationResultViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));

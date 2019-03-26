@@ -9,14 +9,15 @@ using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 // ReSharper disable VirtualMemberCallInConstructor
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public class WordViewModel
+    public class WordViewModel : BaseViewModel
     {
         [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
@@ -28,7 +29,9 @@ namespace Remembrance.ViewModel
             [NotNull] Word word,
             [NotNull] string language,
             [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor)
+            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _ = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             _ = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
@@ -37,9 +40,9 @@ namespace Remembrance.ViewModel
 
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
-            PlayTtsCommand = new AsyncCorrelationCommand(PlayTtsAsync);
-            LearnWordCommand = new AsyncCorrelationCommand(LearnWordAsync, () => CanLearnWord);
-            TogglePriorityCommand = new CorrelationCommand(TogglePriority);
+            PlayTtsCommand = AddCommand(PlayTtsAsync);
+            LearnWordCommand = AddCommand(LearnWordAsync, () => CanLearnWord);
+            TogglePriorityCommand = AddCommand(TogglePriority);
         }
 
         [DoNotNotify]
@@ -68,7 +71,7 @@ namespace Remembrance.ViewModel
         public Word Word { get; }
 
         [CanBeNull]
-        public string WordInfo =>
+        public string? WordInfo =>
             Word.VerbType == null && Word.NounAnimacy == null && Word.NounGender == null
                 ? null
                 : string.Join(

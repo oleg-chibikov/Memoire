@@ -49,27 +49,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BootstrapperCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\BootstrapperCore.dll</HintPath>
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\BootstrapperCore.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Installer, Version=1.0.7011.38508, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Installer.1.0.7011.38508\lib\net47\Scar.Common.Installer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="WixSharp, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.dll</HintPath>
+    <Reference Include="WixSharp, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.dll</HintPath>
     </Reference>
-    <Reference Include="WixSharp.Msi, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.Msi.dll</HintPath>
+    <Reference Include="WixSharp.Msi, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.Msi.dll</HintPath>
     </Reference>
-    <Reference Include="WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\WixSharp.bin.1.9.4\lib\WixSharp.UI.dll</HintPath>
+    <Reference Include="WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\WixSharp.bin.1.9.5\lib\WixSharp.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -98,13 +98,12 @@
   <PropertyGroup>
     <PostBuildEvent>"$(TargetDir)Remembrance.Installer.exe"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WixSharp.bin.1.9.4\build\WixSharp.bin.targets'))" />
     <Error Condition="!Exists('..\packages\WixSharp.1.9.4\build\WixSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WixSharp.1.9.4\build\WixSharp.targets'))" />
+    <Error Condition="!Exists('..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets'))" />
   </Target>
   <Import Project="..\packages\WixSharp.1.9.4\build\WixSharp.targets" Condition="Exists('..\packages\WixSharp.1.9.4\build\WixSharp.targets')" />
   <UsingTask AssemblyFile="$(SolutionDir)packages\WixSharp.1.9.4\build\SetEnvVar.dll" TaskName="SetEnvVar" />
@@ -118,4 +117,5 @@
   <Target Name="BeforeBuild">
     <SetEnvVar Values="WIXSHARP_WIXDIR=$(SolutionDir)packages\WixSharp.wix.bin.3.11.0\tools\bin" />
   </Target>
+  <Import Project="..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets" Condition="Exists('..\packages\WixSharp.bin.1.9.5\build\WixSharp.bin.targets')" />
 </Project>

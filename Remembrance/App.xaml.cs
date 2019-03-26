@@ -19,14 +19,16 @@ using Remembrance.DAL.Shared;
 using Remembrance.Resources;
 using Remembrance.View.Windows;
 using Remembrance.ViewModel;
-using Remembrance.ViewModel.DialogProviders;
 using Remembrance.WebApi;
+using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.Async;
 using Scar.Common.AutofacNamedInstancesFactory;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
+using Scar.Common.MVVM.CollectionView.WPF;
+using Scar.Common.MVVM.Commands;
 using Scar.Common.Sync.Windows;
 using Scar.Common.View;
 using Scar.Common.View.WindowFactory;
@@ -104,15 +106,12 @@ namespace Remembrance
 
         protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
         {
+            builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<OpenFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<SaveFileDialogProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<WindowPositionAdjustmentManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<BitmapImageLoader>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<WindowsSyncSoftwarePathsProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
 
             RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
             RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
@@ -129,6 +128,7 @@ namespace Remembrance
 
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowsSyncSoftwarePathsProvider).Assembly).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();

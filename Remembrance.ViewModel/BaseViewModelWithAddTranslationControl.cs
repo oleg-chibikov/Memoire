@@ -13,13 +13,14 @@ using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
+using Scar.Common.MVVM.Commands;
 using Scar.Common.View.Contracts;
-using Scar.Common.WPF.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public abstract class BaseViewModelWithAddTranslationControl : IDisposable
+    public abstract class BaseViewModelWithAddTranslationControl : BaseViewModel
     {
         [NotNull]
         private readonly ILanguageManager _languageManager;
@@ -46,14 +47,16 @@ namespace Remembrance.ViewModel
             [NotNull] ILocalSettingsRepository localSettingsRepository,
             [NotNull] ILanguageManager languageManager,
             [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger)
+            [NotNull] ILog logger,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
-            SaveCommand = new AsyncCorrelationCommand(SaveAsync);
+            SaveCommand = AddCommand(SaveAsync);
 
             var sourceLanguages = _languageManager.GetAvailableSourceLanguages();
             AvailableSourceLanguages = sourceLanguages;
@@ -72,7 +75,7 @@ namespace Remembrance.ViewModel
         public ObservableCollection<Language> AvailableTargetLanguages { get; }
 
         [CanBeNull]
-        public string ManualTranslation { get; set; }
+        public string? ManualTranslation { get; set; }
 
         [NotNull]
         public ICommand SaveCommand { get; }
@@ -113,12 +116,16 @@ namespace Remembrance.ViewModel
         }
 
         [CanBeNull]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            CancellationTokenSource.Cancel();
-            Cleanup();
+            if (disposing)
+            {
+                CancellationTokenSource.Cancel();
+                Cleanup();
+            }
+            base.Dispose(disposing);
         }
 
         protected virtual void Cleanup()
@@ -127,7 +134,7 @@ namespace Remembrance.ViewModel
 
         [ItemCanBeNull]
         [NotNull]
-        protected abstract Task<IDisplayable> GetWindowAsync();
+        protected abstract Task<IDisplayable?> GetWindowAsync();
 
         [NotNull]
         private async Task SaveAsync()

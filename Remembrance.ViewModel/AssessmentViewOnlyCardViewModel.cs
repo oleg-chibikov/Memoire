@@ -3,12 +3,13 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
@@ -22,12 +23,23 @@ namespace Remembrance.ViewModel
             [NotNull] ILog logger,
             [NotNull] Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
             [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
             [NotNull] IPauseManager pauseManager,
             [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
-            : base(translationInfo, messageHub, logger, wordViewModelFactory, assessmentInfoProvider, pauseManager, wordImageViewerViewModelFactory, learningInfoViewModelFactory)
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            [NotNull] ICultureManager cultureManager,
+            [NotNull] ICommandManager commandManager)
+            : base(
+                translationInfo,
+                messageHub,
+                logger,
+                wordViewModelFactory,
+                assessmentInfoProvider,
+                pauseManager,
+                wordImageViewerViewModelFactory,
+                learningInfoViewModelFactory,
+                cultureManager,
+                commandManager)
         {
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);

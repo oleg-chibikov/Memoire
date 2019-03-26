@@ -6,7 +6,7 @@
 </auto-generated>
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="51474dcb-fee8-4e92-9270-167ece18277c" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="1.0.7018.41710" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b" Manufacturer="Scar">
+  <Product Id="8911c60e-3704-4471-baa5-487d431293e0" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="1.0.7024.41272" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b" Manufacturer="Scar">
     <Package InstallerVersion="200" Compressed="yes" SummaryCodepage="Windows-1252" Languages="1033" />
     <Media Id="1" Cabinet="Remembrance.cab" EmbedCab="yes" />
 
@@ -15,32 +15,32 @@
         <Directory Id="ProgramFilesFolder.Scar" Name="Scar">
           <Directory Id="INSTALLDIR" Name="Remembrance">
 
-            <Component Id="Component.NLog.config_132477106" Guid="51474dcb-fee8-4e92-9270-167e82c5d66c">
+            <Component Id="Component.NLog.config_132477106" Guid="8911c60e-3704-4471-baa5-487df7bee386">
               <File Id="NLog.config_132477106" Source="..\Build\NLog.config" />
             </Component>
 
-            <Component Id="Component.Remembrance.exe_1743866093" Guid="51474dcb-fee8-4e92-9270-167ed4f59cfd">
+            <Component Id="Component.Remembrance.exe_1743866093" Guid="8911c60e-3704-4471-baa5-487d49eea917">
               <File Id="Remembrance.exe_1743866093" Source="..\Build\Remembrance.exe" />
             </Component>
 
-            <Component Id="Component.Remembrance.exe.config_1469985221" Guid="51474dcb-fee8-4e92-9270-167e0e7f79f7">
+            <Component Id="Component.Remembrance.exe.config_1469985221" Guid="8911c60e-3704-4471-baa5-487d83788611">
               <File Id="Remembrance.exe.config_1469985221" Source="..\Build\Remembrance.exe.config" />
             </Component>
 
-            <Component Id="Component.Remembrance.pdb_2146364199" Guid="51474dcb-fee8-4e92-9270-167e7249a17c">
+            <Component Id="Component.Remembrance.pdb_2146364199" Guid="8911c60e-3704-4471-baa5-487de742ae96">
               <File Id="Remembrance.pdb_2146364199" Source="..\Build\Remembrance.pdb" />
             </Component>
 
-            <Component Id="Component.Remembrance.Resources.dll_813060215" Guid="51474dcb-fee8-4e92-9270-167ef44bea78">
+            <Component Id="Component.Remembrance.Resources.dll_813060215" Guid="8911c60e-3704-4471-baa5-487d6944f792">
               <File Id="Remembrance.Resources.dll_813060215" Source="..\Build\Remembrance.Resources.dll" />
             </Component>
 
-            <Component Id="Component.Remembrance.Resources.pdb_695651231" Guid="51474dcb-fee8-4e92-9270-167ef6a46d89">
+            <Component Id="Component.Remembrance.Resources.pdb_695651231" Guid="8911c60e-3704-4471-baa5-487d6b9d7aa3">
               <File Id="Remembrance.Resources.pdb_695651231" Source="..\Build\Remembrance.Resources.pdb" />
             </Component>
 
-            <Component Id="Component.Uninstall_Remembrance" Guid="51474dcb-fee8-4e92-9270-167ea6ece501">
-              <Shortcut Id="INSTALLDIR.Uninstall_Remembrance" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
+            <Component Id="Component.Uninstall_Remembrance" Guid="8911c60e-3704-4471-baa5-487d1be5f21b">
+              <Shortcut Id="INSTALLDIR.Uninstall_Remembrance" WorkingDirectory="System64Folder" Target="[SystemFolder64FolderFolder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
               <CreateFolder />
               <RemoveFolder Id="INSTALLDIR" On="uninstall" />
@@ -52,20 +52,20 @@
 
             <Directory Id="INSTALLDIR.ru_RU" Name="ru-RU">
 
-              <Component Id="Component.Remembrance.Resources.resources.dll_1880758779" Guid="51474dcb-fee8-4e92-9270-167ecead3db4">
+              <Component Id="Component.Remembrance.Resources.resources.dll_1880758779" Guid="8911c60e-3704-4471-baa5-487d43a64ace">
                 <File Id="Remembrance.Resources.resources.dll_1880758779" Source="..\Build\ru-RU\Remembrance.Resources.resources.dll" />
               </Component>
 
             </Directory>
           </Directory>
 
-          <Component Id="ProgramFilesFolder.Scar" Guid="51474dcb-fee8-4e92-9270-167e15e848dd" KeyPath="yes">
+          <Component Id="ProgramFilesFolder.Scar" Guid="8911c60e-3704-4471-baa5-487d8ae155f7" KeyPath="yes">
             <RemoveFolder Id="ProgramFilesFolder.Scar" On="uninstall" />
           </Component>
 
         </Directory>
 
-        <Component Id="Registry.1" Guid="51474dcb-fee8-4e92-9270-167ebb2f530c" KeyPath="yes">
+        <Component Id="Registry.1" Guid="8911c60e-3704-4471-baa5-487d30286026" KeyPath="yes">
           <RegistryKey Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Run">
             <RegistryValue Id="RemembranceAutostart" Type="string" KeyPath="no" Value="[INSTALLDIR]Remembrance.exe" Name="Remembrance" />
           </RegistryKey>
@@ -79,8 +79,8 @@
       <Directory Id="ProgramMenuFolder" Name="ProgramMenuFolder">
         <Directory Id="ProgramMenuFolder.Remembrance" Name="Remembrance">
 
-          <Component Id="Component.Uninstall_Remembrance.1" Guid="51474dcb-fee8-4e92-9270-167ef4637334">
-            <Shortcut Id="ProgramMenuFolder.Remembrance.Uninstall_Remembrance.1" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
+          <Component Id="Component.Uninstall_Remembrance.1" Guid="8911c60e-3704-4471-baa5-487d695c804e">
+            <Shortcut Id="ProgramMenuFolder.Remembrance.Uninstall_Remembrance.1" WorkingDirectory="System64Folder" Target="[SystemFolder64FolderFolder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
             <CreateFolder />
             <RemoveFolder Id="ProgramMenuFolder.Remembrance" On="uninstall" />
@@ -90,7 +90,7 @@
             </RegistryKey>
           </Component>
 
-          <Component Id="Component.Remembrance__" Guid="51474dcb-fee8-4e92-9270-167e866ab025">
+          <Component Id="Component.Remembrance__" Guid="8911c60e-3704-4471-baa5-487dfb63bd3f">
             <Shortcut Id="ProgramMenuFolder.Remembrance.Remembrance__" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
             <CreateFolder />
@@ -105,7 +105,7 @@
 
       <Directory Id="DesktopFolder" Name="DesktopFolder">
 
-        <Component Id="Component.Remembrance.1" Guid="51474dcb-fee8-4e92-9270-167e4be2bc4b">
+        <Component Id="Component.Remembrance.1" Guid="8911c60e-3704-4471-baa5-487dc0dbc965">
           <Shortcut Id="DesktopFolder.Remembrance.1" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
           <CreateFolder />
@@ -117,7 +117,7 @@
 
       </Directory>
 
-      <Component Id="TARGETDIR" Guid="51474dcb-fee8-4e92-9270-167e31e2f500" KeyPath="yes">
+      <Component Id="TARGETDIR" Guid="8911c60e-3704-4471-baa5-487da6db021a" KeyPath="yes">
         <RemoveFolder Id="TARGETDIR" On="uninstall" />
       </Component>
 
@@ -134,7 +134,7 @@
     <MajorUpgrade AllowSameVersionUpgrades="no" DowngradeErrorMessage="A later version of [ProductName] is already installed" Schedule="afterInstallInitialize" />
 
     <Upgrade Id="a235657a-58d6-4239-9428-9d0f8840a45b">
-      <UpgradeVersion Minimum="0.0.0.0" Maximum="1.0.7018.41710" IncludeMinimum="yes" IncludeMaximum="yes" Property="UPGRADEFOUND" />
+      <UpgradeVersion Minimum="0.0.0.0" Maximum="1.0.7024.41272" IncludeMinimum="yes" IncludeMaximum="yes" Property="UPGRADEFOUND" />
     </Upgrade>
 
     <CustomAction Id="OpenFolder" BinaryKey="OpenFolder_File" DllEntry="OpenFolder" Return="check" Execute="immediate" />
@@ -161,8 +161,8 @@
     <Property Id="WixSharp_UI_INSTALLDIR" Value="INSTALLDIR" />
     <Property Id="UAC_REVEALER_ENABLED" Value="true" />
     <Property Id="UAC_WARNING" Value="Please wait for UAC prompt to appear.&#xD;&#xA;&#xD;&#xA;If it appears minimized then activate it from the taskbar." />
-    <Property Id="WixSharp_InstallDialogs" Value="WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.WelcomeDialog&#xA;WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.InstallDirDialog&#xA;WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ProgressDialog&#xA;WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ExitDialog" />
-    <Property Id="WixSharp_ModifyDialogs" Value="WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.MaintenanceTypeDialog&#xA;WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ProgressDialog&#xA;WixSharp.UI, Version=1.9.4.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ExitDialog" />
+    <Property Id="WixSharp_InstallDialogs" Value="WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.WelcomeDialog&#xA;WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.InstallDirDialog&#xA;WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ProgressDialog&#xA;WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ExitDialog" />
+    <Property Id="WixSharp_ModifyDialogs" Value="WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.MaintenanceTypeDialog&#xA;WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ProgressDialog&#xA;WixSharp.UI, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3775edd25acc43c2|WixSharp.UI.Forms.ExitDialog" />
     <Property Id="ARPPRODUCTICON" Value="app_icon.ico" />
 
     <Feature Id="Complete" Title="Complete" Absent="allow" Level="1">

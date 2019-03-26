@@ -8,20 +8,25 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
-using Scar.Common.WPF.Localization;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationDetailsCardViewModel : IDisposable
+    public sealed class TranslationDetailsCardViewModel : BaseViewModel
     {
+        [NotNull]
+        private readonly ICultureManager _cultureManager;
+
         [NotNull]
         private readonly ILog _logger;
 
@@ -48,8 +53,12 @@ namespace Remembrance.ViewModel
             [NotNull] IMessageHub messageHub,
             [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
             [NotNull] IPredictor predictor,
-            [NotNull] ILanguageManager languageManager)
+            [NotNull] ILanguageManager languageManager,
+            [NotNull] ICultureManager cultureManager,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
+            _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -88,7 +97,7 @@ namespace Remembrance.ViewModel
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
         [CanBeNull]
-        public PrepositionsCollection PrepositionsCollection { get; private set; }
+        public PrepositionsCollection? PrepositionsCollection { get; private set; }
 
         [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
@@ -96,19 +105,23 @@ namespace Remembrance.ViewModel
         [NotNull]
         public string Word { get; }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (var subscriptionToken in _subscriptionTokens)
+            base.Dispose(disposing);
+            if (disposing)
             {
-                _messageHub.Unsubscribe(subscriptionToken);
-            }
+                foreach (var subscriptionToken in _subscriptionTokens)
+                {
+                    _messageHub.Unsubscribe(subscriptionToken);
+                }
 
-            _subscriptionTokens.Clear();
+                _subscriptionTokens.Clear();
+            }
         }
 
         [ItemCanBeNull]
         [NotNull]
-        private async Task<PrepositionsCollection> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
+        private async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
         {
             var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
@@ -201,7 +214,7 @@ namespace Remembrance.ViewModel
             await Task.Run(
                     () =>
                     {
-                        CultureUtilities.ChangeCulture(cultureInfo);
+                        _cultureManager.ChangeCulture(cultureInfo);
 
                         foreach (var partOfSpeechTranslation in TranslationDetails.TranslationResult.PartOfSpeechTranslations)
                         {

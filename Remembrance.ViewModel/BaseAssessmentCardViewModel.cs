@@ -9,21 +9,24 @@ using Common.Logging;
 using Easy.MessageHub;
 using JetBrains.Annotations;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
-using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.Localization;
-using Scar.Common.WPF.ViewModel;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public abstract class BaseAssessmentCardViewModel : IRequestCloseViewModel, IDisposable
+    public abstract class BaseAssessmentCardViewModel : BaseViewModel
     {
+        [NotNull]
+        private readonly ICultureManager _cultureManager;
+
         [NotNull]
         private readonly IPauseManager _pauseManager;
 
@@ -53,7 +56,10 @@ namespace Remembrance.ViewModel
             [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
             [NotNull] IPauseManager pauseManager,
             [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory)
+            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            [NotNull] ICultureManager cultureManager,
+            [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -61,6 +67,7 @@ namespace Remembrance.ViewModel
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
+            _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             LearningInfoViewModel = learningInfoViewModelFactory(translationInfo.LearningInfo);
 
@@ -88,7 +95,7 @@ namespace Remembrance.ViewModel
 
             pauseManager.Pause(PauseReason.CardIsVisible, wordViewModel.ToString());
 
-            WindowClosedCommand = new CorrelationCommand(WindowClosed);
+            WindowClosedCommand = AddCommand(WindowClosed);
 
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
@@ -104,7 +111,7 @@ namespace Remembrance.ViewModel
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
         [CanBeNull]
-        public string Tooltip { get; }
+        public string? Tooltip { get; }
 
         [NotNull]
         public ICommand WindowClosedCommand { get; }
@@ -115,23 +122,25 @@ namespace Remembrance.ViewModel
         [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (var subscriptionToken in _subscriptionTokens)
+            base.Dispose(disposing);
+            if (disposing)
             {
-                MessageHub.Unsubscribe(subscriptionToken);
+                foreach (var subscriptionToken in _subscriptionTokens)
+                {
+                    MessageHub.Unsubscribe(subscriptionToken);
+                }
+
+                _subscriptionTokens.Clear();
             }
-
-            _subscriptionTokens.Clear();
         }
-
-        public event EventHandler RequestClose;
 
         protected async void CloseWindowWithTimeout(TimeSpan closeTimeout)
         {
             Logger.TraceFormat("Closing window in {0}...", closeTimeout);
             await Task.Delay(closeTimeout).ConfigureAwait(true);
-            RequestClose?.Invoke(this, new EventArgs());
+            CloseWindow();
             Logger.Debug("Window is closed");
         }
 
@@ -171,7 +180,7 @@ namespace Remembrance.ViewModel
             await Task.Run(
                     () =>
                     {
-                        CultureUtilities.ChangeCulture(cultureInfo);
+                        _cultureManager.ChangeCulture(cultureInfo);
                         Word.ReRenderWord();
                     },
                     CancellationToken.None)

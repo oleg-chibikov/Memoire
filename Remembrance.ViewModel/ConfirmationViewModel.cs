@@ -2,14 +2,14 @@ using System;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using PropertyChanged;
-using Scar.Common.WPF.Commands;
-using Scar.Common.WPF.ViewModel;
+using Scar.Common.MVVM.Commands;
+using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     [UsedImplicitly]
-    public sealed class ConfirmationViewModel : IRequestCloseViewModel
+    public sealed class ConfirmationViewModel : BaseViewModel
     {
         [NotNull]
         public string Text { get; }
@@ -21,12 +21,13 @@ namespace Remembrance.ViewModel
         [DoNotNotify]
         public Task<bool> UserInput => _taskCompletionSource.Task;
 
-        public ConfirmationViewModel(bool showButtons, [NotNull] string text)
+        public ConfirmationViewModel(bool showButtons, [NotNull] string text, [NotNull] ICommandManager commandManager)
+            : base(commandManager)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
-            DeclineCommand = new CorrelationCommand(Decline);
-            ConfirmCommand = new CorrelationCommand(Confirm);
-            WindowClosedCommand = new CorrelationCommand(Decline);
+            DeclineCommand = AddCommand(Decline);
+            ConfirmCommand = AddCommand(Confirm);
+            WindowClosedCommand = AddCommand(Decline);
             _taskCompletionSource = new TaskCompletionSource<bool>();
             ShowButtons = showButtons;
         }
@@ -48,7 +49,7 @@ namespace Remembrance.ViewModel
             }
 
             _taskCompletionSource.SetResult(ShowButtons == false);
-            RequestClose?.Invoke(this, new EventArgs());
+            CloseWindow();
         }
 
         private void Confirm()
@@ -59,9 +60,7 @@ namespace Remembrance.ViewModel
             }
 
             _taskCompletionSource.SetResult(true);
-            RequestClose?.Invoke(this, new EventArgs());
+            CloseWindow();
         }
-
-        public event EventHandler RequestClose;
     }
 }
