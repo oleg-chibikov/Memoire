@@ -1,32 +1,26 @@
 using System;
-using JetBrains.Annotations;
 
 // ReSharper disable NotNullMemberIsNotInitialized
 // ReSharper disable NonReadonlyMemberInGetHashCode
 namespace Remembrance.Contracts.DAL.Model
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
-        [UsedImplicitly]
         public TranslationEntryKey()
         {
         }
 
-        public TranslationEntryKey([NotNull] string text, [NotNull] string sourceLanguage, [NotNull] string targetLanguage)
+        public TranslationEntryKey(string text, string sourceLanguage, string targetLanguage)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             SourceLanguage = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             TargetLanguage = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
         }
 
-        [NotNull]
         public string SourceLanguage { get; set; }
 
-        [NotNull]
         public string TargetLanguage { get; set; }
 
-        [NotNull]
         public string Text { get; set; }
 
         public bool Equals(TranslationEntryKey other)
@@ -44,7 +38,7 @@ namespace Remembrance.Contracts.DAL.Model
             return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
         }
 
-        public static bool operator ==([CanBeNull] TranslationEntryKey? obj1, [CanBeNull] TranslationEntryKey? obj2)
+        public static bool operator ==(TranslationEntryKey? obj1, TranslationEntryKey? obj2)
         {
             if (ReferenceEquals(obj1, obj2))
             {
@@ -55,7 +49,7 @@ namespace Remembrance.Contracts.DAL.Model
         }
 
         // this is second one '!='
-        public static bool operator !=([CanBeNull] TranslationEntryKey obj1, [CanBeNull] TranslationEntryKey obj2)
+        public static bool operator !=(TranslationEntryKey obj1, TranslationEntryKey obj2)
         {
             return !(obj1 == obj2);
         }

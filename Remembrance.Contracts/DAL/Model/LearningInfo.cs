@@ -1,20 +1,17 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class LearningInfo : TrackedEntity<TranslationEntryKey>
     {
-        [NotNull]
         private LinkedListNode<RepeatType> _current;
 
         private DateTime _lastCardShowTime;
 
         private RepeatType _repeatType;
 
-        [UsedImplicitly]
         public LearningInfo()
         {
             LastCardShowTime = DateTime.Now;

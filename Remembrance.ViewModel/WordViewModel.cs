@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
@@ -15,22 +14,19 @@ using Scar.Common.MVVM.ViewModel;
 // ReSharper disable VirtualMemberCallInConstructor
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public class WordViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
-        [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         public WordViewModel(
-            [NotNull] Word word,
-            [NotNull] string language,
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ICommandManager commandManager)
+            Word word,
+            string language,
+            ITextToSpeechPlayer textToSpeechPlayer,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
@@ -56,21 +52,17 @@ namespace Remembrance.ViewModel
         [DoNotNotify]
         public virtual string Language { get; }
 
-        [NotNull]
         public ICommand LearnWordCommand { get; }
 
-        [NotNull]
         public ICommand PlayTtsCommand { get; }
 
         public int? PriorityGroup { get; protected set; }
 
-        [NotNull]
         public ICommand TogglePriorityCommand { get; }
 
         [DoNotNotify]
         public Word Word { get; }
 
-        [CanBeNull]
         public string? WordInfo =>
             Word.VerbType == null && Word.NounAnimacy == null && Word.NounGender == null
                 ? null
@@ -101,13 +93,11 @@ namespace Remembrance.ViewModel
         {
         }
 
-        [NotNull]
         private async Task LearnWordAsync()
         {
             await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Word.Text, Language), CancellationToken.None).ConfigureAwait(false);
         }
 
-        [NotNull]
         private async Task PlayTtsAsync()
         {
             await _textToSpeechPlayer.PlayTtsAsync(Word.Text, Language, CancellationToken.None).ConfigureAwait(false);

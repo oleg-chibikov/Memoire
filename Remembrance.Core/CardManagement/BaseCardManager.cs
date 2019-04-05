@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Processing.Data;
@@ -10,26 +9,21 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
 {
-    [UsedImplicitly]
     internal abstract class BaseCardManager
     {
-        [NotNull]
         protected readonly ILocalSettingsRepository LocalSettingsRepository;
 
-        [NotNull]
         protected readonly ILog Logger;
 
-        [NotNull]
         protected readonly SynchronizationContext SynchronizationContext;
 
-        [NotNull]
         protected readonly IWindowPositionAdjustmentManager WindowPositionAdjustmentManager;
 
         protected BaseCardManager(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
+            ILocalSettingsRepository localSettingsRepository,
+            ILog logger,
+            SynchronizationContext synchronizationContext,
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             SynchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
@@ -37,8 +31,7 @@ namespace Remembrance.Core.CardManagement
             LocalSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
         }
 
-        [NotNull]
-        public async Task ShowCardAsync([NotNull] TranslationInfo translationInfo, [CanBeNull] IDisplayable? ownerWindow)
+        public async Task ShowCardAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             var window = await TryCreateWindowAsync(translationInfo, ownerWindow).ConfigureAwait(false);
@@ -59,8 +52,6 @@ namespace Remembrance.Core.CardManagement
             Logger.InfoFormat("Window for {0} has been opened", translationInfo);
         }
 
-        [NotNull]
-        [ItemCanBeNull]
-        protected abstract Task<IDisplayable?> TryCreateWindowAsync([NotNull] TranslationInfo translationInfo, IDisplayable? ownerWindow);
+        protected abstract Task<IDisplayable?> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow);
     }
 }

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -13,33 +12,27 @@ using Scar.Common.MVVM.ViewModel;
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    [UsedImplicitly]
     public sealed class LearningInfoViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
         private readonly TranslationEntryKey _translationEntryKey;
 
         private RepeatType _repeatType;
 
         public LearningInfoViewModel(
-            [NotNull] LearningInfo learningInfo,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] ILog logger,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ICommandManager commandManager)
+            LearningInfo learningInfo,
+            ILearningInfoRepository learningInfoRepository,
+            ILog logger,
+            IMessageHub messageHub,
+            SynchronizationContext synchronizationContext,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
@@ -55,10 +48,8 @@ namespace Remembrance.ViewModel
 
         public bool CanDemote => RepeatType != RepeatType.Elementary;
 
-        [NotNull]
         public IRefreshableCommand DemoteCommand { get; }
 
-        [NotNull]
         public ICommand FavoriteCommand { get; }
 
         public bool IsFavorited { get; private set; }
@@ -90,7 +81,7 @@ namespace Remembrance.ViewModel
             ReRenderNextCardShowTimeSwitch = !ReRenderNextCardShowTimeSwitch;
         }
 
-        public void UpdateLearningInfo([NotNull] LearningInfo learningInfo)
+        public void UpdateLearningInfo(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             IsFavorited = learningInfo.IsFavorited;

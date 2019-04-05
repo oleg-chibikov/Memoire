@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 // ReSharper disable VirtualMemberCallInConstructor
@@ -8,14 +7,13 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public class BaseWord : TextEntry, IEquatable<BaseWord>
     {
-        public BaseWord([NotNull] BaseWord word)
+        public BaseWord(BaseWord word)
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
             PartOfSpeech = word.PartOfSpeech;
             Text = word.Text;
         }
 
-        [UsedImplicitly]
         public BaseWord()
         {
         }
@@ -37,7 +35,7 @@ namespace Remembrance.Contracts.DAL.Model
             return StringComparer.InvariantCultureIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
         }
 
-        public static bool operator ==([CanBeNull] BaseWord? obj1, [CanBeNull] BaseWord? obj2)
+        public static bool operator ==(BaseWord? obj1, BaseWord? obj2)
         {
             if (ReferenceEquals(obj1, obj2))
             {
@@ -47,7 +45,7 @@ namespace Remembrance.Contracts.DAL.Model
             return obj1?.Equals(obj2!) == true;
         }
 
-        public static bool operator !=([CanBeNull] BaseWord? obj1, [CanBeNull] BaseWord? obj2)
+        public static bool operator !=(BaseWord? obj1, BaseWord? obj2)
         {
             return !(obj1 == obj2);
         }

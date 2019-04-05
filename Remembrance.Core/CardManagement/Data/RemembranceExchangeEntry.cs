@@ -1,25 +1,21 @@
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Core.CardManagement.Data
 {
-    [UsedImplicitly]
     internal sealed class RemembranceExchangeEntry : IExchangeEntry
     {
-        public RemembranceExchangeEntry([NotNull] TranslationEntry translationEntry, [NotNull] LearningInfo learningInfo)
+        public RemembranceExchangeEntry(TranslationEntry translationEntry, LearningInfo learningInfo)
         {
             TranslationEntry = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             LearningInfo = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
         }
 
-        [NotNull]
         [JsonProperty("LearningInfo", Required = Required.Always)]
         public LearningInfo LearningInfo { get; }
 
-        [NotNull]
         [JsonProperty("TranslationEntry", Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
 

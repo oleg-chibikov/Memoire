@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -20,31 +19,25 @@ using Scar.Common.Events;
 
 namespace Remembrance.Core.Exchange
 {
-    [UsedImplicitly]
     internal abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messenger;
 
-        [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         protected BaseFileImporter(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            ITranslationEntryRepository translationEntryRepository,
+            ILog logger,
+            ITranslationEntryProcessor translationEntryProcessor,
+            IMessageHub messenger,
+            ILearningInfoRepository learningInfoRepository)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -55,7 +48,6 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs> Progress;
 
-        [NotNull]
         public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken cancellationToken)
         {
             _ = fileName ?? throw new ArgumentNullException(nameof(fileName));
@@ -103,22 +95,18 @@ namespace Remembrance.Core.Exchange
             return new ExchangeResult(true, errorsList.Any() ? errorsList : null, successCount);
         }
 
-        [CanBeNull]
-        protected virtual IReadOnlyCollection<ManualTranslation>? GetManualTranslations([NotNull] T exchangeEntry)
+        protected virtual IReadOnlyCollection<ManualTranslation>? GetManualTranslations(T exchangeEntry)
         {
             return null;
         }
 
-        [CanBeNull]
-        protected abstract IReadOnlyCollection<BaseWord>? GetPriorityTranslations([NotNull] T exchangeEntry);
+        protected abstract IReadOnlyCollection<BaseWord>? GetPriorityTranslations(T exchangeEntry);
 
-        [ItemNotNull]
-        [NotNull]
-        protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync([NotNull] T exchangeEntry, CancellationToken cancellationToken);
+        protected abstract Task<TranslationEntryKey> GetTranslationEntryKeyAsync(T exchangeEntry, CancellationToken cancellationToken);
 
-        protected abstract bool UpdateLearningInfo([NotNull] T exchangeEntry, [NotNull] LearningInfo learningInfo);
+        protected abstract bool UpdateLearningInfo(T exchangeEntry, LearningInfo learningInfo);
 
-        private static bool UpdateManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations, [NotNull] TranslationEntry translationEntry)
+        private static bool UpdateManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationEntry translationEntry)
         {
             if (manualTranslations == null)
             {
@@ -134,8 +122,7 @@ namespace Remembrance.Core.Exchange
             return true;
         }
 
-        [CanBeNull]
-        private T[]? Deserialize([NotNull] string fileName)
+        private T[]? Deserialize(string fileName)
         {
             T[]? deserialized = null;
 
@@ -156,11 +143,10 @@ namespace Remembrance.Core.Exchange
             return deserialized;
         }
 
-        [ItemCanBeNull]
         private async Task<TranslationInfo?> ImportNewEntry(
             CancellationToken cancellationToken,
-            [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations)
+            TranslationEntryKey translationEntryKey,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
@@ -171,12 +157,11 @@ namespace Remembrance.Core.Exchange
                 .ConfigureAwait(false);
         }
 
-        [ItemCanBeNull]
         private async Task<TranslationEntry?> ImportOneEntry(
             CancellationToken cancellationToken,
-            [NotNull] T exchangeEntry,
-            [NotNull] IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
-            [NotNull] List<string> errorsList)
+            T exchangeEntry,
+            IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
+            List<string> errorsList)
         {
             cancellationToken.ThrowIfCancellationRequested();
             _logger.TraceFormat("Importing {0}...", exchangeEntry.Text);
@@ -236,14 +221,14 @@ namespace Remembrance.Core.Exchange
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
 
-        private void PublishPriorityWord([NotNull] TranslationEntry translationEntry, [NotNull] BaseWord priorityTranslation)
+        private void PublishPriorityWord(TranslationEntry translationEntry, BaseWord priorityTranslation)
         {
             _logger.InfoFormat("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
             var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
             _messenger.Publish(priorityWordKey);
         }
 
-        private bool UpdatePriorityTranslationsAsync([NotNull] T exchangeEntry, [NotNull] TranslationEntry translationEntry)
+        private bool UpdatePriorityTranslationsAsync(T exchangeEntry, TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
             if (priorityTranslations == null || priorityTranslations?.Any() != true)

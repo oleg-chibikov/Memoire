@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Languages;
@@ -14,20 +13,18 @@ using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl
     {
-        [NotNull]
         private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         public AddTranslationViewModel(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger,
-            [NotNull] IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
-            [NotNull] ICommandManager commandManager)
+            ILocalSettingsRepository localSettingsRepository,
+            ILanguageManager languageManager,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ILog logger,
+            IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
+            ICommandManager commandManager)
             : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
         {
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));

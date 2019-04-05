@@ -1,16 +1,15 @@
-using JetBrains.Annotations;
+using System;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
+using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.DAL.LiteDB;
-using Scar.Common.IO;
 
 namespace Remembrance.DAL.Local
 {
-    [UsedImplicitly]
     internal sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, TranslationEntryKey>, IPrepositionsInfoRepository
     {
-        public PrepositionsInfoRepository()
-            : base(CommonPaths.SettingsPath)
+        public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider)
+            : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);

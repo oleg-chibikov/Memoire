@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -14,24 +13,32 @@ using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationVariantViewModel : PriorityWordViewModel
     {
         public TranslationVariantViewModel(
-            [NotNull] TranslationEntry translationEntry,
-            [NotNull] TranslationVariant translationVariant,
-            [NotNull] string parentText,
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
-            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ICommandManager commandManager)
-            : base(translationEntry, translationVariant, textToSpeechPlayer, messageHub, translationEntryProcessor, logger, wordViewModelFactory, translationEntryRepository, commandManager)
+            TranslationEntry translationEntry,
+            TranslationVariant translationVariant,
+            string parentText,
+            ITextToSpeechPlayer textToSpeechPlayer,
+            ITranslationEntryProcessor translationEntryProcessor,
+            IMessageHub messageHub,
+            Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
+            Func<Word, string, WordViewModel> wordViewModelFactory,
+            Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            ILog logger,
+            ITranslationEntryRepository translationEntryRepository,
+            ICommandManager commandManager)
+            : base(
+                translationEntry,
+                translationVariant,
+                textToSpeechPlayer,
+                messageHub,
+                translationEntryProcessor,
+                logger,
+                wordViewModelFactory,
+                translationEntryRepository,
+                commandManager)
         {
             _ = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
@@ -44,16 +51,12 @@ namespace Remembrance.ViewModel
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationEntry.Id, Word), parentText);
         }
 
-        [CanBeNull]
         public IReadOnlyCollection<Example>? Examples { get; }
 
-        [CanBeNull]
         public IReadOnlyCollection<WordViewModel>? Meanings { get; }
 
-        [CanBeNull]
         public IReadOnlyCollection<PriorityWordViewModel>? Synonyms { get; }
 
-        [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }
     }
 }

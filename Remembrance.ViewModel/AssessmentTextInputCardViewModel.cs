@@ -3,9 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
@@ -14,29 +12,28 @@ using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
 using Scar.Common;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentTextInputCardViewModel : BaseAssessmentCardViewModel
     {
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
         public AssessmentTextInputCardViewModel(
-            [NotNull] TranslationInfo translationInfo,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ILog logger,
-            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] ICultureManager cultureManager,
-            [NotNull] ICommandManager commandManager)
+            TranslationInfo translationInfo,
+            IMessageHub messageHub,
+            ILog logger,
+            Func<Word, string, WordViewModel> wordViewModelFactory,
+            ILearningInfoRepository learningInfoRepository,
+            IAssessmentInfoProvider assessmentInfoProvider,
+            IPauseManager pauseManager,
+            Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            ICultureManager cultureManager,
+            ICommandManager commandManager)
             : base(
                 translationInfo,
                 messageHub,
@@ -56,13 +53,10 @@ namespace Remembrance.ViewModel
             ProvideAnswerCommand = AddCommand(ProvideAnswer);
         }
 
-        [CanBeNull]
         public bool? Accepted { get; private set; }
 
-        [NotNull]
         public ICommand ProvideAnswerCommand { get; }
 
-        [CanBeNull]
         public string? ProvidedAnswer { get; set; }
 
         private TimeSpan ChangeRepeatType(Word mostSuitable, int currentMinDistance)

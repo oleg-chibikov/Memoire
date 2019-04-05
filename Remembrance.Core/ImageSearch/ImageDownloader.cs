@@ -5,25 +5,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Resources;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch
 {
-    [UsedImplicitly]
     internal class ImageDownloader : IImageDownloader
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public ImageDownloader([NotNull] ILog logger, [NotNull] IMessageHub messageHub)
+        public ImageDownloader(ILog logger, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));

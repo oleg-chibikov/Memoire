@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -19,39 +18,29 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class WordImageViewerViewModel : BaseViewModel
     {
         internal const string DefaultSearchTextTemplate = "{0} {1}";
 
-        [NotNull]
         private readonly ICancellationTokenSourceProvider _cancellationTokenSourceProvider;
 
-        [NotNull]
         private readonly IImageDownloader _imageDownloader;
 
-        [NotNull]
         private readonly IImageSearcher _imageSearcher;
 
         private readonly bool _isReadonly;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly string _thisAndParentSearchText;
 
-        [NotNull]
         private readonly IWordImageInfoRepository _wordImageInfoRepository;
 
-        [NotNull]
         private readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
 
-        [NotNull]
         private readonly WordKey _wordKey;
 
         private int?[] _nonAvailableIndexes = new int?[2];
@@ -59,16 +48,16 @@ namespace Remembrance.ViewModel
         private bool _shouldRepeat;
 
         public WordImageViewerViewModel(
-            [NotNull] WordKey wordKey,
-            [NotNull] string parentText,
-            [NotNull] ILog logger,
-            [NotNull] IWordImageInfoRepository wordImageInfoRepository,
-            [NotNull] ICancellationTokenSourceProvider cancellationTokenSourceProvider,
-            [NotNull] IImageDownloader imageDownloader,
-            [NotNull] IImageSearcher imageSearcher,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] IWordImageSearchIndexRepository wordImageSearchIndexRepository,
-            [NotNull] ICommandManager commandManager,
+            WordKey wordKey,
+            string parentText,
+            ILog logger,
+            IWordImageInfoRepository wordImageInfoRepository,
+            ICancellationTokenSourceProvider cancellationTokenSourceProvider,
+            IImageDownloader imageDownloader,
+            IImageSearcher imageSearcher,
+            IMessageHub messageHub,
+            IWordImageSearchIndexRepository wordImageSearchIndexRepository,
+            ICommandManager commandManager,
             bool isReadonly = false)
             : base(commandManager)
         {
@@ -92,7 +81,6 @@ namespace Remembrance.ViewModel
             ConstructionTask = wordImageInfo != null ? LoadInitialImage(wordImageInfo) : SetNextOrPreviousImageAsync(true);
         }
 
-        [CanBeNull]
         public byte[]? ThumbnailBytes { get; private set; }
 
         public bool IsLoading { get; private set; } = true;
@@ -105,38 +93,30 @@ namespace Remembrance.ViewModel
         [DependsOn(nameof(SearchIndex), nameof(IsAlternate))]
         public bool IsSetPreviousImageVisible => !_isReadonly && !IsFirst;
 
-        [NotNull]
         public ICommand ReloadImageCommand { get; }
 
-        [NotNull]
         public ICommand SetNextImageCommand { get; }
 
-        [NotNull]
         public ICommand SetPreviousImageCommand { get; }
 
         [DependsOn(nameof(ImageName), nameof(ImageUrl), nameof(SearchIndex), nameof(SearchText), nameof(IsAlternate))]
-        [CanBeNull]
+
         public string? ToolTip => _isReadonly ? null : $"{SearchIndex + 1}{AlternateInfo}. {SearchText}: {ImageName} ({ImageUrl})";
 
-        [NotNull]
         internal Task ConstructionTask { get; }
 
         internal bool IsAlternate { get; private set; }
 
         internal int SearchIndex { get; private set; }
 
-        [CanBeNull]
         private string? AlternateInfo => IsAlternate ? " (*)" : null;
 
-        [CanBeNull]
         private string? ImageName { get; set; }
 
-        [CanBeNull]
         private string? ImageUrl { get; set; }
 
         private bool IsFirst => SearchIndex == 0 && !IsAlternate;
 
-        [NotNull]
         private string SearchText => IsAlternate ? _wordKey.Word.Text : _thisAndParentSearchText;
 
         public override string ToString()
@@ -144,26 +124,23 @@ namespace Remembrance.ViewModel
             return $"Image for {_wordKey}";
         }
 
-        [NotNull]
         internal async Task ReloadImageAsync()
         {
             _shouldRepeat = true;
             await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
         }
 
-        [NotNull]
         internal async Task SetNextImageAsync()
         {
             await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
         }
 
-        [NotNull]
         internal async Task SetPreviousImageAsync()
         {
             await SetNextOrPreviousImageAsync(false).ConfigureAwait(false);
         }
 
-        private async Task LoadInitialImage([NotNull] WordImageInfo wordImageInfo)
+        private async Task LoadInitialImage(WordImageInfo wordImageInfo)
         {
             IsLoading = true;
             var wordImageSearchIndex = _wordImageSearchIndexRepository.TryGetById(wordImageInfo.Id);
@@ -177,7 +154,6 @@ namespace Remembrance.ViewModel
         /// <remarks>
         /// This function swaps searchText every next time until one of the texts stops to give results
         /// </remarks>
-        [NotNull]
         private async Task SetNextOrPreviousImageAsync(bool increase)
         {
             if (IsFirst && !increase)
@@ -235,8 +211,7 @@ namespace Remembrance.ViewModel
             IsLoading = false;
         }
 
-        [NotNull]
-        private async Task SetWordImageAsync(int index, [NotNull] string searchText)
+        private async Task SetWordImageAsync(int index, string searchText)
         {
             WordImageInfo wordImageInfo;
             _logger.TraceFormat("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
@@ -312,8 +287,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
-        private async Task UpdateImageViewAsync([NotNull] WordImageInfo wordImageInfo, [CanBeNull] WordImageSearchIndex? wordImageSearchIndex)
+        private async Task UpdateImageViewAsync(WordImageInfo wordImageInfo, WordImageSearchIndex? wordImageSearchIndex)
         {
             if (wordImageSearchIndex != null)
             {

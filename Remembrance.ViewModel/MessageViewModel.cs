@@ -1,6 +1,5 @@
 using System;
 using Common.Logging;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Resources;
 using Scar.Common.Messages;
@@ -9,11 +8,10 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel : BaseViewModel
     {
-        public MessageViewModel([NotNull] Message message, [NotNull] ILog logger, [NotNull] ICommandManager commandManager)
+        public MessageViewModel(Message message, ILog logger, ICommandManager commandManager)
             : base(commandManager)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -24,7 +22,6 @@ namespace Remembrance.ViewModel
 
         public TimeSpan AutoCloseTimeout { get; }
 
-        [NotNull]
         public Message Message { get; }
     }
 }

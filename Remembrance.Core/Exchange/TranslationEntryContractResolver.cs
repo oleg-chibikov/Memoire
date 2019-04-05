@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Remembrance.Contracts.DAL.Model;
@@ -11,7 +10,6 @@ namespace Remembrance.Core.Exchange
 {
     internal sealed class TranslationEntryContractResolver : DefaultContractResolver
     {
-        [NotNull]
         private static readonly IDictionary<Type, string[]> Excluded = new Dictionary<Type, string[]>
         {
             {
@@ -22,7 +20,6 @@ namespace Remembrance.Core.Exchange
             }
         };
 
-        [CanBeNull]
         private Type? _currentDeclaringType;
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
@@ -31,8 +28,7 @@ namespace Remembrance.Core.Exchange
             return base.CreateProperties(type, memberSerialization);
         }
 
-        [NotNull]
-        protected override JsonProperty CreateProperty([NotNull] MemberInfo member, MemberSerialization memberSerialization)
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
             var objectType = _currentDeclaringType;
@@ -40,7 +36,7 @@ namespace Remembrance.Core.Exchange
             return property;
         }
 
-        private bool ShouldExclude([NotNull] MemberInfo memberInfo, [CanBeNull] Type? objectType)
+        private bool ShouldExclude(MemberInfo memberInfo, Type? objectType)
         {
             if (objectType == null)
             {

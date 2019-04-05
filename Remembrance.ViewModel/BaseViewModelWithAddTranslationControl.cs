@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -14,41 +13,34 @@ using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Scar.Common.MVVM.Commands;
-using Scar.Common.View.Contracts;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Common.View.Contracts;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseViewModelWithAddTranslationControl : BaseViewModel
     {
-        [NotNull]
         private readonly ILanguageManager _languageManager;
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
-        [NotNull]
         protected readonly ILog Logger;
 
-        [NotNull]
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
-        [NotNull]
         private string _selectedSourceLanguage;
 
-        [NotNull]
         private string _selectedTargetLanguage;
 
         protected BaseViewModelWithAddTranslationControl(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger,
-            [NotNull] ICommandManager commandManager)
+            ILocalSettingsRepository localSettingsRepository,
+            ILanguageManager languageManager,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ILog logger,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
@@ -68,19 +60,14 @@ namespace Remembrance.ViewModel
             logger.Debug("Languages have been loaded");
         }
 
-        [NotNull]
         public IReadOnlyCollection<Language> AvailableSourceLanguages { get; }
 
-        [NotNull]
         public ObservableCollection<Language> AvailableTargetLanguages { get; }
 
-        [CanBeNull]
         public string? ManualTranslation { get; set; }
 
-        [NotNull]
         public ICommand SaveCommand { get; }
 
-        [NotNull]
         public string SelectedSourceLanguage
         {
             get => _selectedSourceLanguage;
@@ -99,7 +86,6 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
         public string SelectedTargetLanguage
         {
             get => _selectedTargetLanguage;
@@ -115,7 +101,6 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [CanBeNull]
         public string? Text { get; set; }
 
         protected override void Dispose(bool disposing)
@@ -125,6 +110,7 @@ namespace Remembrance.ViewModel
                 CancellationTokenSource.Cancel();
                 Cleanup();
             }
+
             base.Dispose(disposing);
         }
 
@@ -132,11 +118,8 @@ namespace Remembrance.ViewModel
         {
         }
 
-        [ItemCanBeNull]
-        [NotNull]
         protected abstract Task<IDisplayable?> GetWindowAsync();
 
-        [NotNull]
         private async Task SaveAsync()
         {
             var text = Text;

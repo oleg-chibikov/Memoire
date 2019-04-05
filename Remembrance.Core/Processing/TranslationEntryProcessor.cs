@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -23,70 +22,54 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.Processing
 {
-    [UsedImplicitly]
     internal sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
-        [NotNull]
         private readonly ITranslationDetailsCardManager _cardManager;
 
-        [NotNull]
         private readonly ILanguageManager _languageManager;
 
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
-        [NotNull]
         private readonly Func<ILoadingWindow> _loadingWindowFactory;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
-        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
         private readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
-        [NotNull]
         private readonly ITranslationDetailsRepository _translationDetailsRepository;
 
-        [NotNull]
         private readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        [NotNull]
         private readonly IWordImageInfoRepository _wordImageInfoRepository;
 
-        [NotNull]
         private readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
 
-        [NotNull]
         private readonly IWordsTranslator _wordsTranslator;
 
         public TranslationEntryProcessor(
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationDetailsCardManager cardManager,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationDetailsRepository translationDetailsRepository,
-            [NotNull] IWordsTranslator wordsTranslator,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] IWordImageInfoRepository wordImageInfoRepository,
-            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] ITranslationEntryDeletionRepository translationEntryDeletionRepository,
-            [NotNull] IWordImageSearchIndexRepository wordImageSearchIndexRepository,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] Func<ILoadingWindow> loadingWindowFactory,
-            [NotNull] SynchronizationContext synchronizationContext)
+            ITextToSpeechPlayer textToSpeechPlayer,
+            ILog logger,
+            ITranslationDetailsCardManager cardManager,
+            IMessageHub messageHub,
+            ITranslationDetailsRepository translationDetailsRepository,
+            IWordsTranslator wordsTranslator,
+            ITranslationEntryRepository translationEntryRepository,
+            IWordImageInfoRepository wordImageInfoRepository,
+            IPrepositionsInfoRepository prepositionsInfoRepository,
+            ILearningInfoRepository learningInfoRepository,
+            ITranslationEntryDeletionRepository translationEntryDeletionRepository,
+            IWordImageSearchIndexRepository wordImageSearchIndexRepository,
+            ILanguageManager languageManager,
+            Func<ILoadingWindow> loadingWindowFactory,
+            SynchronizationContext synchronizationContext)
         {
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
@@ -233,7 +216,7 @@ namespace Remembrance.Core.Processing
             return new TranslationInfo(translationEntry, translationDetails, learningInfo);
         }
 
-        private static void CapitalizeManualTranslations([CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations)
+        private static void CapitalizeManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
             if (manualTranslations == null)
             {
@@ -248,11 +231,10 @@ namespace Remembrance.Core.Processing
             }
         }
 
-        [NotNull]
         private static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
-            [NotNull] string text,
-            [NotNull] IReadOnlyCollection<ManualTranslation> manualTranslations,
-            [NotNull] IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
+            string text,
+            IReadOnlyCollection<ManualTranslation> manualTranslations,
+            IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             var groups = manualTranslations.GroupBy(x => x.PartOfSpeech);
             var manualPartOfSpeechTranslations = groups.Select(
@@ -290,10 +272,7 @@ namespace Remembrance.Core.Processing
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
-        private void DeleteFromPriority(
-            [NotNull] TranslationEntry translationEntry,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
-            [NotNull] TranslationDetails translationDetails)
+        private void DeleteFromPriority(TranslationEntry translationEntry, IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
                 .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants)
@@ -322,9 +301,7 @@ namespace Remembrance.Core.Processing
             }
         }
 
-        [ItemCanBeNull]
-        [NotNull]
-        private async Task<TranslationEntryKey?> GetTranslationKeyAsync([NotNull] TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
+        private async Task<TranslationEntryKey?> GetTranslationKeyAsync(TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
         {
             var text = translationEntryAdditionInfo.Text;
             var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
@@ -356,7 +333,7 @@ namespace Remembrance.Core.Processing
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
-        private async Task PostProcessWordAsync([CanBeNull] IDisplayable? ownerWindow, [NotNull] TranslationInfo translationInfo, CancellationToken cancellationToken)
+        private async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             var playTtsTask = _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken);
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
@@ -394,11 +371,9 @@ namespace Remembrance.Core.Processing
             return (translationDetails, false);
         }
 
-        [ItemCanBeNull]
-        [NotNull]
         private async Task<TranslationResult?> TranslateAsync(
-            [NotNull] TranslationEntryKey translationEntryKey,
-            [CanBeNull] IReadOnlyCollection<ManualTranslation>? manualTranslations,
+            TranslationEntryKey translationEntryKey,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             // Used En as ui language to simplify conversion of common words to the enums

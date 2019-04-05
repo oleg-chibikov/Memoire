@@ -1,12 +1,11 @@
 using System;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Contracts.Processing.Data
 {
     public sealed class PriorityWordKey
     {
-        public PriorityWordKey(bool isPriority, [NotNull] WordKey wordKey)
+        public PriorityWordKey(bool isPriority, WordKey wordKey)
         {
             IsPriority = isPriority;
             WordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
@@ -14,7 +13,6 @@ namespace Remembrance.Contracts.Processing.Data
 
         public bool IsPriority { get; }
 
-        [NotNull]
         public WordKey WordKey { get; }
 
         public override string ToString()

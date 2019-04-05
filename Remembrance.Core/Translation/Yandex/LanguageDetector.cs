@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.LanguageDetector;
@@ -13,31 +12,26 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    [UsedImplicitly]
     internal sealed class LanguageDetector : ILanguageDetector
     {
-        [NotNull]
         private static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
         {
             ContractResolver = new ListResultContractResolver()
         };
 
-        [NotNull]
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new DetectionResultContractResolver()
         };
 
-        [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public LanguageDetector([NotNull] IMessageHub messageHub)
+        public LanguageDetector(IMessageHub messageHub)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }

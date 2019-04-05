@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -25,7 +24,7 @@ namespace Remembrance.Core
             return contract;
         }
 
-        protected override string ResolvePropertyName([NotNull] string propertyName)
+        protected override string ResolvePropertyName(string propertyName)
         {
             var resolved = PropertyMappings.TryGetValue(propertyName, out var resolvedName);
             return resolved ? resolvedName : base.ResolvePropertyName(propertyName);

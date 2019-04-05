@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Remembrance.Contracts.Sync;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Core.Sync
 {
-    [UsedImplicitly]
     internal sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
         where TEntity : IEntity<TId>
         where TDeletionEntity : IEntity<TId>, ITrackedEntity
@@ -19,12 +17,11 @@ namespace Remembrance.Core.Sync
 
         private readonly IList<TId> _ownDeletionEventsToClear;
 
-        [NotNull]
         private readonly TDeletionEventRepository _ownRepository;
 
         private bool _collectInfo = true;
 
-        public DeletionEventsSyncExtender([NotNull] TDeletionEventRepository ownRepository)
+        public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository)
         {
             _ownRepository = ownRepository ?? throw new ArgumentNullException(nameof(ownRepository));
             _ownDeletionEventsToClear = new List<TId>(_ownRepository.GetAll().Select(x => x.Id));

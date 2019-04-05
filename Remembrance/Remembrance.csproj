@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props')" />
+  <Import Project="..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,8 +45,8 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.9.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.9.1\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -57,8 +57,8 @@
     <Reference Include="Common.Logging.NLog41, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.NLog41.3.4.1\lib\net40\Common.Logging.NLog41.dll</HintPath>
     </Reference>
-    <Reference Include="Costura, Version=3.3.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.3.3.2\lib\net40\Costura.dll</HintPath>
+    <Reference Include="Costura, Version=3.3.3.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.3.3.3\lib\net40\Costura.dll</HintPath>
     </Reference>
     <Reference Include="Easy.MessageHub, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Easy.MessageHub.4.0.1\lib\net45\Easy.MessageHub.dll</HintPath>
@@ -97,6 +97,12 @@
     <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.ApplicationLifetime, Version=1.0.7034.40458, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.ApplicationLifetime.1.0.7034.40458\lib\netstandard2.0\Scar.Common.ApplicationLifetime.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.ApplicationLifetime.Contracts, Version=1.0.7034.38220, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.ApplicationLifetime.Contracts.1.0.7034.38220\lib\netstandard2.0\Scar.Common.ApplicationLifetime.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.Async, Version=1.0.7016.37652, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Async.1.0.7016.37652\lib\netstandard2.0\Scar.Common.Async.dll</HintPath>
     </Reference>
@@ -109,17 +115,20 @@
     <Reference Include="Scar.Common.DAL.LiteDB, Version=1.0.7016.37846, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.DAL.LiteDB.1.0.7016.37846\lib\netstandard2.0\Scar.Common.DAL.LiteDB.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.IO, Version=1.0.7018.24639, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.IO.1.0.7018.24639\lib\netstandard2.0\Scar.Common.IO.dll</HintPath>
+    <Reference Include="Scar.Common.IO, Version=1.0.7034.37794, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.IO.1.0.7034.37794\lib\netstandard2.0\Scar.Common.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Scar.Common.Localization, Version=1.0.7027.23438, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Localization.1.0.7027.23438\lib\netstandard2.0\Scar.Common.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.Logging, Version=1.0.6719.22279, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.Logging.1.0.6719.22279\lib\net47\Scar.Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.Logging.Autofac, Version=1.0.7027.24662, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Logging.Autofac.1.0.7027.24662\lib\netstandard2.0\Scar.Common.Logging.Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.MVVM.CollectionView, Version=1.0.7024.40951, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.MVVM.CollectionView.1.0.7024.40951\lib\netstandard2.0\Scar.Common.MVVM.CollectionView.dll</HintPath>
-    </Reference>
-    <Reference Include="Scar.Common.MVVM.CollectionView.WPF, Version=1.0.7024.41200, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.MVVM.CollectionView.WPF.1.0.7024.41200\lib\net47\Scar.Common.MVVM.CollectionView.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.MVVM.Commands, Version=1.0.7021.22562, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.MVVM.Commands.1.0.7021.22562\lib\netstandard2.0\Scar.Common.MVVM.Commands.dll</HintPath>
@@ -145,26 +154,29 @@
     <Reference Include="Scar.Common.View.WindowFactory, Version=1.0.7016.39154, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.View.WindowFactory.1.0.7016.39154\lib\netstandard2.0\Scar.Common.View.WindowFactory.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.WPF.CollectionView, Version=1.0.7028.19256, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.CollectionView.1.0.7028.19256\lib\net47\Scar.Common.WPF.CollectionView.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox, Version=1.0.6789.21716, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.AutoCompleteTextBox.1.0.6789.21716\lib\net47\Scar.Common.WPF.Controls.AutoCompleteTextBox.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.6998.22355, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.6998.22355\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.7033.24214, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.7033.24214\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink, Version=1.0.7008.19827, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.1.0.7008.19827\lib\net47\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.7008.17071, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.7008.17071\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.7031.28253, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.7031.28253\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.6995.37007, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.6995.37007\lib\net47\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.7027.26012, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.7027.26012\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.6890.23681, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.6890.23681\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Startup, Version=1.0.7034.39696, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Startup.1.0.7034.39696\lib\net47\Scar.Common.WPF.Startup.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
@@ -361,7 +373,7 @@ foreach (var item in filesToCleanup)
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.4.0.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.4.0.2\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.2\build\Costura.Fody.props'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props'))" />
   </Target>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>del "$(SolutionDir)Release\Remembrance.Portable.7z"

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -10,15 +9,14 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationResultViewModel : BaseViewModel
     {
         public TranslationResultViewModel(
-            [NotNull] TranslationResult translationResult,
-            [NotNull] TranslationEntry translationEntry,
-            [NotNull] Func<PartOfSpeechTranslation, TranslationEntry, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory,
-            [NotNull] ICommandManager commandManager)
+            TranslationResult translationResult,
+            TranslationEntry translationEntry,
+            Func<PartOfSpeechTranslation, TranslationEntry, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = partOfSpeechTranslationViewModelFactory ?? throw new ArgumentNullException(nameof(partOfSpeechTranslationViewModelFactory));
@@ -28,7 +26,6 @@ namespace Remembrance.ViewModel
                 .ToArray();
         }
 
-        [NotNull]
         public IReadOnlyCollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; }
     }
 }

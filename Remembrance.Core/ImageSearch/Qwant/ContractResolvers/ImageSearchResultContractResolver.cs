@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Remembrance.Contracts.ImageSearch.Data;
-using Remembrance.Core.ImageSearch.Qwant.Data;
+using Remembrance.Contracts.ImageSearch.Data.Qwant;
 using Remembrance.Core.ImageSearch.Qwant.JsonConverters;
 
 namespace Remembrance.Core.ImageSearch.Qwant.ContractResolvers

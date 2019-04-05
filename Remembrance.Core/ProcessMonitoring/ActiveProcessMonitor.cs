@@ -3,26 +3,21 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Timers;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.ProcessMonitoring;
 
 namespace Remembrance.Core.ProcessMonitoring
 {
-    [UsedImplicitly]
     internal sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
     {
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly IPauseManager _pauseManager;
 
-        [NotNull]
         private readonly Timer _timer;
 
-        public ActiveProcessMonitor([NotNull] IPauseManager pauseManager, [NotNull] ILocalSettingsRepository localSettingsRepository)
+        public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository)
         {
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
@@ -44,7 +39,6 @@ namespace Remembrance.Core.ProcessMonitoring
             _timer.Dispose();
         }
 
-        [CanBeNull]
         private static Process? GetActiveProcess()
         {
             var hwnd = GetForegroundWindow();
@@ -54,7 +48,6 @@ namespace Remembrance.Core.ProcessMonitoring
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
-        [CanBeNull]
         private static Process? GetProcessByHandle(IntPtr hwnd)
         {
             try

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.CardManagement.Data
 {
@@ -11,7 +10,7 @@ namespace Remembrance.Contracts.CardManagement.Data
         {
         }
 
-        public PauseInfoCollection([NotNull] IEnumerable<PauseInfo> collection)
+        public PauseInfoCollection(IEnumerable<PauseInfo> collection)
             : base(collection)
         {
         }

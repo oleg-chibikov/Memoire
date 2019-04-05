@@ -1,19 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    [UsedImplicitly]
     internal sealed class TranslationEntrySyncPostProcessor : ISyncPostProcessor<TranslationEntry>
     {
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public TranslationEntrySyncPostProcessor([NotNull] IMessageHub messageHub)
+        public TranslationEntrySyncPostProcessor(IMessageHub messageHub)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }

@@ -6,56 +6,47 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Resources;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsCardViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly ICultureManager _cultureManager;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IPredictor _predictor;
 
-        [NotNull]
         private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
-        [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        [NotNull]
         private readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsCardViewModel(
-            [NotNull] TranslationInfo translationInfo,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
-            [NotNull] ILog logger,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] IPrepositionsInfoRepository prepositionsInfoRepository,
-            [NotNull] IPredictor predictor,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ICultureManager cultureManager,
-            [NotNull] ICommandManager commandManager)
+            TranslationInfo translationInfo,
+            Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
+            ILog logger,
+            IMessageHub messageHub,
+            IPrepositionsInfoRepository prepositionsInfoRepository,
+            IPredictor predictor,
+            ILanguageManager languageManager,
+            ICultureManager cultureManager,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
@@ -87,22 +78,16 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
         }
 
-        [NotNull]
         public string LanguagePair { get; }
 
-        [NotNull]
         public string ReversoContextLink { get; }
 
-        [NotNull]
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
-        [CanBeNull]
         public PrepositionsCollection? PrepositionsCollection { get; private set; }
 
-        [NotNull]
         public TranslationDetailsViewModel TranslationDetails { get; }
 
-        [NotNull]
         public string Word { get; }
 
         protected override void Dispose(bool disposing)
@@ -119,9 +104,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [ItemCanBeNull]
-        [NotNull]
-        private async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync([NotNull] string text, CancellationToken cancellationToken)
+        private async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
         {
             var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
@@ -136,8 +119,7 @@ namespace Remembrance.ViewModel
             return prepositionsCollection;
         }
 
-        [NotNull]
-        private async Task LoadPrepositionsIfNotExistsAsync([NotNull] string text, [NotNull] TranslationDetails translationDetails, CancellationToken cancellationToken)
+        private async Task LoadPrepositionsIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
             var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
             if (prepositionsInfo == null)
@@ -156,7 +138,7 @@ namespace Remembrance.ViewModel
             PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
-        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
+        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(_translationEntryKey))
@@ -169,7 +151,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void OnPriorityChanged([NotNull] PriorityWordKey priorityWordKey)
+        private void OnPriorityChanged(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
@@ -206,7 +188,7 @@ namespace Remembrance.ViewModel
                 CancellationToken.None);
         }
 
-        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

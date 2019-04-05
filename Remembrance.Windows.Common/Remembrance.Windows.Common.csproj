@@ -36,11 +36,14 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Scar.Common.Localization, Version=1.0.7027.23438, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Localization.1.0.7027.23438\lib\netstandard2.0\Scar.Common.Localization.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.View.Contracts, Version=1.0.7016.37709, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.View.Contracts.1.0.7016.37709\lib\netstandard2.0\Scar.Common.View.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.7027.26012, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.7027.26012\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.Contracts, Version=1.0.7016.37974, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.Contracts.1.0.7016.37974\lib\net47\Scar.Common.WPF.View.Contracts.dll</HintPath>
@@ -51,22 +54,21 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WPFLocalizeExtension, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFLocalizeExtension.3.1.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    <Reference Include="WPFLocalizeExtension, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WPFLocalizeExtension.3.3.1\lib\net452\WPFLocalizeExtension.dll</HintPath>
     </Reference>
-    <Reference Include="XAMLMarkupExtensions, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XAMLMarkupExtensions.1.3.0\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    <Reference Include="XAMLMarkupExtensions, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c726e0262981a1eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\XAMLMarkupExtensions.1.6.0\lib\net452\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ApplicationTerminator.cs" />
-    <Compile Include="CultureManager.cs" />
     <Compile Include="DialogProviders\DialogProviderConstants.cs" />
     <Compile Include="DialogProviders\OpenFileDialogProvider.cs" />
     <Compile Include="DialogProviders\SaveFileDialogProvider.cs" />

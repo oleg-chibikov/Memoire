@@ -9,8 +9,11 @@ namespace Remembrance.Contracts
         string LocalSharedDataPath { get; }
 
         string GetSharedPath(SyncBus syncBus);
+
         void OpenSettingsFolder();
+
         void OpenSharedFolder(SyncBus syncBus);
+
         void ViewLogs();
     }
 }

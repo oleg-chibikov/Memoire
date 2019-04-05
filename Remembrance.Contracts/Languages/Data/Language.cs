@@ -1,19 +1,15 @@
-using JetBrains.Annotations;
-
 namespace Remembrance.Contracts.Languages.Data
 {
     public sealed class Language
     {
-        public Language([NotNull] string code, [NotNull] string displayName)
+        public Language(string code, string displayName)
         {
             Code = code;
             DisplayName = displayName;
         }
 
-        [NotNull]
         public string Code { get; }
 
-        [NotNull]
         public string DisplayName { get; }
 
         public override bool Equals(object obj)
@@ -39,7 +35,7 @@ namespace Remembrance.Contracts.Languages.Data
             return Code;
         }
 
-        private bool Equals([NotNull] Language other)
+        private bool Equals(Language other)
         {
             return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
         }

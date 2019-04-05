@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -15,29 +14,19 @@ using Remembrance.Resources;
 
 namespace Remembrance.Core.Languages
 {
-    [UsedImplicitly]
     internal sealed class LanguageManager : ILanguageManager
     {
-        [NotNull]
         private readonly AvailableLanguagesInfo _availableLanguages;
 
-        [NotNull]
         private readonly ILanguageDetector _languageDetector;
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public LanguageManager(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] ILanguageDetector languageDetector)
+        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISettingsRepository settingsRepository, ILog logger, ILanguageDetector languageDetector)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
@@ -53,7 +42,7 @@ namespace Remembrance.Core.Languages
             _availableLanguages = cachedLanguages ?? ReloadAvailableLanguagesAsync().Result;
         }
 
-        public bool CheckTargetLanguageIsValid(string sourceLanguage, [NotNull] string targetLanguage)
+        public bool CheckTargetLanguageIsValid(string sourceLanguage, string targetLanguage)
         {
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             _ = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
@@ -61,7 +50,10 @@ namespace Remembrance.Core.Languages
             return availableTargetLanguages.Contains(targetLanguage);
         }
 
-        public IReadOnlyDictionary<string, string> GetAvailableLanguages() => _availableLanguages.Languages;
+        public IReadOnlyDictionary<string, string> GetAvailableLanguages()
+        {
+            return _availableLanguages.Languages;
+        }
 
         public LanguagesCollection GetAvailableSourceLanguages(bool addAuto)
         {
@@ -83,7 +75,8 @@ namespace Remembrance.Core.Languages
             }
 
             var ordered = languages
-                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+                .OrderBy(
+                    language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
 
@@ -116,7 +109,8 @@ namespace Remembrance.Core.Languages
             var lastUsed = _localSettingsRepository.LastUsedTargetLanguage;
             var toSelect = lastUsed != null && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
             var ordered = languages
-                .OrderBy(language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+                .OrderBy(
+                    language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
             return new LanguagesCollection(ordered, toSelect);
@@ -149,7 +143,7 @@ namespace Remembrance.Core.Languages
             return ordered.First();
         }
 
-        private static int GetLanguageOrder([NotNull] string languageCode, [NotNull] string preferred, [NotNull] string currentCultureLanguage, [CanBeNull] string? lastUsed)
+        private static int GetLanguageOrder(string languageCode, string preferred, string currentCultureLanguage, string? lastUsed)
         {
             return languageCode == Constants.AutoDetectLanguage ? 1 :
                 languageCode == preferred ? 2 :
@@ -158,8 +152,6 @@ namespace Remembrance.Core.Languages
                 lastUsed != null && languageCode == lastUsed ? 5 : 6;
         }
 
-        [NotNull]
-        [ItemNotNull]
         private async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
             _logger.Trace("Loading available languages...");

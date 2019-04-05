@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
@@ -24,41 +23,33 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseAssessmentCardViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly ICultureManager _cultureManager;
 
-        [NotNull]
         private readonly IPauseManager _pauseManager;
 
-        [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        [NotNull]
         protected readonly HashSet<Word> AcceptedAnswers;
 
-        [NotNull]
         protected readonly ILog Logger;
 
-        [NotNull]
         protected readonly IMessageHub MessageHub;
 
-        [NotNull]
         protected readonly TranslationInfo TranslationInfo;
 
-        [NotNull]
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
 
         protected BaseAssessmentCardViewModel(
-            [NotNull] TranslationInfo translationInfo,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ILog logger,
-            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] ICultureManager cultureManager,
-            [NotNull] ICommandManager commandManager)
+            TranslationInfo translationInfo,
+            IMessageHub messageHub,
+            ILog logger,
+            Func<Word, string, WordViewModel> wordViewModelFactory,
+            IAssessmentInfoProvider assessmentInfoProvider,
+            IPauseManager pauseManager,
+            Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            ICultureManager cultureManager,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
@@ -101,25 +92,18 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
         }
 
-        [NotNull]
         public WordViewModel CorrectAnswer { get; protected set; }
 
-        [NotNull]
         public string LanguagePair { get; }
 
-        [NotNull]
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
-        [CanBeNull]
         public string? Tooltip { get; }
 
-        [NotNull]
         public ICommand WindowClosedCommand { get; }
 
-        [NotNull]
         public WordViewModel Word { get; }
 
-        [NotNull]
         public WordImageViewerViewModel WordImageViewerViewModel { get; }
 
         protected override void Dispose(bool disposing)
@@ -144,12 +128,12 @@ namespace Remembrance.ViewModel
             Logger.Debug("Window is closed");
         }
 
-        private static bool HasUppercaseLettersExceptFirst([NotNull] string text)
+        private static bool HasUppercaseLettersExceptFirst(string text)
         {
             return text.Substring(1).Any(letter => char.IsLetter(letter) && char.IsUpper(letter));
         }
 
-        private static void PrepareVerb([NotNull] string sourceLanguage, [NotNull] BaseWord word)
+        private static void PrepareVerb(string sourceLanguage, BaseWord word)
         {
             if (sourceLanguage != Constants.EnLanguageTwoLetters || word.PartOfSpeech != PartOfSpeech.Verb)
             {
@@ -159,7 +143,7 @@ namespace Remembrance.ViewModel
             word.Text = "To " + (HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant());
         }
 
-        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
+        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(TranslationInfo.TranslationEntryKey))
@@ -172,7 +156,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

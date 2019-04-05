@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -13,10 +12,8 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    [UsedImplicitly]
     internal sealed class WordsTranslator : IWordsTranslator
     {
-        [NotNull]
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new TranslationResultContractResolver()
@@ -25,16 +22,14 @@ namespace Remembrance.Core.Translation.Yandex
         /// <summary>
         /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
         /// </summary>
-        [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
         };
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public WordsTranslator([NotNull] IMessageHub messageHub)
+        public WordsTranslator(IMessageHub messageHub)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
@@ -71,7 +66,7 @@ namespace Remembrance.Core.Translation.Yandex
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
         
-        [NotNull]
+        
         public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui)
         {
             var dictionaryTask = GetDictionaryResultAsync(from, to, text, ui);
@@ -106,8 +101,8 @@ namespace Remembrance.Core.Translation.Yandex
             public string[] Texts { get; set; }
         }
 
-        [ItemCanBeNull]
-        [NotNull]
+        
+        
         private async Task<string?> GetTranslateResultAsync(string from, string to, string text)
         {
             var uriPart = $"translate?key={YandexConstants.ApiKey}&lang={from}-{to}&text={text}";

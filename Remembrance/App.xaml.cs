@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
@@ -16,23 +17,24 @@ using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.Shared;
-using Remembrance.Resources;
 using Remembrance.View.Windows;
 using Remembrance.ViewModel;
 using Remembrance.WebApi;
 using Remembrance.Windows.Common;
 using Scar.Common;
+using Scar.Common.ApplicationLifetime;
 using Scar.Common.Async;
 using Scar.Common.AutofacNamedInstancesFactory;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
-using Scar.Common.MVVM.CollectionView.WPF;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.Sync.Windows;
 using Scar.Common.View;
 using Scar.Common.View.WindowFactory;
+using Scar.Common.WPF.CollectionView;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
+using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.Startup;
 
 namespace Remembrance
@@ -42,7 +44,10 @@ namespace Remembrance
 
     internal sealed partial class App
     {
-        protected override string AlreadyRunningCaption { get; } = Errors.DefaultError;
+        public App()
+        {
+            InitializeComponent();
+        }
 
         protected override NewInstanceHandling NewInstanceHandling => NewInstanceHandling.Restart;
 
@@ -109,6 +114,9 @@ namespace Remembrance
             builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<CultureManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationTerminator>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
@@ -143,7 +151,7 @@ namespace Remembrance
         {
             var nestedLifeTimeScope = Container.BeginLifetimeScope();
             var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
-            var synchronizationContext = SynchronizationContext ?? throw new InvalidOperationException();
+            var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current;
             synchronizationContext.Post(
                 x =>
                 {

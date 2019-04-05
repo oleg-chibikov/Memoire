@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Exchange.Data;
@@ -14,34 +13,27 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
 {
-    [UsedImplicitly]
     internal sealed class CardsExchanger : ICardsExchanger, IDisposable
     {
-        [NotNull]
         private readonly IFileExporter _exporter;
 
-        [NotNull]
         private readonly IFileImporter[] _importers;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IOpenFileDialogProvider _openFileDialog;
 
-        [NotNull]
         private readonly ISaveFileDialogProvider _saveFileDialog;
 
         public CardsExchanger(
-            [NotNull] ILog logger,
-            [NotNull] IFileExporter exporter,
-            [NotNull] IFileImporter[] importers,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] IOpenFileDialogProvider openFileDialog,
-            [NotNull] ISaveFileDialogProvider saveFileDialog)
+            ILog logger,
+            IFileExporter exporter,
+            IFileImporter[] importers,
+            IMessageHub messageHub,
+            IOpenFileDialogProvider openFileDialog,
+            ISaveFileDialogProvider saveFileDialog)
         {
             _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
             _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));
@@ -158,13 +150,11 @@ namespace Remembrance.Core.Exchange
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
 
-        [CanBeNull]
         private string? ShowOpenFileDialog()
         {
             return _openFileDialog.ShowDialog() == true ? _openFileDialog.FileName : null;
         }
 
-        [CanBeNull]
         private string? ShowSaveFileDialog()
         {
             _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";

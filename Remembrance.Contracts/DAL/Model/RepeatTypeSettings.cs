@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
     public static class RepeatTypeSettings
     {
-        [NotNull]
         public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new Dictionary<RepeatType, TimeSpan>
         {
             { RepeatType.Elementary, TimeSpan.FromMinutes(5) },
@@ -20,7 +18,6 @@ namespace Remembrance.Contracts.DAL.Model
             { RepeatType.Expert, TimeSpan.FromDays(100) }
         };
 
-        [NotNull]
         public static readonly LinkedList<RepeatType> RepeatTypes = new LinkedList<RepeatType>(
             new[]
             {

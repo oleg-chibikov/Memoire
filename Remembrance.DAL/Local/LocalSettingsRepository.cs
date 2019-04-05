@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
@@ -9,23 +8,20 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.ProcessMonitoring.Data;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
-using Scar.Common.IO;
+using Scar.Common.ApplicationLifetime.Contracts;
 
 namespace Remembrance.DAL.Local
 {
-    [UsedImplicitly]
     internal sealed class LocalSettingsRepository : BaseSettingsRepository, ILocalSettingsRepository
     {
-        [NotNull]
         private const string PauseTimeKey = "PauseTime_";
 
-        [NotNull]
         private const string SyncTimeKey = "SyncTime_";
 
         private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
-        public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider)
-            : base(CommonPaths.SettingsPath, nameof(Settings))
+        public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, IAssemblyInfoProvider assemblyInfoProvider)
+        : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)), nameof(Settings))
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
         }
@@ -67,7 +63,7 @@ namespace Remembrance.DAL.Local
             get =>
                 TryGetValue(
                     nameof(SyncBus),
-                    () => _remembrancePathsProvider.DropBoxPath != null ? SyncBus.Dropbox : (_remembrancePathsProvider.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync));
+                    () => _remembrancePathsProvider.DropBoxPath != null ? SyncBus.Dropbox : _remembrancePathsProvider.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync);
             set => RemoveUpdateOrInsert(nameof(SyncBus), (SyncBus?)value);
         }
 

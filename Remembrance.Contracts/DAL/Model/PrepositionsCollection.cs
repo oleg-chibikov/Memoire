@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.DAL.Model
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature, ImplicitUseTargetFlags.WithMembers)]
     public sealed class PrepositionsCollection
     {
-        [CanBeNull]
         public IReadOnlyCollection<string>? Texts { get; set; }
 
         public override string ToString()

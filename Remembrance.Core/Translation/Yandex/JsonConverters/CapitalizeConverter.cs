@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Scar.Common;
 
@@ -12,8 +11,7 @@ namespace Remembrance.Core.Translation.Yandex.JsonConverters
             return objectType == typeof(string);
         }
 
-        [NotNull]
-        public override object ReadJson([NotNull] JsonReader reader, Type objectType, object existingValue, [NotNull] JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             return reader.Path.EndsWith(".text", StringComparison.InvariantCultureIgnoreCase) ? reader.Value.ToString().Capitalize() : reader.Value;
         }

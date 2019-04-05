@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
@@ -9,16 +8,15 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsViewModel : BaseViewModel
     {
         private readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsViewModel(
-            [NotNull] Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
-            [NotNull] TranslationInfo translationInfo,
-            [NotNull] ICommandManager commandManager)
+            Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
+            TranslationInfo translationInfo,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = translationResultViewModelFactory ?? throw new ArgumentNullException(nameof(translationResultViewModelFactory));
@@ -27,7 +25,6 @@ namespace Remembrance.ViewModel
             TranslationResult = translationResultViewModelFactory(translationInfo.TranslationDetails.TranslationResult, translationInfo.TranslationEntry);
         }
 
-        [NotNull]
         public TranslationResultViewModel TranslationResult { get; }
 
         public override string ToString()

@@ -1,21 +1,18 @@
 using System;
-using JetBrains.Annotations;
 using Scar.Common;
 
 namespace Remembrance.Contracts.ProcessMonitoring.Data
 {
     public sealed class ProcessInfo
     {
-        public ProcessInfo([NotNull] string name, [CanBeNull] string? filePath = null)
+        public ProcessInfo(string name, string? filePath = null)
         {
             Name = name.Capitalize() ?? throw new ArgumentNullException(nameof(name));
             FilePath = filePath;
         }
 
-        [CanBeNull]
         public string? FilePath { get; }
 
-        [NotNull]
         public string Name { get; }
 
         public override bool Equals(object obj)
@@ -33,7 +30,7 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
             return Name;
         }
 
-        private bool Equals([NotNull] ProcessInfo other)
+        private bool Equals(ProcessInfo other)
         {
             return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase);
         }

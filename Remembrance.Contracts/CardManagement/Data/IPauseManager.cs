@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-
 namespace Remembrance.Contracts.CardManagement.Data
 {
     public interface IPauseManager
@@ -8,10 +6,9 @@ namespace Remembrance.Contracts.CardManagement.Data
 
         PauseInfoCollection GetPauseInfo(PauseReason pauseReason);
 
-        [CanBeNull]
         string? GetPauseReasons();
 
-        void Pause(PauseReason pauseReason, [CanBeNull] string? description = null);
+        void Pause(PauseReason pauseReason, string? description = null);
 
         void ResetPauseTimes();
 

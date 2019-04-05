@@ -1,34 +1,32 @@
 using System;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentViewOnlyCardViewModel : BaseAssessmentCardViewModel
     {
         public AssessmentViewOnlyCardViewModel(
-            [NotNull] TranslationInfo translationInfo,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ILog logger,
-            [NotNull] Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
-            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] IAssessmentInfoProvider assessmentInfoProvider,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] ICultureManager cultureManager,
-            [NotNull] ICommandManager commandManager)
+            TranslationInfo translationInfo,
+            IMessageHub messageHub,
+            ILog logger,
+            Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
+            Func<Word, string, WordViewModel> wordViewModelFactory,
+            IAssessmentInfoProvider assessmentInfoProvider,
+            IPauseManager pauseManager,
+            Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
+            Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            ICultureManager cultureManager,
+            ICommandManager commandManager)
             : base(
                 translationInfo,
                 messageHub,
@@ -53,7 +51,6 @@ namespace Remembrance.ViewModel
             Logger.InfoFormat("Increased repeat type for {0}", learningInfo);
         }
 
-        [NotNull]
         public TranslationDetailsCardViewModel TranslationDetailsCardViewModel { get; }
     }
 }

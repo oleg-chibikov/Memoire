@@ -6,6 +6,6 @@ namespace Remembrance.Contracts.View
         Indeterminate = 1,
         Normal = 2,
         Error = 3,
-        Paused = 4,
+        Paused = 4
     }
 }

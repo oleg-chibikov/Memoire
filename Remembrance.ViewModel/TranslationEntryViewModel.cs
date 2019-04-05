@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -20,34 +19,29 @@ using Scar.Common.MVVM.Commands;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel
     {
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
 
-        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         public TranslationEntryViewModel(
-            [NotNull] TranslationEntry translationEntry,
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ICommandManager commandManager)
+            TranslationEntry translationEntry,
+            ITextToSpeechPlayer textToSpeechPlayer,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ILog logger,
+            SynchronizationContext synchronizationContext,
+            ITranslationEntryRepository translationEntryRepository,
+            Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
+            ILearningInfoRepository learningInfoRepository,
+            Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
+            ILanguageManager languageManager,
+            ICommandManager commandManager)
             : base(
                 new Word
                 {
@@ -82,27 +76,21 @@ namespace Remembrance.ViewModel
         [DoNotNotify]
         public TranslationEntryKey Id { get; }
 
-        [NotNull]
         public override string Language => Id.SourceLanguage;
 
-        [NotNull]
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
         public DateTime ModifiedDate { get; private set; }
 
-        [NotNull]
         public string TargetLanguage => Id.TargetLanguage;
 
-        [NotNull]
         public string ReversoContextLink { get; }
 
-        [NotNull]
         public ObservableCollection<PriorityWordViewModel> Translations { get; } = new ObservableCollection<PriorityWordViewModel>();
 
-        [NotNull]
         internal Task ConstructionTask { get; }
 
-        public void ProcessPriorityChange([NotNull] PriorityWordKey priorityWordKey)
+        public void ProcessPriorityChange(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (priorityWordKey.IsPriority)
@@ -115,8 +103,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
-        public async Task ReloadTranslationsAsync([NotNull] TranslationEntry translationEntry)
+        public async Task ReloadTranslationsAsync(TranslationEntry translationEntry)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             var isPriority = translationEntry.PriorityWords?.Any() == true;
@@ -157,14 +144,14 @@ namespace Remembrance.ViewModel
             return Id.ToString();
         }
 
-        public void Update([NotNull] LearningInfo learningInfo, DateTime translationEntryModifiedDate)
+        public void Update(LearningInfo learningInfo, DateTime translationEntryModifiedDate)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             LearningInfoViewModel.UpdateLearningInfo(learningInfo);
             UpdateModifiedDate(learningInfo, translationEntryModifiedDate);
         }
 
-        private void ProcessNonPriority([NotNull] WordKey wordKey)
+        private void ProcessNonPriority(WordKey wordKey)
         {
             var translations = Translations;
             _logger.TraceFormat("Removing non-priority word {1} from the list for {0}...", this, wordKey);
@@ -192,7 +179,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void ProcessPriority([NotNull] WordKey wordKey)
+        private void ProcessPriority(WordKey wordKey)
         {
             _logger.TraceFormat("Removing all non-priority translations for {0} except {1}...", this, wordKey);
             var found = false;
@@ -238,7 +225,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void UpdateModifiedDate([NotNull] ITrackedEntity learningInfo, DateTime translationEntryModifiedDate)
+        private void UpdateModifiedDate(ITrackedEntity learningInfo, DateTime translationEntryModifiedDate)
         {
             ModifiedDate = learningInfo.ModifiedDate > translationEntryModifiedDate ? learningInfo.ModifiedDate : translationEntryModifiedDate;
         }

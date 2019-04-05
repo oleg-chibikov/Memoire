@@ -52,6 +52,9 @@
     <Reference Include="Scar.Common, Version=1.0.7018.41786, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.1.0.7018.41786\lib\netstandard2.0\Scar.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Scar.Common.Localization, Version=1.0.7027.23438, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.Localization.1.0.7027.23438\lib\netstandard2.0\Scar.Common.Localization.dll</HintPath>
+    </Reference>
     <Reference Include="Scar.Common.MVVM.Commands, Version=1.0.7021.22562, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.MVVM.Commands.1.0.7021.22562\lib\netstandard2.0\Scar.Common.MVVM.Commands.dll</HintPath>
     </Reference>
@@ -70,14 +73,14 @@
     <Reference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox, Version=1.0.6789.21716, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.AutoCompleteTextBox.1.0.6789.21716\lib\net47\Scar.Common.WPF.Controls.AutoCompleteTextBox.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.6998.22355, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.6998.22355\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Behaviors, Version=1.0.7033.24214, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Behaviors.1.0.7033.24214\lib\net47\Scar.Common.WPF.Controls.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink, Version=1.0.7008.19827, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.1.0.7008.19827\lib\net47\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.7008.17071, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.7008.17071\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Controls.Styles, Version=1.0.7031.28253, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Controls.Styles.1.0.7031.28253\lib\net47\Scar.Common.WPF.Controls.Styles.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid, Version=1.0.6995.37007, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.1.0.6995.37007\lib\net47\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll</HintPath>
@@ -85,14 +88,14 @@
     <Reference Include="Scar.Common.WPF.Converters, Version=1.0.6719.22053, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.Converters.1.0.6719.22053\lib\net47\Scar.Common.WPF.Converters.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.6719.22006, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.6719.22006\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.Localization, Version=1.0.7027.26012, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.Localization.1.0.7027.26012\lib\net47\Scar.Common.WPF.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View, Version=1.0.6812.21943, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.1.0.6812.21943\lib\net47\Scar.Common.WPF.View.dll</HintPath>
     </Reference>
-    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7021.22483, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.7021.22483\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
+    <Reference Include="Scar.Common.WPF.View.AnimatedWindow, Version=1.0.7027.42388, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scar.Common.WPF.View.AnimatedWindow.1.0.7027.42388\lib\net47\Scar.Common.WPF.View.AnimatedWindow.dll</HintPath>
     </Reference>
     <Reference Include="Scar.Common.WPF.View.BaseWindow, Version=1.0.7021.22452, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Scar.Common.WPF.View.BaseWindow.1.0.7021.22452\lib\net47\Scar.Common.WPF.View.BaseWindow.dll</HintPath>

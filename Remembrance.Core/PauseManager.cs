@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Resources;
 
 namespace Remembrance.Core
 {
-    [UsedImplicitly]
     internal sealed class PauseManager : IPauseManager, IDisposable
     {
         private static readonly IDictionary<PauseReason, string> PauseReasonLabels = new Dictionary<PauseReason, string>
@@ -21,24 +19,19 @@ namespace Remembrance.Core
             { PauseReason.OperationInProgress, Texts.PauseReasonOperationInProgress }
         };
 
-        [NotNull]
         private readonly IDictionary<PauseReason, string> _descriptions = new Dictionary<PauseReason, string>();
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly object _lockObject = new object();
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
         private readonly IDictionary<PauseReason, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReason, PauseInfoCollection>();
 
-        public PauseManager([NotNull] ILog logger, [NotNull] IMessageHub messageHub, [NotNull] ILocalSettingsRepository localSettingsRepository)
+        public PauseManager(ILog logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -156,7 +149,7 @@ namespace Remembrance.Core
             _messageHub.Publish(pauseReason);
         }
 
-        private static void ApplyToEveryPauseReason([NotNull] Action<PauseReason> action)
+        private static void ApplyToEveryPauseReason(Action<PauseReason> action)
         {
             foreach (var pauseReason in Enum.GetValues(typeof(PauseReason)).Cast<PauseReason>().Where(p => p != PauseReason.None))
             {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -18,31 +17,26 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly TranslationEntry _translationEntry;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        [NotNull]
         private readonly WordKey _wordKey;
 
         public PriorityWordViewModel(
-            [NotNull] TranslationEntry translationEntry,
-            [NotNull] Word word,
-            [NotNull] ITextToSpeechPlayer textToSpeechPlayer,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger,
-            [NotNull] Func<Word, string, WordViewModel> wordViewModelFactory,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ICommandManager commandManager)
+            TranslationEntry translationEntry,
+            Word word,
+            ITextToSpeechPlayer textToSpeechPlayer,
+            IMessageHub messageHub,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ILog logger,
+            Func<Word, string, WordViewModel> wordViewModelFactory,
+            ITranslationEntryRepository translationEntryRepository,
+            ICommandManager commandManager)
             : base(word, translationEntry.Id.TargetLanguage, textToSpeechPlayer, translationEntryProcessor, commandManager)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
@@ -58,7 +52,6 @@ namespace Remembrance.ViewModel
         [DoNotNotify]
         public override bool CanEdit { get; } = true;
 
-        [NotNull]
         [DoNotNotify]
         public override string Language => _translationEntry.Id.TargetLanguage;
 

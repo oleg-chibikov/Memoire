@@ -5,48 +5,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    [UsedImplicitly]
     internal sealed class SynchronizationManager : ISynchronizationManager, IDisposable
     {
-        [NotNull]
         private readonly FileSystemWatcher _fileSystemWatcher;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
-
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
-        [NotNull]
-        private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
-
-        [NotNull]
-        private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
-
-        [CanBeNull]
-        private string? _allMachinesSharedBasePath;
-
-        [CanBeNull]
-        private string? _thisMachineSharedPath;
 
         private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
+        private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
+
+        private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
+
+        private string? _allMachinesSharedBasePath;
+
+        private string? _thisMachineSharedPath;
+
         public SynchronizationManager(
-            [NotNull] ILog logger,
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
-            [NotNull] IReadOnlyCollection<ISyncExtender> syncExtenders,
-            [NotNull] IMessageHub messageHub,
+            ILog logger,
+            ILocalSettingsRepository localSettingsRepository,
+            IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
+            IReadOnlyCollection<ISyncExtender> syncExtenders,
+            IMessageHub messageHub,
             IRemembrancePathsProvider remembrancePathsProvider)
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
@@ -107,7 +97,7 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void FileSystemWatcher_Changed(object sender, [NotNull] FileSystemEventArgs e)
+        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
@@ -142,7 +132,7 @@ namespace Remembrance.Core.Sync
             }
         }
 
-        private void SynchronizeFile([NotNull] string filePath)
+        private void SynchronizeFile(string filePath)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 

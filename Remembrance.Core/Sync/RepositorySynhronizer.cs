@@ -7,7 +7,6 @@ using Autofac;
 using Autofac.Core;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
@@ -18,44 +17,35 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Sync
 {
-    [UsedImplicitly]
     internal sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
         where TRepository : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
-        [NotNull]
         private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly TRepository _ownRepository;
 
-        [NotNull]
         private readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
 
-        [CanBeNull]
         private readonly ISyncPostProcessor<TEntity>? _syncPostProcessor;
 
-        [CanBeNull]
         private readonly ISyncPreProcessor<TEntity>? _syncPreProcessor;
 
         public RepositorySynhronizer(
-            [NotNull] IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
-            [NotNull] ILog logger,
-            [NotNull] TRepository ownRepository,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] IReadOnlyCollection<ISyncExtender<TRepository>> syncExtenders,
-            [CanBeNull] ISyncPreProcessor<TEntity>? syncPreProcessor = null,
-            [CanBeNull] ISyncPostProcessor<TEntity>? syncPostProcessor = null)
+            IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
+            ILog logger,
+            TRepository ownRepository,
+            IMessageHub messageHub,
+            ILocalSettingsRepository localSettingsRepository,
+            IReadOnlyCollection<ISyncExtender<TRepository>> syncExtenders,
+            ISyncPreProcessor<TEntity>? syncPreProcessor = null,
+            ISyncPostProcessor<TEntity>? syncPostProcessor = null)
         {
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
@@ -74,7 +64,7 @@ namespace Remembrance.Core.Sync
             ApplyRemoteRepositoryAction(filePath, SyncInternal);
         }
 
-        private void ApplyRemoteRepositoryAction([NotNull] string filePath, [NotNull] Action<TRepository> action)
+        private void ApplyRemoteRepositoryAction(string filePath, Action<TRepository> action)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
             var extension = Path.GetExtension(filePath);
@@ -110,7 +100,7 @@ namespace Remembrance.Core.Sync
             File.Delete(newFilePath);
         }
 
-        private void SyncInternal([NotNull] TRepository remoteRepository)
+        private void SyncInternal(TRepository remoteRepository)
         {
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
 

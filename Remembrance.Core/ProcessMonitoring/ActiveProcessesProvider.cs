@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using JetBrains.Annotations;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.ProcessMonitoring.Data;
 
 namespace Remembrance.Core.ProcessMonitoring
 {
-    [UsedImplicitly]
     internal sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {
         public IReadOnlyCollection<ProcessInfo> GetActiveProcesses()

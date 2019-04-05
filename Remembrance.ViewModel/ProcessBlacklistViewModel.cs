@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Common.Logging;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.ProcessMonitoring.Data;
@@ -14,27 +13,18 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class ProcessBlacklistViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly IActiveProcessesProvider _activeProcessesProvider;
 
-        [NotNull]
         private readonly ObservableCollection<ProcessInfo> _availableProcesses = new ObservableCollection<ProcessInfo>();
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [CanBeNull]
         private string? _filter;
 
-        public ProcessBlacklistViewModel(
-            [NotNull] IActiveProcessesProvider activeProcessesProvider,
-            [NotNull] ILog logger,
-            [NotNull] ICommandManager commandManager,
-            [NotNull] ICollectionViewSource collectionViewSource)
+        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILog logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource)
             : base(commandManager)
         {
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));
@@ -52,34 +42,24 @@ namespace Remembrance.ViewModel
             AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
-        [NotNull]
         public ICommand AddFromActiveProcessesCommand { get; }
 
-        [NotNull]
         public ICommand AddTextCommand { get; }
 
-        [NotNull]
         public ICollectionView AvailableProcessesView { get; }
 
-        [NotNull]
         public ObservableCollection<ProcessInfo> BlacklistedProcesses { get; } = new ObservableCollection<ProcessInfo>();
 
-        [NotNull]
         public ICollectionView BlacklistedProcessesView { get; }
 
-        [NotNull]
         public ICommand CancelAdditionCommand { get; }
 
-        [NotNull]
         public ICommand ClearFilterCommand { get; }
 
-        [NotNull]
         public ICommand DeleteBatchCommand { get; }
 
-        [NotNull]
         public ICommand DeleteCommand { get; }
 
-        [CanBeNull]
         public string? Filter
         {
             get => _filter;
@@ -92,13 +72,11 @@ namespace Remembrance.ViewModel
 
         public bool IsActiveProcessesDialogOpen { get; private set; }
 
-        [NotNull]
         public ICommand OpenProcessesListCommand { get; }
 
-        [CanBeNull]
         public string? Text { get; set; }
 
-        private void AddFromActiveProcesses([NotNull] IList processesList)
+        private void AddFromActiveProcesses(IList processesList)
         {
             _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             var processInfos = processesList.Cast<ProcessInfo>();
@@ -149,7 +127,7 @@ namespace Remembrance.ViewModel
             Filter = null;
         }
 
-        private void Delete([NotNull] ProcessInfo processInfo)
+        private void Delete(ProcessInfo processInfo)
         {
             _ = processInfo ?? throw new ArgumentNullException(nameof(processInfo));
             _logger.TraceFormat("Deleting process info {0} from the blacklist...", processInfo);
@@ -157,7 +135,7 @@ namespace Remembrance.ViewModel
             BlacklistedProcesses.Remove(processInfo);
         }
 
-        private void DeleteBatch([NotNull] IList processesList)
+        private void DeleteBatch(IList processesList)
         {
             _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             _logger.Trace("Deleting multiple process infos from the blacklist...");

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Common.Logging;
-using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Shared;
@@ -12,7 +11,6 @@ using Scar.Common;
 
 namespace Remembrance.Core.Sync
 {
-    [UsedImplicitly]
     internal sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
     {
         private readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
@@ -21,10 +19,10 @@ namespace Remembrance.Core.Sync
         private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public SharedRepositoryCloner(
-            [NotNull] IReadOnlyCollection<ISharedRepository> cloneableRepositories,
-            [NotNull] Func<IRateLimiter> rateLimiterFactory,
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILog logger,
+            IReadOnlyCollection<ISharedRepository> cloneableRepositories,
+            Func<IRateLimiter> rateLimiterFactory,
+            ILocalSettingsRepository localSettingsRepository,
+            ILog logger,
             IRemembrancePathsProvider remembrancePathsProvider)
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
@@ -48,7 +46,7 @@ namespace Remembrance.Core.Sync
             }
         }
 
-        private void Repository_Changed([NotNull] object sender, EventArgs e)
+        private void Repository_Changed(object sender, EventArgs e)
         {
             var repository = (ISharedRepository)sender;
             var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];

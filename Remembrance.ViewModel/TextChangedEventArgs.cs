@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 
 namespace Remembrance.ViewModel
 {
@@ -7,16 +6,14 @@ namespace Remembrance.ViewModel
 
     public sealed class TextChangedEventArgs : EventArgs
     {
-        public TextChangedEventArgs([CanBeNull] string? newValue, [CanBeNull] string? oldValue)
+        public TextChangedEventArgs(string? newValue, string? oldValue)
         {
             NewValue = newValue;
             OldValue = oldValue;
         }
 
-        [CanBeNull]
         public string? NewValue { get; }
 
-        [CanBeNull]
         public string? OldValue { get; }
     }
 }

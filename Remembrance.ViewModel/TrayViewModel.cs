@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
@@ -13,13 +12,13 @@ using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
+using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class TrayViewModel : BaseViewModel
     {
@@ -27,67 +26,52 @@ namespace Remembrance.ViewModel
 
         private const string TimeSpanFormat = @"hh\:mm\:ss";
 
-        [NotNull]
         private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
-        [NotNull]
+        private readonly IApplicationTerminator _applicationTerminator;
+
         private readonly Func<ICardShowTimeProvider> _cardShowTimeProviderFactory;
 
-        [NotNull]
         private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IPauseManager _pauseManager;
 
-        [NotNull]
-        private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
-
-        [NotNull]
-        private readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
-
-        [NotNull]
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
-        [NotNull]
-        private readonly Timer _timer;
-
-        [CanBeNull]
-        private ICardShowTimeProvider? _cardShowTimeProvider;
-
-        [NotNull]
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        [NotNull]
+        private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
+
+        private readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+
+        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
-        private readonly IApplicationTerminator _applicationTerminator;
+        private readonly Timer _timer;
+
+        private ICardShowTimeProvider? _cardShowTimeProvider;
 
         private bool _isToolTipOpened;
 
         public TrayViewModel(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
-            [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
-            [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory,
-            [NotNull] IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
-            [NotNull] Func<ICardShowTimeProvider> cardShowTimeProviderFactory,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] IRemembrancePathsProvider remembrancePathsProvider,
-            [NotNull] ICommandManager commandManager,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] IApplicationTerminator applicationTerminator)
+            ILocalSettingsRepository localSettingsRepository,
+            ILog logger,
+            IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
+            IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            IWindowFactory<ISettingsWindow> settingsWindowFactory,
+            IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
+            Func<ICardShowTimeProvider> cardShowTimeProviderFactory,
+            IPauseManager pauseManager,
+            IMessageHub messageHub,
+            IRemembrancePathsProvider remembrancePathsProvider,
+            ICommandManager commandManager,
+            SynchronizationContext synchronizationContext,
+            IApplicationTerminator applicationTerminator)
             : base(commandManager)
         {
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
@@ -122,58 +106,42 @@ namespace Remembrance.ViewModel
 
         public bool IsLoading { get; private set; }
 
-        [NotNull]
         public ICommand AddTranslationCommand { get; }
 
-        [NotNull]
         public string CardShowFrequency { get; private set; } = string.Empty;
 
-        [CanBeNull]
         public string? CardVisiblePauseTime { get; private set; }
 
         public DateTime CurrentTime { get; private set; }
 
-        [NotNull]
         public ICommand ExitCommand { get; }
 
         public bool IsActive { get; private set; }
 
         public bool IsPaused { get; private set; }
 
-        [CanBeNull]
         public string? LastCardShowTime { get; private set; }
 
-        [NotNull]
         public string NextCardShowTime { get; private set; } = string.Empty;
 
-        [NotNull]
         public ICommand OpenSettingsFolderCommand { get; }
 
-        [NotNull]
         public ICommand OpenSharedFolderCommand { get; }
 
-        [CanBeNull]
         public string? PauseReasons { get; private set; }
 
-        [NotNull]
         public ICommand ShowDictionaryCommand { get; }
 
-        [NotNull]
         public ICommand ShowSettingsCommand { get; }
 
-        [NotNull]
         public string TimeLeftToShowCard { get; private set; } = string.Empty;
 
-        [NotNull]
         public ICommand ToggleActiveCommand { get; }
 
-        [NotNull]
         public ICommand ToolTipCloseCommand { get; }
 
-        [NotNull]
         public ICommand ToolTipOpenCommand { get; }
 
-        [NotNull]
         public ICommand ViewLogsCommand { get; }
 
         protected override void Dispose(bool disposing)
@@ -192,7 +160,6 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
         private async Task AddTranslationAsync()
         {
             _logger.Trace("Showing Add Translation window...");
@@ -220,9 +187,7 @@ namespace Remembrance.ViewModel
             _semaphore.Release();
 
             TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat);
-            LastCardShowTime = provider.LastCardShowTime == null
-                ? null
-                : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
+            LastCardShowTime = provider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
             NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat);
             CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat);
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
@@ -236,14 +201,12 @@ namespace Remembrance.ViewModel
             return provider;
         }
 
-        [NotNull]
         private async Task ShowDictionaryAsync()
         {
             _logger.Trace("Showing dictionary...");
             await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [NotNull]
         private async Task ShowSettingsAsync()
         {
             _logger.Trace("Showing settings...");
@@ -257,11 +220,13 @@ namespace Remembrance.ViewModel
                 return;
             }
 
-            _synchronizationContext.Send(x =>
-            {
-                // ReSharper disable once AssignmentIsFullyDiscarded
-                _ = SetTimesInfoAsync();
-            }, null);
+            _synchronizationContext.Send(
+                x =>
+                {
+                    // ReSharper disable once AssignmentIsFullyDiscarded
+                    _ = SetTimesInfoAsync();
+                },
+                null);
         }
 
         private void ToggleActive()

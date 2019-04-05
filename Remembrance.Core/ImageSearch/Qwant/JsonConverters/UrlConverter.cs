@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Remembrance.Core.ImageSearch.Qwant.JsonConverters
@@ -11,12 +10,10 @@ namespace Remembrance.Core.ImageSearch.Qwant.JsonConverters
             return objectType == typeof(string);
         }
 
-        [NotNull]
-        public override object ReadJson([NotNull] JsonReader reader, Type objectType, object existingValue, [NotNull] JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return !(reader.Value is string valueString)
-                ? string.Empty
-                : (valueString.StartsWith(@"//", StringComparison.InvariantCultureIgnoreCase) ? $"https:{valueString}" : valueString);
+            return !(reader.Value is string valueString) ? string.Empty :
+                valueString.StartsWith(@"//", StringComparison.InvariantCultureIgnoreCase) ? $"https:{valueString}" : valueString;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

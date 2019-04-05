@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 
 namespace Remembrance.Contracts.CardManagement
 {
@@ -7,7 +6,6 @@ namespace Remembrance.Contracts.CardManagement
     {
         TimeSpan CardShowFrequency { get; }
 
-        [CanBeNull]
         DateTime? LastCardShowTime { get; }
 
         DateTime NextCardShowTime { get; }

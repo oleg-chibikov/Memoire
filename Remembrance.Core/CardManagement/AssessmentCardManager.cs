@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
@@ -21,52 +20,42 @@ using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.Core.CardManagement
 {
-    [UsedImplicitly]
     internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
         private readonly DateTime _initTime;
 
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
-        [NotNull]
         private readonly object _lockObject = new object();
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IPauseManager _pauseManager;
 
-        [NotNull]
         private readonly IScopedWindowProvider _scopedWindowProvider;
 
-        [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         private bool _hasOpenWindows;
 
-        [NotNull]
         private IDisposable _interval;
 
         public AssessmentCardManager(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] IScopedWindowProvider scopedWindowProvider,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
+            ITranslationEntryRepository translationEntryRepository,
+            ILocalSettingsRepository localSettingsRepository,
+            ILog logger,
+            IMessageHub messageHub,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ISettingsRepository settingsRepository,
+            SynchronizationContext synchronizationContext,
+            ILearningInfoRepository learningInfoRepository,
+            IScopedWindowProvider scopedWindowProvider,
+            IPauseManager pauseManager,
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
             : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             logger.Trace("Starting showing cards...");
@@ -256,7 +245,6 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        [NotNull]
         private IDisposable ProvideInterval(TimeSpan delay)
         {
             return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);

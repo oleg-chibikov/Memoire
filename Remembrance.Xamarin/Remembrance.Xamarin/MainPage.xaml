@@ -1,14 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Remembrance.Xamarin"
-             x:Class="Remembrance.Xamarin.MainPage">
-
+             x:Class="Remembrance.Xamarin.MainPage"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}">
     <StackLayout>
         <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
+        <Label Text="Add translation" 
            HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+               VerticalOptions="CenterAndExpand" />
+        <Editor Text="{Binding Text, Mode=TwoWay}"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand" />
+        <Button Text="AddTranslation"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand"
+            Command="{Binding SaveCommand, Mode=OneTime}"/>
     </StackLayout>
 
 </ContentPage>

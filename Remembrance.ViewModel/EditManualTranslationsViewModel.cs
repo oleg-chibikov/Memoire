@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -20,28 +19,23 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class EditManualTranslationsViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
         public EditManualTranslationsViewModel(
-            [NotNull] ILog logger,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ICommandManager commandManager)
+            ILog logger,
+            ITranslationEntryProcessor translationEntryProcessor,
+            IMessageHub messageHub,
+            ITranslationEntryRepository translationEntryRepository,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -55,33 +49,24 @@ namespace Remembrance.ViewModel
             SaveCommand = AddCommand(SaveAsync);
         }
 
-        [NotNull]
         public static IReadOnlyCollection<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
 
-        [NotNull]
         public ICommand AddTranslationCommand { get; }
 
-        [NotNull]
         public ICommand CancelCommand { get; }
 
-        [NotNull]
         public ICommand DeleteCommand { get; }
 
-        [NotNull]
         public ICommand EditManualTranslationsCommand { get; }
 
         public bool IsManualTranslationsDialogOpen { get; private set; }
 
-        [NotNull]
         public ObservableCollection<ManualTranslation> ManualTranslations { get; } = new ObservableCollection<ManualTranslation>();
 
-        [CanBeNull]
         public string? ManualTranslationText { get; set; }
 
-        [NotNull]
         public ICommand SaveCommand { get; }
 
-        [NotNull]
         public TranslationEntryKey TranslationEntryKey { get; private set; } = new TranslationEntryKey();
 
         private void AddTranslation()
@@ -108,8 +93,7 @@ namespace Remembrance.ViewModel
             IsManualTranslationsDialogOpen = false;
         }
 
-        [NotNull]
-        private async Task DeleteAsync([NotNull] ManualTranslation manualTranslation)
+        private async Task DeleteAsync(ManualTranslation manualTranslation)
         {
             _ = manualTranslation ?? throw new ArgumentNullException(nameof(manualTranslation));
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
@@ -128,7 +112,7 @@ namespace Remembrance.ViewModel
             ManualTranslations.Remove(manualTranslation);
         }
 
-        private void EditManualTranslations([NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private void EditManualTranslations(TranslationEntryViewModel translationEntryViewModel)
         {
             _logger.TraceFormat("Editing manual translation for {0}...", translationEntryViewModel);
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
@@ -148,7 +132,6 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
         private async Task SaveAsync()
         {
             _logger.Trace("Saving...");

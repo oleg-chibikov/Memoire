@@ -1,8 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceAssemblyReference>true</ProduceAssemblyReference>
+    <Company>Scar</Company>
+    <Authors>Scar</Authors>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>Remembrance.Xamarin</AssemblyName>
+    <RootNamespace>Remembrance.Xamarin</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,7 +18,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.0.1" />
+    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.0.7016.39333" />
+    <PackageReference Include="Scar.Common.Xamarin.Startup" Version="1.0.7034.40510" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.293080" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Remembrance.Core\Remembrance.Core.csproj" />
+    <ProjectReference Include="..\..\Remembrance.DAL\Remembrance.DAL.csproj" />
+    <ProjectReference Include="..\..\Remembrance.ViewModel\Remembrance.ViewModel.csproj" />
   </ItemGroup>
 </Project>

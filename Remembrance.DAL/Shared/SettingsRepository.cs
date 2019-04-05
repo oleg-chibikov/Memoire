@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -8,10 +7,9 @@ using Remembrance.Resources;
 
 namespace Remembrance.DAL.Shared
 {
-    [UsedImplicitly]
     internal sealed class SettingsRepository : BaseSettingsRepository, ISettingsRepository
     {
-        public SettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, [CanBeNull] string? directoryPath = null, bool shrink = true)
+        public SettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true)
             : base(directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)), nameof(Settings), shrink)
         {
         }

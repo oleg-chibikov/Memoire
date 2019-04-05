@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
@@ -12,15 +11,14 @@ using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
 {
-    [UsedImplicitly]
     internal sealed class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
     {
         public RemembranceFileImporter(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            ITranslationEntryRepository translationEntryRepository,
+            ILog logger,
+            ITranslationEntryProcessor translationEntryProcessor,
+            IMessageHub messenger,
+            ILearningInfoRepository learningInfoRepository)
             : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
         }

@@ -6,28 +6,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
+using Remembrance.Contracts.ImageSearch.Data.Qwant;
 using Remembrance.Core.ImageSearch.Qwant.ContractResolvers;
-using Remembrance.Core.ImageSearch.Qwant.Data;
 using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
 {
-    [UsedImplicitly]
     internal sealed class ImageSearcher : IImageSearcher
     {
-        [NotNull]
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new ImageSearchResultContractResolver()
         };
 
-        [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://api.qwant.com/api/search/"),
@@ -37,16 +33,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
         };
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IRateLimiter _rateLimiter;
 
-        public ImageSearcher([NotNull] ILog logger, [NotNull] IMessageHub messageHub, [NotNull] IRateLimiter rateLimiter)
+        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));

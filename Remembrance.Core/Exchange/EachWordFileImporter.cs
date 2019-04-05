@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Languages;
@@ -14,7 +13,6 @@ using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
 {
-    [UsedImplicitly]
     internal sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
         private static readonly char[] Separator =
@@ -25,16 +23,15 @@ namespace Remembrance.Core.Exchange
             '\\'
         };
 
-        [NotNull]
         private readonly ILanguageManager _languageManager;
 
         public EachWordFileImporter(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILog logger,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] IMessageHub messenger,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ILearningInfoRepository learningInfoRepository)
+            ITranslationEntryRepository translationEntryRepository,
+            ILog logger,
+            ITranslationEntryProcessor translationEntryProcessor,
+            IMessageHub messenger,
+            ILanguageManager languageManager,
+            ILearningInfoRepository learningInfoRepository)
             : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));

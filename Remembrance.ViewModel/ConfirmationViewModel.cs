@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
@@ -8,20 +7,11 @@ using Scar.Common.MVVM.ViewModel;
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    [UsedImplicitly]
     public sealed class ConfirmationViewModel : BaseViewModel
     {
-        [NotNull]
-        public string Text { get; }
-
-        public bool ShowButtons { get; }
-
         private readonly TaskCompletionSource<bool> _taskCompletionSource;
 
-        [DoNotNotify]
-        public Task<bool> UserInput => _taskCompletionSource.Task;
-
-        public ConfirmationViewModel(bool showButtons, [NotNull] string text, [NotNull] ICommandManager commandManager)
+        public ConfirmationViewModel(bool showButtons, string text, ICommandManager commandManager)
             : base(commandManager)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
@@ -32,13 +22,17 @@ namespace Remembrance.ViewModel
             ShowButtons = showButtons;
         }
 
-        [NotNull]
+        public string Text { get; }
+
+        public bool ShowButtons { get; }
+
+        [DoNotNotify]
+        public Task<bool> UserInput => _taskCompletionSource.Task;
+
         public IRefreshableCommand DeclineCommand { get; }
 
-        [NotNull]
         public IRefreshableCommand ConfirmCommand { get; }
 
-        [NotNull]
         public IRefreshableCommand WindowClosedCommand { get; }
 
         private void Decline()

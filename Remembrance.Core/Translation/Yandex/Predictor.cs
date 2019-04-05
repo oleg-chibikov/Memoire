@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.Predictor;
@@ -13,28 +12,23 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    [UsedImplicitly]
     internal sealed class Predictor : IPredictor
     {
-        [NotNull]
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new PredictionResultContractResolver()
         };
 
-        [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://predictor.yandex.net/api/v1/predict.json/")
         };
 
-        [NotNull]
         private readonly ILanguageDetector _languageDetector;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        public Predictor([NotNull] ILanguageDetector languageDetector, [NotNull] IMessageHub messageHub)
+        public Predictor(ILanguageDetector languageDetector, IMessageHub messageHub)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));

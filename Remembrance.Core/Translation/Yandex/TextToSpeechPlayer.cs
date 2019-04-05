@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using NAudio.Wave;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
@@ -15,30 +14,24 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    [UsedImplicitly]
     internal sealed class TextToSpeechPlayer : ITextToSpeechPlayer
     {
-        [NotNull]
         private const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
 
         private static readonly Regex CyryllicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
 
-        [NotNull]
         private readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://tts.voicetech.yandex.net/")
         };
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        public TextToSpeechPlayer([NotNull] ILog logger, [NotNull] ISettingsRepository settingsRepository, [NotNull] IMessageHub messageHub)
+        public TextToSpeechPlayer(ILog logger, ISettingsRepository settingsRepository, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
@@ -91,8 +84,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
         }
 
-        [NotNull]
-        private static string PrepareLanguage([NotNull] string lang, [NotNull] string text)
+        private static string PrepareLanguage(string lang, string text)
         {
             switch (lang)
             {

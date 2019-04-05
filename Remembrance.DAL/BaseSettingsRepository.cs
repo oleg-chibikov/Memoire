@@ -1,15 +1,13 @@
 using System;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
-    [UsedImplicitly]
     internal abstract class BaseSettingsRepository : TrackedLiteDbRepository<Settings, string>
     {
-        protected BaseSettingsRepository([NotNull] string directoryPath, [NotNull] string fileName, bool shrink = true)
+        protected BaseSettingsRepository(string directoryPath, string fileName, bool shrink = true)
             : base(directoryPath, fileName, shrink)
         {
         }
@@ -33,13 +31,13 @@ namespace Remembrance.DAL
             }
         }
 
-        protected TValue TryGetValue<TValue>([NotNull] string key, Func<TValue> defaultValueProvider)
+        protected TValue TryGetValue<TValue>(string key, Func<TValue> defaultValueProvider)
         {
             var entry = TryGetById(key);
             return entry == null ? defaultValueProvider() : JsonConvert.DeserializeObject<TValue>(entry.ValueJson);
         }
 
-        protected TValue TryGetValue<TValue>([NotNull] string key, TValue defaultValue = default(TValue))
+        protected TValue TryGetValue<TValue>(string key, TValue defaultValue = default)
         {
             var entry = TryGetById(key);
             return entry == null ? defaultValue : JsonConvert.DeserializeObject<TValue>(entry.ValueJson);

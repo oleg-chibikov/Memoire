@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
@@ -12,8 +11,7 @@ namespace Remembrance.Core.Translation.Yandex.JsonConverters
             return objectType == typeof(string);
         }
 
-        [NotNull]
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, [NotNull] JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var partOfSpeechString = serializer.Deserialize<string>(reader);
             switch (partOfSpeechString.ToLowerInvariant())

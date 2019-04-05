@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
-using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -25,6 +23,7 @@ using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.DAL;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.CollectionView;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.View.Contracts;
@@ -32,60 +31,42 @@ using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
-        [NotNull]
-        private readonly ICultureManager _cultureManager;
-
-        [NotNull]
         private readonly Func<string, bool, ConfirmationViewModel> _confirmationViewModelFactory;
 
-        [NotNull]
-        private readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
-
-        [NotNull]
         private readonly Func<ConfirmationViewModel, IConfirmationWindow> _confirmationWindowFactory;
 
-        [NotNull]
+        private readonly ICultureManager _cultureManager;
+
         private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
-        [NotNull]
         private readonly ILearningInfoRepository _learningInfoRepository;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IRateLimiter _rateLimiter;
 
-        [NotNull]
         private readonly IScopedWindowProvider _scopedWindowProvider;
 
-        [NotNull]
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        [NotNull]
         private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
 
-        [NotNull]
         private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
-        [NotNull]
         private readonly Timer _timer;
 
-        [NotNull]
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        [NotNull]
         private readonly Func<TranslationEntry, TranslationEntryViewModel> _translationEntryViewModelFactory;
 
-        [NotNull]
         private readonly ObservableCollection<TranslationEntryViewModel> _translationList;
+
+        private readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
 
         private int _count;
 
@@ -96,26 +77,26 @@ namespace Remembrance.ViewModel
         private bool _loaded;
 
         public DictionaryViewModel(
-            [NotNull] ITranslationEntryRepository translationEntryRepository,
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] ITranslationEntryProcessor translationEntryProcessor,
-            [NotNull] ILog logger,
-            [NotNull] IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] EditManualTranslationsViewModel editManualTranslationsViewModel,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] ILearningInfoRepository learningInfoRepository,
-            [NotNull] Func<TranslationEntry, TranslationEntryViewModel> translationEntryViewModelFactory,
-            [NotNull] IScopedWindowProvider scopedWindowProvider,
-            [NotNull] IWindowFactory<ISettingsWindow> settingsWindowFactory,
-            [NotNull] IRateLimiter rateLimiter,
-            [NotNull] Func<string, bool, ConfirmationViewModel> confirmationViewModelFactory,
-            [NotNull] Func<ConfirmationViewModel, IConfirmationWindow> confirmationWindowFactory,
-            [NotNull] IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
-            [NotNull] ICultureManager cultureManager,
-            [NotNull] ICommandManager commandManager,
-            [NotNull] ICollectionViewSource collectionViewSource)
+            ITranslationEntryRepository translationEntryRepository,
+            ILocalSettingsRepository localSettingsRepository,
+            ILanguageManager languageManager,
+            ITranslationEntryProcessor translationEntryProcessor,
+            ILog logger,
+            IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
+            IMessageHub messageHub,
+            EditManualTranslationsViewModel editManualTranslationsViewModel,
+            SynchronizationContext synchronizationContext,
+            ILearningInfoRepository learningInfoRepository,
+            Func<TranslationEntry, TranslationEntryViewModel> translationEntryViewModelFactory,
+            IScopedWindowProvider scopedWindowProvider,
+            IWindowFactory<ISettingsWindow> settingsWindowFactory,
+            IRateLimiter rateLimiter,
+            Func<string, bool, ConfirmationViewModel> confirmationViewModelFactory,
+            Func<ConfirmationViewModel, IConfirmationWindow> confirmationWindowFactory,
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
+            ICultureManager cultureManager,
+            ICommandManager commandManager,
+            ICollectionViewSource collectionViewSource)
             : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
         {
             EditManualTranslationsViewModel = editManualTranslationsViewModel ?? throw new ArgumentNullException(nameof(editManualTranslationsViewModel));
@@ -163,28 +144,20 @@ namespace Remembrance.ViewModel
 
         public int Count { get; private set; }
 
-        [NotNull]
         public ICommand DeleteCommand { get; }
 
-        [NotNull]
         public EditManualTranslationsViewModel EditManualTranslationsViewModel { get; }
 
-        [NotNull]
         public ICommand OpenDetailsCommand { get; }
 
-        [NotNull]
         public ICommand OpenSettingsCommand { get; }
 
-        [NotNull]
         public ICommand SearchCommand { get; }
 
-        [CanBeNull]
         public string? SearchText { get; set; }
 
-        [NotNull]
         public ICollectionView View { get; }
 
-        [NotNull]
         public ICommand WindowContentRenderedCommand { get; }
 
         protected override void Cleanup()
@@ -204,8 +177,7 @@ namespace Remembrance.ViewModel
             return await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        [NotNull]
-        private async Task DeleteAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private async Task DeleteAsync(TranslationEntryViewModel translationEntryViewModel)
         {
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             if (!await ConfirmDeletionAsync(translationEntryViewModel.ToString()))
@@ -229,7 +201,6 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
         private async Task LoadTranslationsAsync()
         {
             await Task.Run(
@@ -249,7 +220,6 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        [NotNull]
         private async Task<bool> LoadTranslationsPageAsync(int pageNumber)
         {
             if (CancellationTokenSource.IsCancellationRequested)
@@ -283,7 +253,7 @@ namespace Remembrance.ViewModel
             return true;
         }
 
-        private async void OnLearningInfoReceivedAsync([NotNull] LearningInfo learningInfo)
+        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             Logger.DebugFormat("Received {0} from external source", learningInfo);
@@ -309,7 +279,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnPriorityChangedAsync([NotNull] PriorityWordKey priorityWordKey)
+        private async void OnPriorityChangedAsync(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
@@ -334,7 +304,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnTranslationEntriesBatchReceivedAsync([NotNull] IReadOnlyCollection<TranslationEntry> translationEntries)
+        private async void OnTranslationEntriesBatchReceivedAsync(IReadOnlyCollection<TranslationEntry> translationEntries)
         {
             _ = translationEntries ?? throw new ArgumentNullException(nameof(translationEntries));
             Logger.DebugFormat("Received a batch of translations ({0} items) from the external source...", translationEntries.Count);
@@ -351,7 +321,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnTranslationEntryReceivedAsync([NotNull] TranslationEntry translationEntry)
+        private async void OnTranslationEntryReceivedAsync(TranslationEntry translationEntry)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             Logger.DebugFormat("Received {0} from external source", translationEntry);
@@ -359,8 +329,7 @@ namespace Remembrance.ViewModel
             await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        [NotNull]
-        private async Task OnTranslationEntryReceivedInternalAsync([NotNull] TranslationEntry translationEntry)
+        private async Task OnTranslationEntryReceivedInternalAsync(TranslationEntry translationEntry)
         {
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             var existingTranslationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(translationEntry.Id));
@@ -392,7 +361,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private async void OnUiLanguageChangedAsync([NotNull] CultureInfo cultureInfo)
+        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
@@ -414,8 +383,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        [NotNull]
-        private async Task OpenDetailsAsync([NotNull] TranslationEntryViewModel translationEntryViewModel)
+        private async Task OpenDetailsAsync(TranslationEntryViewModel translationEntryViewModel)
         {
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             Logger.TraceFormat("Opening details for {0}...", translationEntryViewModel);
@@ -439,7 +407,6 @@ namespace Remembrance.ViewModel
                 null);
         }
 
-        [NotNull]
         private async Task OpenSettingsAsync()
         {
             Logger.Trace("Opening settings...");
@@ -469,7 +436,7 @@ namespace Remembrance.ViewModel
                 null);
         }
 
-        private void Search([CanBeNull] string? text)
+        private void Search(string? text)
         {
             Logger.TraceFormat("Searching for {0}...", text);
 
@@ -508,7 +475,7 @@ namespace Remembrance.ViewModel
             _semaphore.Release();
         }
 
-        private void TranslationList_CollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
+        private void TranslationList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -548,13 +515,12 @@ namespace Remembrance.ViewModel
             Count = View.Filter == null ? _count : View.Cast<object>().Count();
         }
 
-        [NotNull]
         private async Task WindowContentRenderedAsync()
         {
             await LoadTranslationsAsync().ConfigureAwait(false);
         }
 
-        private Task<bool> ConfirmDeletionAsync([NotNull] string name)
+        private Task<bool> ConfirmDeletionAsync(string name)
         {
             var confirmationViewModel = _confirmationViewModelFactory(string.Format(Texts.AreYouSureDelete, name), true);
 

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
@@ -26,32 +25,23 @@ using Scar.Common.MVVM.ViewModel;
 
 namespace Remembrance.ViewModel
 {
-    [UsedImplicitly]
     [AddINotifyPropertyChangedInterface]
     public sealed class SettingsViewModel : BaseViewModel
     {
-        [NotNull]
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        [NotNull]
         private readonly ICardsExchanger _cardsExchanger;
 
-        [NotNull]
         private readonly ILocalSettingsRepository _localSettingsRepository;
 
-        [NotNull]
         private readonly ILog _logger;
 
-        [NotNull]
         private readonly IMessageHub _messageHub;
 
-        [NotNull]
         private readonly IPauseManager _pauseManager;
 
-        [NotNull]
         private readonly ISettingsRepository _settingsRepository;
 
-        [NotNull]
         private readonly SynchronizationContext _synchronizationContext;
 
         private bool _saved;
@@ -59,17 +49,17 @@ namespace Remembrance.ViewModel
         private string _uiLanguage;
 
         public SettingsViewModel(
-            [NotNull] ILocalSettingsRepository localSettingsRepository,
-            [NotNull] ISettingsRepository settingsRepository,
-            [NotNull] ILog logger,
-            [NotNull] IMessageHub messageHub,
-            [NotNull] ICardsExchanger cardsExchanger,
-            [NotNull] SynchronizationContext synchronizationContext,
-            [NotNull] IPauseManager pauseManager,
-            [NotNull] ProcessBlacklistViewModel processBlacklistViewModel,
-            [NotNull] ILanguageManager languageManager,
-            [NotNull] IRemembrancePathsProvider remembrancePathsProvider,
-            [NotNull] ICommandManager commandManager)
+            ILocalSettingsRepository localSettingsRepository,
+            ISettingsRepository settingsRepository,
+            ILog logger,
+            IMessageHub messageHub,
+            ICardsExchanger cardsExchanger,
+            SynchronizationContext synchronizationContext,
+            IPauseManager pauseManager,
+            ProcessBlacklistViewModel processBlacklistViewModel,
+            ILanguageManager languageManager,
+            IRemembrancePathsProvider remembrancePathsProvider,
+            ICommandManager commandManager)
             : base(commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
@@ -110,7 +100,8 @@ namespace Remembrance.ViewModel
             AvailableTranslationLanguages = languageManager.GetAvailableSourceLanguages(false);
             SelectedPreferredLanguage = _settingsRepository.PreferredLanguage;
             TtsSpeaker = _settingsRepository.TtsSpeaker;
-            UiLanguage = _localSettingsRepository.UiLanguage;
+            _uiLanguage = _localSettingsRepository.UiLanguage;
+            UiLanguage = _uiLanguage;
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
             SyncBus = _localSettingsRepository.SyncBus;
@@ -126,48 +117,37 @@ namespace Remembrance.ViewModel
 
         public IReadOnlyCollection<SyncBus> SyncBuses { get; }
 
-        [NotNull]
         public IReadOnlyCollection<Language> AvailableTranslationLanguages { get; }
 
-        [NotNull]
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
-        [NotNull]
         public IReadOnlyCollection<Language> AvailableUiLanguages { get; } = new[]
         {
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")
         };
 
-        [NotNull]
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } =
             Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
         public double CardShowFrequency { get; set; }
 
-        [NotNull]
         public ICommand ExportCommand { get; }
 
-        [NotNull]
         public ICommand ImportCommand { get; }
 
-        [NotNull]
         public ICommand OpenSettingsFolderCommand { get; }
 
-        [NotNull]
         public ICommand OpenSharedFolderCommand { get; }
 
-        [NotNull]
         public ProcessBlacklistViewModel ProcessBlacklistViewModel { get; }
 
         public int Progress { get; private set; }
 
-        [CanBeNull]
         public string? ProgressDescription { get; private set; }
 
         public ProgressState ProgressState { get; private set; }
 
-        [NotNull]
         public ICommand SaveCommand { get; }
 
         public string SelectedPreferredLanguage { get; set; }
@@ -188,10 +168,8 @@ namespace Remembrance.ViewModel
             }
         }
 
-        [NotNull]
         public ICommand ViewLogsCommand { get; }
 
-        [NotNull]
         public ICommand WindowClosingCommand { get; }
 
         protected override void Dispose(bool disposing)
@@ -211,7 +189,7 @@ namespace Remembrance.ViewModel
             Progress = 0;
         }
 
-        private void CardsExchanger_Progress([NotNull] object sender, [NotNull] ProgressEventArgs e)
+        private void CardsExchanger_Progress(object sender, ProgressEventArgs e)
         {
             _synchronizationContext.Send(
                 x =>
@@ -236,13 +214,11 @@ namespace Remembrance.ViewModel
             _pauseManager.Resume(PauseReason.OperationInProgress);
         }
 
-        [NotNull]
         private async Task ExportAsync()
         {
             await _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        [NotNull]
         private async Task ImportAsync()
         {
             await _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
