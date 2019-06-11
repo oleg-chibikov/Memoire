@@ -163,14 +163,6 @@ namespace Remembrance.Xamarin
 
         protected override void OnStartup()
         {
-            Container.Resolve<ILocalSettingsRepository>();
-            Container.Resolve<ILanguageManager>();
-            Container.Resolve<ITranslationEntryProcessor>();
-            Container.Resolve<ILog>();
-            Container.Resolve<IWindowFactory<IAddTranslationWindow>>();
-            Container.Resolve <ICommandManager>();
-
-            var vm = Container.Resolve<AddTranslationViewModel>();
             MainPage = Container.Resolve<MainPage>();
         }
 
@@ -185,6 +177,7 @@ namespace Remembrance.Xamarin
             builder.RegisterType<CommandManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<NullSyncSoftwarePathsProvider>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(AddTranslationViewModel).Assembly).AsSelf().InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(SettingsRepository).Assembly).AsImplementedInterfaces().SingleInstance();
         }
     }

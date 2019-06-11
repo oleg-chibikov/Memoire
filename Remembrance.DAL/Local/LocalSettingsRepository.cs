@@ -7,7 +7,6 @@ using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.ProcessMonitoring.Data;
 using Remembrance.Contracts.Sync;
-using Remembrance.Resources;
 using Scar.Common.ApplicationLifetime.Contracts;
 
 namespace Remembrance.DAL.Local

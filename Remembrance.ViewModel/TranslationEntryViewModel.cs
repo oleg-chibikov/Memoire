@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using PropertyChanged;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Languages;
@@ -13,7 +14,6 @@ using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Resources;
 using Scar.Common.DAL.Model;
 using Scar.Common.MVVM.Commands;
 

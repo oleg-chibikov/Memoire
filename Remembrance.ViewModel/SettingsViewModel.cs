@@ -18,7 +18,6 @@ using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Contracts.View;
-using Remembrance.Resources;
 using Scar.Common.Events;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;

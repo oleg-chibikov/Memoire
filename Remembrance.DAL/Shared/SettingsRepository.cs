@@ -3,7 +3,6 @@ using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
-using Remembrance.Resources;
 
 namespace Remembrance.DAL.Shared
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using NAudio.Wave;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;

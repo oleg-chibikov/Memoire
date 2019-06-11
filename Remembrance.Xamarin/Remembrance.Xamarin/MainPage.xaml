@@ -6,18 +6,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}">
+             d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}">
     <StackLayout>
         <!-- Place new controls here -->
         <Label Text="Add translation" 
            HorizontalOptions="Center"
                VerticalOptions="CenterAndExpand" />
         <Editor Text="{Binding Text, Mode=TwoWay}"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
-        <Button Text="AddTranslation"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand"
+            HorizontalOptions="Fill"
+            VerticalOptions="Start" />
+        <Picker ItemsSource="{Binding AvailableSourceLanguages, Mode=OneTime}"
+                ItemDisplayBinding="{Binding DisplayName, Mode=OneTime}"
+                SelectedItem="{Binding SelectedSourceLanguageItem, Mode=TwoWay}" />
+        <Picker ItemsSource="{Binding AvailableTargetLanguages, Mode=OneTime}"
+                SelectedItem="{Binding SelectedTargetLanguageItem, Mode=TwoWay}"
+                ItemDisplayBinding="{Binding DisplayName, Mode=OneTime}" />
+        <Button Text="Add Translation"
+            HorizontalOptions="Fill"
+            VerticalOptions="Start"
             Command="{Binding SaveCommand, Mode=OneTime}"/>
     </StackLayout>
 

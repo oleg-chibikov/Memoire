@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Translate;
-using Remembrance.Resources;
 
 namespace Remembrance.Core.Languages
 {
@@ -71,7 +71,7 @@ namespace Remembrance.Core.Languages
             if (addAuto)
             {
                 languages[Constants.AutoDetectLanguage] = "--AutoDetect--";
-                toSelect = toSelect ?? Constants.AutoDetectLanguage;
+                toSelect ??= Constants.AutoDetectLanguage;
             }
 
             var ordered = languages

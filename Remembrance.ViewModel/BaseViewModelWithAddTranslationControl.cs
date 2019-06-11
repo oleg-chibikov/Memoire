@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,8 +33,9 @@ namespace Remembrance.ViewModel
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         private string _selectedSourceLanguage;
-
         private string _selectedTargetLanguage;
+        private Language _selectedSourceLanguageItem;
+        private Language _selectedTargetLanguageItem;
 
         protected BaseViewModelWithAddTranslationControl(
             ILocalSettingsRepository localSettingsRepository,
@@ -53,10 +55,12 @@ namespace Remembrance.ViewModel
             var sourceLanguages = _languageManager.GetAvailableSourceLanguages();
             AvailableSourceLanguages = sourceLanguages;
             _selectedSourceLanguage = sourceLanguages.SelectedLanguage;
+            _selectedSourceLanguageItem = sourceLanguages.SelectedLanguageItem;
 
             var targetLanguages = _languageManager.GetAvailableTargetLanguages(_selectedSourceLanguage);
             AvailableTargetLanguages = new ObservableCollection<Language>(targetLanguages);
             _selectedTargetLanguage = targetLanguages.SelectedLanguage;
+            _selectedTargetLanguageItem = sourceLanguages.SelectedLanguageItem;
             logger.Debug("Languages have been loaded");
         }
 
@@ -67,6 +71,26 @@ namespace Remembrance.ViewModel
         public string? ManualTranslation { get; set; }
 
         public ICommand SaveCommand { get; }
+
+        public Language SelectedSourceLanguageItem
+        {
+            get => _selectedSourceLanguageItem;
+            set
+            {
+                _selectedSourceLanguageItem = value;
+                SelectedSourceLanguage = value.Code;
+            }
+        }
+
+        public Language SelectedTargetLanguageItem
+        {
+            get => _selectedTargetLanguageItem;
+            set
+            {
+                _selectedTargetLanguageItem = value;
+                SelectedTargetLanguage = value.Code;
+            }
+        }
 
         public string SelectedSourceLanguage
         {

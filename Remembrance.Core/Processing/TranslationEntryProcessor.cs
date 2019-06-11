@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
+using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -225,9 +226,9 @@ namespace Remembrance.Core.Processing
 
             foreach (var manualTranslation in manualTranslations)
             {
-                manualTranslation.Text = manualTranslation.Text.Capitalize();
-                manualTranslation.Example = manualTranslation.Example.Capitalize();
-                manualTranslation.Meaning = manualTranslation.Meaning.Capitalize();
+                manualTranslation.Text = manualTranslation.Text?.Capitalize();
+                manualTranslation.Example = manualTranslation.Example?.Capitalize();
+                manualTranslation.Meaning = manualTranslation.Meaning?.Capitalize();
             }
         }
 

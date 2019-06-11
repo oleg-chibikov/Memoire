@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
 using Newtonsoft.Json;
+using Remembrance.Contracts;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.LanguageDetector;
 using Remembrance.Core.Translation.Yandex.ContractResolvers;

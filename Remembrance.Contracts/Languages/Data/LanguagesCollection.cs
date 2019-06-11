@@ -8,9 +8,20 @@ namespace Remembrance.Contracts.Languages.Data
         public LanguagesCollection(IEnumerable<Language> languages, string? selectedLanguage)
             : base(languages)
         {
-            SelectedLanguage = selectedLanguage ?? this.First().Code;
+            if (selectedLanguage == null || selectedLanguage == Constants.AutoDetectLanguage)
+            {
+                SelectedLanguageItem = this.First();
+                SelectedLanguage = SelectedLanguageItem.Code;
+            }
+            else
+            {
+                // TODO: Better if it would be a dictionary
+                SelectedLanguageItem = this.Single(x => x.Code == selectedLanguage);
+                SelectedLanguage = selectedLanguage;
+            }
         }
 
         public string SelectedLanguage { get; }
+        public Language SelectedLanguageItem { get; }
     }
 }
