@@ -31,6 +31,12 @@ namespace Remembrance.DAL.Shared
             set => RemoveUpdateOrInsert(nameof(TtsSpeaker), value);
         }
 
+        public bool SolveQwantCaptcha
+        {
+            get => TryGetValue<bool>(nameof(SolveQwantCaptcha));
+            set => RemoveUpdateOrInsert(nameof(SolveQwantCaptcha), value);
+        }
+
         public VoiceEmotion TtsVoiceEmotion
         {
             get => TryGetValue<VoiceEmotion>(nameof(TtsVoiceEmotion));

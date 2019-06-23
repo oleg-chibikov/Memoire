@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using Newtonsoft.Json;
+using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Contracts.ImageSearch.Data.Qwant;
@@ -39,10 +40,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
         private readonly IRateLimiter _rateLimiter;
 
-        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter)
+        private readonly ISettingsRepository _settingsRepository;
+
+        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISettingsRepository settingsRepository)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
+            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -57,7 +61,12 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    if ((int)response.StatusCode == 429)
+                    if ((int)response.StatusCode != 429)
+                    {
+                        throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                    }
+
+                    if (_settingsRepository.SolveQwantCaptcha)
                     {
                         _rateLimiter.Throttle(
                             TimeSpan.FromSeconds(10),
@@ -68,11 +77,10 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                 _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
                             },
                             skipLast: true);
-
-                        return null;
                     }
 
-                    throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
+                    return null;
+
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

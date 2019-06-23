@@ -13,6 +13,8 @@ namespace Remembrance.Contracts.DAL.Shared
 
         Speaker TtsSpeaker { get; set; }
 
+        bool SolveQwantCaptcha { get; set; }
+
         VoiceEmotion TtsVoiceEmotion { get; set; }
     }
 }

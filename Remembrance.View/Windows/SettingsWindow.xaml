@@ -79,6 +79,8 @@
                         Height="Auto" />
                     <RowDefinition
                         Height="Auto" />
+                    <RowDefinition
+                        Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
@@ -220,18 +222,26 @@
                     ItemsSource="{Binding SyncBuses, Mode=OneTime}"
                     SelectedValue="{Binding SyncBus, Mode=TwoWay}" />
 
+                <TextBlock Grid.Row="5"
+                    Grid.Column="0"
+                    Text="{lex:Loc SolveQwantCaptcha}" />
+
+                <CheckBox Grid.Row="5"
+                    Grid.Column="1"
+                    IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
+
                 <TextBlock
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Grid.Column="0"
                     Text="{lex:Loc ProcessesBlacklist}" />
 
                 <controls:ProcessesBlacklistControl
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Grid.Column="1"
                     DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
 
                 <StackPanel
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Grid.Column="1"
                     Orientation="Horizontal"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}"

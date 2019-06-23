@@ -363,4 +363,7 @@
   <data name="SyncBus" xml:space="preserve">
     <value>Синхронизировать через</value>
   </data>
+  <data name="SolveQwantCaptcha" xml:space="preserve">
+    <value>Показывать капчу для картинок</value>
+  </data>
 </root>

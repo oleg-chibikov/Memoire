@@ -363,4 +363,7 @@
   <data name="SyncBus" xml:space="preserve">
     <value>Sync using</value>
   </data>
+  <data name="SolveQwantCaptcha" xml:space="preserve">
+    <value>Solve Qwant Captcha</value>
+  </data>
 </root>

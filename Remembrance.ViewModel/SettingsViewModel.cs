@@ -103,6 +103,7 @@ namespace Remembrance.ViewModel
             UiLanguage = _uiLanguage;
             TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
+            SolveQwantCaptcha = _settingsRepository.SolveQwantCaptcha;
             SyncBus = _localSettingsRepository.SyncBus;
             OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
             OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
@@ -130,6 +131,8 @@ namespace Remembrance.ViewModel
             Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
         public double CardShowFrequency { get; set; }
+
+        public bool SolveQwantCaptcha { get; set; }
 
         public ICommand ExportCommand { get; }
 
@@ -239,6 +242,11 @@ namespace Remembrance.ViewModel
             if (_settingsRepository.TtsVoiceEmotion != TtsVoiceEmotion)
             {
                 _settingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
+            }
+
+            if (_settingsRepository.SolveQwantCaptcha != SolveQwantCaptcha)
+            {
+                _settingsRepository.SolveQwantCaptcha = SolveQwantCaptcha;
             }
 
             if (_localSettingsRepository.UiLanguage != UiLanguage)
