@@ -152,7 +152,7 @@ namespace Remembrance.Core.Processing
             }
             finally
             {
-                _synchronizationContext.Post(x => loadingWindow.Close(), null);
+                _synchronizationContext.Post(x => loadingWindow?.Close(), null);
             }
         }
 
@@ -226,9 +226,9 @@ namespace Remembrance.Core.Processing
 
             foreach (var manualTranslation in manualTranslations)
             {
-                manualTranslation.Text = manualTranslation.Text?.Capitalize();
-                manualTranslation.Example = manualTranslation.Example?.Capitalize();
-                manualTranslation.Meaning = manualTranslation.Meaning?.Capitalize();
+                manualTranslation.Text = manualTranslation.Text.Capitalize();
+                manualTranslation.Example = manualTranslation.Example.Capitalize();
+                manualTranslation.Meaning = manualTranslation.Meaning.Capitalize();
             }
         }
 

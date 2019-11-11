@@ -1,7 +1,3 @@
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
 [assembly: AssemblyCompany("Scar")]
 [assembly: AssemblyCopyright("Copyright © Scar 2016")]
 [assembly: ComVisible(false)]

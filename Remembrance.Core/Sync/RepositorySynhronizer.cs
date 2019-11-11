@@ -120,7 +120,7 @@ namespace Remembrance.Core.Sync
                         // _logger.TraceFormat("Processing {0}...", remoteEntity);
                         var existingEntity = _ownRepository.TryGetById(remoteEntity.Id);
                         var insert = false;
-                        if (!Equals(existingEntity, default(TEntity)))
+                        if (!Equals(existingEntity, default))
                         {
                             if (remoteEntity.ModifiedDate <= existingEntity.ModifiedDate)
                             {

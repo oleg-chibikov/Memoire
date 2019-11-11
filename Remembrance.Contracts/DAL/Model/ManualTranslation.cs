@@ -6,15 +6,11 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class ManualTranslation : BaseWord
     {
-        public ManualTranslation()
-        {
-        }
-
         public ManualTranslation(string text, string example = "", string meaning = "", PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
-            Example = example;
-            Meaning = meaning;
+            Example = example ?? throw new ArgumentNullException(nameof(example));
+            Meaning = meaning ?? throw new ArgumentNullException(nameof(meaning));
             PartOfSpeech = partOfSpeech;
         }
 

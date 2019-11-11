@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Autofac;
 using Autofac.Extras.Moq;
 using Easy.MessageHub;
@@ -15,7 +14,6 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.ViewModel;
-using Remembrance.Windows.Common;
 using Scar.Common.Async;
 using Scar.Common.Messages;
 

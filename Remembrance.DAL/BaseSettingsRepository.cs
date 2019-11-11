@@ -14,7 +14,7 @@ namespace Remembrance.DAL
 
         protected void RemoveUpdateOrInsert<TValue>(string key, TValue value)
         {
-            if (Equals(value, default(TValue)))
+            if (Equals(value, default))
             {
                 Delete(key);
                 return;
