@@ -24,8 +24,9 @@ namespace Remembrance.DAL.Shared
         {
             var chooseIsFavoritedFirstProbability = _rand.Next(100);
             return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to be shown
-                .OrderByDescending(x => chooseIsFavoritedFirstProbability > 60 || x.IsFavorited) // favorited are shown first with 60% probability
+                .OrderByDescending(x => chooseIsFavoritedFirstProbability > 20 || x.IsFavorited) // favorited are shown first with 20% probability
                 .ThenBy(x => x.ShowCount) // the lower the value, the greater the priority
+                .ThenBy(x => x.RepeatType) // items are ordered by the level of learning
                 .ThenBy(x => Guid.NewGuid()) // similar values are ordered randomly
                 .FirstOrDefault();
         }
