@@ -107,7 +107,7 @@ namespace Remembrance.ViewModel
 
         private void AddText()
         {
-            if (string.IsNullOrWhiteSpace(Text))
+            if (Text == null || string.IsNullOrWhiteSpace(Text))
             {
                 return;
             }

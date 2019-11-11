@@ -71,7 +71,7 @@ namespace Remembrance.ViewModel
 
         private void AddTranslation()
         {
-            if (string.IsNullOrWhiteSpace(ManualTranslationText))
+            if (ManualTranslationText == null || string.IsNullOrWhiteSpace(ManualTranslationText))
             {
                 throw new LocalizableException(Errors.WordIsMissing, "Word is not specified");
             }

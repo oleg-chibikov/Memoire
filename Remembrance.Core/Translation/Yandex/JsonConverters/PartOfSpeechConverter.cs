@@ -11,10 +11,10 @@ namespace Remembrance.Core.Translation.Yandex.JsonConverters
             return objectType == typeof(string);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var partOfSpeechString = serializer.Deserialize<string>(reader);
-            switch (partOfSpeechString.ToLowerInvariant())
+            switch (partOfSpeechString?.ToLowerInvariant())
             {
                 case "noun":
                     return PartOfSpeech.Noun;
@@ -43,7 +43,7 @@ namespace Remembrance.Core.Translation.Yandex.JsonConverters
             }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             throw new NotSupportedException();
         }

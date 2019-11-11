@@ -10,13 +10,13 @@ namespace Remembrance.Core.ImageSearch.Qwant.JsonConverters
             return objectType == typeof(string);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             return !(reader.Value is string valueString) ? string.Empty :
                 valueString.StartsWith(@"//", StringComparison.InvariantCultureIgnoreCase) ? $"https:{valueString}" : valueString;
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             throw new NotSupportedException();
         }

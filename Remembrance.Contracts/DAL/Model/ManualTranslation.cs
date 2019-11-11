@@ -6,6 +6,12 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class ManualTranslation : BaseWord
     {
+        // ReSharper disable once UnusedMember.Global
+        public ManualTranslation()
+        {
+            Example = Meaning = Text = string.Empty;
+        }
+
         public ManualTranslation(string text, string example = "", string meaning = "", PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));

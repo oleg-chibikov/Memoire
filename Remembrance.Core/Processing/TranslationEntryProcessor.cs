@@ -307,7 +307,7 @@ namespace Remembrance.Core.Processing
             var text = translationEntryAdditionInfo.Text;
             var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
             var targetLanguage = translationEntryAdditionInfo.TargetLanguage;
-            if (string.IsNullOrWhiteSpace(text))
+            if (text == null || string.IsNullOrWhiteSpace(text))
             {
                 _messageHub.Publish(Errors.WordIsMissing.ToWarning());
                 return null;

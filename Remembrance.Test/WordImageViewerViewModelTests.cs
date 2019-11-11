@@ -246,7 +246,7 @@ namespace Remembrance.Test
             // Arrange
             _autoMock.Mock<IImageDownloader>()
                 .SetupSequence(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(null)
+                .ReturnsAsync((byte[])null)
                 .ReturnsAsync(new byte[1]);
             WithSuccessfulImageSearch();
 

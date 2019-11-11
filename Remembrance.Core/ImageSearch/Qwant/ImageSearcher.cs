@@ -85,7 +85,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var deserialized = JsonConvert.DeserializeObject<QwantResponse>(result, SerializerSettings);
-                return deserialized.Data.Result.Items;
+                return deserialized?.Data.Result.Items;
             }
             catch (Exception ex)
             {

@@ -146,7 +146,7 @@ namespace Remembrance.ViewModel
         private async Task SaveAsync()
         {
             var text = Text;
-            var manualTranslation = string.IsNullOrWhiteSpace(ManualTranslation)
+            var manualTranslation = ManualTranslation == null || string.IsNullOrWhiteSpace(ManualTranslation)
                 ? null
                 : new[]
                 {

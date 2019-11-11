@@ -56,7 +56,7 @@ namespace Remembrance.Core.Translation.Yandex
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<DetectionResult>(result, SerializerSettings);
+                return JsonConvert.DeserializeObject<DetectionResult>(result, SerializerSettings) ?? throw new InvalidOperationException("Cannot deserialize DetectionResult");
             }
             catch (Exception ex)
             {
