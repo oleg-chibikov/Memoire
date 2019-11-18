@@ -37,7 +37,12 @@ namespace Remembrance.ViewModel
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager)
-            : base(word, translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)), textToSpeechPlayer, translationEntryProcessor, commandManager)
+            : base(
+                word,
+                translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)),
+                textToSpeechPlayer,
+                translationEntryProcessor,
+                commandManager)
         {
             _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;

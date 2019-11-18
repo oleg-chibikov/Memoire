@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.DictionaryWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.DictionaryWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -30,71 +29,51 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <!--Allow Resize-->
     <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
+        <WindowChrome CaptionHeight="0"
             ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
     <i:Interaction.Triggers>
-        <i:EventTrigger
-            EventName="ContentRenderAnimationFinished">
-            <i:InvokeCommandAction
-                Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
+        <i:EventTrigger EventName="ContentRenderAnimationFinished">
+            <i:InvokeCommandAction Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <materialDesign:DialogHost
-        IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
+    <materialDesign:DialogHost IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
-            <dialogs:EditManualTranslationsDialog
-                DataContext="{Binding EditManualTranslationsViewModel, Mode=OneTime}" />
+            <dialogs:EditManualTranslationsDialog DataContext="{Binding EditManualTranslationsViewModel, Mode=OneTime}" />
         </materialDesign:DialogHost.DialogContent>
-        <Grid
-            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        <Grid commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             commonView:MarginSetter.Orientation="Vertical"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="Auto" />
-                <RowDefinition
-                    Height="*" />
-                <RowDefinition
-                    Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <DockPanel
-                Grid.Row="0">
-                <controls:SearchControl
-                    VerticalAlignment="Center"
+            <DockPanel Grid.Row="0">
+                <controls:SearchControl VerticalAlignment="Center"
                     VerticalContentAlignment="Center" />
             </DockPanel>
-            <controls:TranslationsGridControl
-                Width="Auto"
+            <controls:TranslationsGridControl Width="Auto"
                 Grid.Row="1" />
-            <DockPanel
-                commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+            <DockPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 commonView:MarginSetter.Orientation="Horizontal"
                 Grid.Row="2">
-                <TextBlock
-                    Style="{StaticResource Logo}"
+                <TextBlock Style="{StaticResource Logo}"
                     Text="Remembrance"
                     DockPanel.Dock="Left" />
-                <Button
-                    Style="{StaticResource ImageButton}"
+                <Button Style="{StaticResource ImageButton}"
                     ToolTip="{lex:Loc EditSettings}"
                     Command="{Binding OpenSettingsCommand, Mode=OneTime}">
-                    <materialDesign:PackIcon
-                        Kind="Settings" />
+                    <materialDesign:PackIcon Kind="Settings" />
                 </Button>
-                <TextBlock
-                    Text="{lex:Loc Total}" />
-                <TextBlock
-                    Text="{Binding Count, Mode=OneWay}" />
-                <controls:AddTranslationControl
-                    Width="900"
+                <TextBlock Text="{lex:Loc Total}" />
+                <TextBlock Text="{Binding Count, Mode=OneWay}" />
+                <controls:AddTranslationControl Width="900"
                     DockPanel.Dock="Right"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"

@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.AssessmentViewOnlyCardWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.AssessmentViewOnlyCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -23,53 +22,38 @@
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico"
     Title="{Binding Word, Mode=OneTime}">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
-        <i:EventTrigger
-            EventName="Closed">
-            <i:InvokeCommandAction
-                Command="{Binding WindowClosedCommand, Mode=OneTime}" />
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <StackPanel
-        commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Expander
-            Header="{lex:Loc Details}"
+    <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+        <Expander Header="{lex:Loc Details}"
             ExpandDirection="Up">
-            <controls:TranslationDetailsCardControl
-                DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
+            <controls:TranslationDetailsCardControl DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
         </Expander>
-        <controls:LearningInfoActionsControl
-            DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
-        <StackPanel
-            Orientation="Horizontal"
+        <controls:LearningInfoActionsControl DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
+        <StackPanel Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-            <controls:WordImageViewerControl
-                DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
-            <controls:WordControl
-                FontSize="{StaticResource HugeFontSize}"
+            <controls:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
+            <controls:WordControl FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
             <!--Prepositions collection is lazy loaded-->
-            <TextBlock
-                Foreground="{StaticResource WordInfo}"
+            <TextBlock Foreground="{StaticResource WordInfo}"
                 Text="{Binding TranslationDetailsCardViewModel.PrepositionsCollection, Mode=OneWay}" />
-            <TextBlock
-                Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
-            <TextBlock
-                FontSize="{StaticResource HugeFontSize}"
+            <TextBlock Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
+            <TextBlock FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 Text="-" />
-            <controls:WordControl
-                FontSize="{StaticResource HugeFontSize}"
+            <controls:WordControl FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding CorrectAnswer, Mode=OneTime}" />
         </StackPanel>
-        <controls:WordsControl
-            Foreground="{StaticResource WordInfo}"
+        <controls:WordsControl Foreground="{StaticResource WordInfo}"
             ItemsSource="{Binding SourceLanguageSynonyms, Mode=OneTime}" />
     </StackPanel>
 </animatedWindow:AnimatedWindow>

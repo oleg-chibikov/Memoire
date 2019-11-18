@@ -20,7 +20,7 @@ namespace Remembrance.DAL.Local
         private readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, IAssemblyInfoProvider assemblyInfoProvider)
-        : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)), nameof(Settings))
+            : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)), nameof(Settings))
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
         }

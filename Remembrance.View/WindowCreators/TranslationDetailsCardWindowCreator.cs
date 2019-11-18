@@ -12,7 +12,6 @@ using Scar.Common.View.WindowFactory;
 namespace Remembrance.View.WindowCreators
 {
     [UsedImplicitly]
-
     internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         [NotNull]

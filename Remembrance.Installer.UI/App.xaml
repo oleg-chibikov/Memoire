@@ -1,5 +1,4 @@
-﻿<Application
-    x:Class="Remembrance.Installer.UI.App"
+﻿<Application x:Class="Remembrance.Installer.UI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     StartupUri="pack://application:,,,/Scar.Common.Installer.UI;component/View/MainWindow.xaml"

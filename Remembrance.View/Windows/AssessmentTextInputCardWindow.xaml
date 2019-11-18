@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.AssessmentTextInputCardWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.AssessmentTextInputCardWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -23,71 +22,51 @@
     Background="{StaticResource DarkerBackground}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
-        <i:EventTrigger
-            EventName="Closed">
-            <i:InvokeCommandAction
-                Command="{Binding WindowClosedCommand, Mode=OneTime}" />
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid
-        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+    <Grid commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
         commonView:MarginSetter.Orientation="Vertical">
         <Grid.RowDefinitions>
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
-            <RowDefinition
-                Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <controls:LearningInfoActionsControl
-            Grid.Row="0"
+        <controls:LearningInfoActionsControl Grid.Row="0"
             DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
-        <StackPanel
-            Orientation="Horizontal"
+        <StackPanel Orientation="Horizontal"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
             Grid.Row="1">
-            <controls:WordImageViewerControl
-                DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
-            <controls:WordControl
-                FontSize="{StaticResource HugeFontSize}"
+            <controls:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
+            <controls:WordControl FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding Word, Mode=OneTime}" />
-            <TextBlock
-                Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
-            <TextBlock
-                FontSize="{StaticResource HugeFontSize}"
+            <TextBlock Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
+            <TextBlock FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 Text="-"
                 Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}" />
-            <controls:WordControl
-                FontSize="{StaticResource HugeFontSize}"
+            <controls:WordControl FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
                 DataContext="{Binding CorrectAnswer, Mode=OneWay}"
                 Visibility="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource NotNullToVisibilityConverter}}">
                 <controls:WordControl.Style>
-                    <Style
-                        TargetType="{x:Type controls:WordControl}">
+                    <Style TargetType="{x:Type controls:WordControl}">
                         <Style.Triggers>
-                            <DataTrigger
-                                Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                 Value="False">
-                                <Setter
-                                    Property="Foreground"
+                                <Setter Property="Foreground"
                                     Value="{StaticResource Red}" />
                             </DataTrigger>
-                            <DataTrigger
-                                Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                 Value="True">
-                                <Setter
-                                    Property="Foreground"
+                                <Setter Property="Foreground"
                                     Value="{StaticResource Green}" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -95,27 +74,21 @@
                 </controls:WordControl.Style>
             </controls:WordControl>
         </StackPanel>
-        <controls:WordsControl
-            Grid.Row="2"
+        <controls:WordsControl Grid.Row="2"
             Foreground="{StaticResource WordInfo}"
             ItemsSource="{Binding SourceLanguageSynonyms, Mode=OneTime}" />
-        <DockPanel
-            Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
+        <DockPanel Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
             Grid.Row="3">
-            <controls:AnswerControl
-                DockPanel.Dock="Right"
+            <controls:AnswerControl DockPanel.Dock="Right"
                 HorizontalAlignment="Right"
                 FontSize="{StaticResource MediumFontSize}" />
         </DockPanel>
-        <StackPanel
-            Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
+        <StackPanel Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
             Grid.Row="3">
-            <TextBlock
-                Foreground="{StaticResource Red}"
+            <TextBlock Foreground="{StaticResource Red}"
                 Text="{lex:Loc WrongAnswer}"
                 Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}" />
-            <TextBlock
-                Foreground="{StaticResource Green}"
+            <TextBlock Foreground="{StaticResource Green}"
                 Text="{lex:Loc CorrectAnswer}"
                 Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>

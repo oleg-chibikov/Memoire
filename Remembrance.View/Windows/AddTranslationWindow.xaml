@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.AddTranslationWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.AddTranslationWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -24,11 +23,9 @@
     Width="900"
     Background="{StaticResource DarkerBackground}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
-    <controls:AddTranslationControl
-        VerticalAlignment="Center"
+    <controls:AddTranslationControl VerticalAlignment="Center"
         VerticalContentAlignment="Center" />
     <animatedWindow:AnimatedWindow.Resources>
-        <view:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <view:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
 </animatedWindow:AnimatedWindow>

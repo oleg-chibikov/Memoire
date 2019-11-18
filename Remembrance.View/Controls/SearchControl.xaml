@@ -1,5 +1,4 @@
-<commonView:BaseControl
-    x:Class="Remembrance.View.Controls.SearchControl"
+<commonView:BaseControl x:Class="Remembrance.View.Controls.SearchControl"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -17,34 +16,28 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
-    <StackPanel
-        Orientation="Horizontal"
+    <StackPanel Orientation="Horizontal"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
 
-        <autoComplete:CompletableTextBox
-            x:Name="SearchTextBox"
+        <autoComplete:CompletableTextBox x:Name="SearchTextBox"
             Width="200"
             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             DataProvider="{DynamicResource SuggestionProvider}">
             <autoComplete:CompletableTextBox.InputBindings>
-                <KeyBinding
-                    Command="{Binding SearchCommand, Mode=OneTime}"
+                <KeyBinding Command="{Binding SearchCommand, Mode=OneTime}"
                     Key="Enter"
                     CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}, Mode=OneWay}" />
             </autoComplete:CompletableTextBox.InputBindings>
         </autoComplete:CompletableTextBox>
 
-        <Button
-            IsDefault="True"
+        <Button IsDefault="True"
             Style="{StaticResource ImageButton}"
             ToolTip="{lex:Loc Search}"
             Command="{Binding SearchCommand, Mode=OneTime}"
             CommandParameter="{Binding Text, ElementName=SearchTextBox, Mode=OneWay}">
-            <materialDesign:PackIcon
-                Kind="FileFind" />
+            <materialDesign:PackIcon Kind="FileFind" />
         </Button>
     </StackPanel>
 </commonView:BaseControl>

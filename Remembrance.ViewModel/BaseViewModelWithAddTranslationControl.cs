@@ -32,8 +32,8 @@ namespace Remembrance.ViewModel
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
         private string _selectedSourceLanguage;
-        private string _selectedTargetLanguage;
         private Language _selectedSourceLanguageItem;
+        private string _selectedTargetLanguage;
         private Language _selectedTargetLanguageItem;
 
         protected BaseViewModelWithAddTranslationControl(

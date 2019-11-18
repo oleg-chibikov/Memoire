@@ -1,5 +1,4 @@
-<baseWindow:BaseWindow
-    x:Class="Remembrance.View.Windows.TrayWindow"
+<baseWindow:BaseWindow x:Class="Remembrance.View.Windows.TrayWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -25,146 +24,113 @@
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <Window.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </Window.Resources>
     <Grid>
-        <tb:TaskbarIcon
-            LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
+        <tb:TaskbarIcon LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
             DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
             ToolTipText="{lex:Loc Remembrance.Resources:Texts:Title}">
             <i:Interaction.Triggers>
-                <i:EventTrigger
-                    EventName="TrayToolTipClose">
-                    <i:InvokeCommandAction
-                        Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
+                <i:EventTrigger EventName="TrayToolTipClose">
+                    <i:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
                 </i:EventTrigger>
-                <i:EventTrigger
-                    EventName="TrayToolTipOpen">
-                    <i:InvokeCommandAction
-                        Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
+                <i:EventTrigger EventName="TrayToolTipOpen">
+                    <i:InvokeCommandAction Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <ContextMenu.Resources>
-                        <Style
-                            TargetType="Image">
-                            <Setter
-                                Property="Width"
+                        <Style TargetType="Image">
+                            <Setter Property="Width"
                                 Value="16" />
-                            <Setter
-                                Property="Height"
+                            <Setter Property="Height"
                                 Value="16" />
                         </Style>
                     </ContextMenu.Resources>
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:Settings}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:Settings}"
                         Command="{Binding ShowSettingsCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="Settings" />
+                            <materialDesign:PackIcon Kind="Settings" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:AddTranslation}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:AddTranslation}"
                         Command="{Binding AddTranslationCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="PlusBox" />
+                            <materialDesign:PackIcon Kind="PlusBox" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:Dictionary}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:Dictionary}"
                         Command="{Binding ShowDictionaryCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="Dictionary" />
+                            <materialDesign:PackIcon Kind="Dictionary" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Command="{Binding ToggleActiveCommand, Mode=OneTime}"
+                    <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
                         Header="{lex:Loc Remembrance.Resources:Texts:Deactivate}"
                         Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="ToggleSwitchOff" />
+                            <materialDesign:PackIcon Kind="ToggleSwitchOff" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Command="{Binding ToggleActiveCommand, Mode=OneTime}"
+                    <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
                         Header="{lex:Loc Remembrance.Resources:Texts:Activate}"
                         Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="ToggleSwitch" />
+                            <materialDesign:PackIcon Kind="ToggleSwitch" />
                         </MenuItem.Icon>
                     </MenuItem>
 
                     <Separator />
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:ViewLogs}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:ViewLogs}"
                         Command="{Binding ViewLogsCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="FileDocument" />
+                            <materialDesign:PackIcon Kind="FileDocument" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:OpenSharedFolder}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:OpenSharedFolder}"
                         Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="Dropbox" />
+                            <materialDesign:PackIcon Kind="Dropbox" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:OpenSettingsFolder}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:OpenSettingsFolder}"
                         Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="Folder" />
+                            <materialDesign:PackIcon Kind="Folder" />
                         </MenuItem.Icon>
                     </MenuItem>
 
                     <Separator />
 
-                    <MenuItem
-                        Header="{lex:Loc Remembrance.Resources:Texts:Exit}"
+                    <MenuItem Header="{lex:Loc Remembrance.Resources:Texts:Exit}"
                         Command="{Binding ExitCommand, Mode=OneTime}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon
-                                Kind="ExitToApp" />
+                            <materialDesign:PackIcon Kind="ExitToApp" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
             <tb:TaskbarIcon.Style>
-                <Style
-                    TargetType="tb:TaskbarIcon">
-                    <Setter
-                        Property="IconSource"
+                <Style TargetType="tb:TaskbarIcon">
+                    <Setter Property="IconSource"
                         Value="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico" />
                     <Style.Triggers>
-                        <DataTrigger
-                            Binding="{Binding IsPaused, Mode=OneWay}"
+                        <DataTrigger Binding="{Binding IsPaused, Mode=OneWay}"
                             Value="True">
-                            <Setter
-                                Property="IconSource"
+                            <Setter Property="IconSource"
                                 Value="pack://application:,,/Remembrance.View;component/Images/IconPaused.ico" />
                         </DataTrigger>
-                        <DataTrigger
-                            Binding="{Binding IsActive, Mode=OneWay}"
+                        <DataTrigger Binding="{Binding IsActive, Mode=OneWay}"
                             Value="False">
-                            <Setter
-                                Property="IconSource"
+                            <Setter Property="IconSource"
                                 Value="pack://application:,,/Remembrance.View;component/Images/IconInactive.ico" />
                         </DataTrigger>
                     </Style.Triggers>

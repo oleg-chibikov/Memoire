@@ -13,7 +13,7 @@ namespace Remembrance.View.Converters
         [NotNull]
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
-            return value == null ? TaskbarItemProgressState.None: (TaskbarItemProgressState)(int)value;
+            return value == null ? TaskbarItemProgressState.None : (TaskbarItemProgressState)(int)value;
         }
 
         [NotNull]

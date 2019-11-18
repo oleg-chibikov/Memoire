@@ -1,6 +1,5 @@
-
-
 // ReSharper disable NotNullMemberIsNotInitialized
+
 namespace Remembrance.Contracts.ImageSearch.Data
 {
     public sealed class ImageInfo

@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.SettingsWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.SettingsWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -25,167 +24,125 @@
     Background="{StaticResource DarkerBackground}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <i:Interaction.Triggers>
-        <i:EventTrigger
-            EventName="Closing">
-            <i:InvokeCommandAction
-                Command="{Binding WindowClosingCommand, Mode=OneTime}" />
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosingCommand, Mode=OneTime}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <animatedWindow:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary
-                    Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </animatedWindow:AnimatedWindow.Resources>
     <animatedWindow:AnimatedWindow.TaskbarItemInfo>
-        <TaskbarItemInfo
-            ProgressState="{Binding ProgressState, Mode=OneWay, Converter={StaticResource ProgressStateConverter}}"
+        <TaskbarItemInfo ProgressState="{Binding ProgressState, Mode=OneWay, Converter={StaticResource ProgressStateConverter}}"
             Description="{Binding ProgressDescription, Mode=OneWay}"
             ProgressValue="{Binding Progress, Mode=OneWay, Converter={StaticResource PercentageIntToDoubleConverter}}" />
     </animatedWindow:AnimatedWindow.TaskbarItemInfo>
-    <materialDesign:DialogHost
-        IsOpen="{Binding ProcessBlacklistViewModel.IsActiveProcessesDialogOpen, Mode=OneWay}">
+    <materialDesign:DialogHost IsOpen="{Binding ProcessBlacklistViewModel.IsActiveProcessesDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
-            <dialogs:ActiveProcessesDialog
-                DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
+            <dialogs:ActiveProcessesDialog DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
         </materialDesign:DialogHost.DialogContent>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="Auto" />
-                <RowDefinition
-                    Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid
-                Grid.Row="0"
+            <Grid Grid.Row="0"
                 commonView:MarginSetter.Orientation="Vertical"
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
                 <Grid.RowDefinitions>
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
-                    <RowDefinition
-                        Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition
-                        Width="220" />
-                    <ColumnDefinition
-                        Width="*" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
+                <TextBlock Grid.Row="0"
                     Grid.Column="0"
                     Text="{lex:Loc UiLanguage}" />
 
-                <DockPanel
-                    Grid.Row="0"
+                <DockPanel Grid.Row="0"
                     Grid.Column="1">
-                    <ComboBox
-                        IsSynchronizedWithCurrentItem="True"
+                    <ComboBox IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding AvailableUiLanguages, Mode=OneTime}"
                         SelectedValue="{Binding UiLanguage, Mode=TwoWay}"
                         SelectedValuePath="Code"
                         DisplayMemberPath="DisplayName" />
-                    <StackPanel
-                        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                    <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                        <Button
-                            Style="{StaticResource ImageButton}"
+                        <Button Style="{StaticResource ImageButton}"
                             ToolTip="{lex:Loc ViewLogs}"
                             Command="{Binding ViewLogsCommand, Mode=OneTime}">
-                            <materialDesign:PackIcon
-                                Kind="FileDocument" />
+                            <materialDesign:PackIcon Kind="FileDocument" />
                         </Button>
-                        <Button
-                            Style="{StaticResource ImageButton}"
+                        <Button Style="{StaticResource ImageButton}"
                             ToolTip="{lex:Loc OpenSharedFolder}"
                             Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
-                            <materialDesign:PackIcon
-                                Kind="Dropbox" />
+                            <materialDesign:PackIcon Kind="Dropbox" />
                         </Button>
-                        <Button
-                            Style="{StaticResource ImageButton}"
+                        <Button Style="{StaticResource ImageButton}"
                             ToolTip="{lex:Loc OpenSettingsFolder}"
                             Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
-                            <materialDesign:PackIcon
-                                Kind="Folder" />
+                            <materialDesign:PackIcon Kind="Folder" />
                         </Button>
                     </StackPanel>
                 </DockPanel>
 
-                <TextBlock
-                    Grid.Row="1"
+                <TextBlock Grid.Row="1"
                     Grid.Column="0"
                     Text="{lex:Loc PreferredLanguage}" />
 
-                <DockPanel
-                    Grid.Row="1"
+                <DockPanel Grid.Row="1"
                     Grid.Column="1">
-                    <ComboBox
-                        IsSynchronizedWithCurrentItem="True"
+                    <ComboBox IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding AvailableTranslationLanguages, Mode=OneTime}"
                         SelectedValue="{Binding SelectedPreferredLanguage, Mode=TwoWay}"
                         SelectedValuePath="Code"
                         DisplayMemberPath="DisplayName" />
-                    <StackPanel
-                        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                    <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                        <Button
-                            Foreground="{StaticResource Red}"
+                        <Button Foreground="{StaticResource Red}"
                             Style="{StaticResource ImageButton}"
                             ToolTip="{lex:Loc Import}"
                             Command="{Binding ImportCommand, Mode=OneTime}">
-                            <materialDesign:PackIcon
-                                Kind="Import" />
+                            <materialDesign:PackIcon Kind="Import" />
                         </Button>
-                        <Button
-                            Foreground="{StaticResource Green}"
+                        <Button Foreground="{StaticResource Green}"
                             Style="{StaticResource ImageButton}"
                             ToolTip="{lex:Loc Export}"
                             Command="{Binding ExportCommand, Mode=OneTime}">
-                            <materialDesign:PackIcon
-                                Kind="Export" />
+                            <materialDesign:PackIcon Kind="Export" />
                         </Button>
                     </StackPanel>
                 </DockPanel>
 
-                <TextBlock
-                    Grid.Row="2"
+                <TextBlock Grid.Row="2"
                     Grid.Column="0"
                     Text="{lex:Loc TtsSpeaker}" />
 
-                <DockPanel
-                    commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+                <DockPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                     commonView:MarginSetter.Orientation="Horizontal"
                     Grid.Row="2"
                     Grid.Column="1">
-                    <ComboBox
-                        IsSynchronizedWithCurrentItem="True"
+                    <ComboBox IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding AvailableTtsSpeakers, Mode=OneTime}"
                         SelectedValue="{Binding TtsSpeaker, Mode=TwoWay}"
                         SelectedValuePath="Key"
                         DisplayMemberPath="Value" />
-                    <ComboBox
-                        HorizontalAlignment="Left"
+                    <ComboBox HorizontalAlignment="Left"
                         IsSynchronizedWithCurrentItem="True"
                         ItemsSource="{Binding AvailableVoiceEmotions, Mode=OneTime}"
                         SelectedValue="{Binding TtsVoiceEmotion, Mode=TwoWay}"
@@ -193,13 +150,11 @@
                         DisplayMemberPath="Value" />
                 </DockPanel>
 
-                <TextBlock
-                    Grid.Row="3"
+                <TextBlock Grid.Row="3"
                     Grid.Column="0"
                     Text="{lex:Loc CardShowFrequency}" />
 
-                <Slider
-                    Grid.Row="3"
+                <Slider Grid.Row="3"
                     Grid.Column="1"
                     Minimum="0.08333"
                     Maximum="120"
@@ -210,13 +165,11 @@
                     AutoToolTipPlacement="None"
                     ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
-                <TextBlock
-                    Grid.Row="4"
+                <TextBlock Grid.Row="4"
                     Grid.Column="0"
                     Text="{lex:Loc SyncBus}" />
 
-                <ComboBox
-                    Grid.Row="4"
+                <ComboBox Grid.Row="4"
                     Grid.Column="1"
                     IsSynchronizedWithCurrentItem="True"
                     ItemsSource="{Binding SyncBuses, Mode=OneTime}"
@@ -230,24 +183,20 @@
                     Grid.Column="1"
                     IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
 
-                <TextBlock
-                    Grid.Row="6"
+                <TextBlock Grid.Row="6"
                     Grid.Column="0"
                     Text="{lex:Loc ProcessesBlacklist}" />
 
-                <controls:ProcessesBlacklistControl
-                    Grid.Row="6"
+                <controls:ProcessesBlacklistControl Grid.Row="6"
                     Grid.Column="1"
                     DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
 
-                <StackPanel
-                    Grid.Row="7"
+                <StackPanel Grid.Row="7"
                     Grid.Column="1"
                     Orientation="Horizontal"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                     HorizontalAlignment="Right">
-                    <Button
-                        Width="100"
+                    <Button Width="100"
                         IsDefault="True"
                         Command="{Binding SaveCommand, Mode=OneTime}"
                         CommandParameter="{Binding SelectedItems, ElementName=DataGrid, Mode=OneWay}"
@@ -255,46 +204,35 @@
                 </StackPanel>
 
                 <Grid.Style>
-                    <Style
-                        TargetType="Grid">
-                        <Setter
-                            Property="IsEnabled"
+                    <Style TargetType="Grid">
+                        <Setter Property="IsEnabled"
                             Value="True" />
                         <Style.Triggers>
-                            <DataTrigger
-                                Binding="{Binding ProgressState, Mode=OneWay}"
+                            <DataTrigger Binding="{Binding ProgressState, Mode=OneWay}"
                                 Value="Normal">
-                                <Setter
-                                    Property="IsEnabled"
+                                <Setter Property="IsEnabled"
                                     Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
             </Grid>
-            <Border
-                Grid.Row="1"
+            <Border Grid.Row="1"
                 Margin="0 5 0 0"
                 BorderThickness="0">
                 <Border.Style>
-                    <Style
-                        TargetType="Border">
-                        <Setter
-                            Property="Visibility"
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility"
                             Value="Collapsed" />
-                        <Setter
-                            Property="Opacity"
+                        <Setter Property="Opacity"
                             Value="0" />
                         <Style.Triggers>
-                            <DataTrigger
-                                Binding="{Binding ProgressState, Mode=OneWay}"
+                            <DataTrigger Binding="{Binding ProgressState, Mode=OneWay}"
                                 Value="Normal">
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
-                                        <Storyboard
-                                            Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation
-                                                From="0"
+                                        <Storyboard Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimation From="0"
                                                 To="1"
                                                 Duration="0:0:0:1" />
                                         </Storyboard>
@@ -302,23 +240,19 @@
                                 </DataTrigger.EnterActions>
                                 <DataTrigger.ExitActions>
                                     <BeginStoryboard>
-                                        <Storyboard
-                                            Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation
-                                                Duration="0:0:0:1" />
+                                        <Storyboard Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimation Duration="0:0:0:1" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </DataTrigger.ExitActions>
-                                <Setter
-                                    Property="Visibility"
+                                <Setter Property="Visibility"
                                     Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
                 <!-- Progress Bar -->
-                <ProgressBar
-                    Minimum="0"
+                <ProgressBar Minimum="0"
                     Maximum="100"
                     HorizontalAlignment="Stretch"
                     Height="20"

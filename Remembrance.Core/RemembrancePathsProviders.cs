@@ -13,8 +13,7 @@ namespace Remembrance.Core
     {
         private readonly IAssemblyInfoProvider _assemblyInfoProvider;
 
-        public RemembrancePathsProvider(IOneDrivePathProvider oneDrivePathProvider,
-            IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider)
+        public RemembrancePathsProvider(IOneDrivePathProvider oneDrivePathProvider, IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider)
         {
             _assemblyInfoProvider = assemblyInfoProvider ?? throw new ArgumentNullException(nameof(assemblyInfoProvider));
             _ = oneDrivePathProvider ?? throw new ArgumentNullException(nameof(oneDrivePathProvider));
@@ -54,8 +53,7 @@ namespace Remembrance.Core
 
         public void ViewLogs()
         {
-            Process.Start(
-                $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
+            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
         }
     }
 }

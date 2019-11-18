@@ -197,9 +197,7 @@ namespace Remembrance.Core.CardManagement
             return new AssessmentInfo(acceptedAnswers, word, correct, false, acceptedWordGroup.Meanings);
         }
 
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(
-            bool randomPossible,
-            IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
+        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(bool randomPossible, IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             _logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = partOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
@@ -221,6 +219,7 @@ namespace Remembrance.Core.CardManagement
                 Meanings = meanings ?? throw new ArgumentNullException(nameof(meanings));
                 Synonyms = synonyms ?? throw new ArgumentNullException(nameof(synonyms));
             }
+
             public IEnumerable<Word> Meanings { get; }
             public IEnumerable<Word> Synonyms { get; }
 

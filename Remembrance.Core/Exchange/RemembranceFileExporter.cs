@@ -29,10 +29,7 @@ namespace Remembrance.Core.Exchange
 
         private readonly ITranslationEntryRepository _translationEntryRepository;
 
-        public RemembranceFileExporter(
-            ITranslationEntryRepository translationEntryRepository,
-            ILog logger,
-            ILearningInfoRepository learningInfoRepository)
+        public RemembranceFileExporter(ITranslationEntryRepository translationEntryRepository, ILog logger, ILearningInfoRepository learningInfoRepository)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

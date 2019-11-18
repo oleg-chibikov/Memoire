@@ -8,13 +8,6 @@ namespace Remembrance.Windows.Common.DialogProviders
     internal sealed class SaveFileDialogProvider : ISaveFileDialogProvider
     {
         [NotNull]
-        public string FileName
-        {
-            get => _dialog.FileName;
-            set => _dialog.FileName = value;
-        }
-
-        [NotNull]
         private readonly SaveFileDialog _dialog = new SaveFileDialog
         {
             FileName = DialogProviderConstants.DefaultFilePattern,
@@ -22,6 +15,13 @@ namespace Remembrance.Windows.Common.DialogProviders
             RestoreDirectory = true,
             Title = $"{Texts.Title}: {Texts.Export}"
         };
+
+        [NotNull]
+        public string FileName
+        {
+            get => _dialog.FileName;
+            set => _dialog.FileName = value;
+        }
 
         public bool? ShowDialog()
         {

@@ -37,8 +37,6 @@ namespace Remembrance.ViewModel
 
         protected readonly TranslationInfo TranslationInfo;
 
-        public IEnumerable<WordViewModel> SourceLanguageSynonyms { get; }
-
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
 
         protected BaseAssessmentCardViewModel(
@@ -100,6 +98,8 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
         }
+
+        public IEnumerable<WordViewModel> SourceLanguageSynonyms { get; }
 
         public WordViewModel CorrectAnswer { get; protected set; }
 

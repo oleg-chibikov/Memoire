@@ -1,6 +1,5 @@
-
-
 // ReSharper disable NotNullMemberIsNotInitialized
+
 namespace Remembrance.Contracts.Translate.Data.LanguageDetector
 {
     public sealed class DetectionResult

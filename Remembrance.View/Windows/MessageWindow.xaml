@@ -1,5 +1,4 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.MessageWindow"
+<animatedWindow:AnimatedWindow x:Class="Remembrance.View.Windows.MessageWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -27,16 +26,13 @@
     AutoCloseTimeout="{Binding AutoCloseTimeout, Mode=OneTime}"
     Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary
-            Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
-    <Border
-        BorderThickness="2"
+    <Border BorderThickness="2"
         BorderBrush="{StaticResource Border}"
         Padding="10"
         Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBackgroundBrushConverter}}">
-        <TextBlock
-            Foreground="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToForegroundBrushConverter}}"
+        <TextBlock Foreground="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToForegroundBrushConverter}}"
             Text="{Binding Message.Text, Mode=OneTime}" />
     </Border>
 </animatedWindow:AnimatedWindow>
