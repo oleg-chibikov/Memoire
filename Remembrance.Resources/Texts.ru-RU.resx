@@ -360,6 +360,9 @@
   <data name="ModifiedDate" xml:space="preserve">
     <value>Изменено</value>
   </data>
+  <data name="CreatedDate" xml:space="preserve">
+    <value>Создано</value>
+  </data>
   <data name="SyncBus" xml:space="preserve">
     <value>Синхронизировать через</value>
   </data>

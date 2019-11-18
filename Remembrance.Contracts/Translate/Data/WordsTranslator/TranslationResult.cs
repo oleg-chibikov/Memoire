@@ -8,7 +8,7 @@ namespace Remembrance.Contracts.Translate.Data.WordsTranslator
     {
         public IReadOnlyCollection<PartOfSpeechTranslation> PartOfSpeechTranslations { get; set; }
 
-        public IReadOnlyCollection<Word> GetDefaultWords()
+        public IEnumerable<Word> GetDefaultWords()
         {
             return PartOfSpeechTranslations.Select(x => x.TranslationVariants.First()).Cast<Word>().ToList();
         }

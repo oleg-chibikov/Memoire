@@ -27,14 +27,17 @@
             <RowDefinition
                 Height="Auto" />
             <RowDefinition
+                Height="Auto" />
+            <RowDefinition
                 Height="*" />
         </Grid.RowDefinitions>
+        <controls:LearningInfoActionsControl
+            Grid.Row ="0"
+            DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
         <StackPanel
             Orientation="Horizontal"
-            Grid.Row="0"
+            Grid.Row="1"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-            <controls:LearningInfoActionsControl
-                DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
             <TextBlock
                 FontSize="{StaticResource HugeFontSize}"
                 FontWeight="Bold"
@@ -54,7 +57,7 @@
         <ScrollViewer
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto"
-            Grid.Row="1">
+            Grid.Row="2">
             <ItemsControl
                 Grid.IsSharedSizeScope="True"
                 ItemsSource="{Binding TranslationDetails.TranslationResult.PartOfSpeechTranslations, Mode=OneTime}">

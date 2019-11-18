@@ -49,7 +49,7 @@ namespace Remembrance.ViewModel
             SaveCommand = AddCommand(SaveAsync);
         }
 
-        public static IReadOnlyCollection<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
+        public static IEnumerable<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
 
         public ICommand AddTranslationCommand { get; }
 

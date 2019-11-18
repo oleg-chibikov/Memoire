@@ -121,7 +121,7 @@ namespace Remembrance.ViewModel
 
         public IDictionary<Speaker, string> AvailableTtsSpeakers { get; } = Enum.GetValues(typeof(Speaker)).Cast<Speaker>().ToDictionary(x => x, x => x.ToString());
 
-        public IReadOnlyCollection<Language> AvailableUiLanguages { get; } = new[]
+        public IEnumerable<Language> AvailableUiLanguages { get; } = new[]
         {
             new Language(Constants.EnLanguage, "English"),
             new Language(Constants.RuLanguage, "Русский")

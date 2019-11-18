@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Newtonsoft.Json;
-using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Exchange;
@@ -32,7 +31,6 @@ namespace Remembrance.Core.Exchange
 
         public RemembranceFileExporter(
             ITranslationEntryRepository translationEntryRepository,
-            ITranslationDetailsRepository translationDetailsRepository,
             ILog logger,
             ILearningInfoRepository learningInfoRepository)
         {
@@ -41,7 +39,7 @@ namespace Remembrance.Core.Exchange
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
         }
 
-        public event EventHandler<ProgressEventArgs> Progress;
+        public event EventHandler<ProgressEventArgs>? Progress;
 
         public Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
         {

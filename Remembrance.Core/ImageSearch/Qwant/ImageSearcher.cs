@@ -79,8 +79,8 @@ namespace Remembrance.Core.ImageSearch.Qwant
                             skipLast: true);
                     }
 
+                    _logger.WarnFormat("Cannot search images for {0}. Response StatusCode is {1} and ReasonPhrase {2}", text, response.StatusCode, response.ReasonPhrase);
                     return null;
-
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

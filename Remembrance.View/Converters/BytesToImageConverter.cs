@@ -10,7 +10,6 @@ namespace Remembrance.View.Converters
     [ValueConversion(typeof(byte[]), typeof(BitmapImage))]
     internal sealed class BytesToImageConverter : IValueConverter
     {
-        [NotNull]
         public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
         {
             if (!(value is byte[] imageBytes))

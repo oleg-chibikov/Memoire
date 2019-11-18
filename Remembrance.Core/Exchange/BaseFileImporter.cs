@@ -46,7 +46,7 @@ namespace Remembrance.Core.Exchange
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
         }
 
-        public event EventHandler<ProgressEventArgs> Progress;
+        public event EventHandler<ProgressEventArgs>? Progress;
 
         public async Task<ExchangeResult> ImportAsync(string fileName, CancellationToken cancellationToken)
         {
@@ -231,7 +231,7 @@ namespace Remembrance.Core.Exchange
         private bool UpdatePriorityTranslationsAsync(T exchangeEntry, TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
-            if (priorityTranslations == null || priorityTranslations?.Any() != true)
+            if (priorityTranslations?.Any() != true)
             {
                 return false;
             }

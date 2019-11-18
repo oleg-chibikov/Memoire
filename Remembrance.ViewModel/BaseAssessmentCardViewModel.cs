@@ -37,6 +37,8 @@ namespace Remembrance.ViewModel
 
         protected readonly TranslationInfo TranslationInfo;
 
+        public IEnumerable<WordViewModel> SourceLanguageSynonyms { get; }
+
         protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
 
         protected BaseAssessmentCardViewModel(
@@ -69,7 +71,14 @@ namespace Remembrance.ViewModel
             AcceptedAnswers = assessmentInfo.AcceptedAnswers;
             var wordViewModel = wordViewModelFactory(assessmentInfo.Word, sourceLanguage);
             PrepareVerb(sourceLanguage, wordViewModel.Word);
-
+            SourceLanguageSynonyms = assessmentInfo.Synonyms.Select(
+                    x =>
+                    {
+                        // No need to show part of speech
+                        x.PartOfSpeech = PartOfSpeech.Unknown;
+                        return x;
+                    })
+                .Select(x => wordViewModelFactory(x, sourceLanguage));
             wordViewModel.CanLearnWord = false;
             Word = wordViewModel;
             CorrectAnswer = wordViewModelFactory(assessmentInfo.CorrectAnswer, targetLanguage);

@@ -22,11 +22,15 @@ namespace Remembrance.DAL.Shared
 
         public LearningInfo? GetMostSuitable()
         {
-            var chooseIsFavoritedFirstProbability = _rand.Next(100);
+            var chooseFavoritedItemsItemsFirst = _rand.Next(100) > 20;
+            var chooseItemsWithSmallerShowCountFirst = _rand.Next(100) > 30;
+            var chooseItemsWithLowerRepeatTypeFirst = _rand.Next(100) > 30;
+            var chooseOlderItemsFirst = _rand.Next(100) > 30;
             return Collection.Find(x => x.NextCardShowTime < DateTime.Now) // get entries which are ready to be shown
-                .OrderByDescending(x => chooseIsFavoritedFirstProbability > 20 || x.IsFavorited) // favorited are shown first with 20% probability
-                .ThenBy(x => x.ShowCount) // the lower the value, the greater the priority
-                .ThenBy(x => x.RepeatType) // items are ordered by the level of learning
+                .OrderByDescending(x => !chooseFavoritedItemsItemsFirst || x.IsFavorited) // favorited are shown first with 20% probability
+                .ThenBy(x => chooseItemsWithSmallerShowCountFirst ? x.ShowCount : 0) // the lower the ShowCount, the greater the priority. This rule will be applied in 30% cases
+                .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority. This rule will be applied in 30% cases
+                .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTime.MinValue) // this gives a 30% chance of showing an old card
                 .ThenBy(x => Guid.NewGuid()) // similar values are ordered randomly
                 .FirstOrDefault();
         }

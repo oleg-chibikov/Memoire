@@ -136,7 +136,7 @@ namespace Remembrance.Core.Sync
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            if (!_synchronizers.ContainsKey(fileName))
+            if (!_synchronizers.ContainsKey(fileName ?? throw new InvalidOperationException("fileName should not be null")))
             {
                 _logger.WarnFormat("Unknown type of repository: {0}", filePath);
                 return;

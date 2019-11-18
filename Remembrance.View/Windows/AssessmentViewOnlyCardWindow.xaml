@@ -68,5 +68,8 @@
                 FontWeight="Bold"
                 DataContext="{Binding CorrectAnswer, Mode=OneTime}" />
         </StackPanel>
+        <controls:WordsControl
+            Foreground="{StaticResource WordInfo}"
+            ItemsSource="{Binding SourceLanguageSynonyms, Mode=OneTime}" />
     </StackPanel>
 </animatedWindow:AnimatedWindow>

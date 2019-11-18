@@ -1,4 +1,4 @@
-namespace Remembrance.DAL.Contracts.Model
+namespace Remembrance.Contracts.DAL.Model
 {
     public abstract class Entity
     {

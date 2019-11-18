@@ -45,7 +45,7 @@ namespace Remembrance.ViewModel
             : base(
                 new Word
                 {
-                    Text = translationEntry.Id.Text
+                    Text = translationEntry?.Id.Text ?? throw new ArgumentNullException(nameof(translationEntry))
                 },
                 translationEntry.Id.SourceLanguage,
                 textToSpeechPlayer,
@@ -53,7 +53,6 @@ namespace Remembrance.ViewModel
                 commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
-            _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));

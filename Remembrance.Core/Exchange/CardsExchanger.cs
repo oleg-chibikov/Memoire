@@ -49,7 +49,7 @@ namespace Remembrance.Core.Exchange
             exporter.Progress += ImporterExporter_Progress;
         }
 
-        public event EventHandler<ProgressEventArgs> Progress;
+        public event EventHandler<ProgressEventArgs>? Progress;
 
         public async Task ExportAsync(CancellationToken cancellationToken)
         {

@@ -224,7 +224,6 @@ namespace Remembrance.ViewModel
                             if (imagesUrls == null)
                             {
                                 // Null means error - just displaying Error instead of image. Message is already shown to client;
-                                _logger.WarnFormat("Cannot search images for {0}", _wordKey);
                                 _shouldRepeat = true;
                             }
                             else

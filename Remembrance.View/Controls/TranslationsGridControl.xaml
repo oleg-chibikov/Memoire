@@ -36,7 +36,9 @@
             <DataTemplate
                 DataType="{x:Type system:DateTime}">
                 <TextBlock
-                    Text="{Binding StringFormat=dd MMM HH:mm, Mode=OneWay}" />
+                    VerticalAlignment="Center"
+                    FontSize ="{StaticResource TinyFontSize}"
+                    Text="{Binding StringFormat=dd MMM yy HH:mm, Mode=OneWay}" />
             </DataTemplate>
         </xceed:XceedAutoFitColumnGrid.Resources>
         <xceed:XceedAutoFitColumnGrid.Columns>
@@ -188,7 +190,8 @@
                     <DataTemplate>
                         <TextBlock
                             VerticalAlignment="Center"
-                            Text="{Binding StringFormat=dd MMM HH:mm, Mode=OneWay}"
+                            FontSize ="{StaticResource TinyFontSize}"
+                            Text="{Binding StringFormat=dd MMM yy HH:mm, Mode=OneWay}"
                             Foreground="{Binding Converter={StaticResource DateTimeToBrushConverter}, Mode=OneWay}" />
                     </DataTemplate>
                 </xcdg:Column.CellContentTemplate>
@@ -204,6 +207,12 @@
                 ReadOnly="True"
                 FieldName="ModifiedDate"
                 Title="{lex:Loc Remembrance.Resources:Texts:ModifiedDate}"
+                AllowGroup="False" />
+            <xcdg:Column
+                CellVerticalContentAlignment="Center"
+                ReadOnly="True"
+                FieldName="LearningInfoViewModel.CreatedDate"
+                Title="{lex:Loc Remembrance.Resources:Texts:CreatedDate}"
                 AllowGroup="False" />
             <xcdg:UnboundColumn
                 CellVerticalContentAlignment="Center"

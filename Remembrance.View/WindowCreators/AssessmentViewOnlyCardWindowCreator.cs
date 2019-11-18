@@ -33,6 +33,7 @@ namespace Remembrance.View.WindowCreators
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
         }
 
+        [NotNull]
         public Task<IAssessmentViewOnlyCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
             _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));

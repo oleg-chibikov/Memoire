@@ -154,6 +154,11 @@
         14
     </system:Double>
 
+    <system:Double
+        x:Key="TinyFontSize">
+        10
+    </system:Double>
+
     <Style
         x:Key="Control"
         TargetType="{x:Type commonView:BaseControl}">

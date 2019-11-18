@@ -43,6 +43,8 @@
                 Height="Auto" />
             <RowDefinition
                 Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
         </Grid.RowDefinitions>
 
         <controls:LearningInfoActionsControl
@@ -93,9 +95,13 @@
                 </controls:WordControl.Style>
             </controls:WordControl>
         </StackPanel>
+        <controls:WordsControl
+            Grid.Row="2"
+            Foreground="{StaticResource WordInfo}"
+            ItemsSource="{Binding SourceLanguageSynonyms, Mode=OneTime}" />
         <DockPanel
             Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
-            Grid.Row="2">
+            Grid.Row="3">
             <controls:AnswerControl
                 DockPanel.Dock="Right"
                 HorizontalAlignment="Right"
@@ -103,7 +109,7 @@
         </DockPanel>
         <StackPanel
             Visibility="{Binding Accepted, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"
-            Grid.Row="2">
+            Grid.Row="3">
             <TextBlock
                 Foreground="{StaticResource Red}"
                 Text="{lex:Loc WrongAnswer}"

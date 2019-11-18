@@ -29,8 +29,6 @@ namespace Remembrance.ViewModel
             ICommandManager commandManager)
             : base(commandManager)
         {
-            _ = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            _ = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Language = language ?? throw new ArgumentNullException(nameof(language));
             Word = word ?? throw new ArgumentNullException(nameof(word));
 

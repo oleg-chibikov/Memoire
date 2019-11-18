@@ -25,6 +25,8 @@
         <controls:FavoriteButton />
         <controls:DemoteButton />
         <TextBlock
+            VerticalAlignment="Center"
             Text="{Binding RepeatType, Mode=OneWay, Converter={StaticResource RepeatTypeConverter}}" />
+        <controls:CardCommonInfoControl HorizontalAlignment="Right"/>
     </StackPanel>
 </commonView:BaseControl>

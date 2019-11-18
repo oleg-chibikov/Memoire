@@ -58,6 +58,11 @@ namespace Remembrance.ViewModel
 
         public DateTime ModifiedDate { get; private set; }
 
+        public DateTime CreatedDate { get; private set; }
+
+        [DependsOn(nameof(CreatedDate), nameof(ModifiedDate))]
+        public string DateInfo => CreatedDate == ModifiedDate ? CreatedDate.ToString("dd MMM yyy HH:mm") : $"{CreatedDate:dd MMM yy HH:mm}->{ModifiedDate:dd MMM yy HH:mm}";
+
         public DateTime NextCardShowTime { get; private set; }
 
         public RepeatType RepeatType
@@ -90,6 +95,7 @@ namespace Remembrance.ViewModel
             RepeatType = learningInfo.RepeatType;
             ShowCount = learningInfo.ShowCount;
             ModifiedDate = learningInfo.ModifiedDate;
+            CreatedDate = learningInfo.CreatedDate;
         }
 
         private void Demote()
