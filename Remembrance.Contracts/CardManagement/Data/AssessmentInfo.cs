@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Contracts.CardManagement.Data
@@ -12,7 +13,7 @@ namespace Remembrance.Contracts.CardManagement.Data
             Word = word ?? throw new ArgumentNullException(nameof(word));
             CorrectAnswer = correctAnswer ?? throw new ArgumentNullException(nameof(correctAnswer));
             IsReverse = isReverse;
-            Synonyms = synonyms ?? throw new ArgumentNullException(nameof(synonyms));
+            Synonyms = synonyms?.Where(x => !x.Equals(word)).Distinct() ?? throw new ArgumentNullException(nameof(synonyms));
         }
 
         public HashSet<Word> AcceptedAnswers { get; }
