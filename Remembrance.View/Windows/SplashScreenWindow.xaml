@@ -17,6 +17,6 @@
         Foreground="{StaticResource DarkerBackground}"
         DockPanel.Dock="Left" />
     <baseWindow:BaseWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </baseWindow:BaseWindow.Resources>
 </baseWindow:BaseWindow>

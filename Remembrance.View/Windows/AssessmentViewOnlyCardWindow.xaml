@@ -12,17 +12,17 @@
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
     WindowStartupLocation="Manual"
     SizeToContent="WidthAndHeight"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico"
     Title="{Binding Word, Mode=OneTime}">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">

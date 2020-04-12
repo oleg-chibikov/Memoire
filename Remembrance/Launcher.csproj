@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Description>Launcher application for Remembrance</Description>
+    <ApplicationIcon>IconAlt.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Remembrance.Launcher.App</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Logging.NLog41" Version="3.4.1" />
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7407.19205" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7407.19165" />
+    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7407.19205" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7407.19165" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7407.19171" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Remembrance.Core\Core.csproj" />
+    <ProjectReference Include="..\Remembrance.DAL\DAL.csproj" />
+    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
+    <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\Remembrance.View\View.csproj" />
+    <ProjectReference Include="..\Remembrance.WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\Remembrance.Windows.Common\Windows.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="IconAlt.ico" />
+  </ItemGroup>
+
+</Project>

@@ -18,7 +18,7 @@ using Scar.Common.Messages;
 namespace Remembrance.Core.Sync
 {
     internal sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
-        where TRepository : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
+        where TRepository : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
         private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;

@@ -7,19 +7,19 @@
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:ProcessBlacklistViewModel}">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel Orientation="Vertical"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
@@ -45,7 +45,7 @@
                     AllowGroup="False"
                     AllowSort="False"
                     FieldName="FilePath"
-                    Title="{lex:Loc Remembrance.Resources:Texts:ProcessIcon}">
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:ProcessIcon}">
                     <xcdg:Column.CellContentTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Converter={StaticResource FilePathToIconImageSourceConverter}, Mode=OneWay}"
@@ -61,7 +61,7 @@
                     ReadOnly="True"
                     FieldName="Name"
                     CellContentTemplate="{StaticResource CellTemplate}"
-                    Title="{lex:Loc Remembrance.Resources:Texts:Process}" />
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Process}" />
                 <xcdg:UnboundColumn CellVerticalContentAlignment="Center"
                     ReadOnly="True"
                     FieldName="This">

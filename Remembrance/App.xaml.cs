@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using JetBrains.Annotations;
 using LiteDB;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
@@ -37,7 +38,11 @@ using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.Startup;
 
-namespace Remembrance
+[assembly: AssemblyCompany("Scar")]
+[assembly: AssemblyCopyright("Copyright © Scar 2016")]
+[assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
+[assembly: AssemblyProduct("Remembrance")]
+namespace Remembrance.Launcher
 {
     // TODO: Feature Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
     // TODO: Feature: if the word level is low, replace textbox with dropdown
@@ -90,7 +95,7 @@ namespace Remembrance
             where T : class
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
-                o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
+                o => new BsonArray(o.Select(x => BsonMapper.Global.ToDocument(x))),
                 m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
         }
 
@@ -98,18 +103,18 @@ namespace Remembrance
             where T : class
         {
             BsonMapper.Global.RegisterType<ISet<T>>(
-                o => new BsonValue(o.Select(x => BsonMapper.Global.ToDocument(x))),
+                o => new BsonArray(o.Select(x => BsonMapper.Global.ToDocument(x))),
                 m => new HashSet<T>(m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument))));
         }
 
         private static void RegisterLiteDbStringReadonlyCollection()
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(
-                o => new BsonValue(o.Select(x => new BsonValue(x))),
+                o => new BsonArray(o.Select(x => new BsonValue(x))),
                 m => m.AsArray.Select(item => item.AsString).ToArray());
         }
 
-        protected override void RegisterDependencies([NotNull] ContainerBuilder builder)
+        protected override void RegisterDependencies(ContainerBuilder builder)
         {
             builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
@@ -162,15 +167,16 @@ namespace Remembrance
                 null);
         }
 
-        private static void RegisterNamed<T, TInterface>([NotNull] ContainerBuilder builder)
+        private static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
             where T : TInterface
+            where TInterface : class
         {
             builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).As<TInterface>().InstancePerDependency();
         }
 
-        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>([NotNull] ContainerBuilder builder)
+        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>(ContainerBuilder builder)
             where TRepository : TRepositoryInterface, IChangeableRepository
-            where TRepositoryInterface : IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
+            where TRepositoryInterface : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
             where TEntity : IEntity<TId>, ITrackedEntity
         {
             builder.RegisterType(typeof(RepositorySynhronizer<TEntity, TId, TRepositoryInterface>)).SingleInstance().AsImplementedInterfaces();
@@ -178,6 +184,7 @@ namespace Remembrance
         }
 
         private void ResolveInSeparateTaskAsync<T>()
+            where T : class
         {
             Task.Run(() => Container.Resolve<T>());
         }

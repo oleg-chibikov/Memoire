@@ -3,14 +3,13 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using JetBrains.Annotations;
 
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(byte[]), typeof(BitmapImage))]
     internal sealed class BytesToImageConverter : IValueConverter
     {
-        public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (!(value is byte[] imageBytes))
             {
@@ -33,8 +32,7 @@ namespace Remembrance.View.Converters
             return image;
         }
 
-        [NotNull]
-        public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

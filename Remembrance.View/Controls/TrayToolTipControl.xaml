@@ -7,17 +7,17 @@
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}">
     <commonView:BaseControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -40,7 +40,7 @@
                 Style="{StaticResource Logo}"
                 Text="Remembrance" />
             <Control Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-                ToolTip="{lex:Loc Remembrance.Resources:Texts:Loading}"
+                ToolTip="{lex:Loc Scar.Remembrance.Resources:Texts:Loading}"
                 Style="{StaticResource BusyAnimationStyle}" />
             <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 Visibility="{Binding IsLoading, Converter={StaticResource ReverseBoolToVisibilityConverter}, Mode=OneWay}">

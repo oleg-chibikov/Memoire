@@ -8,12 +8,12 @@ namespace Remembrance.View.Converters
     [ValueConversion(typeof(WordViewModel), typeof(bool))]
     internal sealed class PriorityWordViewModelToBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return value is PriorityWordViewModel;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

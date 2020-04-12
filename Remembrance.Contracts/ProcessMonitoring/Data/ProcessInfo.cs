@@ -7,7 +7,9 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
     {
         public ProcessInfo(string name, string? filePath = null)
         {
-            Name = name.Capitalize() ?? throw new ArgumentNullException(nameof(name));
+            _ = name ?? throw new ArgumentNullException(nameof(name));
+
+            Name = name.Capitalize();
             FilePath = filePath;
         }
 
@@ -22,7 +24,7 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return StringComparer.OrdinalIgnoreCase.GetHashCode(Name);
         }
 
         public override string ToString()
@@ -32,7 +34,7 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
 
         private bool Equals(ProcessInfo other)
         {
-            return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

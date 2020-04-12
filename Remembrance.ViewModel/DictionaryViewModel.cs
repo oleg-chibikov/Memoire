@@ -450,8 +450,8 @@ namespace Remembrance.ViewModel
                 {
                     var translationEntryViewModel = (TranslationEntryViewModel)obj;
                     return string.IsNullOrWhiteSpace(text)
-                           || translationEntryViewModel.Id.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0
-                           || translationEntryViewModel.Translations.Any(translation => translation.Word.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                           || translationEntryViewModel.Id.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0
+                           || translationEntryViewModel.Translations.Any(translation => translation.Word.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
                 };
             }
 

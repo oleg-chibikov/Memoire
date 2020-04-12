@@ -8,11 +8,11 @@
     xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:AssessmentTextInputCardViewModel}"
@@ -20,9 +20,9 @@
     SizeToContent="WidthAndHeight"
     Title="{Binding Word, Mode=OneTime}"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico">
+    Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
@@ -59,12 +59,12 @@
                 <controls:WordControl.Style>
                     <Style TargetType="{x:Type controls:WordControl}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+              <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                 Value="False">
                                 <Setter Property="Foreground"
                                     Value="{StaticResource Red}" />
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+              <DataTrigger Binding="{Binding Path=DataContext.Accepted, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                 Value="True">
                                 <Setter Property="Foreground"
                                     Value="{StaticResource Green}" />

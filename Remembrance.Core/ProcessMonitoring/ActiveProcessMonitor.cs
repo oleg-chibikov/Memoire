@@ -79,7 +79,7 @@ namespace Remembrance.Core.ProcessMonitoring
         {
             var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
 
-            if (blacklistedProcesses?.Select(processInfo => processInfo.Name).Contains(process.ProcessName, StringComparer.InvariantCultureIgnoreCase) == true)
+            if (blacklistedProcesses?.Select(processInfo => processInfo.Name).Contains(process.ProcessName, StringComparer.OrdinalIgnoreCase) == true)
             {
                 _pauseManager.Pause(PauseReason.ActiveProcessBlacklisted, process.ProcessName);
             }

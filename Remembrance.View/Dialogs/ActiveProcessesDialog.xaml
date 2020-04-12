@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     mc:Ignorable="d"
@@ -13,16 +12,17 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:behaviors="clr-namespace:Scar.Common.WPF.Controls.Behaviors;assembly=Scar.Common.WPF.Controls.Behaviors"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     engine:LocalizeDictionary.DesignCulture="en"
     engine:LocalizeDictionary.OutputMissingKeys="True"
-    engine:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    engine:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     engine:ResxLocalizationProvider.DefaultDictionary="Texts"
     HorizontalAlignment="Stretch"
     Style="{StaticResource Control}"
     d:DataContext="{d:DesignInstance d:Type=viewModel:ProcessBlacklistViewModel}">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel Margin="5"
         Orientation="Vertical"
@@ -72,7 +72,7 @@
                     AllowGroup="False"
                     AllowSort="False"
                     FieldName="FilePath"
-                    Title="{lex:Loc Remembrance.Resources:Texts:ProcessIcon}">
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:ProcessIcon}">
                     <xcdg:Column.CellContentTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Converter={StaticResource FilePathToIconImageSourceConverter}, Mode=OneWay}"
@@ -88,7 +88,7 @@
                     ReadOnly="True"
                     FieldName="Name"
                     CellContentTemplate="{StaticResource CellTemplate}"
-                    Title="{lex:Loc Remembrance.Resources:Texts:Process}" />
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Process}" />
             </xceed:XceedAutoFitColumnGrid.Columns>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">

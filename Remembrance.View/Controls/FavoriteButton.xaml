@@ -7,13 +7,13 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance d:Type=viewModel:LearningInfoViewModel}"
     ToolTip="{lex:Loc Favorite}"
     Command="{Binding FavoriteCommand, Mode=OneTime}">
     <Button.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </Button.Resources>
     <Button.Style>
         <StaticResource ResourceKey="ImageButton" />

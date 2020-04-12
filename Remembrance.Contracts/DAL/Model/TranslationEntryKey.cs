@@ -6,7 +6,9 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class TranslationEntryKey : IEquatable<TranslationEntryKey>
     {
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public TranslationEntryKey()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
         }
 
@@ -63,9 +65,9 @@ namespace Remembrance.Contracts.DAL.Model
         {
             unchecked
             {
-                var hashCode = Text.GetHashCode();
-                hashCode = (hashCode * 397) ^ SourceLanguage.GetHashCode();
-                hashCode = (hashCode * 397) ^ TargetLanguage.GetHashCode();
+                var hashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(Text);
+                hashCode = (hashCode * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(SourceLanguage);
+                hashCode = (hashCode * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(TargetLanguage);
                 return hashCode;
             }
         }

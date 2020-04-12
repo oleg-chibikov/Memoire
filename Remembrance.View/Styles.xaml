@@ -9,12 +9,12 @@
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:converters="clr-namespace:Remembrance.View.Converters"
     xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
-    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink">
+    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid">
 
     <commonConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
     <commonConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />

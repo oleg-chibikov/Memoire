@@ -7,8 +7,8 @@
     xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
-    Icon="pack://application:,,/Remembrance.View;component/Images/IconAlt.ico"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     SizeToContent="WidthAndHeight"
@@ -17,7 +17,7 @@
     d:DataContext="{d:DesignInstance viewModel:ConfirmationViewModel}"
     Title="Confirmation">
     <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </animatedWindow:AnimatedWindow.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">

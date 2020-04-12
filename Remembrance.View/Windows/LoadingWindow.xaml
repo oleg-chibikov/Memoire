@@ -16,6 +16,6 @@
     <baseWindow:BaseWindow.Resources>
         <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
     </baseWindow:BaseWindow.Resources>
-    <Control ToolTip="{lex:Loc Remembrance.Resources:Texts:Loading}"
+    <Control ToolTip="{lex:Loc Scar.Remembrance.Resources:Texts:Loading}"
         Style="{StaticResource BusyAnimationStyle}" />
 </baseWindow:BaseWindow>

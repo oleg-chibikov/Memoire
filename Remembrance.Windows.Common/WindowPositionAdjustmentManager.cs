@@ -1,5 +1,4 @@
 using System.Windows;
-using JetBrains.Annotations;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Resources;
 using Scar.Common.View.Contracts;
@@ -7,7 +6,6 @@ using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Windows.Common
 {
-    [UsedImplicitly]
     internal sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
     {
         public void AdjustAnyWindowPosition(IDisplayable window)

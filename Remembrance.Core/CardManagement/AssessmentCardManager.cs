@@ -130,32 +130,32 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
-                {
-                    window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                        .ConfigureAwait(false);
-                    break;
-                }
+                    {
+                        window = await _scopedWindowProvider
+                            .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                            .ConfigureAwait(false);
+                        break;
+                    }
 
                 case RepeatType.PreIntermediate:
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
-                {
-                    window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                        .ConfigureAwait(false);
-                    break;
-                }
+                    {
+                        window = await _scopedWindowProvider
+                            .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                            .ConfigureAwait(false);
+                        break;
+                    }
 
                 case RepeatType.Advanced:
                 case RepeatType.Proficiency:
                 case RepeatType.Expert:
-                {
-                    window = await _scopedWindowProvider
-                        .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                        .ConfigureAwait(false);
-                    break;
-                }
+                    {
+                        window = await _scopedWindowProvider
+                            .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                            .ConfigureAwait(false);
+                        break;
+                    }
 
                 default:
                     throw new ArgumentOutOfRangeException();

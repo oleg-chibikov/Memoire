@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Remembrance")]
-[assembly: InternalsVisibleTo("Remembrance.Xamarin")]
-[assembly: InternalsVisibleTo("Remembrance.Test")]
+[assembly: InternalsVisibleTo("Scar.Remembrance.Launcher")]
+[assembly: InternalsVisibleTo("Scar.Remembrance.Xamarin")]
+[assembly: InternalsVisibleTo("Scar.Remembrance.Test")]

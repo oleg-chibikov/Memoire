@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     x:Name="Control">
     <ItemsControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>

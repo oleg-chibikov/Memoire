@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extras.Moq;
 using Easy.MessageHub;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.Shared;
@@ -23,27 +23,41 @@ namespace Remembrance.Test
     [Apartment(ApartmentState.STA)]
     internal sealed class WordImageViewerViewModelTests
     {
-        [SetUp]
-        public void SetUp()
+        private static AutoMock CreateAutoMock()
         {
-            _autoMock = AutoMock.GetLoose();
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
+            var autoMock = AutoMock.GetLoose();
+            autoMock.Mock<ICancellationTokenSourceProvider>()
                 .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
                 .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
-            _key = _autoMock.Create<WordKey>();
-            var word = _key.Word;
+            autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
+            return autoMock;
+        }
+
+        private static ImageInfoWithBitmap CreateImageInfoWithBitmap(AutoMock autoMock)
+        {
+            var imageInfoWithBitmap = autoMock.Create<ImageInfoWithBitmap>();
+            imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
+            imageInfoWithBitmap.ImageInfo = autoMock.Create<ImageInfo>();
+            return imageInfoWithBitmap;
+        }
+
+        private static WordKey CreateMockKey(AutoMock autoMock)
+        {
+            var key = autoMock.Create<WordKey>();
+            var word = key.Word;
             word.Text = FallbackSearchText;
-            _imageInfoWithBitmap = _autoMock.Create<ImageInfoWithBitmap>();
-            _imageInfoWithBitmap.ThumbnailBitmap = new byte[1];
-            _imageInfoWithBitmap.ImageInfo = _autoMock.Create<ImageInfo>();
-            _autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
+            var translationEntryKey = key.TranslationEntryKey;
+            translationEntryKey.SourceLanguage = Constants.RuLanguage;
+            translationEntryKey.TargetLanguage = Constants.EnLanguage;
+            translationEntryKey.Text = word.Text;
+            return key;
         }
 
         [TearDown]
         public void TearDown()
         {
-            Assert.That(_sut.IsLoading, Is.False, "IsLoading should be false after each kind of processing");
-            _autoMock.Dispose();
+            //TODO: Additional test
+            // Assert.That(_sut.IsLoading, Is.False, "IsLoading should be false after each kind of processing");
         }
 
         private const string FallbackSearchText = "foo";
@@ -52,46 +66,36 @@ namespace Remembrance.Test
 
         private static readonly string DefaultSearchText = string.Format(WordImageViewerViewModel.DefaultSearchTextTemplate, FallbackSearchText, ParentText);
 
-        private AutoMock _autoMock;
-
-        private ImageInfoWithBitmap _imageInfoWithBitmap;
-
-        private WordKey _key;
-
-        private WordImageViewerViewModel _sut;
-
-        [ItemNotNull]
-        [NotNull]
-        private async Task<WordImageViewerViewModel> CreateViewModelAsync(bool reset = true, bool wait = true)
+        private static async Task<WordImageViewerViewModel> CreateViewModelAsync(AutoMock autoMock, bool reset = true, bool wait = true)
         {
-            _sut = _autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), _key));
+            var sut = autoMock.Create<WordImageViewerViewModel>(new TypedParameter(typeof(string), ParentText), new TypedParameter(typeof(WordKey), CreateMockKey(autoMock)));
             if (wait)
             {
-                await _sut.ConstructionTask.ConfigureAwait(false);
+                await sut.ConstructionTask.ConfigureAwait(false);
             }
 
             if (reset)
             {
-                Reset();
+                Reset(autoMock);
             }
 
-            return _sut;
+            return sut;
         }
 
-        private void Reset()
+        private static void Reset(AutoMock autoMock)
         {
-            _autoMock.Mock<IImageSearcher>().Invocations.Clear();
-            _autoMock.Mock<IImageDownloader>().Invocations.Clear();
+            autoMock.Mock<IImageSearcher>().Reset();
+            autoMock.Mock<IImageDownloader>().Reset();
         }
 
-        private void VerifyDownloadCount([NotNull] Func<Times> times)
+        private static void VerifyDownloadCount(AutoMock autoMock, Func<Times> times)
         {
-            _autoMock.Mock<IImageDownloader>().Verify(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), times);
+            autoMock.Mock<IImageDownloader>().Verify(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), times);
         }
 
-        private void VerifyImagesSearch([NotNull] Func<Times> times, [CanBeNull] string searchText = null)
+        private static void VerifyImagesSearch(AutoMock autoMock, Func<Times> times, string? searchText = null)
         {
-            _autoMock.Mock<IImageSearcher>()
+            autoMock.Mock<IImageSearcher>()
                 .Verify(
                     x => x.SearchImagesAsync(
                         It.Is<string>(s => searchText == null || s == searchText),
@@ -102,19 +106,19 @@ namespace Remembrance.Test
                     times);
         }
 
-        private void VerifyMessage([NotNull] Func<Times> times)
+        private static void VerifyMessage(AutoMock autoMock, Func<Times> times)
         {
-            _autoMock.Mock<IMessageHub>().Verify(x => x.Publish(It.IsAny<Message>()), times);
+            autoMock.Mock<IMessageHub>().Verify(x => x.Publish(It.IsAny<Message>()), times);
         }
 
-        private void WithImageSearchError([CanBeNull] string searchText = null)
+        private static void WithImageSearchError(AutoMock autoMock, string? searchText = null)
         {
-            WithImageSearchResult(null, searchText);
+            WithImageSearchResult(autoMock, null, searchText);
         }
 
-        private void WithImageSearchResult([CanBeNull] IReadOnlyCollection<ImageInfo> imageInfos, [CanBeNull] string searchText = null)
+        private static void WithImageSearchResult(AutoMock autoMock, IReadOnlyCollection<ImageInfo>? imageInfos, string? searchText = null)
         {
-            _autoMock.Mock<IImageSearcher>()
+            autoMock.Mock<IImageSearcher>()
                 .Setup(
                     x => x.SearchImagesAsync(
                         It.Is<string>(s => searchText == null || s == searchText),
@@ -125,98 +129,101 @@ namespace Remembrance.Test
                 .ReturnsAsync(imageInfos);
         }
 
-        private void WithInitialEmptyImage()
+        private static void WithInitialEmptyImage(AutoMock autoMock)
         {
-            var image = _autoMock.Create<ImageInfoWithBitmap>();
-            image.ImageInfo = _autoMock.Create<ImageInfo>();
-            WithInitialImage(customImage: image);
+            var image = autoMock.Create<ImageInfoWithBitmap>();
+            image.ImageInfo = autoMock.Create<ImageInfo>();
+            WithInitialImage(autoMock, customImage: image);
         }
 
-        private void WithInitialImage(
+        private static void WithInitialImage(
+            AutoMock autoMock,
             int searchIndex = 0,
             bool isAlternate = false,
-            [CanBeNull] int?[] notAvailableIndexes = null,
-            [CanBeNull] ImageInfoWithBitmap customImage = null)
+            int?[]? notAvailableIndexes = null,
+            ImageInfoWithBitmap? customImage = null)
         {
-            _autoMock.Mock<IWordImageInfoRepository>()
-                .Setup(x => x.TryGetById(_key))
-                .Returns(new WordImageInfo(_key, customImage ?? _imageInfoWithBitmap, notAvailableIndexes ?? new int?[2]));
-            _autoMock.Mock<IWordImageSearchIndexRepository>().Setup(x => x.TryGetById(_key)).Returns(new WordImageSearchIndex(_key, searchIndex, isAlternate));
+            var key = CreateMockKey(autoMock);
+            autoMock.Mock<IWordImageInfoRepository>()
+                .Setup(x => x.TryGetById(key))
+                .Returns(new WordImageInfo(key, customImage ?? CreateImageInfoWithBitmap(autoMock), notAvailableIndexes ?? new int?[2]));
+            autoMock.Mock<IWordImageSearchIndexRepository>().Setup(x => x.TryGetById(key)).Returns(new WordImageSearchIndex(key, searchIndex, isAlternate));
         }
 
-        private void WithNoImageFound([CanBeNull] string searchText = null)
+        private static void WithNoImageFound(AutoMock autoMock, string? searchText = null)
         {
-            WithImageSearchResult(new ImageInfo[0], searchText);
+            WithImageSearchResult(autoMock, new ImageInfo[0], searchText);
         }
 
-        private void WithSuccessfulImageSearch([CanBeNull] string searchText = null)
+        private static void WithSuccessfulImageSearch(AutoMock autoMock, string? searchText = null)
         {
             WithImageSearchResult(
+                autoMock,
                 new[]
                 {
-                    _autoMock.Create<ImageInfo>()
+                    autoMock.Create<ImageInfo>()
                 },
                 searchText);
         }
 
         [Test]
-        [NotNull]
         public async Task IsLoadingIsTrueDuringProcessing()
         {
             // Arrange
+            using var autoMock = CreateAutoMock();
             var semaphore = new SemaphoreSlim(0, 1);
             var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
+            autoMock.Mock<ICancellationTokenSourceProvider>()
                 .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
                 .Returns(runningTask);
 
             // Act
-            _sut = await CreateViewModelAsync(false, false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false, false).ConfigureAwait(false);
 
             // Assert
-            Assert.That(_sut.IsLoading, Is.True);
+            Assert.That(sut.IsLoading, Is.True);
             semaphore.Release();
             await runningTask.ConfigureAwait(false);
         }
 
         [Test]
-        [NotNull]
         public async Task PerformsReload()
         {
             // Arrange
-            WithInitialEmptyImage();
-            WithSuccessfulImageSearch();
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialEmptyImage(autoMock);
+            WithSuccessfulImageSearch(autoMock);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Act
-            await _sut.ReloadImageAsync().ConfigureAwait(false);
+            await sut.ReloadImageAsync().ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
-            Assert.That(_sut.IsReloadVisible, Is.False);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
+            Assert.That(sut.IsReloadVisible, Is.False);
         }
 
         [Test]
-        [NotNull]
         public async Task ReloadIsNotVisibleDuringProcessing()
         {
             // Arrange
+            using var autoMock = CreateAutoMock();
             var semaphore = new SemaphoreSlim(0, 1);
             var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
+            autoMock.Mock<ICancellationTokenSourceProvider>()
                 .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
                 .Returns(runningTask);
 
             // Act
-            _sut = await CreateViewModelAsync(false, false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false, false).ConfigureAwait(false);
 
             // Assert
-            Assert.That(_sut.IsReloadVisible, Is.False);
+            Assert.That(sut.IsReloadVisible, Is.False);
             semaphore.Release();
             await runningTask.ConfigureAwait(false);
         }
@@ -225,337 +232,338 @@ namespace Remembrance.Test
         public void When_Canceled_Throws()
         {
             // Arrange
-            _autoMock.Mock<ICancellationTokenSourceProvider>()
+            using var autoMock = CreateAutoMock();
+            autoMock.Mock<ICancellationTokenSourceProvider>()
                 .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
-                .ThrowsAsync(new OperationCanceledException());
+                .Throws(new OperationCanceledException());
 
             // Assert
             Assert.That(
                 async () =>
                 {
                     // Act
-                    _sut = await CreateViewModelAsync().ConfigureAwait(false);
+                    await CreateViewModelAsync(autoMock).ConfigureAwait(false);
                 },
                 Throws.Exception.TypeOf<TaskCanceledException>());
         }
 
         [Test]
-        [NotNull]
         public async Task When_DownloadsEmptyImage_ShouldTrySearchWithDifferentText()
         {
             // Arrange
-            _autoMock.Mock<IImageDownloader>()
+            using var autoMock = CreateAutoMock();
+            autoMock.Mock<IImageDownloader>()
                 .SetupSequence(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((byte[])null)
+                .ReturnsAsync(null)
                 .ReturnsAsync(new byte[1]);
-            WithSuccessfulImageSearch();
+            WithSuccessfulImageSearch(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(() => Times.Exactly(2));
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+            VerifyDownloadCount(autoMock, () => Times.Exactly(2));
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.True);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_ErrorOccursDuringSearch_StopsSearch()
         {
             // Arrange
-            WithImageSearchError();
+            using var autoMock = CreateAutoMock();
+            WithImageSearchError(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Never);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Never);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_GoingBackwards_AlternatesSearchTextForEveryRequest()
         {
             // Arrange
-            WithInitialImage(2);
-            WithSuccessfulImageSearch();
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock, 2);
+            WithSuccessfulImageSearch(autoMock);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             for (var i = 1; i >= 0; i--)
             {
                 // Act
-                Reset();
-                await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+                Reset(autoMock);
+                await sut.SetPreviousImageAsync().ConfigureAwait(false);
 
                 // Assert
-                VerifyImagesSearch(Times.Once, FallbackSearchText);
-                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
-                Assert.That(_sut.IsAlternate, Is.True);
-                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+                VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+                Assert.That(sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(sut.IsAlternate, Is.True);
+                Assert.That(sut.ThumbnailBytes, Is.Not.Null);
 
                 // Act
-                Reset();
-                await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+                Reset(autoMock);
+                await sut.SetPreviousImageAsync().ConfigureAwait(false);
 
                 // Assert
-                VerifyImagesSearch(Times.Once, DefaultSearchText);
-                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
-                Assert.That(_sut.IsAlternate, Is.False);
-                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+                VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+                Assert.That(sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(sut.IsAlternate, Is.False);
+                Assert.That(sut.ThumbnailBytes, Is.Not.Null);
             }
         }
 
         [Test]
-        [NotNull]
         public async Task When_GoingForwards_AlternatesSearchTextForEveryRequest()
         {
             // Arrange
-            WithInitialImage(0, true);
-            WithSuccessfulImageSearch();
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock, 0, true);
+            WithSuccessfulImageSearch(autoMock);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             for (var i = 1; i <= 2; i++)
             {
                 // Act
-                Reset();
-                await _sut.SetNextImageAsync().ConfigureAwait(false);
+                Reset(autoMock);
+                await sut.SetNextImageAsync().ConfigureAwait(false);
 
                 // Assert
-                VerifyImagesSearch(Times.Once, DefaultSearchText);
-                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
-                Assert.That(_sut.IsAlternate, Is.False);
-                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+                VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+                Assert.That(sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(sut.IsAlternate, Is.False);
+                Assert.That(sut.ThumbnailBytes, Is.Not.Null);
 
                 // Act
-                Reset();
-                await _sut.SetNextImageAsync().ConfigureAwait(false);
+                Reset(autoMock);
+                await sut.SetNextImageAsync().ConfigureAwait(false);
 
                 // Assert
-                VerifyImagesSearch(Times.Once, FallbackSearchText);
-                Assert.That(_sut.SearchIndex, Is.EqualTo(i));
-                Assert.That(_sut.IsAlternate, Is.True);
-                Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+                VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+                Assert.That(sut.SearchIndex, Is.EqualTo(i));
+                Assert.That(sut.IsAlternate, Is.True);
+                Assert.That(sut.ThumbnailBytes, Is.Not.Null);
             }
         }
 
         [Test]
-        [NotNull]
         public async Task When_ImageBytesAreNull_Then_ShouldRepeatSearchInitially()
         {
             // Arrange
-            WithInitialEmptyImage();
-            WithSuccessfulImageSearch();
+            using var autoMock = CreateAutoMock();
+            WithInitialEmptyImage(autoMock);
+            WithSuccessfulImageSearch(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_ImageIsEmpty_ReloadIsVisible()
         {
             // Arrange
-            WithInitialEmptyImage();
+            using var autoMock = CreateAutoMock();
+            WithInitialEmptyImage(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Assert
-            Assert.That(_sut.ThumbnailBytes, Is.Null);
-            Assert.That(_sut.IsReloadVisible, Is.True);
+            Assert.That(sut.ThumbnailBytes, Is.Null);
+            Assert.That(sut.IsReloadVisible, Is.True);
         }
 
         [Test]
-        [NotNull]
         public async Task When_IndexIsZero_And_IsAlternate_PreviousSearchShouldUseDefaultSearchText()
         {
             // Arrange
-            WithInitialImage(0, true);
-            WithSuccessfulImageSearch();
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock, 0, true);
+            WithSuccessfulImageSearch(autoMock);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Act
-            await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+            await sut.SetPreviousImageAsync().ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_IndexIsZero_AndNot_IsAlternate_PreviousButton_Should_DoNothing()
         {
             // Arrange
-            WithInitialImage();
-            WithSuccessfulImageSearch();
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock);
+            WithSuccessfulImageSearch(autoMock);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Act
-            await _sut.SetPreviousImageAsync().ConfigureAwait(false);
+            await sut.SetPreviousImageAsync().ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Never);
-            VerifyDownloadCount(Times.Never);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Never);
+            VerifyDownloadCount(autoMock, Times.Never);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_InitialImageIsEmpty_PerformsSearchWithDefaultSearchText()
         {
             // Arrange
-            WithSuccessfulImageSearch();
+            using var autoMock = CreateAutoMock();
+            WithSuccessfulImageSearch(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_IsInitializedWithImage_NoSearchAndDownloadOccurs()
         {
             // Arrange
-            WithInitialImage();
-            WithSuccessfulImageSearch();
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock);
+            WithSuccessfulImageSearch(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Never);
-            VerifyDownloadCount(Times.Never);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Never);
+            VerifyDownloadCount(autoMock, Times.Never);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_MoreThanOneImageIsReturned_Throws()
         {
             // Arrange
-            WithInitialImage();
-            WithImageSearchResult(new ImageInfo[2]);
-            _sut = await CreateViewModelAsync().ConfigureAwait(false);
+            using var autoMock = CreateAutoMock();
+            WithInitialImage(autoMock);
+            WithImageSearchResult(autoMock, new ImageInfo[2]);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false);
 
             // Act
             // Assert
-            Assert.That(() => _sut.SetNextImageAsync(), Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => sut.SetNextImageAsync(), Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
-        [NotNull]
         public async Task When_NoImagesAvailableForBothSearchTexts_PerformsTwoAttemptsWithDifferentSearchTexts()
         {
             // Arrange
-            WithNoImageFound();
+            using var autoMock = CreateAutoMock();
+            WithNoImageFound(autoMock);
 
             // Act
-            _sut = await CreateViewModelAsync(false).ConfigureAwait(false);
+            var sut = await CreateViewModelAsync(autoMock, false).ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Never);
-            VerifyMessage(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.Zero);
-            Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.ThumbnailBytes, Is.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Never);
+            VerifyMessage(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.Zero);
+            Assert.That(sut.IsAlternate, Is.True);
+            Assert.That(sut.ThumbnailBytes, Is.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_OnlyDefaultSearchTextReturnsResults_IndexIncreasesEveryTime()
         {
             // Arrange
-            WithSuccessfulImageSearch(DefaultSearchText);
-            WithNoImageFound(FallbackSearchText);
+            using var autoMock = CreateAutoMock();
+            WithSuccessfulImageSearch(autoMock, DefaultSearchText);
+            WithNoImageFound(autoMock, FallbackSearchText);
 
-            _sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using only DefaultSearchText
-
-            // Act
-            await _sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-
-            Reset();
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false); // this should search using only DefaultSearchText
 
             // Act
-            await _sut.SetNextImageAsync().ConfigureAwait(false);
+            await sut.SetNextImageAsync().ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Once, DefaultSearchText);
-            VerifyImagesSearch(Times.Never, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.EqualTo(2));
-            Assert.That(_sut.IsAlternate, Is.False);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+
+            Reset(autoMock);
+
+            // Act
+            await sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(autoMock, Times.Once, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Never, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.EqualTo(2));
+            Assert.That(sut.IsAlternate, Is.False);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
 
         [Test]
-        [NotNull]
         public async Task When_OnlyFallbackSearchTextReturnsResults_IndexIncreasesEveryTime()
         {
             // Arrange
-            WithSuccessfulImageSearch(FallbackSearchText);
-            WithNoImageFound(DefaultSearchText);
+            using var autoMock = CreateAutoMock();
+            WithSuccessfulImageSearch(autoMock, FallbackSearchText);
+            WithNoImageFound(autoMock, DefaultSearchText);
 
-            _sut = await CreateViewModelAsync().ConfigureAwait(false); // this should search using DefaultSearchText and then FallbackSearchText
-
-            // Act
-            await _sut.SetNextImageAsync().ConfigureAwait(false);
-
-            // Assert
-            VerifyImagesSearch(Times.Never, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
+            var sut = await CreateViewModelAsync(autoMock).ConfigureAwait(false); // this should search using DefaultSearchText and then FallbackSearchText
 
             // Act
-            Reset();
-            await _sut.SetNextImageAsync().ConfigureAwait(false);
+            await sut.SetNextImageAsync().ConfigureAwait(false);
 
             // Assert
-            VerifyImagesSearch(Times.Never, DefaultSearchText);
-            VerifyImagesSearch(Times.Once, FallbackSearchText);
-            VerifyDownloadCount(Times.Once);
-            Assert.That(_sut.SearchIndex, Is.EqualTo(2));
-            Assert.That(_sut.IsAlternate, Is.True);
-            Assert.That(_sut.ThumbnailBytes, Is.Not.Null);
+            VerifyImagesSearch(autoMock, Times.Never, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+
+            // Act
+            Reset(autoMock);
+            await sut.SetNextImageAsync().ConfigureAwait(false);
+
+            // Assert
+            VerifyImagesSearch(autoMock, Times.Never, DefaultSearchText);
+            VerifyImagesSearch(autoMock, Times.Once, FallbackSearchText);
+            VerifyDownloadCount(autoMock, Times.Once);
+            Assert.That(sut.SearchIndex, Is.EqualTo(2));
+            Assert.That(sut.IsAlternate, Is.True);
+            Assert.That(sut.ThumbnailBytes, Is.Not.Null);
         }
     }
 }

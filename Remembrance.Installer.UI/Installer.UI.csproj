@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-16"?><Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Description>Launcher application for Remembrance.Installer</Description>
+    <ApplicationIcon />
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Remembrance.Installer.UI.App</StartupObject>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Windows Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Fody" Version="6.1.1" developmentDependency="true" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.3" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.1.0" />
+    <PackageReference Include="Microsoft.WindowsAPICodePack.Core" Version="1.1.0" />
+    <PackageReference Include="Scar.Common" Version="1.1.7407.19164" />
+    <PackageReference Include="Scar.Common.Installer.UI" Version="1.1.7407.19166" />
+    <PackageReference Include="Scar.Common.MVVM.Commands" Version="1.1.7407.19168" />
+    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7407.19167" />
+    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7407.19205" />
+    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7407.19255" />
+    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.19166" />
+    <PackageReference Include="Scar.Common.WPF.View" Version="1.1.7407.19166" />
+    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.26967" />
+    <PackageReference Include="Scar.Common.WPF.View.BaseWindow" Version="1.1.7407.19255" />
+    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7407.19205" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="4.7.0" />
+    <PackageReference Include="System.Security.Permissions" Version="4.7.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
+    <PackageReference Include="WindowsAPICodePack" Version="1.1.1" />
+    <PackageReference Include="WixSharp.bin" Version="1.14.2" />
+    <PackageReference Include="WPFLocalizeExtension" Version="3.3.1" />
+    <PackageReference Include="XAMLMarkupExtensions" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icon.ico" />
+    <Resource Include="Windows Logo.png" />
+  </ItemGroup>
+
+</Project>

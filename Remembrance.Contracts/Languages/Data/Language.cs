@@ -1,3 +1,5 @@
+using System;
+
 namespace Remembrance.Contracts.Languages.Data
 {
     public sealed class Language
@@ -26,7 +28,7 @@ namespace Remembrance.Contracts.Languages.Data
         {
             unchecked
             {
-                return (Code.GetHashCode() * 397) ^ DisplayName.GetHashCode();
+                return (Code.GetHashCode() * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(DisplayName);
             }
         }
 

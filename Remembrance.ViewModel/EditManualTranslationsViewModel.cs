@@ -79,7 +79,7 @@ namespace Remembrance.ViewModel
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
             _logger.TraceFormat("Adding {0}...", ManualTranslationText);
             ManualTranslationText = null;
-            if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.InvariantCultureIgnoreCase)))
+            if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new LocalizableException(Errors.TranslationIsPresent, "Translations is already present in the dictionary");
             }

@@ -3,7 +3,7 @@
     mc:Ignorable="d"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Remembrance.View;component/Styles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/Styles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/ScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

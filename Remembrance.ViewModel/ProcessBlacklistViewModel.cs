@@ -39,7 +39,7 @@ namespace Remembrance.ViewModel
             ClearFilterCommand = AddCommand(ClearFilter);
             AvailableProcessesView = collectionViewSource.GetDefaultView(_availableProcesses);
             BlacklistedProcessesView = collectionViewSource.GetDefaultView(BlacklistedProcesses);
-            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.InvariantCultureIgnoreCase) >= 0;
+            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public ICommand AddFromActiveProcessesCommand { get; }

@@ -4,20 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     mc:Ignorable="d"
     Width="800"
     Style="{StaticResource Control}"
     d:DataContext="{d:DesignInstance Type=viewModel:EditManualTranslationsViewModel, IsDesignTimeCreatable=False}">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <Grid Margin="5"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -55,21 +55,21 @@
                     FieldName="Text"
                     CellContentTemplate="{StaticResource CellTemplate}"
                     CellEditor="{StaticResource CellEditor}"
-                    Title="{lex:Loc Remembrance.Resources:Texts:Translation}" />
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Translation}" />
                 <xcdg:Column CellVerticalContentAlignment="Center"
                     ReadOnly="False"
                     FieldName="Example"
-                    Title="{lex:Loc Remembrance.Resources:Texts:Example}" />
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Example}" />
                 <xcdg:Column CellVerticalContentAlignment="Center"
                     ReadOnly="False"
                     FieldName="Meaning"
                     CellContentTemplate="{StaticResource CellTemplate}"
                     CellEditor="{StaticResource CellEditor}"
-                    Title="{lex:Loc Remembrance.Resources:Texts:Meaning}" />
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Meaning}" />
                 <xcdg:Column CellVerticalContentAlignment="Center"
                     ReadOnly="False"
                     FieldName="PartOfSpeech"
-                    Title="{lex:Loc Remembrance.Resources:Texts:PartOfSpeech}">
+                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:PartOfSpeech}">
                     <xcdg:Column.CellEditor>
                         <xcdg:CellEditor>
                             <xcdg:CellEditor.EditTemplate>

@@ -1,0 +1,136 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Description>Remembrance View classes</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\Icon.ico" />
+    <None Remove="Images\IconAlt.ico" />
+    <None Remove="Images\IconInactive.ico" />
+    <None Remove="Images\IconPaused.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.8" />
+    <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7407.27134" />
+    <PackageReference Include="Scar.Common.WPF.Controls.Behaviors" Version="1.1.7407.19164" />
+    <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7407.19255" />
+    <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7407.27130" />
+    <PackageReference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid" Version="1.1.7407.19165" />
+    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.19166" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7407.19168" />
+    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.26967" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Controls\AddManualTranslationControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\AddProcessToBlacklistControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\AddTranslationControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\AnswerControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\CardCommonInfoControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\DemoteButton.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\FavoriteButton.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\LearningInfoActionsControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\ProcessesBlacklistControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\SearchControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\TranslationDetailsCardControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\TranslationsGridControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\TrayToolTipControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\WordControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\WordImageViewerControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Controls\WordsControl.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="DesignTimeResources.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Dialogs\ActiveProcessesDialog.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Dialogs\EditManualTranslationsDialog.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Styles.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Windows\AddTranslationWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\AssessmentTextInputCardWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\AssessmentViewOnlyCardWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\ConfirmationWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\DictionaryWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\LoadingWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\MessageWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\SettingsWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\SplashScreenWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\TranslationDetailsCardWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+    <Page Include="Windows\TrayWindow.xaml">
+      <CustomToolNamespace>XamlIntelliSenseFileGenerator</CustomToolNamespace>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
+    <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icon.ico" />
+    <Resource Include="Images\IconAlt.ico" />
+    <Resource Include="Images\IconInactive.ico" />
+    <Resource Include="Images\IconPaused.ico" />
+  </ItemGroup>
+</Project>

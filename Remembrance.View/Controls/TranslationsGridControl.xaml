@@ -8,21 +8,21 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Xceed;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Remembrance.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <xceed:XceedAutoFitColumnGrid ItemsSource="{Binding View, Mode=OneTime}"
         AutoScrollCurrentItem="All"
@@ -39,7 +39,7 @@
         <xceed:XceedAutoFitColumnGrid.Columns>
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
-                Title="{lex:Loc Remembrance.Resources:Texts:IsFavorited}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:IsFavorited}"
                 FieldName="LearningInfoViewModel.IsFavorited"
                 AllowGroup="True"
                 AllowSort="True">
@@ -56,7 +56,7 @@
                 CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="Text"
-                Title="{lex:Loc Remembrance.Resources:Texts:Word}">
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Word}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <controls:WordControl d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
@@ -72,7 +72,7 @@
                 FieldName="Translations"
                 AllowGroup="False"
                 AllowSort="False"
-                Title="{lex:Loc Remembrance.Resources:Texts:Translation}">
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Translation}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <StackPanel d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
@@ -101,11 +101,11 @@
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="Language"
-                Title="{lex:Loc Remembrance.Resources:Texts:FromCap}" />
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:FromCap}" />
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="TargetLanguage"
-                Title="{lex:Loc Remembrance.Resources:Texts:ToCap}" />
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ToCap}" />
             <xcdg:UnboundColumn CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="ReversoContextColumn"
@@ -139,7 +139,7 @@
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LearningInfoViewModel.RepeatType"
-                Title="{lex:Loc Remembrance.Resources:Texts:Repeat}">
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Repeat}">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
                         <TextBlock d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
@@ -151,12 +151,12 @@
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LearningInfoViewModel.LastCardShowTime"
-                Title="{lex:Loc Remembrance.Resources:Texts:LastCardShowTime}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:LastCardShowTime}"
                 AllowGroup="False" />
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LearningInfoViewModel.NextCardShowTime"
-                Title="{lex:Loc Remembrance.Resources:Texts:NextCardShowTime}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:NextCardShowTime}"
                 AllowGroup="False">
                 <xcdg:Column.CellContentTemplate>
                     <DataTemplate>
@@ -170,17 +170,17 @@
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LearningInfoViewModel.ShowCount"
-                Title="{lex:Loc Remembrance.Resources:Texts:ShowCount}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ShowCount}"
                 AllowGroup="True" />
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="ModifiedDate"
-                Title="{lex:Loc Remembrance.Resources:Texts:ModifiedDate}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ModifiedDate}"
                 AllowGroup="False" />
             <xcdg:Column CellVerticalContentAlignment="Center"
                 ReadOnly="True"
                 FieldName="LearningInfoViewModel.CreatedDate"
-                Title="{lex:Loc Remembrance.Resources:Texts:CreatedDate}"
+                Title="{lex:Loc Scar.Remembrance.Resources:Texts:CreatedDate}"
                 AllowGroup="False" />
             <xcdg:UnboundColumn CellVerticalContentAlignment="Center"
                 ReadOnly="True"

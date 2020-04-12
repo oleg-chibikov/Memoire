@@ -2,15 +2,13 @@ using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Common.Logging;
-using JetBrains.Annotations;
 using Scar.Common.WebApi;
 
 namespace Remembrance.WebApi
 {
-    [UsedImplicitly]
     public sealed class ApiHoster : AutofacApiHoster
     {
-        public ApiHoster([NotNull] ILog logger, [NotNull] ILifetimeScope lifetimeScope)
+        public ApiHoster(ILog logger, ILifetimeScope lifetimeScope)
             : base(logger, lifetimeScope)
         {
         }

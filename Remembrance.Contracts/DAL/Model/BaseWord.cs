@@ -32,7 +32,7 @@ namespace Remembrance.Contracts.DAL.Model
                 return true;
             }
 
-            return StringComparer.InvariantCultureIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
+            return StringComparer.OrdinalIgnoreCase.Equals(Text, other.Text) && PartOfSpeech == other.PartOfSpeech;
         }
 
         public static bool operator ==(BaseWord? obj1, BaseWord? obj2)
@@ -59,7 +59,7 @@ namespace Remembrance.Contracts.DAL.Model
         {
             unchecked
             {
-                var hashCode = StringComparer.InvariantCultureIgnoreCase.GetHashCode(Text);
+                var hashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(Text);
                 hashCode = (hashCode * 397) ^ PartOfSpeech.GetHashCode();
                 return hashCode;
             }
