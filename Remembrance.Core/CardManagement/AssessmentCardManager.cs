@@ -76,8 +76,8 @@ namespace Remembrance.Core.CardManagement
                 CreateInterval();
             }
 
-            _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(OnCardShowFrequencyChanged));
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
+            _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(HandlePauseReasonChanged));
             logger.Debug("Started showing cards");
         }
 
@@ -182,7 +182,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private void OnCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
+        private void HandleCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
         {
             CardShowFrequency = newCardShowFrequency;
             if (!_pauseManager.IsPaused)
@@ -199,7 +199,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private async void OnIntervalHit(long x)
+        private async void HandleIntervalHit(long x)
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Logger.Trace("Trying to show next card...");
@@ -230,7 +230,7 @@ namespace Remembrance.Core.CardManagement
             await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
         }
 
-        private void OnPauseReasonChanged(PauseReason pauseReason)
+        private void HandlePauseReasonChanged(PauseReason pauseReason)
         {
             if (_pauseManager.IsPaused)
             {
@@ -247,7 +247,7 @@ namespace Remembrance.Core.CardManagement
 
         private IDisposable ProvideInterval(TimeSpan delay)
         {
-            return Observable.Timer(delay, CardShowFrequency).Subscribe(OnIntervalHit);
+            return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHit);
         }
 
         private void Window_Closed(object sender, EventArgs e)

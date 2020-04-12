@@ -73,9 +73,9 @@ namespace Remembrance.ViewModel
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
-            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChanged));
-            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChanged));
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
         }
 
         public string LanguagePair { get; }
@@ -138,7 +138,7 @@ namespace Remembrance.ViewModel
             PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
-        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
+        private async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(_translationEntryKey))
@@ -151,7 +151,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void OnPriorityChanged(PriorityWordKey priorityWordKey)
+        private void HandlePriorityChanged(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
@@ -188,7 +188,7 @@ namespace Remembrance.ViewModel
                 CancellationToken.None);
         }
 
-        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
+        private async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

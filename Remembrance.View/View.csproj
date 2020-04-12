@@ -16,14 +16,14 @@
 
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.8" />
-    <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7407.27134" />
-    <PackageReference Include="Scar.Common.WPF.Controls.Behaviors" Version="1.1.7407.19164" />
+    <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7407.39691" />
+    <PackageReference Include="Scar.Common.WPF.Controls.Behaviors" Version="1.1.7407.38966" />
     <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7407.19255" />
-    <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7407.27130" />
-    <PackageReference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid" Version="1.1.7407.19165" />
-    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.19166" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7407.28090" />
-    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.26967" />
+    <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7407.39558" />
+    <PackageReference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid" Version="1.1.7407.39183" />
+    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.39184" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7407.39183" />
+    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.39185" />
   </ItemGroup>
 
   <ItemGroup>

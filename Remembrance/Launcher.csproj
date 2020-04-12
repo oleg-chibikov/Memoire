@@ -23,11 +23,12 @@
   <ItemGroup>
     <PackageReference Include="Common.Logging.NLog41" Version="3.4.1" />
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7407.19205" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7407.19165" />
-    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7407.19205" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7407.19165" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7407.19171" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7407.39186" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7407.39187" />
+    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7407.39186" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7407.39187" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7407.39183" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,16 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "Remembrance.DAL\DAL.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "Remembrance.Resources\Resources.csproj", "{0E8CE927-1859-41A0-971A-DE6425AC6852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Remembrance.Installer\Installer.csproj", "{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer", "Remembrance.Installer\Installer.csproj", "{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30} = {6F4F5769-673C-436C-9F84-0CAFAF21AA30}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "Remembrance.WebApi\WebApi.csproj", "{14958824-6559-4EDE-9954-42E5A22B2144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Remembrance.WebApi\WebApi.csproj", "{14958824-6559-4EDE-9954-42E5A22B2144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Remembrance\Launcher.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "Remembrance\Launcher.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer.UI", "Remembrance.Installer.UI\Installer.UI.csproj", "{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer.UI", "Remembrance.Installer.UI\Installer.UI.csproj", "{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26} = {A2E7DAAE-8DF9-42AE-A433-8810248A0E26}
 	EndProjectSection
@@ -25,19 +25,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "Remembrance.Vi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Remembrance.Contracts\Contracts.csproj", "{A4DAD214-A08F-4A0E-8E26-F7FBCDA801FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "Remembrance.View\View.csproj", "{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "Remembrance.View\View.csproj", "{1C3ECD88-7B1A-4513-B3E9-3474588BEC8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Remembrance.Core\Core.csproj", "{A10C7E6D-D616-4B99-8BB2-A43035346099}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Remembrance.Test\Test.csproj", "{3BA8BF52-7125-401E-BE18-16650135AA4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Remembrance.Test\Test.csproj", "{3BA8BF52-7125-401E-BE18-16650135AA4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows.Common", "Remembrance.Windows.Common\Windows.Common.csproj", "{24958824-6559-4EDE-9954-42E5A22B2144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Windows.Common", "Remembrance.Windows.Common\Windows.Common.csproj", "{24958824-6559-4EDE-9954-42E5A22B2144}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4CF6513F-5BD0-4A96-A5A4-4A839826E4DF}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		InternalsVisibleTo.cs = InternalsVisibleTo.cs
+		Remembrance.sln.DotSettings = Remembrance.sln.DotSettings
 	EndProjectSection
 EndProject
 Global

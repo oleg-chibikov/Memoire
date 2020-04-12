@@ -20,6 +20,7 @@ using Scar.Common.Messages;
 namespace Remembrance.Test
 {
     [TestFixture]
+    [Parallelizable]
     [Apartment(ApartmentState.STA)]
     internal sealed class WordImageViewerViewModelTests
     {
@@ -53,7 +54,7 @@ namespace Remembrance.Test
             return key;
         }
 
-        [TearDown]
+
         public void TearDown()
         {
             //TODO: Additional test
@@ -244,7 +245,7 @@ namespace Remembrance.Test
                     // Act
                     await CreateViewModelAsync(autoMock).ConfigureAwait(false);
                 },
-                Throws.Exception.TypeOf<TaskCanceledException>());
+                Throws.Exception.TypeOf<OperationCanceledException>());
         }
 
         [Test]

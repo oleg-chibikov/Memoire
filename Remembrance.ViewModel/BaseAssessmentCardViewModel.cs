@@ -95,8 +95,8 @@ namespace Remembrance.ViewModel
 
             WindowClosedCommand = AddCommand(WindowClosed);
 
-            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
         }
 
         public IEnumerable<WordViewModel> SourceLanguageSynonyms { get; }
@@ -152,7 +152,7 @@ namespace Remembrance.ViewModel
             word.Text = "To " + (HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant());
         }
 
-        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
+        private async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(TranslationInfo.TranslationEntryKey))
@@ -165,7 +165,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
+        private async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

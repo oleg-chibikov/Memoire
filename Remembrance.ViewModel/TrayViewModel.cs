@@ -101,7 +101,7 @@ namespace Remembrance.ViewModel
             IsActive = _localSettingsRepository.IsActive;
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(OnPauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(HandlePauseReasonChanged));
         }
 
         public bool IsLoading { get; private set; }
@@ -172,7 +172,7 @@ namespace Remembrance.ViewModel
             _applicationTerminator.Terminate();
         }
 
-        private void OnPauseReasonChanged(PauseReason reason)
+        private void HandlePauseReasonChanged(PauseReason reason)
         {
             IsPaused = _pauseManager.IsPaused;
         }

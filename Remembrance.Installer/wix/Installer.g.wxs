@@ -6,7 +6,7 @@
 </auto-generated>
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="8b965a9c-b3e9-48ce-9680-c9bd32254014" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="0.0.0.0" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b">
+  <Product Id="4d5e130f-e69d-492b-a2f9-43e3c3bbbb82" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="0.0.0.0" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b">
     <Package InstallerVersion="200" Compressed="yes" SummaryCodepage="Windows-1252" Languages="1033" />
     <Media Id="1" Cabinet="Remembrance.cab" EmbedCab="yes" />
 
@@ -15,31 +15,31 @@
         <Directory Id="ProgramFilesFolder.Scar" Name="Scar">
           <Directory Id="INSTALLDIR" Name="Remembrance">
 
-            <Component Id="Component.NLog.config_2185781715" Guid="8b965a9c-b3e9-48ce-9680-c9bd494600e6">
+            <Component Id="Component.NLog.config_2185781715" Guid="4d5e130f-e69d-492b-a2f9-43e3dadc7b54">
               <File Id="NLog.config_2185781715" Source="..\Build\NLog.config" />
             </Component>
 
-            <Component Id="Component.Remembrance.exe_1553468483" Guid="8b965a9c-b3e9-48ce-9680-c9bd12342f05">
+            <Component Id="Component.Remembrance.exe_1553468483" Guid="4d5e130f-e69d-492b-a2f9-43e3a3caaa73">
               <File Id="Remembrance.exe_1553468483" Source="..\Build\Remembrance.exe" />
             </Component>
 
-            <Component Id="Component.Remembrance.exe.config_3431285376" Guid="8b965a9c-b3e9-48ce-9680-c9bd62cd7c6d">
+            <Component Id="Component.Remembrance.exe.config_3431285376" Guid="4d5e130f-e69d-492b-a2f9-43e3f363f7db">
               <File Id="Remembrance.exe.config_3431285376" Source="..\Build\Remembrance.exe.config" />
             </Component>
 
-            <Component Id="Component.Remembrance.pdb_1149921833" Guid="8b965a9c-b3e9-48ce-9680-c9bd7d2b2080">
+            <Component Id="Component.Remembrance.pdb_1149921833" Guid="4d5e130f-e69d-492b-a2f9-43e30ec19bee">
               <File Id="Remembrance.pdb_1149921833" Source="..\Build\Remembrance.pdb" />
             </Component>
 
-            <Component Id="Component.Remembrance.Resources.dll_2399423351" Guid="8b965a9c-b3e9-48ce-9680-c9bda208b187">
+            <Component Id="Component.Remembrance.Resources.dll_2399423351" Guid="4d5e130f-e69d-492b-a2f9-43e3339e2cf5">
               <File Id="Remembrance.Resources.dll_2399423351" Source="..\Build\Remembrance.Resources.dll" />
             </Component>
 
-            <Component Id="Component.Remembrance.Resources.pdb_3908134801" Guid="8b965a9c-b3e9-48ce-9680-c9bd332ddd5e">
+            <Component Id="Component.Remembrance.Resources.pdb_3908134801" Guid="4d5e130f-e69d-492b-a2f9-43e3c4c358cc">
               <File Id="Remembrance.Resources.pdb_3908134801" Source="..\Build\Remembrance.Resources.pdb" />
             </Component>
 
-            <Component Id="Component.Uninstall_Remembrance" Guid="8b965a9c-b3e9-48ce-9680-c9bd1affa087">
+            <Component Id="Component.Uninstall_Remembrance" Guid="4d5e130f-e69d-492b-a2f9-43e3ab951bf5">
               <Shortcut Id="INSTALLDIR.Uninstall_Remembrance" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
               <CreateFolder />
@@ -52,20 +52,20 @@
 
             <Directory Id="INSTALLDIR.ru_RU" Name="ru-RU">
 
-              <Component Id="Component.Remembrance.Resources.resources.dll_434619980" Guid="8b965a9c-b3e9-48ce-9680-c9bd646044d6">
+              <Component Id="Component.Remembrance.Resources.resources.dll_434619980" Guid="4d5e130f-e69d-492b-a2f9-43e3f5f6bf44">
                 <File Id="Remembrance.Resources.resources.dll_434619980" Source="..\Build\ru-RU\Remembrance.Resources.resources.dll" />
               </Component>
 
             </Directory>
           </Directory>
 
-          <Component Id="ProgramFilesFolder.Scar" Guid="8b965a9c-b3e9-48ce-9680-c9bd89fb0363" KeyPath="yes">
+          <Component Id="ProgramFilesFolder.Scar" Guid="4d5e130f-e69d-492b-a2f9-43e31a917ed1" KeyPath="yes">
             <RemoveFolder Id="ProgramFilesFolder.Scar" On="uninstall" />
           </Component>
 
         </Directory>
 
-        <Component Id="Registry.1" Guid="8b965a9c-b3e9-48ce-9680-c9bd2f420e92" KeyPath="yes">
+        <Component Id="Registry.1" Guid="4d5e130f-e69d-492b-a2f9-43e3c0d88900" KeyPath="yes">
           <RegistryKey Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Run">
             <RegistryValue Id="RemembranceAutostart" Type="string" KeyPath="no" Value="[INSTALLDIR]Remembrance.exe" Name="Remembrance" />
           </RegistryKey>
@@ -79,7 +79,7 @@
       <Directory Id="ProgramMenuFolder" Name="ProgramMenuFolder">
         <Directory Id="ProgramMenuFolder.Remembrance" Name="Remembrance">
 
-          <Component Id="Component.Uninstall_Remembrance.1" Guid="8b965a9c-b3e9-48ce-9680-c9bd68762eba">
+          <Component Id="Component.Uninstall_Remembrance.1" Guid="4d5e130f-e69d-492b-a2f9-43e3f90ca928">
             <Shortcut Id="ProgramMenuFolder.Remembrance.Uninstall_Remembrance.1" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
             <CreateFolder />
@@ -90,7 +90,7 @@
             </RegistryKey>
           </Component>
 
-          <Component Id="Component.Remembrance__" Guid="8b965a9c-b3e9-48ce-9680-c9bdfa7d6bab">
+          <Component Id="Component.Remembrance__" Guid="4d5e130f-e69d-492b-a2f9-43e38b13e619">
             <Shortcut Id="ProgramMenuFolder.Remembrance.Remembrance__" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
             <CreateFolder />
@@ -105,7 +105,7 @@
 
       <Directory Id="DesktopFolder" Name="DesktopFolder">
 
-        <Component Id="Component.Remembrance.1" Guid="8b965a9c-b3e9-48ce-9680-c9bdbff577d1">
+        <Component Id="Component.Remembrance.1" Guid="4d5e130f-e69d-492b-a2f9-43e3508bf23f">
           <Shortcut Id="DesktopFolder.Remembrance.1" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
           <CreateFolder />
@@ -117,7 +117,7 @@
 
       </Directory>
 
-      <Component Id="TARGETDIR" Guid="8b965a9c-b3e9-48ce-9680-c9bda5f5b086" KeyPath="yes">
+      <Component Id="TARGETDIR" Guid="4d5e130f-e69d-492b-a2f9-43e3368b2bf4" KeyPath="yes">
         <RemoveFolder Id="TARGETDIR" On="uninstall" />
       </Component>
 

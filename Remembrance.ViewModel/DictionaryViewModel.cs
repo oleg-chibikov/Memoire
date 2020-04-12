@@ -133,11 +133,11 @@ namespace Remembrance.ViewModel
 
             Logger.Trace("Subscribing to the events...");
 
-            _subscriptionTokens.Add(messageHub.Subscribe<TranslationEntry>(OnTranslationEntryReceivedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(OnLearningInfoReceivedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<IReadOnlyCollection<TranslationEntry>>(OnTranslationEntriesBatchReceivedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(OnUiLanguageChangedAsync));
-            _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(OnPriorityChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<TranslationEntry>(HandleTranslationEntryReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<IReadOnlyCollection<TranslationEntry>>(HandleTranslationEntriesBatchReceivedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
+            _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChangedAsync));
 
             Logger.Debug("Started");
         }
@@ -253,7 +253,7 @@ namespace Remembrance.ViewModel
             return true;
         }
 
-        private async void OnLearningInfoReceivedAsync(LearningInfo learningInfo)
+        private async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             Logger.DebugFormat("Received {0} from external source", learningInfo);
@@ -279,7 +279,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnPriorityChangedAsync(PriorityWordKey priorityWordKey)
+        private async void HandlePriorityChangedAsync(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             Logger.TraceFormat("Changing priority: {0}...", priorityWordKey);
@@ -304,7 +304,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnTranslationEntriesBatchReceivedAsync(IReadOnlyCollection<TranslationEntry> translationEntries)
+        private async void HandleTranslationEntriesBatchReceivedAsync(IReadOnlyCollection<TranslationEntry> translationEntries)
         {
             _ = translationEntries ?? throw new ArgumentNullException(nameof(translationEntries));
             Logger.DebugFormat("Received a batch of translations ({0} items) from the external source...", translationEntries.Count);
@@ -321,7 +321,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private async void OnTranslationEntryReceivedAsync(TranslationEntry translationEntry)
+        private async void HandleTranslationEntryReceivedAsync(TranslationEntry translationEntry)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             Logger.DebugFormat("Received {0} from external source", translationEntry);
@@ -361,7 +361,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private async void OnUiLanguageChangedAsync(CultureInfo cultureInfo)
+        private async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

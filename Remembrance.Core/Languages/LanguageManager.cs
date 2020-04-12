@@ -126,11 +126,9 @@ namespace Remembrance.Core.Languages
         public string GetTargetAutoSubstitute(string sourceLanguage)
         {
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
-            var availableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
-
-            if (!availableTargetLanguages.Any())
+            if (!_availableLanguages.Directions.TryGetValue(sourceLanguage, out var availableTargetLanguages) || !availableTargetLanguages.Any())
             {
-                throw new InvalidOperationException("No target languages available");
+                throw new InvalidOperationException($"No target languages available for source language {sourceLanguage}");
             }
 
             var ordered = availableTargetLanguages.OrderBy(

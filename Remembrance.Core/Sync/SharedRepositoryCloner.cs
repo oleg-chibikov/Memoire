@@ -85,9 +85,9 @@ namespace Remembrance.Core.Sync
                         File.Copy(oldFilePath, newFilePath);
                         _logger.InfoFormat("Cloned repository {0} to {1}", oldFilePath, newFilePath);
                     }
-                    catch
+                    catch (IOException ex)
                     {
-                        _logger.WarnFormat("Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
+                        _logger.WarnFormat("Cannot clone repository {0} to {1}. Retrying...", ex, oldFilePath, newFilePath);
                         Repository_Changed(sender, e);
                     }
                 });
