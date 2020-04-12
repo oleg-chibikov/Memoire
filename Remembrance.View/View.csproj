@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Champagne &amp; Limousines.ttf" />
+    <None Remove="Fonts\cubic.ttf" />
     <None Remove="Images\Icon.ico" />
     <None Remove="Images\IconAlt.ico" />
     <None Remove="Images\IconInactive.ico" />
@@ -20,7 +22,7 @@
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7407.27130" />
     <PackageReference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid" Version="1.1.7407.19165" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.19166" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7407.19168" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7407.28090" />
     <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.26967" />
   </ItemGroup>
 
@@ -128,6 +130,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\Champagne &amp; Limousines.ttf" />
+    <Resource Include="Fonts\cubic.ttf" />
     <Resource Include="Images\Icon.ico" />
     <Resource Include="Images\IconAlt.ico" />
     <Resource Include="Images\IconInactive.ico" />

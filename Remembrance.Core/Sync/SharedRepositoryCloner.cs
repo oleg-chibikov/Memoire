@@ -62,9 +62,21 @@ namespace Remembrance.Core.Sync
 
                     var fileName = repository.DbFileName + repository.DbFileExtension;
                     var oldFilePath = Path.Combine(repository.DbDirectoryPath, fileName);
-                    var newFilePath = Path.Combine(_remembrancePathsProvider.GetSharedPath(syncBus), fileName);
+                    var newDirectoryPath = _remembrancePathsProvider.GetSharedPath(syncBus);
+                    var newFilePath = Path.Combine(newDirectoryPath, fileName);
+
                     try
                     {
+                        if (!File.Exists(oldFilePath))
+                        {
+                            throw new InvalidOperationException($"{oldFilePath} does not exist");
+                        }
+
+                        if (!Directory.Exists(newDirectoryPath))
+                        {
+                            Directory.CreateDirectory(newDirectoryPath);
+                        }
+
                         if (File.Exists(newFilePath))
                         {
                             File.Delete(newFilePath);
