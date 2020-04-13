@@ -9,9 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </ApplicationDefinition>
+    <ApplicationDefinition Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
