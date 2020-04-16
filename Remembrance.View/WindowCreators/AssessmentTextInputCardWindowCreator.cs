@@ -9,7 +9,7 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.View.WindowCreators
 {
-    //TODO: Move to viewModel
+    // TODO: Move to viewModel
     sealed class AssessmentTextInputCardWindowCreator : IWindowCreator<IAssessmentTextInputCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         readonly Func<TranslationInfo, AssessmentTextInputCardViewModel> _assessmentTextInputCardViewModelFactory;
@@ -25,9 +25,10 @@ namespace Remembrance.View.WindowCreators
             _assessmentTextInputCardWindowFactory = assessmentTextInputCardWindowFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardWindowFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
         }
+
         public Task<IAssessmentTextInputCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
+            _ = param.TranslationInfo ?? throw new ArgumentException(nameof(param.TranslationInfo) + " is null");
             var assessmentViewModel = _assessmentTextInputCardViewModelFactory(param.TranslationInfo);
             IAssessmentTextInputCardWindow? window = null;
             _synchronizationContext.Send(x => window = _assessmentTextInputCardWindowFactory(param.Window, assessmentViewModel), null);

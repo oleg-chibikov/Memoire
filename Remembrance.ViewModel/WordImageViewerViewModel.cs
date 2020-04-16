@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -7,7 +9,7 @@ using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Resources;
@@ -58,8 +60,7 @@ namespace Remembrance.ViewModel
             IMessageHub messageHub,
             IWordImageSearchIndexRepository wordImageSearchIndexRepository,
             ICommandManager commandManager,
-            bool isReadonly = false)
-            : base(commandManager)
+            bool isReadonly = false) : base(commandManager)
         {
             _wordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -73,7 +74,7 @@ namespace Remembrance.ViewModel
             SetPreviousImageCommand = AddCommand(SetPreviousImageAsync);
             ReloadImageCommand = AddCommand(ReloadImageAsync);
 
-            _thisAndParentSearchText = string.Format(DefaultSearchTextTemplate, wordKey.Word.Text, parentText);
+            _thisAndParentSearchText = string.Format(CultureInfo.InvariantCulture, DefaultSearchTextTemplate, wordKey.Word.Text, parentText);
             _isReadonly = isReadonly;
 
             var wordImageInfo = _wordImageInfoRepository.TryGetById(_wordKey);
@@ -81,12 +82,12 @@ namespace Remembrance.ViewModel
             ConstructionTask = wordImageInfo != null ? LoadInitialImage(wordImageInfo) : SetNextOrPreviousImageAsync(true);
         }
 
-        public byte[]? ThumbnailBytes { get; private set; }
+        public IReadOnlyCollection<byte>? ThumbnailBytes { get; private set; }
 
         public bool IsLoading { get; private set; } = true;
 
         [DependsOn(nameof(ThumbnailBytes), nameof(IsLoading))]
-        public bool IsReloadVisible => ThumbnailBytes == null && !IsLoading;
+        public bool IsReloadVisible => (ThumbnailBytes == null) && !IsLoading;
 
         public bool IsSetNextImageVisible => !_isReadonly;
 
@@ -115,7 +116,7 @@ namespace Remembrance.ViewModel
 
         string? ImageUrl { get; set; }
 
-        bool IsFirst => SearchIndex == 0 && !IsAlternate;
+        bool IsFirst => (SearchIndex == 0) && !IsAlternate;
 
         string SearchText => IsAlternate ? _wordKey.Word.Text : _thisAndParentSearchText;
 
@@ -152,7 +153,7 @@ namespace Remembrance.ViewModel
         /// The set next or previous image async.
         /// </summary>
         /// <remarks>
-        /// This function swaps searchText every next time until one of the texts stops to give results
+        /// This function swaps searchText every next time until one of the texts stops to give results.
         /// </remarks>
         async Task SetNextOrPreviousImageAsync(bool increase)
         {
@@ -173,16 +174,16 @@ namespace Remembrance.ViewModel
                 var nonAvailableIndexForSwapped = _nonAvailableIndexes[swappedPosition];
                 var nextPossibleIndex = increase ? searchIndex + 1 : searchIndex - 1;
                 var noSwap = false;
-                if (nonAvailableIndexForSwapped == null || nextPossibleIndex < nonAvailableIndexForSwapped)
+                if ((nonAvailableIndexForSwapped == null) || (nextPossibleIndex < nonAvailableIndexForSwapped))
                 {
                     IsAlternate = !IsAlternate;
                 }
                 else
                 {
                     noSwap = true;
-                    if (nonAvailableIndex != null && nextPossibleIndex >= nonAvailableIndex)
+                    if ((nonAvailableIndex != null) && (nextPossibleIndex >= nonAvailableIndex))
                     {
-                        _messageHub.Publish(string.Format(Errors.NoMoreImages, _wordKey).ToWarning());
+                        _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.NoMoreImages, _wordKey).ToWarning());
                         IsLoading = false;
                         return;
                     }
@@ -258,7 +259,7 @@ namespace Remembrance.ViewModel
                                 wordImageInfo = new WordImageInfo(_wordKey, imageInfoWithBitmap, _nonAvailableIndexes);
                                 _wordImageInfoRepository.Upsert(wordImageInfo);
                                 WordImageSearchIndex? wordImageSearchIndex = null;
-                                if (index > 0 || IsAlternate)
+                                if ((index > 0) || IsAlternate)
                                 {
                                     wordImageSearchIndex = new WordImageSearchIndex(_wordKey, index, IsAlternate);
                                     _wordImageSearchIndexRepository.Upsert(wordImageSearchIndex);
@@ -299,10 +300,10 @@ namespace Remembrance.ViewModel
                 IsAlternate = false;
             }
 
-            _nonAvailableIndexes = wordImageInfo.NonAvailableIndexes;
+            _nonAvailableIndexes = wordImageInfo.NonAvailableIndexes.ToArray();
             var image = wordImageInfo.Image;
-            byte[]? thumbnailBytes;
-            if (image == null || (thumbnailBytes = image.ThumbnailBitmap) == null || thumbnailBytes.Length == 0)
+            IReadOnlyCollection<byte>? thumbnailBytes;
+            if ((image == null) || ((thumbnailBytes = image.ThumbnailBitmap) == null) || (thumbnailBytes.Count == 0))
             {
                 // Try to search the next image if the current image is not available, but has metadata
                 await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);

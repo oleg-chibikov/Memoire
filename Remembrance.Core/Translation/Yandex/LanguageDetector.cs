@@ -13,22 +13,13 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class LanguageDetector : ILanguageDetector
+    sealed class LanguageDetector : ILanguageDetector, IDisposable
     {
-        static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new ListResultContractResolver()
-        };
+        static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings { ContractResolver = new ListResultContractResolver() };
 
-        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new DetectionResultContractResolver()
-        };
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new DetectionResultContractResolver() };
 
-        readonly HttpClient _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
-        };
+        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/") };
 
         readonly IMessageHub _messageHub;
 
@@ -58,14 +49,10 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<DetectionResult>(result, SerializerSettings) ?? throw new InvalidOperationException("Cannot deserialize DetectionResult");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex));
-                return new DetectionResult
-                {
-                    Code = Constants.EnLanguageTwoLetters,
-                    Language = Constants.EnLanguage
-                };
+                return new DetectionResult { Code = Constants.EnLanguageTwoLetters, Language = Constants.EnLanguage };
             }
         }
 
@@ -84,11 +71,16 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<LanguageListResult>(result, ListResultSettings);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
         }
     }
 }

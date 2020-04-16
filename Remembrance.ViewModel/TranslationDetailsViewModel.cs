@@ -16,8 +16,7 @@ namespace Remembrance.ViewModel
         public TranslationDetailsViewModel(
             Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
             TranslationInfo translationInfo,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _ = translationResultViewModelFactory ?? throw new ArgumentNullException(nameof(translationResultViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));

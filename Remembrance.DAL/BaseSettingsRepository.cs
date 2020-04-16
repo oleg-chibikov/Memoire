@@ -5,10 +5,9 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
-    abstract class BaseSettingsRepository : TrackedLiteDbRepository<Settings, string>
+    abstract class BaseSettingsRepository : TrackedLiteDbRepository<ApplicationSettings, string>
     {
-        protected BaseSettingsRepository(string directoryPath, string fileName, bool shrink = true)
-            : base(directoryPath, fileName, shrink)
+        protected BaseSettingsRepository(string directoryPath, string fileName, bool shrink = true) : base(directoryPath, fileName, shrink)
         {
         }
 
@@ -20,11 +19,7 @@ namespace Remembrance.DAL
                 return;
             }
 
-            var settings = new Settings
-            {
-                Id = key,
-                ValueJson = JsonConvert.SerializeObject(value)
-            };
+            var settings = new ApplicationSettings { Id = key, ValueJson = JsonConvert.SerializeObject(value) };
             if (!Update(settings))
             {
                 Insert(settings);

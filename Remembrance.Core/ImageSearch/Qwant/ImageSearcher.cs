@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using Newtonsoft.Json;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Contracts.ImageSearch.Data;
 using Remembrance.Contracts.ImageSearch.Data.Qwant;
@@ -18,20 +18,14 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
 {
-    sealed class ImageSearcher : IImageSearcher
+    sealed class ImageSearcher : IImageSearcher, IDisposable
     {
-        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new ImageSearchResultContractResolver()
-        };
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new ImageSearchResultContractResolver() };
 
         readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://api.qwant.com/api/search/"),
-            DefaultRequestHeaders =
-            {
-                { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36" }
-            }
+            DefaultRequestHeaders = { { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36" } }
         };
 
         readonly ILog _logger;
@@ -40,13 +34,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
         readonly IRateLimiter _rateLimiter;
 
-        readonly ISettingsRepository _settingsRepository;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISettingsRepository settingsRepository)
+        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISharedSettingsRepository sharedSettingsRepository)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -54,7 +48,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             language = language != null ? $"&locale={language}_{language}" : null;
-            var uriPart = $"images?count={count}&offset={skip}&q={text.ToLowerInvariant()}&t=images{language}&uiv=4";
+            var uriPart = $"images?count={count}&offset={skip}&q={text}&t=images{language}&uiv=4";
             _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try
             {
@@ -66,7 +60,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                         throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
                     }
 
-                    if (_settingsRepository.SolveQwantCaptcha)
+                    if (_sharedSettingsRepository.SolveQwantCaptcha)
                     {
                         _rateLimiter.Throttle(
                             TimeSpan.FromSeconds(10),
@@ -87,11 +81,16 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 var deserialized = JsonConvert.DeserializeObject<QwantResponse>(result, SerializerSettings);
                 return deserialized?.Data.Result.Items;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex));
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
         }
     }
 }

@@ -9,10 +9,7 @@ namespace Remembrance.Core.ImageSearch.Qwant.ContractResolvers
 {
     sealed class ImageSearchResultContractResolver : CustomContractResolver
     {
-        protected override IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
-        {
-            { typeof(string), new UrlConverter() }
-        };
+        protected override IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = new Dictionary<Type, JsonConverter> { { typeof(string), new UrlConverter() } };
 
         protected override IReadOnlyDictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {

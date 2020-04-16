@@ -27,7 +27,7 @@ namespace Remembrance.View.WindowCreators
 
         public Task<IAssessmentViewOnlyCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
+            _ = param.TranslationInfo ?? throw new ArgumentException(nameof(param.TranslationInfo) + " is null");
             var assessmentViewModel = _assessmentViewOnlyCardViewModelFactory(param.TranslationInfo);
             IAssessmentViewOnlyCardWindow? window = null;
             _synchronizationContext.Send(x => window = _assessmentViewOnlyCardWindowFactory(param.Window, assessmentViewModel), null);

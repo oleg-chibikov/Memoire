@@ -8,6 +8,7 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>Remembrance.Installer.UI.App</StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <OutputPath>..\BuildInstallerUI\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,5 +34,9 @@
     <Resource Include="Icon.ico" />
     <Resource Include="Windows Logo.png" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
+    <Exec Command="del &quot;$(SolutionDir)Release\Remembrance.Installer.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Remembrance.Installer.7z&quot; &quot;$(SolutionDir)BuildInstallerUI\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb -xr!*nbsbuilder.exe" />
+  </Target>
 
 </Project>

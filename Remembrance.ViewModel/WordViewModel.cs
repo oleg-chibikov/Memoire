@@ -19,15 +19,12 @@ namespace Remembrance.ViewModel
     {
         readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
-
         public WordViewModel(
             Word word,
             string language,
             ITextToSpeechPlayer textToSpeechPlayer,
             ITranslationEntryProcessor translationEntryProcessor,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             Language = language ?? throw new ArgumentNullException(nameof(language));
             Word = word ?? throw new ArgumentNullException(nameof(word));
@@ -62,7 +59,7 @@ namespace Remembrance.ViewModel
         public Word Word { get; }
 
         public string? WordInfo =>
-            Word.VerbType == null && Word.NounAnimacy == null && Word.NounGender == null
+            (Word.VerbType == null) && (Word.NounAnimacy == null) && (Word.NounGender == null)
                 ? null
                 : string.Join(
                     ", ",
@@ -73,18 +70,20 @@ namespace Remembrance.ViewModel
                         Word.NounGender
                     }.Where(x => x != null));
 
+        protected ITranslationEntryProcessor TranslationEntryProcessor { get; }
+
         // A hack to raise NotifyPropertyChanged for other properties
         [AlsoNotifyFor(nameof(Word))]
         bool ReRenderWordSwitch { get; set; }
 
-        public void ReRenderWord()
-        {
-            ReRenderWordSwitch = !ReRenderWordSwitch;
-        }
-
         public override string ToString()
         {
             return $"{Word} [{Language}]";
+        }
+
+        public void ReRenderWord()
+        {
+            ReRenderWordSwitch = !ReRenderWordSwitch;
         }
 
         protected virtual void TogglePriority()

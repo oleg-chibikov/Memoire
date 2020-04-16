@@ -39,7 +39,7 @@ namespace Remembrance.Contracts.Languages.Data
 
         bool Equals(Language other)
         {
-            return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
+            return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

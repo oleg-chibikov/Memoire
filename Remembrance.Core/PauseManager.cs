@@ -11,15 +11,15 @@ namespace Remembrance.Core
 {
     sealed class PauseManager : IPauseManager, IDisposable
     {
-        static readonly IDictionary<PauseReason, string> PauseReasonLabels = new Dictionary<PauseReason, string>
+        static readonly IDictionary<PauseReasons, string> PauseReasonLabels = new Dictionary<PauseReasons, string>
         {
-            { PauseReason.InactiveMode, Texts.PauseReasonInactiveMode },
-            { PauseReason.ActiveProcessBlacklisted, Texts.PauseReasonActiveProcessBlacklisted },
-            { PauseReason.CardIsVisible, Texts.PauseReasonCardIsVisible },
-            { PauseReason.OperationInProgress, Texts.PauseReasonOperationInProgress }
+            { PauseReasons.InactiveMode, Texts.PauseReasonInactiveMode },
+            { PauseReasons.ActiveProcessBlacklisted, Texts.PauseReasonActiveProcessBlacklisted },
+            { PauseReasons.CardIsVisible, Texts.PauseReasonCardIsVisible },
+            { PauseReasons.OperationInProgress, Texts.PauseReasonOperationInProgress }
         };
 
-        readonly IDictionary<PauseReason, string> _descriptions = new Dictionary<PauseReason, string>();
+        readonly IDictionary<PauseReasons, string> _descriptions = new Dictionary<PauseReasons, string>();
 
         readonly ILocalSettingsRepository _localSettingsRepository;
 
@@ -29,7 +29,7 @@ namespace Remembrance.Core
 
         readonly IMessageHub _messageHub;
 
-        readonly IDictionary<PauseReason, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReason, PauseInfoCollection>();
+        readonly IDictionary<PauseReasons, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReasons, PauseInfoCollection>();
 
         public PauseManager(ILog logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
@@ -40,15 +40,7 @@ namespace Remembrance.Core
             ApplyToEveryPauseReason(pauseReason => _pauseInfos[pauseReason] = _localSettingsRepository.GetPauseInfo(pauseReason));
             if (!_localSettingsRepository.IsActive)
             {
-                _pauseInfos[PauseReason.InactiveMode].Pause();
-            }
-        }
-
-        public void Dispose()
-        {
-            lock (_lockObject)
-            {
-                ApplyToEveryPauseReason(pauseReason => _localSettingsRepository.AddOrUpdatePauseInfo(pauseReason, _pauseInfos[pauseReason]));
+                _pauseInfos[PauseReasons.InactiveMode].Pause();
             }
         }
 
@@ -63,11 +55,19 @@ namespace Remembrance.Core
             }
         }
 
-        public PauseInfoCollection GetPauseInfo(PauseReason pauseReason)
+        public void Dispose()
         {
             lock (_lockObject)
             {
-                return _pauseInfos[pauseReason];
+                ApplyToEveryPauseReason(pauseReason => _localSettingsRepository.AddOrUpdatePauseInfo(pauseReason, _pauseInfos[pauseReason]));
+            }
+        }
+
+        public PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons)
+        {
+            lock (_lockObject)
+            {
+                return _pauseInfos[pauseReasons];
             }
         }
 
@@ -97,24 +97,24 @@ namespace Remembrance.Core
             }
         }
 
-        public void Pause(PauseReason pauseReason, string? description)
+        public void PauseActivity(PauseReasons pauseReasons, string? description)
         {
             lock (_lockObject)
             {
                 if (description != null)
                 {
-                    _descriptions[pauseReason] = description;
+                    _descriptions[pauseReasons] = description;
                 }
 
-                if (!_pauseInfos[pauseReason].Pause())
+                if (!_pauseInfos[pauseReasons].Pause())
                 {
                     return;
                 }
 
-                _logger.Info($"Paused: {pauseReason}");
+                _logger.Info($"Paused: {pauseReasons}");
             }
 
-            _messageHub.Publish(pauseReason);
+            _messageHub.Publish(pauseReasons);
         }
 
         public void ResetPauseTimes()
@@ -132,26 +132,26 @@ namespace Remembrance.Core
             _logger.Debug("Paused time is resetted");
         }
 
-        public void Resume(PauseReason pauseReason)
+        public void ResumeActivity(PauseReasons pauseReasons)
         {
             lock (_lockObject)
             {
-                if (!_pauseInfos[pauseReason].Resume())
+                if (!_pauseInfos[pauseReasons].Resume())
                 {
                     return;
                 }
 
-                _descriptions.Remove(pauseReason);
-                _localSettingsRepository.AddOrUpdatePauseInfo(pauseReason, _pauseInfos[pauseReason]);
-                _logger.Info($"Resumed: {pauseReason}");
+                _descriptions.Remove(pauseReasons);
+                _localSettingsRepository.AddOrUpdatePauseInfo(pauseReasons, _pauseInfos[pauseReasons]);
+                _logger.Info($"Resumed: {pauseReasons}");
             }
 
-            _messageHub.Publish(pauseReason);
+            _messageHub.Publish(pauseReasons);
         }
 
-        static void ApplyToEveryPauseReason(Action<PauseReason> action)
+        static void ApplyToEveryPauseReason(Action<PauseReasons> action)
         {
-            foreach (var pauseReason in Enum.GetValues(typeof(PauseReason)).Cast<PauseReason>().Where(p => p != PauseReason.None))
+            foreach (var pauseReason in Enum.GetValues(typeof(PauseReasons)).Cast<PauseReasons>().Where(p => p != PauseReasons.None))
             {
                 action(pauseReason);
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,6 +101,7 @@ namespace Remembrance.Core.Sync
             File.Delete(newFilePath);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General catch for all types of exceptions")]
         void SyncInternal(TRepository remoteRepository)
         {
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
@@ -161,6 +163,7 @@ namespace Remembrance.Core.Sync
                     {
                         _messageHub.Publish(
                             string.Format(
+                                    CultureInfo.InvariantCulture,
                                     Errors.CannotSynchronize,
                                     remoteEntity,
                                     Path.Combine(remoteRepository.DbDirectoryPath, $"{remoteRepository.DbFileName}{remoteRepository.DbFileExtension}"))

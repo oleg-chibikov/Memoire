@@ -5,7 +5,7 @@ using System.Linq;
 using Common.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Sync;
 using Scar.Common;
 
@@ -54,8 +54,8 @@ namespace Remembrance.Core.Sync
                 TimeSpan.FromSeconds(5),
                 () =>
                 {
-                    var syncBus = _localSettingsRepository.SyncBus;
-                    if (syncBus == SyncBus.NoSync)
+                    var syncBus = _localSettingsRepository.SyncEngine;
+                    if (syncBus == SyncEngine.NoSync)
                     {
                         return;
                     }

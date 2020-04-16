@@ -52,17 +52,12 @@ namespace Remembrance.Core.Sync
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            _fileSystemWatcher = new FileSystemWatcher
-            {
-                IncludeSubdirectories = true,
-                InternalBufferSize = 64 * 1024,
-                NotifyFilter = NotifyFilters.FileName
-            };
+            _fileSystemWatcher = new FileSystemWatcher { IncludeSubdirectories = true, InternalBufferSize = 64 * 1024, NotifyFilter = NotifyFilters.FileName };
             _fileSystemWatcher.Created += FileSystemWatcher_Changed;
             _fileSystemWatcher.Changed += FileSystemWatcher_Changed;
-            OnSyncBusChanged(localSettingsRepository.SyncBus);
+            OnSyncBusChanged(localSettingsRepository.SyncEngine);
 
-            _subscriptionTokens.Add(messageHub.Subscribe<SyncBus>(OnSyncBusChanged));
+            _subscriptionTokens.Add(messageHub.Subscribe<SyncEngine>(OnSyncBusChanged));
         }
 
         public void Dispose()
@@ -78,17 +73,17 @@ namespace Remembrance.Core.Sync
             _subscriptionTokens.Clear();
         }
 
-        void OnSyncBusChanged(SyncBus syncBus)
+        void OnSyncBusChanged(SyncEngine syncEngine)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
-            if (syncBus == SyncBus.NoSync)
+            if (syncEngine == SyncEngine.NoSync)
             {
                 _allMachinesSharedBasePath = _thisMachineSharedPath = null;
                 return;
             }
 
             {
-                _thisMachineSharedPath = _remembrancePathsProvider.GetSharedPath(syncBus);
+                _thisMachineSharedPath = _remembrancePathsProvider.GetSharedPath(syncEngine);
                 _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
                 _fileSystemWatcher.Path = _allMachinesSharedBasePath;
             }
@@ -101,7 +96,7 @@ namespace Remembrance.Core.Sync
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
-            if (directoryPath == null || directoryPath == _thisMachineSharedPath)
+            if ((directoryPath == null) || (directoryPath == _thisMachineSharedPath))
             {
                 return;
             }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -52,10 +53,10 @@ namespace Remembrance.Core.ProcessMonitoring
         {
             try
             {
-                GetWindowThreadProcessId(hwnd, out var processId);
+                var result = GetWindowThreadProcessId(hwnd, out var processId);
                 return Process.GetProcessById((int)processId);
             }
-            catch
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException || ex is Win32Exception)
             {
                 return null;
             }
@@ -81,11 +82,11 @@ namespace Remembrance.Core.ProcessMonitoring
 
             if (blacklistedProcesses?.Select(processInfo => processInfo.Name).Contains(process.ProcessName, StringComparer.OrdinalIgnoreCase) == true)
             {
-                _pauseManager.Pause(PauseReason.ActiveProcessBlacklisted, process.ProcessName);
+                _pauseManager.PauseActivity(PauseReasons.ActiveProcessBlacklisted, process.ProcessName);
             }
             else
             {
-                _pauseManager.Resume(PauseReason.ActiveProcessBlacklisted);
+                _pauseManager.ResumeActivity(PauseReasons.ActiveProcessBlacklisted);
             }
         }
 

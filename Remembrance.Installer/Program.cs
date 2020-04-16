@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Scar.Common.Installer;
 
 namespace Remembrance.Installer
@@ -20,7 +21,7 @@ namespace Remembrance.Installer
                 .OpenFolderAfterInstallation()
                 .LaunchAfterInstallation()
                 .WithProcessTermination()
-                .Build(wixBinariesLocation: @"..\packages\WixSharp.wix.bin.3.11.2\tools\bin");
+                .Build(wixBinariesLocation: Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", "WixSharp.wix.bin", "3.11.2", "tools", "bin"));
         }
     }
 }

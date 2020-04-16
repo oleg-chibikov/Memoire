@@ -10,7 +10,7 @@ using Autofac;
 using LiteDB;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -40,11 +40,11 @@ using Scar.Common.WPF.Startup;
 [assembly: AssemblyCopyright("Copyright © Scar 2016")]
 [assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
 [assembly: AssemblyProduct("Remembrance")]
+
 namespace Remembrance.Launcher
 {
     // TODO: Feature Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
     // TODO: Feature: if the word level is low, replace textbox with dropdown
-
     sealed partial class App
     {
         public App()
@@ -58,11 +58,7 @@ namespace Remembrance.Launcher
         {
             Logger.Trace("Starting...");
             RegisterLiteDbCustomTypes();
-            Current.Resources.MergedDictionaries.Add(
-                new ResourceDictionary
-                {
-                    { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() }
-                });
+            Current.Resources.MergedDictionaries.Add(new ResourceDictionary { { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() } });
 
             // First the tray icon should be loaded, the rest can be loaded later
             var trayWindow = Container.Resolve<ITrayWindow>();
@@ -75,6 +71,56 @@ namespace Remembrance.Launcher
             ResolveInSeparateTaskAsync<IAssessmentCardManager>();
             ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
             ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
+        }
+
+        protected override void RegisterDependencies(ContainerBuilder builder)
+        {
+            builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<CultureManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationTerminator>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
+
+            RegisterRepositorySynchronizer<ApplicationSettings, string, ISharedSettingsRepository, SharedSettingsRepository>(builder);
+            RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository, TranslationEntryRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository, TranslationEntryDeletionRepository>(builder);
+            RegisterRepositorySynchronizer<WordImageSearchIndex, WordKey, IWordImageSearchIndexRepository, WordImageSearchIndexRepository>(builder);
+
+            builder.RegisterType(typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository, ITranslationEntryDeletionRepository>))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowsSyncSoftwarePathsProvider).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody").AsSelf().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
+        }
+
+        protected override void ShowMessage(Message message)
+        {
+            var nestedLifeTimeScope = Container.BeginLifetimeScope();
+            var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
+            var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current;
+            synchronizationContext.Post(
+                x =>
+                {
+                    var window = nestedLifeTimeScope.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel));
+                    window.AssociateDisposable(nestedLifeTimeScope);
+                    window.Restore();
+                },
+                null);
         }
 
         static void RegisterLiteDbCustomTypes()
@@ -107,62 +153,7 @@ namespace Remembrance.Launcher
 
         static void RegisterLiteDbStringReadonlyCollection()
         {
-            BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(
-                o => new BsonArray(o.Select(x => new BsonValue(x))),
-                m => m.AsArray.Select(item => item.AsString).ToArray());
-        }
-
-        protected override void RegisterDependencies(ContainerBuilder builder)
-        {
-            builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<CultureManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApplicationTerminator>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
-
-            RegisterRepositorySynchronizer<Settings, string, ISettingsRepository, SettingsRepository>(builder);
-            RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
-            RegisterRepositorySynchronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository, TranslationEntryRepository>(builder);
-            RegisterRepositorySynchronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository, TranslationEntryDeletionRepository>(builder);
-            RegisterRepositorySynchronizer<WordImageSearchIndex, WordKey, IWordImageSearchIndexRepository, WordImageSearchIndexRepository>(builder);
-
-            builder.RegisterType(
-                    typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository,
-                            ITranslationEntryDeletionRepository>
-                    ))
-                .SingleInstance()
-                .AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(WindowsSyncSoftwarePathsProvider).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody").AsSelf().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
-        }
-
-        protected override void ShowMessage(Message message)
-        {
-            var nestedLifeTimeScope = Container.BeginLifetimeScope();
-            var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
-            var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current;
-            synchronizationContext.Post(
-                x =>
-                {
-                    var window = nestedLifeTimeScope.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel));
-                    window.AssociateDisposable(nestedLifeTimeScope);
-                    window.Restore();
-                },
-                null);
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(o => new BsonArray(o.Select(x => new BsonValue(x))), m => m.AsArray.Select(item => item.AsString).ToArray());
         }
 
         static void RegisterNamed<T, TInterface>(ContainerBuilder builder)

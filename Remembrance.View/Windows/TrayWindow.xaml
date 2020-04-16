@@ -1,144 +1,134 @@
-<baseWindow:BaseWindow x:Class="Remembrance.View.Windows.TrayWindow"
-    x:ClassModifier="internal"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
-    xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
-    xmlns:controls="clr-namespace:Remembrance.View.Controls"
-    mc:Ignorable="d"
-    WindowState="Minimized"
-    SizeToContent="WidthAndHeight"
-    Visibility="Hidden"
-    ShowInTaskbar="False"
-    lex:LocalizeDictionary.DesignCulture="en"
-    lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
-    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
-    Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico">
-    <Window.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
-    </Window.Resources>
-    <Grid>
-        <tb:TaskbarIcon LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
-            DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
-            ToolTipText="{lex:Loc Scar.Remembrance.Resources:Texts:Title}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="TrayToolTipClose">
-                    <i:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="TrayToolTipOpen">
-                    <i:InvokeCommandAction Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <tb:TaskbarIcon.ContextMenu>
-                <ContextMenu>
-                    <ContextMenu.Resources>
-                        <Style TargetType="Image">
-                            <Setter Property="Width"
-                                Value="16" />
-                            <Setter Property="Height"
-                                Value="16" />
-                        </Style>
-                    </ContextMenu.Resources>
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Settings}"
-                        Command="{Binding ShowSettingsCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="Settings" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+<baseWindow:BaseWindow x:Class="Remembrance.View.Windows.TrayWindow" x:ClassModifier="internal"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:lex="http://wpflocalizeextension.codeplex.com"
+                       xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+                       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                       xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+                       xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+                       xmlns:controls="clr-namespace:Remembrance.View.Controls" mc:Ignorable="d"
+                       WindowState="Minimized" SizeToContent="WidthAndHeight" Visibility="Hidden" ShowInTaskbar="False"
+                       lex:LocalizeDictionary.DesignCulture="en" lex:LocalizeDictionary.OutputMissingKeys="True"
+                       lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
+                       lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+                       d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
+                       Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico">
+  <Window.Resources>
+    <commonView:DesignTimeResourceDictionary
+      Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
+  </Window.Resources>
+  <Grid>
+    <tb:TaskbarIcon LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
+                    DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
+                    ToolTipText="{lex:Loc Scar.Remembrance.Resources:Texts:Title}">
+      <i:Interaction.Triggers>
+        <i:EventTrigger EventName="TrayToolTipClose">
+          <i:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="TrayToolTipOpen">
+          <i:InvokeCommandAction Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
+        </i:EventTrigger>
+      </i:Interaction.Triggers>
+      <tb:TaskbarIcon.ContextMenu>
+        <ContextMenu>
+          <ContextMenu.Resources>
+            <Style TargetType="Image">
+              <Setter Property="Width" Value="16" />
+              <Setter Property="Height" Value="16" />
+            </Style>
+          </ContextMenu.Resources>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Settings}"
+                    Command="{Binding ShowSettingsCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="Settings" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:AddTranslation}"
-                        Command="{Binding AddTranslationCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="PlusBox" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:AddTranslation}"
+                    Command="{Binding AddTranslationCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="PlusBox" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Dictionary}"
-                        Command="{Binding ShowDictionaryCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="Dictionary" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Dictionary}"
+                    Command="{Binding ShowDictionaryCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="Dictionary" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
-                        Header="{lex:Loc Scar.Remembrance.Resources:Texts:Deactivate}"
-                        Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ToggleSwitchOff" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
+                    Header="{lex:Loc Scar.Remembrance.Resources:Texts:Deactivate}"
+                    Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="ToggleSwitchOff" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
-                        Header="{lex:Loc Scar.Remembrance.Resources:Texts:Activate}"
-                        Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ToggleSwitch" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Command="{Binding ToggleActiveCommand, Mode=OneTime}"
+                    Header="{lex:Loc Scar.Remembrance.Resources:Texts:Activate}"
+                    Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="ToggleSwitch" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <Separator />
+          <Separator />
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:ViewLogs}"
-                        Command="{Binding ViewLogsCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="FileDocument" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:ViewLogs}"
+                    Command="{Binding ViewLogsCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="FileDocument" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:OpenSharedFolder}"
-                        Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="Dropbox" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:OpenSharedFolder}"
+                    Command="{Binding OpenSharedFolderCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="Dropbox" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:OpenSettingsFolder}"
-                        Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="Folder" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:OpenSettingsFolder}"
+                    Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="Folder" />
+            </MenuItem.Icon>
+          </MenuItem>
 
-                    <Separator />
+          <Separator />
 
-                    <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Exit}"
-                        Command="{Binding ExitCommand, Mode=OneTime}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ExitToApp" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ContextMenu>
-            </tb:TaskbarIcon.ContextMenu>
-            <tb:TaskbarIcon.Style>
-                <Style TargetType="tb:TaskbarIcon">
-                    <Setter Property="IconSource"
-                        Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsPaused, Mode=OneWay}"
-                            Value="True">
-                            <Setter Property="IconSource"
-                                Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconPaused.ico" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsActive, Mode=OneWay}"
-                            Value="False">
-                            <Setter Property="IconSource"
-                                Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconInactive.ico" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </tb:TaskbarIcon.Style>
-            <tb:TaskbarIcon.TrayToolTip>
-                <controls:TrayToolTipControl />
-            </tb:TaskbarIcon.TrayToolTip>
-        </tb:TaskbarIcon>
-    </Grid>
+          <MenuItem Header="{lex:Loc Scar.Remembrance.Resources:Texts:Exit}"
+                    Command="{Binding ExitCommand, Mode=OneTime}">
+            <MenuItem.Icon>
+              <materialDesign:PackIcon Kind="ExitToApp" />
+            </MenuItem.Icon>
+          </MenuItem>
+        </ContextMenu>
+      </tb:TaskbarIcon.ContextMenu>
+      <tb:TaskbarIcon.Style>
+        <Style TargetType="tb:TaskbarIcon">
+          <Setter Property="IconSource"
+                  Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding IsPaused, Mode=OneWay}" Value="True">
+              <Setter Property="IconSource"
+                      Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconPaused.ico" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsActive, Mode=OneWay}" Value="False">
+              <Setter Property="IconSource"
+                      Value="pack://application:,,/Scar.Remembrance.View;component/Images/IconInactive.ico" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </tb:TaskbarIcon.Style>
+      <tb:TaskbarIcon.TrayToolTip>
+        <controls:TrayToolTipControl />
+      </tb:TaskbarIcon.TrayToolTip>
+    </tb:TaskbarIcon>
+  </Grid>
 </baseWindow:BaseWindow>

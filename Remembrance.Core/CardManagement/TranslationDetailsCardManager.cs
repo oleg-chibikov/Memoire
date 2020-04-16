@@ -20,8 +20,7 @@ namespace Remembrance.Core.CardManagement
             ILog logger,
             SynchronizationContext synchronizationContext,
             IScopedWindowProvider scopedWindowProvider,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
-            : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager) : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
         }

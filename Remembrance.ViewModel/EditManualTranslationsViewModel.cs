@@ -9,7 +9,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
@@ -35,8 +35,7 @@ namespace Remembrance.ViewModel
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messageHub,
             ITranslationEntryRepository translationEntryRepository,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -71,7 +70,7 @@ namespace Remembrance.ViewModel
 
         void AddTranslation()
         {
-            if (ManualTranslationText == null || string.IsNullOrWhiteSpace(ManualTranslationText))
+            if ((ManualTranslationText == null) || string.IsNullOrWhiteSpace(ManualTranslationText))
             {
                 throw new LocalizableException(Errors.WordIsMissing, "Word is not specified");
             }
@@ -99,8 +98,7 @@ namespace Remembrance.ViewModel
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
-                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None)
-                    .ConfigureAwait(false);
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
 
                 // if non manual translations not exist
                 if (translationDetails.TranslationResult.PartOfSpeechTranslations.All(t => t.IsManual))
@@ -136,8 +134,7 @@ namespace Remembrance.ViewModel
         {
             _logger.Trace("Saving...");
             IsManualTranslationsDialogOpen = false;
-            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None)
-                .ConfigureAwait(false);
+            var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
             _messageHub.Publish(translationInfo.TranslationEntry);
         }
     }

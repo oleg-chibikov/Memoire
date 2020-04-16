@@ -29,16 +29,6 @@ namespace Remembrance.ViewModel
 
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        protected readonly HashSet<Word> AcceptedAnswers;
-
-        protected readonly ILog Logger;
-
-        protected readonly IMessageHub MessageHub;
-
-        protected readonly TranslationInfo TranslationInfo;
-
-        protected readonly Func<Word, string, WordViewModel> WordViewModelFactory;
-
         protected BaseAssessmentCardViewModel(
             TranslationInfo translationInfo,
             IMessageHub messageHub,
@@ -49,8 +39,7 @@ namespace Remembrance.ViewModel
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -86,12 +75,9 @@ namespace Remembrance.ViewModel
                 Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(x => '*')) + text[text.Length - 1];
             }
 
-            WordImageViewerViewModel = wordImageViewerViewModelFactory(
-                new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer),
-                assessmentInfo.Word.Text,
-                true);
+            WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer), assessmentInfo.Word.Text, true);
 
-            pauseManager.Pause(PauseReason.CardIsVisible, wordViewModel.ToString());
+            pauseManager.PauseActivity(PauseReasons.CardIsVisible, wordViewModel.ToString());
 
             WindowClosedCommand = AddCommand(WindowClosed);
 
@@ -114,6 +100,16 @@ namespace Remembrance.ViewModel
         public WordViewModel Word { get; }
 
         public WordImageViewerViewModel WordImageViewerViewModel { get; }
+
+        protected HashSet<Word> AcceptedAnswers { get; }
+
+        protected ILog Logger { get; }
+
+        protected IMessageHub MessageHub { get; }
+
+        protected TranslationInfo TranslationInfo { get; }
+
+        protected Func<Word, string, WordViewModel> WordViewModelFactory { get; }
 
         protected override void Dispose(bool disposing)
         {
@@ -144,7 +140,7 @@ namespace Remembrance.ViewModel
 
         static void PrepareVerb(string sourceLanguage, BaseWord word)
         {
-            if (sourceLanguage != Constants.EnLanguageTwoLetters || word.PartOfSpeech != PartOfSpeech.Verb)
+            if ((sourceLanguage != Constants.EnLanguageTwoLetters) || (word.PartOfSpeech != PartOfSpeech.Verb))
             {
                 return;
             }
@@ -182,7 +178,7 @@ namespace Remembrance.ViewModel
 
         void WindowClosed()
         {
-            _pauseManager.Resume(PauseReason.CardIsVisible);
+            _pauseManager.ResumeActivity(PauseReasons.CardIsVisible);
         }
     }
 }

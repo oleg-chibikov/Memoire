@@ -28,9 +28,10 @@ namespace Remembrance.View.WindowCreators
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _learningInfoViewModelFactory = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
         }
+
         public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            _ = param.TranslationInfo ?? throw new ArgumentNullException(nameof(param.TranslationInfo));
+            _ = param.TranslationInfo ?? throw new ArgumentException(nameof(param.TranslationInfo) + " is null");
             var learningInfoViewModel = _learningInfoViewModelFactory(param.TranslationInfo.LearningInfo);
             var translationDetailsCardViewModel = _translationDetailsCardViewModelFactory(param.TranslationInfo, learningInfoViewModel);
             ITranslationDetailsCardWindow? window = null;

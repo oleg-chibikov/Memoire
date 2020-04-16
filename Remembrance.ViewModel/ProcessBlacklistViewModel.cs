@@ -24,9 +24,10 @@ namespace Remembrance.ViewModel
 
         string? _filter;
 
-        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILog logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource)
-            : base(commandManager)
+        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILog logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource) : base(
+            commandManager)
         {
+            _ = collectionViewSource ?? throw new ArgumentNullException(nameof(collectionViewSource));
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -39,7 +40,7 @@ namespace Remembrance.ViewModel
             ClearFilterCommand = AddCommand(ClearFilter);
             AvailableProcessesView = collectionViewSource.GetDefaultView(_availableProcesses);
             BlacklistedProcessesView = collectionViewSource.GetDefaultView(BlacklistedProcesses);
-            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) >= 0;
+            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || (((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         public ICommand AddFromActiveProcessesCommand { get; }
@@ -107,7 +108,7 @@ namespace Remembrance.ViewModel
 
         void AddText()
         {
-            if (Text == null || string.IsNullOrWhiteSpace(Text))
+            if ((Text == null) || string.IsNullOrWhiteSpace(Text))
             {
                 return;
             }

@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using Easy.MessageHub;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    sealed class SettingsSyncPostProcessor : ISyncPostProcessor<Settings>
+    sealed class SettingsSyncPostProcessor : ISyncPostProcessor<ApplicationSettings>
     {
         readonly IMessageHub _messageHub;
 
@@ -17,10 +17,10 @@ namespace Remembrance.Core.Sync
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public Task AfterEntityChangedAsync(Settings oldValue, Settings newValue)
+        public Task AfterEntityChangedAsync(ApplicationSettings oldValue, ApplicationSettings newValue)
         {
             _ = newValue ?? throw new ArgumentNullException(nameof(newValue));
-            if (newValue.Id != nameof(ISettingsRepository.CardShowFrequency))
+            if (newValue.Id != nameof(ISharedSettingsRepository.CardShowFrequency))
             {
                 return Task.CompletedTask;
             }

@@ -11,8 +11,7 @@ namespace Remembrance.ViewModel
     {
         readonly TaskCompletionSource<bool> _taskCompletionSource;
 
-        public ConfirmationViewModel(bool showButtons, string text, ICommandManager commandManager)
-            : base(commandManager)
+        public ConfirmationViewModel(bool showButtons, string text, ICommandManager commandManager) : base(commandManager)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             DeclineCommand = AddCommand(Decline);

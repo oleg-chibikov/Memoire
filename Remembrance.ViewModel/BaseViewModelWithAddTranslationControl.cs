@@ -22,15 +22,7 @@ namespace Remembrance.ViewModel
     public abstract class BaseViewModelWithAddTranslationControl : BaseViewModel
     {
         readonly ILanguageManager _languageManager;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
-        protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
-
-        protected readonly ILog Logger;
-
-        protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
-
         string _selectedSourceLanguage;
         Language _selectedSourceLanguageItem;
         string _selectedTargetLanguage;
@@ -41,8 +33,7 @@ namespace Remembrance.ViewModel
             ILanguageManager languageManager,
             ITranslationEntryProcessor translationEntryProcessor,
             ILog logger,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -77,7 +68,7 @@ namespace Remembrance.ViewModel
             set
             {
                 _selectedSourceLanguageItem = value;
-                SelectedSourceLanguage = value.Code;
+                SelectedSourceLanguage = value?.Code ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
@@ -87,7 +78,7 @@ namespace Remembrance.ViewModel
             set
             {
                 _selectedTargetLanguageItem = value;
-                SelectedTargetLanguage = value.Code;
+                SelectedTargetLanguage = value?.Code ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
@@ -126,11 +117,17 @@ namespace Remembrance.ViewModel
 
         public string? Text { get; set; }
 
+        protected CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource();
+
+        protected ILog Logger { get; }
+
+        protected ITranslationEntryProcessor TranslationEntryProcessor { get; }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                CancellationTokenSource.Cancel();
+                CancellationTokenSource.Dispose();
                 Cleanup();
             }
 
@@ -146,7 +143,7 @@ namespace Remembrance.ViewModel
         async Task SaveAsync()
         {
             var text = Text;
-            var manualTranslation = ManualTranslation == null || string.IsNullOrWhiteSpace(ManualTranslation)
+            var manualTranslation = (ManualTranslation == null) || string.IsNullOrWhiteSpace(ManualTranslation)
                 ? null
                 : new[]
                 {
@@ -159,11 +156,7 @@ namespace Remembrance.ViewModel
             ManualTranslation = null;
 
             var window = await GetWindowAsync().ConfigureAwait(false);
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(
-                    translationEntryAdditionInfo,
-                    CancellationTokenSource.Token,
-                    window,
-                    manualTranslations: manualTranslation)
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, window, manualTranslations: manualTranslation)
                 .ConfigureAwait(false);
         }
     }

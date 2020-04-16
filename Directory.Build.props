@@ -1,7 +1,29 @@
-﻿<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NetCore.Analyzers.Runtime.SpecifyIFormatProviderExceptCommonLoggingAnalyzer" Version="1.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="$(MSBuildProjectFile.Contains('Test'))">$(MSBuildThisFileDirectory)\CodeAnalysis.Test.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-    <OutputPath>..\BuildCommon\</OutputPath>
+    <!--<OutputPath>..\BuildCommon\</OutputPath>-->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType Condition=" '$(Configuration)' == 'Release' ">None</DebugType>
     <SignAssembly>false</SignAssembly>
@@ -9,7 +31,6 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Company>Scar</Company>
     <Authors>Scar</Authors>
     <AssemblyName>$(Company).$(SolutionName).$(MSBuildProjectName)</AssemblyName>
@@ -22,6 +43,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)\InternalsVisibleTo.cs" Link="InternalsVisibleTo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)\Assembly.cs" Link="Assembly.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" Link="Properties\stylecop.json" />
   </ItemGroup>
 </Project>

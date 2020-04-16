@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="WTG Logistics Services Tests Ruleset" ToolsVersion="16.0">
+  <Include Path="CodeAnalysis.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1707" Action="None" />
+	<Rule Id="CA2100" Action="None" />
+  </Rules>
+</RuleSet>

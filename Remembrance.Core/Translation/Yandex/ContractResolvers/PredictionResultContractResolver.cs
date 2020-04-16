@@ -7,9 +7,7 @@ namespace Remembrance.Core.Translation.Yandex.ContractResolvers
     {
         protected override IReadOnlyDictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {
-            { nameof(PredictionResult.EndOfWord), "endOfWord" },
-            { nameof(PredictionResult.Position), "pos" },
-            { nameof(PredictionResult.PredictionVariants), "text" }
+            { nameof(PredictionResult.EndOfWord), "endOfWord" }, { nameof(PredictionResult.Position), "pos" }, { nameof(PredictionResult.PredictionVariants), "text" }
         };
     }
 }

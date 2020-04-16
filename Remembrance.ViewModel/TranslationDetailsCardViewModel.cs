@@ -46,8 +46,7 @@ namespace Remembrance.ViewModel
             IPredictor predictor,
             ILanguageManager languageManager,
             ICultureManager cultureManager,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
@@ -68,7 +67,8 @@ namespace Remembrance.ViewModel
             var allLanguages = languageManager.GetAvailableLanguages();
             var sourceLanguageName = allLanguages[translationInfo.TranslationEntryKey.SourceLanguage].ToLowerInvariant();
             var targetLanguageName = allLanguages[translationInfo.TranslationEntryKey.TargetLanguage].ToLowerInvariant();
-            ReversoContextLink = string.Format(Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.ToLowerInvariant());
+            ReversoContextLink = string.Format(CultureInfo.InvariantCulture, Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.ToLowerInvariant());
+
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
@@ -84,7 +84,7 @@ namespace Remembrance.ViewModel
 
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
-        public PrepositionsCollection? PrepositionsCollection { get; private set; }
+        public Prepositions? PrepositionsCollection { get; private set; }
 
         public TranslationDetailsViewModel TranslationDetails { get; }
 
@@ -104,7 +104,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
+        async Task<Prepositions?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
         {
             var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
@@ -112,10 +112,7 @@ namespace Remembrance.ViewModel
                 return null;
             }
 
-            var prepositionsCollection = new PrepositionsCollection
-            {
-                Texts = predictionResult.Position > 0 ? predictionResult.PredictionVariants : null
-            };
+            var prepositionsCollection = new Prepositions { Texts = predictionResult.Position > 0 ? predictionResult.PredictionVariants : null };
             return prepositionsCollection;
         }
 
@@ -162,8 +159,7 @@ namespace Remembrance.ViewModel
             Task.Run(
                 () =>
                 {
-                    foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(
-                        partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
+                    foreach (var translationVariant in TranslationDetails.TranslationResult.PartOfSpeechTranslations.SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants))
                     {
                         if (translationVariant.Word.Equals(priorityWordKey.WordKey.Word))
                         {

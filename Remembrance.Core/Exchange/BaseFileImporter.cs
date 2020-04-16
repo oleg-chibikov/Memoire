@@ -8,7 +8,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Contracts.Processing;
@@ -59,7 +59,7 @@ namespace Remembrance.Core.Exchange
             }
 
             var existingTranslationEntries = _translationEntryRepository.GetAll().ToDictionary(translationEntry => translationEntry.Id, translationEntry => translationEntry);
-            var totalCount = deserialized.Length;
+            var totalCount = deserialized.Count;
             var errorsList = new List<string>();
             var count = 0;
             var successCount = 0;
@@ -72,7 +72,7 @@ namespace Remembrance.Core.Exchange
                         var importTasks = exchangeEntriesBlock.Select(
                             async exchangeEntry =>
                             {
-                                var translationEntry = await ImportOneEntry(cancellationToken, exchangeEntry, existingTranslationEntries, errorsList).ConfigureAwait(false);
+                                var translationEntry = await ImportOneEntry(exchangeEntry, existingTranslationEntries, errorsList, cancellationToken).ConfigureAwait(false);
                                 if (translationEntry != null)
                                 {
                                     Interlocked.Increment(ref successCount);
@@ -122,20 +122,20 @@ namespace Remembrance.Core.Exchange
             return true;
         }
 
-        T[]? Deserialize(string fileName)
+        IReadOnlyCollection<T>? Deserialize(string fileName)
         {
-            T[]? deserialized = null;
+            IReadOnlyCollection<T>? deserialized = null;
 
             try
             {
                 var file = File.ReadAllText(fileName);
-                deserialized = JsonConvert.DeserializeObject<T[]>(file);
+                deserialized = JsonConvert.DeserializeObject<IReadOnlyCollection<T>>(file);
             }
             catch (IOException ex)
             {
                 _logger.Warn("Cannot load file from disk", ex);
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
                 _logger.Warn("Cannot deserialize object", ex);
             }
@@ -143,10 +143,7 @@ namespace Remembrance.Core.Exchange
             return deserialized;
         }
 
-        async Task<TranslationInfo?> ImportNewEntry(
-            CancellationToken cancellationToken,
-            TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation>? manualTranslations)
+        async Task<TranslationInfo?> ImportNewEntry(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken)
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
@@ -158,10 +155,10 @@ namespace Remembrance.Core.Exchange
         }
 
         async Task<TranslationEntry?> ImportOneEntry(
-            CancellationToken cancellationToken,
             T exchangeEntry,
             IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
-            List<string> errorsList)
+            List<string> errorsList,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             _logger.TraceFormat("Importing {0}...", exchangeEntry.Text);
@@ -177,7 +174,7 @@ namespace Remembrance.Core.Exchange
             var changed = false;
             if (translationEntry == null)
             {
-                var translationInfo = await ImportNewEntry(cancellationToken, translationEntryKey, manualTranslations).ConfigureAwait(false);
+                var translationInfo = await ImportNewEntry(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
                 if (translationInfo == null)
                 {
                     lock (errorsList)

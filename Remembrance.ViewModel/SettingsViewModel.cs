@@ -11,7 +11,7 @@ using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
@@ -39,7 +39,7 @@ namespace Remembrance.ViewModel
 
         readonly IPauseManager _pauseManager;
 
-        readonly ISettingsRepository _settingsRepository;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
 
         readonly SynchronizationContext _synchronizationContext;
 
@@ -49,7 +49,7 @@ namespace Remembrance.ViewModel
 
         public SettingsViewModel(
             ILocalSettingsRepository localSettingsRepository,
-            ISettingsRepository settingsRepository,
+            ISharedSettingsRepository sharedSettingsRepository,
             ILog logger,
             IMessageHub messageHub,
             ICardsExchanger cardsExchanger,
@@ -58,12 +58,11 @@ namespace Remembrance.ViewModel
             ProcessBlacklistViewModel processBlacklistViewModel,
             ILanguageManager languageManager,
             IRemembrancePathsProvider remembrancePathsProvider,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
@@ -81,31 +80,28 @@ namespace Remembrance.ViewModel
                 }
             }
 
-            IList<SyncBus> syncBuses = new List<SyncBus>
-            {
-                SyncBus.NoSync
-            };
+            IList<SyncEngine> syncBuses = new List<SyncEngine> { SyncEngine.NoSync };
             if (remembrancePathsProvider.DropBoxPath != null)
             {
-                syncBuses.Add(SyncBus.Dropbox);
+                syncBuses.Add(SyncEngine.DropBox);
             }
 
             if (remembrancePathsProvider.OneDrivePath != null)
             {
-                syncBuses.Add(SyncBus.OneDrive);
+                syncBuses.Add(SyncEngine.OneDrive);
             }
 
             SyncBuses = syncBuses.ToArray();
             AvailableTranslationLanguages = languageManager.GetAvailableSourceLanguages(false);
-            SelectedPreferredLanguage = _settingsRepository.PreferredLanguage;
-            TtsSpeaker = _settingsRepository.TtsSpeaker;
+            SelectedPreferredLanguage = _sharedSettingsRepository.PreferredLanguage;
+            TtsSpeaker = _sharedSettingsRepository.TtsSpeaker;
             _uiLanguage = _localSettingsRepository.UiLanguage;
             UiLanguage = _uiLanguage;
-            TtsVoiceEmotion = _settingsRepository.TtsVoiceEmotion;
-            CardShowFrequency = _settingsRepository.CardShowFrequency.TotalMinutes;
-            SolveQwantCaptcha = _settingsRepository.SolveQwantCaptcha;
-            SyncBus = _localSettingsRepository.SyncBus;
-            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
+            TtsVoiceEmotion = _sharedSettingsRepository.TtsVoiceEmotion;
+            CardShowFrequency = _sharedSettingsRepository.CardShowFrequency.TotalMinutes;
+            SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
+            SyncEngine = _localSettingsRepository.SyncEngine;
+            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
             OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
             ViewLogsCommand = AddCommand(remembrancePathsProvider.ViewLogs);
             SaveCommand = AddCommand(Save);
@@ -115,7 +111,7 @@ namespace Remembrance.ViewModel
             _cardsExchanger.Progress += CardsExchanger_Progress;
         }
 
-        public IReadOnlyCollection<SyncBus> SyncBuses { get; }
+        public IReadOnlyCollection<SyncEngine> SyncBuses { get; }
 
         public IReadOnlyCollection<Language> AvailableTranslationLanguages { get; }
 
@@ -127,8 +123,7 @@ namespace Remembrance.ViewModel
             new Language(Constants.RuLanguage, "Русский")
         };
 
-        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } =
-            Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
+        public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
 
         public double CardShowFrequency { get; set; }
 
@@ -156,7 +151,7 @@ namespace Remembrance.ViewModel
 
         public Speaker TtsSpeaker { get; set; }
 
-        public SyncBus SyncBus { get; set; }
+        public SyncEngine SyncEngine { get; set; }
 
         public VoiceEmotion TtsVoiceEmotion { get; set; }
 
@@ -180,14 +175,15 @@ namespace Remembrance.ViewModel
             if (disposing)
             {
                 _cardsExchanger.Progress -= CardsExchanger_Progress;
+                _cancellationTokenSource.Dispose();
             }
         }
 
         void BeginProgress()
         {
             ProgressState = ProgressState.Normal;
-            _pauseManager.Pause(PauseReason.OperationInProgress);
-            ProgressDescription = "Caclulating...";
+            _pauseManager.PauseActivity(PauseReasons.OperationInProgress);
+            ProgressDescription = "Calculating...";
             Progress = 0;
         }
 
@@ -213,7 +209,7 @@ namespace Remembrance.ViewModel
         void EndProgress()
         {
             ProgressState = ProgressState.None;
-            _pauseManager.Resume(PauseReason.OperationInProgress);
+            _pauseManager.ResumeActivity(PauseReasons.OperationInProgress);
         }
 
         async Task ExportAsync()
@@ -229,24 +225,24 @@ namespace Remembrance.ViewModel
         void Save()
         {
             _logger.Trace("Saving settings...");
-            if (_settingsRepository.PreferredLanguage != SelectedPreferredLanguage)
+            if (_sharedSettingsRepository.PreferredLanguage != SelectedPreferredLanguage)
             {
-                _settingsRepository.PreferredLanguage = SelectedPreferredLanguage;
+                _sharedSettingsRepository.PreferredLanguage = SelectedPreferredLanguage;
             }
 
-            if (_settingsRepository.TtsSpeaker != TtsSpeaker)
+            if (_sharedSettingsRepository.TtsSpeaker != TtsSpeaker)
             {
-                _settingsRepository.TtsSpeaker = TtsSpeaker;
+                _sharedSettingsRepository.TtsSpeaker = TtsSpeaker;
             }
 
-            if (_settingsRepository.TtsVoiceEmotion != TtsVoiceEmotion)
+            if (_sharedSettingsRepository.TtsVoiceEmotion != TtsVoiceEmotion)
             {
-                _settingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
+                _sharedSettingsRepository.TtsVoiceEmotion = TtsVoiceEmotion;
             }
 
-            if (_settingsRepository.SolveQwantCaptcha != SolveQwantCaptcha)
+            if (_sharedSettingsRepository.SolveQwantCaptcha != SolveQwantCaptcha)
             {
-                _settingsRepository.SolveQwantCaptcha = SolveQwantCaptcha;
+                _sharedSettingsRepository.SolveQwantCaptcha = SolveQwantCaptcha;
             }
 
             if (_localSettingsRepository.UiLanguage != UiLanguage)
@@ -255,16 +251,16 @@ namespace Remembrance.ViewModel
             }
 
             var freq = TimeSpan.FromMinutes(CardShowFrequency);
-            if (_settingsRepository.CardShowFrequency != freq)
+            if (_sharedSettingsRepository.CardShowFrequency != freq)
             {
                 _messageHub.Publish(freq);
-                _settingsRepository.CardShowFrequency = freq;
+                _sharedSettingsRepository.CardShowFrequency = freq;
             }
 
-            if (_localSettingsRepository.SyncBus != SyncBus)
+            if (_localSettingsRepository.SyncEngine != SyncEngine)
             {
-                _messageHub.Publish(SyncBus);
-                _localSettingsRepository.SyncBus = SyncBus;
+                _messageHub.Publish(SyncEngine);
+                _localSettingsRepository.SyncEngine = SyncEngine;
             }
 
             _localSettingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;

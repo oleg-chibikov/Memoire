@@ -19,8 +19,9 @@ namespace Remembrance.DAL.Local
 
         readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
-        public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, IAssemblyInfoProvider assemblyInfoProvider)
-            : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)), nameof(Settings))
+        public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, IAssemblyInfoProvider assemblyInfoProvider) : base(
+            assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),
+            nameof(ApplicationSettings))
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
         }
@@ -57,13 +58,13 @@ namespace Remembrance.DAL.Local
             set => RemoveUpdateOrInsert(nameof(LastUsedTargetLanguage), value);
         }
 
-        public SyncBus SyncBus
+        public SyncEngine SyncEngine
         {
             get =>
                 TryGetValue(
-                    nameof(SyncBus),
-                    () => _remembrancePathsProvider.DropBoxPath != null ? SyncBus.Dropbox : _remembrancePathsProvider.OneDrivePath != null ? SyncBus.OneDrive : SyncBus.NoSync);
-            set => RemoveUpdateOrInsert(nameof(SyncBus), (SyncBus?)value);
+                    nameof(SyncEngine),
+                    () => _remembrancePathsProvider.DropBoxPath != null ? SyncEngine.DropBox : _remembrancePathsProvider.OneDrivePath != null ? SyncEngine.OneDrive : SyncEngine.NoSync);
+            set => RemoveUpdateOrInsert(nameof(SyncEngine), (SyncEngine?)value);
         }
 
         public IReadOnlyCollection<ProcessInfo>? BlacklistedProcesses
@@ -80,7 +81,7 @@ namespace Remembrance.DAL.Local
                     () =>
                     {
                         var uiLanguage = Thread.CurrentThread.CurrentUICulture.Name;
-                        if (uiLanguage == Constants.EnLanguage || uiLanguage == Constants.RuLanguage)
+                        if ((uiLanguage == Constants.EnLanguage) || (uiLanguage == Constants.RuLanguage))
                         {
                             return uiLanguage;
                         }
@@ -91,9 +92,9 @@ namespace Remembrance.DAL.Local
             set => RemoveUpdateOrInsert(nameof(UiLanguage), value);
         }
 
-        public void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoCollection? pauseInfo)
+        public void AddOrUpdatePauseInfo(PauseReasons pauseReasons, PauseInfoCollection? pauseInfo)
         {
-            RemoveUpdateOrInsert(PauseTimeKey + pauseReason, pauseInfo);
+            RemoveUpdateOrInsert(PauseTimeKey + pauseReasons, pauseInfo);
         }
 
         public void AddOrUpdateSyncTime(string repository, DateTime syncTime)
@@ -101,9 +102,9 @@ namespace Remembrance.DAL.Local
             RemoveUpdateOrInsert(SyncTimeKey + repository, syncTime);
         }
 
-        public PauseInfoCollection GetPauseInfo(PauseReason pauseReason)
+        public PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons)
         {
-            return TryGetValue(PauseTimeKey + pauseReason, () => new PauseInfoCollection());
+            return TryGetValue(PauseTimeKey + pauseReasons, () => new PauseInfoCollection());
         }
 
         public DateTime GetSyncTime(string repository)

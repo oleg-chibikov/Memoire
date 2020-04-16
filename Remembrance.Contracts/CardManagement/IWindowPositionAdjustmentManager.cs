@@ -4,10 +4,10 @@ namespace Remembrance.Contracts.CardManagement
 {
     public interface IWindowPositionAdjustmentManager
     {
-        void AdjustAnyWindowPosition(IDisplayable Window);
+        void AdjustAnyWindowPosition(IDisplayable window);
 
-        void AdjustDetailsCardWindowPosition(IDisplayable Window);
+        void AdjustDetailsCardWindowPosition(IDisplayable window);
 
-        void AdjustActivatedWindow(IDisplayable Window);
+        void AdjustActivatedWindow(IDisplayable window);
     }
 }

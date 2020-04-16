@@ -46,6 +46,11 @@ namespace Remembrance.Contracts.DAL.Model
 
         public int ShowCount { get; set; }
 
+        public override string ToString()
+        {
+            return $"Learning info for {Id}";
+        }
+
         public void DecreaseRepeatType()
         {
             var prev = _current.Previous;
@@ -68,11 +73,6 @@ namespace Remembrance.Contracts.DAL.Model
 
             RepeatType = next.Value;
             _current = next;
-        }
-
-        public override string ToString()
-        {
-            return $"Learning info for {Id}";
         }
 
         void SetNextCardShowTime()

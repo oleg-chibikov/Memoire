@@ -25,21 +25,6 @@ namespace Remembrance.Contracts.DAL.Model
 
         public string Text { get; set; }
 
-        public bool Equals(TranslationEntryKey other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Text == other.Text && SourceLanguage == other.SourceLanguage && TargetLanguage == other.TargetLanguage;
-        }
-
         public static bool operator ==(TranslationEntryKey? obj1, TranslationEntryKey? obj2)
         {
             if (ReferenceEquals(obj1, obj2))
@@ -75,6 +60,21 @@ namespace Remembrance.Contracts.DAL.Model
         public override string ToString()
         {
             return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
+        }
+
+        public bool Equals(TranslationEntryKey other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return (Text == other.Text) && (SourceLanguage == other.SourceLanguage) && (TargetLanguage == other.TargetLanguage);
         }
     }
 }

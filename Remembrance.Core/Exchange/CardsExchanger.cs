@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
@@ -27,13 +28,7 @@ namespace Remembrance.Core.Exchange
 
         readonly ISaveFileDialogProvider _saveFileDialog;
 
-        public CardsExchanger(
-            ILog logger,
-            IFileExporter exporter,
-            IFileImporter[] importers,
-            IMessageHub messageHub,
-            IOpenFileDialogProvider openFileDialog,
-            ISaveFileDialogProvider saveFileDialog)
+        public CardsExchanger(ILog logger, IFileExporter exporter, IFileImporter[] importers, IMessageHub messageHub, IOpenFileDialogProvider openFileDialog, ISaveFileDialogProvider saveFileDialog)
         {
             _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
             _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));
@@ -64,8 +59,7 @@ namespace Remembrance.Core.Exchange
             OnProgress(0, 1);
             try
             {
-                await Task.Run(async () => { exchangeResult = await _exporter.ExportAsync(fileName, cancellationToken).ConfigureAwait(false); }, cancellationToken)
-                    .ConfigureAwait(false);
+                await Task.Run(async () => { exchangeResult = await _exporter.ExportAsync(fileName, cancellationToken).ConfigureAwait(false); }, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -107,7 +101,7 @@ namespace Remembrance.Core.Exchange
                                 if (exchangeResult.Success)
                                 {
                                     _logger.InfoFormat("Import from {0} has been performed", fileName);
-                                    var mainMessage = string.Format(Texts.ImportSucceeded, exchangeResult.Count);
+                                    var mainMessage = string.Format(CultureInfo.InvariantCulture, Texts.ImportSucceeded, exchangeResult.Count);
                                     _messageHub.Publish(
                                         exchangeResult.Errors != null
                                             ? $"[{importer.GetType().Name}] {mainMessage}. {Errors.ImportErrors}:{Environment.NewLine}{string.Join(Environment.NewLine, exchangeResult.Errors)}"

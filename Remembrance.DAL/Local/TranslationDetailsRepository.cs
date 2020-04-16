@@ -8,8 +8,7 @@ namespace Remembrance.DAL.Local
 {
     sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, TranslationEntryKey>, ITranslationDetailsRepository
     {
-        public TranslationDetailsRepository(IAssemblyInfoProvider assemblyInfoProvider)
-            : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
+        public TranslationDetailsRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);

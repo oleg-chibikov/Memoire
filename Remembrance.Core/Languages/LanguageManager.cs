@@ -7,7 +7,7 @@ using Common.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Languages.Data;
 using Remembrance.Contracts.Translate;
@@ -24,17 +24,17 @@ namespace Remembrance.Core.Languages
 
         readonly ILog _logger;
 
-        readonly ISettingsRepository _settingsRepository;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISettingsRepository settingsRepository, ILog logger, ILanguageDetector languageDetector)
+        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISharedSettingsRepository sharedSettingsRepository, ILog logger, ILanguageDetector languageDetector)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
 
             var cachedLanguages = _localSettingsRepository.AvailableLanguages;
-            if (DateTime.Now > _localSettingsRepository.AvailableLanguagesModifiedDate + TimeSpan.FromDays(7))
+            if (DateTime.Now > (_localSettingsRepository.AvailableLanguagesModifiedDate + TimeSpan.FromDays(7)))
             {
                 cachedLanguages = null;
             }
@@ -74,9 +74,7 @@ namespace Remembrance.Core.Languages
                 toSelect ??= Constants.AutoDetectLanguage;
             }
 
-            var ordered = languages
-                .OrderBy(
-                    language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+            var ordered = languages.OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
 
@@ -100,17 +98,14 @@ namespace Remembrance.Core.Languages
                     throw new InvalidOperationException("No target languages available");
                 }
 
-                languages = _availableLanguages.Languages.Where(language => acceptableTargetLanguages.Contains(language.Key))
-                    .ToDictionary(language => language.Key, language => language.Value);
+                languages = _availableLanguages.Languages.Where(language => acceptableTargetLanguages.Contains(language.Key)).ToDictionary(language => language.Key, language => language.Value);
             }
 
             languages[Constants.AutoDetectLanguage] = "--Reverse--";
 
             var lastUsed = _localSettingsRepository.LastUsedTargetLanguage;
-            var toSelect = lastUsed != null && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
-            var ordered = languages
-                .OrderBy(
-                    language => GetLanguageOrder(language.Key, _settingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+            var toSelect = (lastUsed != null) && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
+            var ordered = languages.OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
             return new LanguagesCollection(ordered, toSelect);
@@ -134,7 +129,7 @@ namespace Remembrance.Core.Languages
             var ordered = availableTargetLanguages.OrderBy(
                 languageCode => GetLanguageOrder(
                     languageCode,
-                    _settingsRepository.PreferredLanguage,
+                    _sharedSettingsRepository.PreferredLanguage,
                     Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName,
                     _localSettingsRepository.LastUsedTargetLanguage));
 
@@ -147,14 +142,13 @@ namespace Remembrance.Core.Languages
                 languageCode == preferred ? 2 :
                 languageCode == currentCultureLanguage ? 3 :
                 languageCode == Constants.EnLanguageTwoLetters ? 4 :
-                lastUsed != null && languageCode == lastUsed ? 5 : 6;
+                (lastUsed != null) && (languageCode == lastUsed) ? 5 : 6;
         }
 
         async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
             _logger.Trace("Loading available languages...");
-            var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None)
-                .ConfigureAwait(false);
+            var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None).ConfigureAwait(false);
             if (languageListResult == null)
             {
                 throw new InvalidOperationException("No languages info available");
@@ -173,18 +167,11 @@ namespace Remembrance.Core.Languages
                 }
                 else
                 {
-                    directions[from] = new HashSet<string>
-                    {
-                        to
-                    };
+                    directions[from] = new HashSet<string> { to };
                 }
             }
 
-            var availableLanguages = new AvailableLanguagesInfo
-            {
-                Directions = directions,
-                Languages = languageListResult.Languages
-            };
+            var availableLanguages = new AvailableLanguagesInfo { Directions = directions, Languages = languageListResult.Languages };
             _localSettingsRepository.AvailableLanguages = availableLanguages;
             return availableLanguages;
         }

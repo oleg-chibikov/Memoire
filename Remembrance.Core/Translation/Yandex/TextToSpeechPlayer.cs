@@ -7,7 +7,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using NAudio.Wave;
 using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Translate;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 using Remembrance.Resources;
@@ -15,38 +15,36 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class TextToSpeechPlayer : ITextToSpeechPlayer
+    sealed class TextToSpeechPlayer : ITextToSpeechPlayer, IDisposable
     {
         const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
 
-        static readonly Regex CyryllicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
+        static readonly Regex CyrillicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
 
-        readonly HttpClient _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://tts.voicetech.yandex.net/")
-        };
+        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://tts.voicetech.yandex.net/") };
 
         readonly ILog _logger;
 
         readonly IMessageHub _messageHub;
 
-        readonly ISettingsRepository _settingsRepository;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public TextToSpeechPlayer(ILog logger, ISettingsRepository settingsRepository, IMessageHub messageHub)
+        public TextToSpeechPlayer(ILog logger, ISharedSettingsRepository sharedSettingsRepository, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General exception handler")]
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             _ = lang ?? throw new ArgumentNullException(nameof(lang));
             _logger.TraceFormat("Starting speaking {0}...", text);
-            var reset = new AutoResetEvent(false);
+            using var reset = new AutoResetEvent(false);
             var uriPart =
-                $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang, text)}&speaker={_settingsRepository.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={_settingsRepository.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
+                $"generate?text={text}&format={Format.Mp3.ToString()}&lang={PrepareLanguage(lang, text)}&speaker={_sharedSettingsRepository.TtsSpeaker.ToString()}&emotion={_sharedSettingsRepository.TtsVoiceEmotion.ToString()}&key={ApiKey}";
             try
             {
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
@@ -56,24 +54,22 @@ namespace Remembrance.Core.Translation.Yandex
                 }
 
                 var soundStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using (var waveOut = new WaveOutEvent())
-                using (var reader = new Mp3FileReader(soundStream))
+                using var waveOut = new WaveOutEvent();
+                using var reader = new Mp3FileReader(soundStream);
+                waveOut.Init(reader);
+
+                // Thread should be alive while playback is not stopped
+                void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                 {
-                    waveOut.Init(reader);
-
-                    // Thread should be alive while playback is not stopped
-                    void PlaybackStoppedHandler(object s, StoppedEventArgs e)
-                    {
-                        ((WaveOutEvent)s).PlaybackStopped -= PlaybackStoppedHandler;
-                        reset.Set();
-                    }
-
-                    waveOut.PlaybackStopped += PlaybackStoppedHandler;
-                    waveOut.Play();
-
-                    // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
-                    reset.WaitOne(TimeSpan.FromSeconds(5));
+                    ((WaveOutEvent)s).PlaybackStopped -= PlaybackStoppedHandler;
+                    reset.Set();
                 }
+
+                waveOut.PlaybackStopped += PlaybackStoppedHandler;
+                waveOut.Play();
+
+                // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
+                reset.WaitOne(TimeSpan.FromSeconds(5));
 
                 _logger.DebugFormat("Finished speaking {0}", text);
                 return true;
@@ -85,6 +81,11 @@ namespace Remembrance.Core.Translation.Yandex
             }
         }
 
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+        }
+
         static string PrepareLanguage(string lang, string text)
         {
             switch (lang)
@@ -94,7 +95,7 @@ namespace Remembrance.Core.Translation.Yandex
                 case "tr": // turkish
                     return lang;
                 default:
-                    return CyryllicRegex.IsMatch(text) ? Constants.RuLanguageTwoLetters : Constants.EnLanguageTwoLetters;
+                    return CyrillicRegex.IsMatch(text) ? Constants.RuLanguageTwoLetters : Constants.EnLanguageTwoLetters;
             }
         }
     }

@@ -6,6 +6,7 @@
     <ApplicationIcon>IconAlt.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject>Remembrance.Launcher.App</StartupObject>
+    <OutputPath>..\Build\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,5 +44,9 @@
   <ItemGroup>
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
+    <Exec Command="del &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
+  </Target>
 
 </Project>

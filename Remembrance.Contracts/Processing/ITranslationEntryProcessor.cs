@@ -23,9 +23,6 @@ namespace Remembrance.Contracts.Processing
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken);
 
-        Task<TranslationInfo> UpdateManualTranslationsAsync(
-            TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation>? manualTranslations,
-            CancellationToken cancellationToken);
+        Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken);
     }
 }

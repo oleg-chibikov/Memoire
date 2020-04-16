@@ -23,15 +23,15 @@ namespace Remembrance.Contracts.DAL.Local
 
         string? LastUsedTargetLanguage { get; set; }
 
-        SyncBus SyncBus { get; set; }
+        SyncEngine SyncEngine { get; set; }
 
         string UiLanguage { get; set; }
 
-        void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoCollection? pauseInfo);
+        void AddOrUpdatePauseInfo(PauseReasons pauseReasons, PauseInfoCollection? pauseInfo);
 
         void AddOrUpdateSyncTime(string repository, DateTime syncTime);
 
-        PauseInfoCollection GetPauseInfo(PauseReason pauseReason);
+        PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons);
 
         DateTime GetSyncTime(string repository);
     }

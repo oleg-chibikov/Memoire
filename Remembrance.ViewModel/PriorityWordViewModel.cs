@@ -5,7 +5,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate;
@@ -36,13 +36,12 @@ namespace Remembrance.ViewModel
             ILog logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ITranslationEntryRepository translationEntryRepository,
-            ICommandManager commandManager)
-            : base(
-                word,
-                translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)),
-                textToSpeechPlayer,
-                translationEntryProcessor,
-                commandManager)
+            ICommandManager commandManager) : base(
+            word,
+            translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)),
+            textToSpeechPlayer,
+            translationEntryProcessor,
+            commandManager)
         {
             _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;
@@ -72,10 +71,7 @@ namespace Remembrance.ViewModel
             {
                 if (_translationEntry.PriorityWords == null)
                 {
-                    _translationEntry.PriorityWords = new HashSet<BaseWord>
-                    {
-                        _wordKey.Word
-                    };
+                    _translationEntry.PriorityWords = new HashSet<BaseWord> { _wordKey.Word };
                 }
                 else
                 {

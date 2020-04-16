@@ -26,18 +26,17 @@ namespace Remembrance.ViewModel
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
-            ICommandManager commandManager)
-            : base(
-                translationInfo,
-                messageHub,
-                logger,
-                wordViewModelFactory,
-                assessmentInfoProvider,
-                pauseManager,
-                wordImageViewerViewModelFactory,
-                learningInfoViewModelFactory,
-                cultureManager,
-                commandManager)
+            ICommandManager commandManager) : base(
+            translationInfo,
+            messageHub,
+            logger,
+            wordViewModelFactory,
+            assessmentInfoProvider,
+            pauseManager,
+            wordImageViewerViewModelFactory,
+            learningInfoViewModelFactory,
+            cultureManager,
+            commandManager)
         {
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);

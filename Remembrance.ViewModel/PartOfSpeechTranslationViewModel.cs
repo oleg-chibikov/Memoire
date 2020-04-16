@@ -17,14 +17,17 @@ namespace Remembrance.ViewModel
             ITextToSpeechPlayer textToSpeechPlayer,
             Func<TranslationVariant, TranslationEntry, string, TranslationVariantViewModel> translationVariantViewModelFactory,
             ITranslationEntryProcessor translationEntryProcessor,
-            ICommandManager commandManager)
-            : base(partOfSpeechTranslation, translationEntry.Id.SourceLanguage, textToSpeechPlayer, translationEntryProcessor, commandManager)
+            ICommandManager commandManager) : base(
+            partOfSpeechTranslation,
+            translationEntry == null ? throw new ArgumentNullException(nameof(translationEntry)) : translationEntry.Id.SourceLanguage,
+            textToSpeechPlayer,
+            translationEntryProcessor,
+            commandManager)
         {
             _ = partOfSpeechTranslation ?? throw new ArgumentNullException(nameof(partOfSpeechTranslation));
             _ = translationVariantViewModelFactory ?? throw new ArgumentNullException(nameof(translationVariantViewModelFactory));
             Transcription = partOfSpeechTranslation.Transcription;
-            TranslationVariants = partOfSpeechTranslation.TranslationVariants
-                .Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Word.Text))
+            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Word.Text))
                 .ToArray();
             CanLearnWord = false;
         }

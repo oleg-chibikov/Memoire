@@ -7,7 +7,7 @@ using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Resources;
@@ -33,18 +33,17 @@ namespace Remembrance.ViewModel
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
-            ICommandManager commandManager)
-            : base(
-                translationInfo,
-                messageHub,
-                logger,
-                wordViewModelFactory,
-                assessmentInfoProvider,
-                pauseManager,
-                wordImageViewerViewModelFactory,
-                learningInfoViewModelFactory,
-                cultureManager,
-                commandManager)
+            ICommandManager commandManager) : base(
+            translationInfo,
+            messageHub,
+            logger,
+            wordViewModelFactory,
+            assessmentInfoProvider,
+            pauseManager,
+            wordImageViewerViewModelFactory,
+            learningInfoViewModelFactory,
+            cultureManager,
+            commandManager)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
@@ -66,11 +65,7 @@ namespace Remembrance.ViewModel
 
             if (Accepted == true)
             {
-                Logger.InfoFormat(
-                    "Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...",
-                    mostSuitable,
-                    currentMinDistance,
-                    learningInfo);
+                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
                 learningInfo.IncreaseRepeatType();
 
                 // The inputed answer can differ from the first one
@@ -102,7 +97,7 @@ namespace Remembrance.ViewModel
                     // 20% of the word could be errors
                     var maxDistance = acceptedAnswer.Text.Length / 5;
                     var distance = ProvidedAnswer.LevenshteinDistance(acceptedAnswer.Text);
-                    if (distance < 0 || distance > maxDistance)
+                    if ((distance < 0) || (distance > maxDistance))
                     {
                         continue;
                     }

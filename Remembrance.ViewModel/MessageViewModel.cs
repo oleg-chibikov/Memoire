@@ -11,8 +11,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel : BaseViewModel
     {
-        public MessageViewModel(Message message, ILog logger, ICommandManager commandManager)
-            : base(commandManager)
+        public MessageViewModel(Message message, ILog logger, ICommandManager commandManager) : base(commandManager)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             AutoCloseTimeout = AppSettings.MessageCloseTimeout;

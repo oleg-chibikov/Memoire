@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Remembrance.Contracts.ImageSearch.Data;
 using Scar.Common.DAL.Model;
 
@@ -12,7 +13,7 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public WordImageInfo(WordKey wordKey, ImageInfoWithBitmap? image, int?[] nonAvailableIndexes)
+        public WordImageInfo(WordKey wordKey, ImageInfoWithBitmap? image, IReadOnlyCollection<int?> nonAvailableIndexes)
         {
             Id = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
             Image = image;
@@ -21,7 +22,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public ImageInfoWithBitmap? Image { get; set; }
 
-        public int?[] NonAvailableIndexes { get; set; }
+        public IReadOnlyCollection<int?> NonAvailableIndexes { get; set; }
 
         public override string ToString()
         {

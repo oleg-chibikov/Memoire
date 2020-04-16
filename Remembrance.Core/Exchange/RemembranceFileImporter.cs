@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Easy.MessageHub;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing;
 using Remembrance.Core.CardManagement.Data;
 
@@ -18,8 +18,7 @@ namespace Remembrance.Core.Exchange
             ILog logger,
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messenger,
-            ILearningInfoRepository learningInfoRepository)
-            : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
+            ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
         }
 
@@ -40,11 +39,11 @@ namespace Remembrance.Core.Exchange
 
         protected override bool UpdateLearningInfo(RemembranceExchangeEntry exchangeEntry, LearningInfo learningInfo)
         {
-            var changed = learningInfo.IsFavorited != exchangeEntry.LearningInfo.IsFavorited
-                          || learningInfo.RepeatType != exchangeEntry.LearningInfo.RepeatType
-                          || learningInfo.LastCardShowTime != exchangeEntry.LearningInfo.LastCardShowTime
-                          || learningInfo.NextCardShowTime != exchangeEntry.LearningInfo.NextCardShowTime
-                          || learningInfo.ShowCount != exchangeEntry.LearningInfo.ShowCount;
+            var changed = (learningInfo.IsFavorited != exchangeEntry.LearningInfo.IsFavorited) ||
+                          (learningInfo.RepeatType != exchangeEntry.LearningInfo.RepeatType) ||
+                          (learningInfo.LastCardShowTime != exchangeEntry.LearningInfo.LastCardShowTime) ||
+                          (learningInfo.NextCardShowTime != exchangeEntry.LearningInfo.NextCardShowTime) ||
+                          (learningInfo.ShowCount != exchangeEntry.LearningInfo.ShowCount);
             learningInfo.IsFavorited = exchangeEntry.LearningInfo.IsFavorited;
             learningInfo.RepeatType = exchangeEntry.LearningInfo.RepeatType;
             learningInfo.LastCardShowTime = exchangeEntry.LearningInfo.LastCardShowTime;

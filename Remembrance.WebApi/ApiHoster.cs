@@ -8,8 +8,7 @@ namespace Remembrance.WebApi
 {
     public sealed class ApiHoster : AutofacApiHoster
     {
-        public ApiHoster(ILog logger, ILifetimeScope lifetimeScope)
-            : base(logger, lifetimeScope)
+        public ApiHoster(ILog logger, ILifetimeScope lifetimeScope) : base(logger, lifetimeScope)
         {
         }
 
@@ -19,13 +18,7 @@ namespace Remembrance.WebApi
 
         protected override void RegisterRoutes(HttpRouteCollection routes)
         {
-            routes.MapHttpRoute(
-                "DefaultApi",
-                "api/{controller}/{word}",
-                new
-                {
-                    word = RouteParameter.Optional
-                });
+            routes.MapHttpRoute("DefaultApi", "api/{controller}/{word}", new { word = RouteParameter.Optional });
         }
     }
 }

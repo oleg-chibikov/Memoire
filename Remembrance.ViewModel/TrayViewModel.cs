@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -71,8 +72,7 @@ namespace Remembrance.ViewModel
             IRemembrancePathsProvider remembrancePathsProvider,
             ICommandManager commandManager,
             SynchronizationContext synchronizationContext,
-            IApplicationTerminator applicationTerminator)
-            : base(commandManager)
+            IApplicationTerminator applicationTerminator) : base(commandManager)
         {
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
@@ -95,13 +95,13 @@ namespace Remembrance.ViewModel
             ToolTipOpenCommand = AddCommand(ToolTipOpenAsync);
             ToolTipCloseCommand = AddCommand(ToolTipClose);
             ExitCommand = AddCommand(Exit);
-            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncBus));
+            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
             OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
             ViewLogsCommand = AddCommand(remembrancePathsProvider.ViewLogs);
             IsActive = _localSettingsRepository.IsActive;
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(HandlePauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
         }
 
         public bool IsLoading { get; private set; }
@@ -157,6 +157,7 @@ namespace Remembrance.ViewModel
                 _subscriptionTokens.Clear();
 
                 _timer.Dispose();
+                _semaphore.Dispose();
             }
         }
 
@@ -172,7 +173,7 @@ namespace Remembrance.ViewModel
             _applicationTerminator.Terminate();
         }
 
-        void HandlePauseReasonChanged(PauseReason reason)
+        void HandlePauseReasonChanged(PauseReasons reasons)
         {
             IsPaused = _pauseManager.IsPaused;
         }
@@ -186,12 +187,12 @@ namespace Remembrance.ViewModel
             var provider = _cardShowTimeProvider ?? await SetupCardShowTimeProviderAsync();
             _semaphore.Release();
 
-            TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat);
-            LastCardShowTime = provider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat);
-            NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat);
-            CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat);
-            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
-            CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);
+            TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
+            LastCardShowTime = provider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+            NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+            CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.CardManagement.Data.PauseReasons.CardIsVisible).GetPauseTime();
+            CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
         }
 
         async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
@@ -237,11 +238,11 @@ namespace Remembrance.ViewModel
             _logger.InfoFormat("New state is {0}", IsActive);
             if (IsActive)
             {
-                _pauseManager.Resume(PauseReason.InactiveMode);
+                _pauseManager.ResumeActivity(Contracts.CardManagement.Data.PauseReasons.InactiveMode);
             }
             else
             {
-                _pauseManager.Pause(PauseReason.InactiveMode);
+                _pauseManager.PauseActivity(Contracts.CardManagement.Data.PauseReasons.InactiveMode);
             }
         }
 

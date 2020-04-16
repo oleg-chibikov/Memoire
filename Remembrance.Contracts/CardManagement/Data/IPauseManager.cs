@@ -4,14 +4,14 @@ namespace Remembrance.Contracts.CardManagement.Data
     {
         bool IsPaused { get; }
 
-        PauseInfoCollection GetPauseInfo(PauseReason pauseReason);
+        PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons);
 
         string? GetPauseReasons();
 
-        void Pause(PauseReason pauseReason, string? description = null);
+        void PauseActivity(PauseReasons pauseReasons, string? description = null);
 
         void ResetPauseTimes();
 
-        void Resume(PauseReason pauseReason);
+        void ResumeActivity(PauseReasons pauseReasons);
     }
 }

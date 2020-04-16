@@ -12,13 +12,13 @@ namespace Remembrance.Contracts.DAL.Model
         {
         }
 
-        public PrepositionsInfo(TranslationEntryKey translationEntryKey, PrepositionsCollection prepositions)
+        public PrepositionsInfo(TranslationEntryKey translationEntryKey, Prepositions prepositions)
         {
             Id = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             Prepositions = prepositions ?? throw new ArgumentNullException(nameof(prepositions));
         }
 
-        public PrepositionsCollection Prepositions { get; set; }
+        public Prepositions Prepositions { get; set; }
 
         public override string ToString()
         {

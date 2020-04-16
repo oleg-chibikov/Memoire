@@ -24,8 +24,7 @@ namespace Remembrance.ViewModel
             ITranslationEntryProcessor translationEntryProcessor,
             ILog logger,
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
-            ICommandManager commandManager)
-            : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
+            ICommandManager commandManager) : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
         {
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
         }

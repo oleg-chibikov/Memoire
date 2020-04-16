@@ -16,13 +16,11 @@ namespace Remembrance.ViewModel
             TranslationResult translationResult,
             TranslationEntry translationEntry,
             Func<PartOfSpeechTranslation, TranslationEntry, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _ = partOfSpeechTranslationViewModelFactory ?? throw new ArgumentNullException(nameof(partOfSpeechTranslationViewModelFactory));
             _ = translationResult ?? throw new ArgumentNullException(nameof(translationResult));
-            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations
-                .Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry))
+            PartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.Select(partOfSpeechTranslation => partOfSpeechTranslationViewModelFactory(partOfSpeechTranslation, translationEntry))
                 .ToArray();
         }
 

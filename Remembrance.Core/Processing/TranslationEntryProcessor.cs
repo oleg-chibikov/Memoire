@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
@@ -130,11 +131,7 @@ namespace Remembrance.Core.Processing
                     return null;
                 }
 
-                var translationEntry = new TranslationEntry(translationEntryKey)
-                {
-                    Id = translationEntryKey,
-                    ManualTranslations = manualTranslations
-                };
+                var translationEntry = new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
                 _translationEntryRepository.Upsert(translationEntry);
                 var translationDetails = new TranslationDetails(translationResult, translationEntryKey);
                 _translationDetailsRepository.Upsert(translationDetails);
@@ -253,19 +250,13 @@ namespace Remembrance.Core.Processing
                                     ? null
                                     : new[]
                                     {
-                                        new Example
-                                        {
-                                            Text = manualTranslation.Example
-                                        }
+                                        new Example { Text = manualTranslation.Example }
                                     },
                                 Meanings = string.IsNullOrWhiteSpace(manualTranslation.Meaning)
                                     ? null
                                     : new[]
                                     {
-                                        new Word
-                                        {
-                                            Text = manualTranslation.Meaning
-                                        }
+                                        new Word { Text = manualTranslation.Meaning }
                                     }
                             })
                         .ToArray()
@@ -307,18 +298,18 @@ namespace Remembrance.Core.Processing
             var text = translationEntryAdditionInfo.Text;
             var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
             var targetLanguage = translationEntryAdditionInfo.TargetLanguage;
-            if (text == null || string.IsNullOrWhiteSpace(text))
+            if ((text == null) || string.IsNullOrWhiteSpace(text))
             {
                 _messageHub.Publish(Errors.WordIsMissing.ToWarning());
                 return null;
             }
 
-            if (sourceLanguage == null || sourceLanguage == Constants.AutoDetectLanguage)
+            if ((sourceLanguage == null) || (sourceLanguage == Constants.AutoDetectLanguage))
             {
                 sourceLanguage = await _languageManager.GetSourceAutoSubstituteAsync(text, cancellationToken).ConfigureAwait(false);
             }
 
-            if (targetLanguage == null || targetLanguage == Constants.AutoDetectLanguage)
+            if ((targetLanguage == null) || (targetLanguage == Constants.AutoDetectLanguage))
             {
                 targetLanguage = _languageManager.GetTargetAutoSubstitute(sourceLanguage);
             }
@@ -326,7 +317,7 @@ namespace Remembrance.Core.Processing
             {
                 if (!_languageManager.CheckTargetLanguageIsValid(sourceLanguage, targetLanguage))
                 {
-                    _messageHub.Publish(string.Format(Errors.InvalidTargetLanguage, sourceLanguage, targetLanguage).ToWarning());
+                    _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.InvalidTargetLanguage, sourceLanguage, targetLanguage).ToWarning());
                     return null;
                 }
             }
@@ -372,10 +363,7 @@ namespace Remembrance.Core.Processing
             return (translationDetails, false);
         }
 
-        async Task<TranslationResult?> TranslateAsync(
-            TranslationEntryKey translationEntryKey,
-            IReadOnlyCollection<ManualTranslation>? manualTranslations,
-            CancellationToken cancellationToken)
+        async Task<TranslationResult?> TranslateAsync(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken)
         {
             // Used En as ui language to simplify conversion of common words to the enums
             var translationResult = await _wordsTranslator.GetTranslationAsync(
@@ -401,7 +389,7 @@ namespace Remembrance.Core.Processing
             {
                 if (manualTranslations == null)
                 {
-                    _messageHub.Publish(string.Format(Errors.NoTranslations, translationEntryKey).ToWarning());
+                    _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.NoTranslations, translationEntryKey).ToWarning());
                     return null;
                 }
 
@@ -410,8 +398,7 @@ namespace Remembrance.Core.Processing
 
             if (manualTranslations != null)
             {
-                translationResult.PartOfSpeechTranslations =
-                    ConcatTranslationsWithManual(translationEntryKey.Text, manualTranslations, translationResult.PartOfSpeechTranslations).ToArray();
+                translationResult.PartOfSpeechTranslations = ConcatTranslationsWithManual(translationEntryKey.Text, manualTranslations, translationResult.PartOfSpeechTranslations).ToArray();
             }
 
             return translationResult;

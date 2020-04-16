@@ -10,8 +10,7 @@ namespace Remembrance.Contracts.CardManagement.Data
         {
         }
 
-        public PauseInfoCollection(IEnumerable<PauseInfo> collection)
-            : base(collection)
+        public PauseInfoCollection(IEnumerable<PauseInfo> collection) : base(collection)
         {
         }
 
@@ -23,13 +22,13 @@ namespace Remembrance.Contracts.CardManagement.Data
         public bool IsPaused()
         {
             var last = this.LastOrDefault();
-            return last != null && last.EndTime == null;
+            return (last != null) && (last.EndTime == null);
         }
 
         public bool Pause()
         {
             var last = this.LastOrDefault();
-            if (last != null && last.EndTime == null)
+            if ((last != null) && (last.EndTime == null))
             {
                 return false;
             }
@@ -41,7 +40,7 @@ namespace Remembrance.Contracts.CardManagement.Data
         public bool Resume()
         {
             var last = this.LastOrDefault();
-            if (last == null || last.EndTime != null)
+            if ((last == null) || (last.EndTime != null))
             {
                 return false;
             }

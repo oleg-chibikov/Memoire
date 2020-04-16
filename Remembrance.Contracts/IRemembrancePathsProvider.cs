@@ -5,14 +5,16 @@ namespace Remembrance.Contracts
     public interface IRemembrancePathsProvider
     {
         string? DropBoxPath { get; }
+
         string? OneDrivePath { get; }
+
         string LocalSharedDataPath { get; }
 
-        string GetSharedPath(SyncBus syncBus);
+        string GetSharedPath(SyncEngine syncEngine);
 
         void OpenSettingsFolder();
 
-        void OpenSharedFolder(SyncBus syncBus);
+        void OpenSharedFolder(SyncEngine syncEngine);
 
         void ViewLogs();
     }

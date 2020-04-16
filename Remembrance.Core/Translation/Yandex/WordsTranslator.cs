@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,20 +13,14 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class WordsTranslator : IWordsTranslator
+    sealed class WordsTranslator : IWordsTranslator, IDisposable
     {
-        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new TranslationResultContractResolver()
-        };
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new TranslationResultContractResolver() };
 
         /// <summary>
-        /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
+        /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/.
         /// </summary>
-        readonly HttpClient _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
-        };
+        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/") };
 
         readonly IMessageHub _messageHub;
 
@@ -34,14 +29,15 @@ namespace Remembrance.Core.Translation.Yandex
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task<TranslationResult?> GetTranslationAsync(string from, string to, string text, string ui, CancellationToken cancellationToken)
+        public async Task<TranslationResult?> GetTranslationAsync(string sourceLanguage, string targetLanguage, string text, string ui, CancellationToken cancellationToken)
         {
-            _ = from ?? throw new ArgumentNullException(nameof(from));
-            _ = to ?? throw new ArgumentNullException(nameof(to));
+            _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
+            _ = targetLanguage ?? throw new ArgumentNullException(nameof(targetLanguage));
             _ = text ?? throw new ArgumentNullException(nameof(text));
             _ = ui ?? throw new ArgumentNullException(nameof(ui));
+
             // flags morpho(4) //|family(1)
-            var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
+            var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={sourceLanguage}-{targetLanguage}&flags=4&ui={ui}";
             try
             {
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
@@ -53,20 +49,19 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
-                _messageHub.Publish(string.Format(Errors.CannotTranslate, text + $" [{from}->{to}]").ToError(ex));
+                _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, text + $" [{sourceLanguage}->{targetLanguage}]").ToError(ex));
                 return null;
             }
         }
 
         /*
-        private readonly HttpClient translateClient = new HttpClient
+        readonly HttpClient translateClient = new HttpClient
         {
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
-        
-        
+
         public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui)
         {
             var dictionaryTask = GetDictionaryResultAsync(from, to, text, ui);
@@ -85,7 +80,7 @@ namespace Remembrance.Core.Translation.Yandex
         }
 
         [NotNull, ItemCanBeNull]
-        private async Task<TranslationResult?> GetDictionaryResultAsync(string from, string to, string text, string ui)
+        async Task<TranslationResult?> GetDictionaryResultAsync(string from, string to, string text, string ui)
         {
             var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
             var response = await dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
@@ -94,16 +89,14 @@ namespace Remembrance.Core.Translation.Yandex
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<TranslationResult>(result, TranslationResultSettings);
         }
-        private class TextEntriesContainer
+        class TextEntriesContainer
         {
             [NotNull, UsedImplicitly, JsonProperty("text")]
             // ReSharper disable once NotNullMemberIsNotInitialized
             public string[] Texts { get; set; }
         }
 
-        
-        
-        private async Task<string?> GetTranslateResultAsync(string from, string to, string text)
+        async Task<string?> GetTranslateResultAsync(string from, string to, string text)
         {
             var uriPart = $"translate?key={YandexConstants.ApiKey}&lang={from}-{to}&text={text}";
             var response = await translateClient.GetAsync(uriPart).ConfigureAwait(false);
@@ -113,5 +106,10 @@ namespace Remembrance.Core.Translation.Yandex
             return JsonConvert.DeserializeObject<TextEntriesContainer>(result, TranslationResultSettings).Texts.First();
         }
         */
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+        }
     }
 }

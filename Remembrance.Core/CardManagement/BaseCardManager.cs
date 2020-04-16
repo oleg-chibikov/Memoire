@@ -11,14 +11,6 @@ namespace Remembrance.Core.CardManagement
 {
     abstract class BaseCardManager
     {
-        protected readonly ILocalSettingsRepository LocalSettingsRepository;
-
-        protected readonly ILog Logger;
-
-        protected readonly SynchronizationContext SynchronizationContext;
-
-        protected readonly IWindowPositionAdjustmentManager WindowPositionAdjustmentManager;
-
         protected BaseCardManager(
             ILocalSettingsRepository localSettingsRepository,
             ILog logger,
@@ -31,6 +23,14 @@ namespace Remembrance.Core.CardManagement
             LocalSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
         }
 
+        protected ILocalSettingsRepository LocalSettingsRepository { get; }
+
+        protected ILog Logger { get; }
+
+        protected SynchronizationContext SynchronizationContext { get; }
+
+        protected IWindowPositionAdjustmentManager WindowPositionAdjustmentManager { get; }
+
         public async Task ShowCardAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
@@ -41,7 +41,7 @@ namespace Remembrance.Core.CardManagement
                 return;
             }
 
-            //CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
+            // CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
             SynchronizationContext.Send(
                 x =>
                 {

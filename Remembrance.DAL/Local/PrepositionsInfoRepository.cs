@@ -8,8 +8,7 @@ namespace Remembrance.DAL.Local
 {
     sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, TranslationEntryKey>, IPrepositionsInfoRepository
     {
-        public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider)
-            : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
+        public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);

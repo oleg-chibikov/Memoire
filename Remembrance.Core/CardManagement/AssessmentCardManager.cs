@@ -11,7 +11,7 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
@@ -50,16 +50,16 @@ namespace Remembrance.Core.CardManagement
             ILog logger,
             IMessageHub messageHub,
             ITranslationEntryProcessor translationEntryProcessor,
-            ISettingsRepository settingsRepository,
+            ISharedSettingsRepository sharedSettingsRepository,
             SynchronizationContext synchronizationContext,
             ILearningInfoRepository learningInfoRepository,
             IScopedWindowProvider scopedWindowProvider,
             IPauseManager pauseManager,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
-            : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager) : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             logger.Trace("Starting showing cards...");
-            _ = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
+            _ = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+
             // Just to assign the field in the constructor
             _interval = Disposable.Empty;
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
@@ -69,7 +69,7 @@ namespace Remembrance.Core.CardManagement
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _initTime = DateTime.Now;
-            CardShowFrequency = settingsRepository.CardShowFrequency;
+            CardShowFrequency = sharedSettingsRepository.CardShowFrequency;
             LastCardShowTime = localSettingsRepository.LastCardShowTime;
             if (!_pauseManager.IsPaused)
             {
@@ -77,7 +77,7 @@ namespace Remembrance.Core.CardManagement
             }
 
             _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReason>(HandlePauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
             logger.Debug("Started showing cards");
         }
 
@@ -91,7 +91,7 @@ namespace Remembrance.Core.CardManagement
         {
             get
             {
-                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).GetPauseTime();
+                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReasons.CardIsVisible).GetPauseTime();
                 var alreadyPassedTime = DateTime.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
@@ -124,15 +124,28 @@ namespace Remembrance.Core.CardManagement
 
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
             var learningInfo = translationInfo.LearningInfo;
+            var repeatType = learningInfo.RepeatType;
+            var window = await GetWindowByRepeatType(translationInfo, ownerWindow, repeatType);
+
+            window.Closed += Window_Closed;
+            _hasOpenWindows = true;
+            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
+            learningInfo.LastCardShowTime = DateTime.Now;
+            _learningInfoRepository.Update(learningInfo);
+            _messageHub.Publish(learningInfo);
+            return window;
+        }
+
+        async Task<IDisplayable> GetWindowByRepeatType(TranslationInfo translationInfo, IDisplayable? ownerWindow, RepeatType repeatType)
+        {
             IDisplayable window;
-            switch (learningInfo.RepeatType)
+            switch (repeatType)
             {
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
                     {
-                        window = await _scopedWindowProvider
-                            .GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                             .ConfigureAwait(false);
                         break;
                     }
@@ -141,8 +154,7 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
                     {
-                        window = await _scopedWindowProvider
-                            .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                             .ConfigureAwait(false);
                         break;
                     }
@@ -151,22 +163,15 @@ namespace Remembrance.Core.CardManagement
                 case RepeatType.Proficiency:
                 case RepeatType.Expert:
                     {
-                        window = await _scopedWindowProvider
-                            .GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
+                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                             .ConfigureAwait(false);
                         break;
                     }
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(repeatType));
             }
 
-            window.Closed += Window_Closed;
-            _hasOpenWindows = true;
-            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
-            learningInfo.LastCardShowTime = DateTime.Now;
-            _learningInfoRepository.Update(learningInfo);
-            _messageHub.Publish(learningInfo);
             return window;
         }
 
@@ -222,15 +227,14 @@ namespace Remembrance.Core.CardManagement
 
             var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
 
-            var translationDetails = await _translationEntryProcessor
-                .ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+            var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
                 .ConfigureAwait(false);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
             Logger.TraceFormat("Trying to show {0}...", translationInfo);
             await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
         }
 
-        void HandlePauseReasonChanged(PauseReason pauseReason)
+        void HandlePauseReasonChanged(PauseReasons pauseReasons)
         {
             if (_pauseManager.IsPaused)
             {

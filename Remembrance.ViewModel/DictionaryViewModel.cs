@@ -13,7 +13,7 @@ using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
@@ -95,8 +95,7 @@ namespace Remembrance.ViewModel
             IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
             ICultureManager cultureManager,
             ICommandManager commandManager,
-            ICollectionViewSource collectionViewSource)
-            : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
+            ICollectionViewSource collectionViewSource) : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
         {
             EditManualTranslationsViewModel = editManualTranslationsViewModel ?? throw new ArgumentNullException(nameof(editManualTranslationsViewModel));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
@@ -388,14 +387,12 @@ namespace Remembrance.ViewModel
             Logger.TraceFormat("Opening details for {0}...", translationEntryViewModel);
 
             var translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);
-            var translationDetails = await TranslationEntryProcessor
-                .ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationTokenSource.Token)
+            var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationTokenSource.Token)
                 .ConfigureAwait(false);
             var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
             var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
             var ownerWindow = await _dictionaryWindowFactory.GetWindowAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-            var window = await _scopedWindowProvider
-                .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token)
+            var window = await _scopedWindowProvider.GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token)
                 .ConfigureAwait(false);
             _synchronizationContext.Send(
                 x =>
@@ -439,20 +436,15 @@ namespace Remembrance.ViewModel
         {
             Logger.TraceFormat("Searching for {0}...", text);
 
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                View.Filter = null;
-            }
-            else
-            {
-                View.Filter = obj =>
+            View.Filter = string.IsNullOrWhiteSpace(text)
+                ? (Predicate<object>?)null
+                : obj =>
                 {
                     var translationEntryViewModel = (TranslationEntryViewModel)obj;
-                    return string.IsNullOrWhiteSpace(text)
-                           || translationEntryViewModel.Id.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0
-                           || translationEntryViewModel.Translations.Any(translation => translation.Word.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
+                    return string.IsNullOrWhiteSpace(text) ||
+                           (translationEntryViewModel.Id.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                           translationEntryViewModel.Translations.Any(translation => translation.Word.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
                 };
-            }
 
             _filterChanged = true;
 
@@ -474,6 +466,7 @@ namespace Remembrance.ViewModel
             _semaphore.Release();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1312:Variable names should begin with lower-case letter", Justification = "Discarded variable")]
         void TranslationList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -503,7 +496,7 @@ namespace Remembrance.ViewModel
 
         void UpdateCount()
         {
-            if (!_filterChanged && _count == _lastRecordedCount)
+            if (!_filterChanged && (_count == _lastRecordedCount))
             {
                 return;
             }
@@ -521,7 +514,7 @@ namespace Remembrance.ViewModel
 
         Task<bool> ConfirmDeletionAsync(string name)
         {
-            var confirmationViewModel = _confirmationViewModelFactory(string.Format(Texts.AreYouSureDelete, name), true);
+            var confirmationViewModel = _confirmationViewModelFactory(string.Format(CultureInfo.InvariantCulture, Texts.AreYouSureDelete, name), true);
 
             _synchronizationContext.Send(
                 x =>

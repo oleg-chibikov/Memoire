@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -11,7 +12,7 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch
 {
-    class ImageDownloader : IImageDownloader
+    sealed class ImageDownloader : IImageDownloader, IDisposable
     {
         readonly HttpClient _httpClient = new HttpClient();
 
@@ -19,6 +20,7 @@ namespace Remembrance.Core.ImageSearch
 
         readonly IMessageHub _messageHub;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5359:Do Not Disable Certificate Validation", Justification = "No need for certificate validation")]
         public ImageDownloader(ILog logger, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -26,7 +28,7 @@ namespace Remembrance.Core.ImageSearch
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
-        public async Task<byte[]?> DownloadImageAsync(string imageUrl, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<byte>?> DownloadImageAsync(string imageUrl, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,11 +41,16 @@ namespace Remembrance.Core.ImageSearch
 
                 return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 _messageHub.Publish(Errors.CannotDownloadImage.ToError(ex));
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
         }
     }
 }

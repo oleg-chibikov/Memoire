@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using Common.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
@@ -41,17 +42,14 @@ namespace Remembrance.ViewModel
             ILearningInfoRepository learningInfoRepository,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ILanguageManager languageManager,
-            ICommandManager commandManager)
-            : base(
-                new Word
-                {
-                    Text = translationEntry?.Id.Text ?? throw new ArgumentNullException(nameof(translationEntry))
-                },
-                translationEntry.Id.SourceLanguage,
-                textToSpeechPlayer,
-                translationEntryProcessor,
-                commandManager)
+            ICommandManager commandManager) : base(
+            new Word { Text = translationEntry?.Id.Text ?? throw new ArgumentNullException(nameof(translationEntry)) },
+            translationEntry.Id.SourceLanguage,
+            textToSpeechPlayer,
+            translationEntryProcessor,
+            commandManager)
         {
+            _ = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             _priorityWordViewModelFactory = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
@@ -65,17 +63,17 @@ namespace Remembrance.ViewModel
             var allLanguages = languageManager.GetAvailableLanguages();
             var sourceLanguageName = allLanguages[Language].ToLowerInvariant();
             var targetLanguageName = allLanguages[TargetLanguage].ToLowerInvariant();
-            ReversoContextLink = string.Format(Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.Text.ToLowerInvariant());
+            ReversoContextLink = string.Format(CultureInfo.InvariantCulture, Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.Text.ToLowerInvariant());
             UpdateModifiedDate(learningInfo, translationEntry.ModifiedDate);
 
             // no await here
             ConstructionTask = ReloadTranslationsAsync(translationEntry);
         }
 
+        public override string Language => Id.SourceLanguage;
+
         [DoNotNotify]
         public TranslationEntryKey Id { get; }
-
-        public override string Language => Id.SourceLanguage;
 
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
@@ -88,6 +86,11 @@ namespace Remembrance.ViewModel
         public ObservableCollection<PriorityWordViewModel> Translations { get; } = new ObservableCollection<PriorityWordViewModel>();
 
         internal Task ConstructionTask { get; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
 
         public void ProcessPriorityChange(PriorityWordKey priorityWordKey)
         {
@@ -109,17 +112,11 @@ namespace Remembrance.ViewModel
             IEnumerable<Word> words;
             if (isPriority)
             {
-                words = translationEntry.PriorityWords.Select(
-                    baseWord => new Word
-                    {
-                        Text = baseWord.Text,
-                        PartOfSpeech = baseWord.PartOfSpeech
-                    });
+                words = translationEntry.PriorityWords.Select(baseWord => new Word { Text = baseWord.Text, PartOfSpeech = baseWord.PartOfSpeech });
             }
             else
             {
-                var translationDetails = await TranslationEntryProcessor
-                    .ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+                var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
                     .ConfigureAwait(false);
                 words = translationDetails.TranslationResult.GetDefaultWords();
             }
@@ -136,11 +133,6 @@ namespace Remembrance.ViewModel
                     }
                 },
                 null);
-        }
-
-        public override string ToString()
-        {
-            return Id.ToString();
         }
 
         public void Update(LearningInfo learningInfo, DateTime translationEntryModifiedDate)
@@ -213,11 +205,7 @@ namespace Remembrance.ViewModel
                 _logger.TraceFormat("Not found {0} in the list. Adding...", wordKey);
 
                 var translationEntry = _translationEntryRepository.GetById(wordKey.TranslationEntryKey);
-                var word = new Word
-                {
-                    Text = wordKey.Word.Text,
-                    PartOfSpeech = wordKey.Word.PartOfSpeech
-                };
+                var word = new Word { Text = wordKey.Word.Text, PartOfSpeech = wordKey.Word.PartOfSpeech };
                 var priorityWordViewModel = _priorityWordViewModelFactory(word, translationEntry);
                 _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);
                 _logger.DebugFormat("{0} has been added to the list", wordKey);

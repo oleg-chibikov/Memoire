@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Common.Logging;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Core.CardManagement.Data;
@@ -19,8 +19,7 @@ namespace Remembrance.Core.Exchange
     {
         static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
         {
-            ContractResolver = new TranslationEntryContractResolver(),
-            NullValueHandling = NullValueHandling.Ignore
+            ContractResolver = new TranslationEntryContractResolver(), NullValueHandling = NullValueHandling.Ignore
         };
 
         readonly ILearningInfoRepository _learningInfoRepository;

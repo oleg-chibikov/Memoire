@@ -10,7 +10,7 @@ namespace Remembrance.View.Converters
     {
         protected override bool IsVisible(PartOfSpeech? value)
         {
-            return value != null && value != PartOfSpeech.Unknown;
+            return (value != null) && (value != PartOfSpeech.Unknown);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Remembrance.View.Converters
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            return value == null || (DateTime)value > DateTime.Now ? Brushes.OrangeRed : Brushes.MediumSeaGreen;
+            return (value == null) || ((DateTime)value > DateTime.Now) ? Brushes.OrangeRed : Brushes.MediumSeaGreen;
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

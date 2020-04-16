@@ -1,38 +1,32 @@
-<Button x:Class="Remembrance.View.Controls.FavoriteButton"
-    x:ClassModifier="internal"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance d:Type=viewModel:LearningInfoViewModel}"
-    ToolTip="{lex:Loc Favorite}"
-    Command="{Binding FavoriteCommand, Mode=OneTime}">
-    <Button.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
-    </Button.Resources>
-    <Button.Style>
-        <StaticResource ResourceKey="ImageButton" />
-    </Button.Style>
-    <materialDesign:PackIcon>
-        <materialDesign:PackIcon.Style>
-            <Style TargetType="materialDesign:PackIcon">
-                <Setter Property="Kind"
-                    Value="StarOutline" />
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsFavorited, Mode=OneWay}"
-                        Value="True">
-                        <Setter Property="Kind"
-                            Value="Star" />
-                        <Setter Property="Foreground"
-                            Value="{StaticResource Favorite}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </materialDesign:PackIcon.Style>
-    </materialDesign:PackIcon>
+<Button x:Class="Remembrance.View.Controls.FavoriteButton" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+        xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel" mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance d:Type=viewModel:LearningInfoViewModel}" ToolTip="{lex:Loc Favorite}"
+        Command="{Binding FavoriteCommand, Mode=OneTime}">
+  <Button.Resources>
+    <commonView:DesignTimeResourceDictionary
+      Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
+  </Button.Resources>
+  <Button.Style>
+    <StaticResource ResourceKey="ImageButton" />
+  </Button.Style>
+  <materialDesign:PackIcon>
+    <materialDesign:PackIcon.Style>
+      <Style TargetType="materialDesign:PackIcon">
+        <Setter Property="Kind" Value="StarOutline" />
+        <Style.Triggers>
+          <DataTrigger Binding="{Binding IsFavorited, Mode=OneWay}" Value="True">
+            <Setter Property="Kind" Value="Star" />
+            <Setter Property="Foreground" Value="{StaticResource Favorite}" />
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+    </materialDesign:PackIcon.Style>
+  </materialDesign:PackIcon>
 </Button>

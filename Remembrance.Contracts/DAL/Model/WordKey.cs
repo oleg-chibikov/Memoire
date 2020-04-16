@@ -15,6 +15,7 @@ namespace Remembrance.Contracts.DAL.Model
         public WordKey(TranslationEntryKey translationEntryKey, BaseWord word)
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
+
             // Creating a new copy to ensure word has the only necessary fields (the WordKeys are stored in DB)
             Word = new BaseWord(word);
             TranslationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
@@ -23,21 +24,6 @@ namespace Remembrance.Contracts.DAL.Model
         public TranslationEntryKey TranslationEntryKey { get; set; }
 
         public BaseWord Word { get; set; }
-
-        public bool Equals(WordKey other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
-        }
 
         public static bool operator ==(WordKey? obj1, WordKey? obj2)
         {
@@ -72,6 +58,21 @@ namespace Remembrance.Contracts.DAL.Model
         public override string ToString()
         {
             return $"{TranslationEntryKey} - {Word}";
+        }
+
+        public bool Equals(WordKey other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
         }
     }
 }

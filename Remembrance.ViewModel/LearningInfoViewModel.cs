@@ -5,7 +5,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.Shared;
+using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
@@ -32,8 +32,7 @@ namespace Remembrance.ViewModel
             ILog logger,
             IMessageHub messageHub,
             SynchronizationContext synchronizationContext,
-            ICommandManager commandManager)
-            : base(commandManager)
+            ICommandManager commandManager) : base(commandManager)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
@@ -61,7 +60,7 @@ namespace Remembrance.ViewModel
         public DateTime CreatedDate { get; private set; }
 
         [DependsOn(nameof(CreatedDate), nameof(ModifiedDate))]
-        public string DateInfo => CreatedDate == ModifiedDate ? CreatedDate.ToString("dd MMM yyy HH:mm") : $"{CreatedDate:dd MMM yy HH:mm}->{ModifiedDate:dd MMM yy HH:mm}";
+        public string DateInfo => CreatedDate == ModifiedDate ? $"{CreatedDate:dd MMM yy HH:mm}" : $"{CreatedDate:dd MMM yy HH:mm}->{ModifiedDate:dd MMM yy HH:mm}";
 
         public DateTime NextCardShowTime { get; private set; }
 

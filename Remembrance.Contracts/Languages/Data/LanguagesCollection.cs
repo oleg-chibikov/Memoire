@@ -5,10 +5,9 @@ namespace Remembrance.Contracts.Languages.Data
 {
     public sealed class LanguagesCollection : List<Language>
     {
-        public LanguagesCollection(IEnumerable<Language> languages, string? selectedLanguage)
-            : base(languages)
+        public LanguagesCollection(IEnumerable<Language> languages, string? selectedLanguage) : base(languages)
         {
-            if (selectedLanguage == null || selectedLanguage == Constants.AutoDetectLanguage)
+            if ((selectedLanguage == null) || (selectedLanguage == Constants.AutoDetectLanguage))
             {
                 SelectedLanguageItem = this.First();
                 SelectedLanguage = SelectedLanguageItem.Code;
@@ -22,6 +21,7 @@ namespace Remembrance.Contracts.Languages.Data
         }
 
         public string SelectedLanguage { get; }
+
         public Language SelectedLanguageItem { get; }
     }
 }
