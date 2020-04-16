@@ -13,9 +13,9 @@ using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
 {
-    internal sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
+    sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
-        private static readonly char[] Separator =
+        static readonly char[] Separator =
         {
             ',',
             ';',
@@ -23,7 +23,7 @@ namespace Remembrance.Core.Exchange
             '\\'
         };
 
-        private readonly ILanguageManager _languageManager;
+        readonly ILanguageManager _languageManager;
 
         public EachWordFileImporter(
             ITranslationEntryRepository translationEntryRepository,

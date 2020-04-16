@@ -12,9 +12,9 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    internal sealed class WordsTranslator : IWordsTranslator
+    sealed class WordsTranslator : IWordsTranslator
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new TranslationResultContractResolver()
         };
@@ -22,12 +22,12 @@ namespace Remembrance.Core.Translation.Yandex
         /// <summary>
         /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/
         /// </summary>
-        private readonly HttpClient _httpClient = new HttpClient
+        readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/")
         };
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public WordsTranslator(IMessageHub messageHub)
         {

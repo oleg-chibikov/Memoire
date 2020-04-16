@@ -3,15 +3,15 @@ using Scar.Common.Installer;
 
 namespace Remembrance.Installer
 {
-    internal static class Program
+    static class Program
     {
-        private const string BuildDir = "..\\Build";
+        const string BuildDir = "..\\Build";
 
-        private const string ProductIcon = "Icon.ico";
+        const string ProductIcon = "Icon.ico";
 
-        private static readonly Guid UpgradeCode = new Guid("a235657a-58d6-4239-9428-9d0f8840a45b");
+        static readonly Guid UpgradeCode = new Guid("a235657a-58d6-4239-9428-9d0f8840a45b");
 
-        private static void Main()
+        static void Main()
         {
             new InstallBuilder(nameof(Remembrance), nameof(Scar), BuildDir, UpgradeCode).WithIcon(ProductIcon)
                 .WithDesktopShortcut()

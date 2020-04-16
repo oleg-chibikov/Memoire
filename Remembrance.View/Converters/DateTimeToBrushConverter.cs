@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(DateTime), typeof(Brush))]
-    internal sealed class DateTimeToBrushConverter : IValueConverter
+    sealed class DateTimeToBrushConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

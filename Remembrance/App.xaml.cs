@@ -25,14 +25,12 @@ using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.ApplicationLifetime;
 using Scar.Common.Async;
-using Scar.Common.AutofacNamedInstancesFactory;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.Sync.Windows;
 using Scar.Common.View;
-using Scar.Common.View.WindowFactory;
 using Scar.Common.WPF.CollectionView;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.Localization;
@@ -47,7 +45,7 @@ namespace Remembrance.Launcher
     // TODO: Feature Store Learning info not for TranEntry, but for the particular PartOfSpeechTranslation or even more detailed.
     // TODO: Feature: if the word level is low, replace textbox with dropdown
 
-    internal sealed partial class App
+    sealed partial class App
     {
         public App()
         {
@@ -79,7 +77,7 @@ namespace Remembrance.Launcher
             ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
         }
 
-        private static void RegisterLiteDbCustomTypes()
+        static void RegisterLiteDbCustomTypes()
         {
             RegisterLiteDbReadonlyCollection<PartOfSpeechTranslation>();
             RegisterLiteDbReadonlyCollection<TranslationVariant>();
@@ -91,7 +89,7 @@ namespace Remembrance.Launcher
             RegisterLiteDbSet<BaseWord>();
         }
 
-        private static void RegisterLiteDbReadonlyCollection<T>()
+        static void RegisterLiteDbReadonlyCollection<T>()
             where T : class
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<T>>(
@@ -99,7 +97,7 @@ namespace Remembrance.Launcher
                 m => m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument)).ToArray());
         }
 
-        private static void RegisterLiteDbSet<T>()
+        static void RegisterLiteDbSet<T>()
             where T : class
         {
             BsonMapper.Global.RegisterType<ISet<T>>(
@@ -107,7 +105,7 @@ namespace Remembrance.Launcher
                 m => new HashSet<T>(m.AsArray.Select(item => BsonMapper.Global.ToObject<T>(item.AsDocument))));
         }
 
-        private static void RegisterLiteDbStringReadonlyCollection()
+        static void RegisterLiteDbStringReadonlyCollection()
         {
             BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(
                 o => new BsonArray(o.Select(x => new BsonValue(x))),
@@ -167,14 +165,14 @@ namespace Remembrance.Launcher
                 null);
         }
 
-        private static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
+        static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
             where T : TInterface
             where TInterface : class
         {
             builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).As<TInterface>().InstancePerDependency();
         }
 
-        private static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>(ContainerBuilder builder)
+        static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>(ContainerBuilder builder)
             where TRepository : TRepositoryInterface, IChangeableRepository
             where TRepositoryInterface : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
             where TEntity : IEntity<TId>, ITrackedEntity
@@ -183,7 +181,7 @@ namespace Remembrance.Launcher
             RegisterNamed<TRepository, TRepositoryInterface>(builder);
         }
 
-        private void ResolveInSeparateTaskAsync<T>()
+        void ResolveInSeparateTaskAsync<T>()
             where T : class
         {
             Task.Run(() => Container.Resolve<T>());

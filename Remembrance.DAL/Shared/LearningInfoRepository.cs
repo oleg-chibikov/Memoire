@@ -7,9 +7,9 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL.Shared
 {
-    internal sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
+    sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
     {
-        private readonly Random _rand = new Random();
+        readonly Random _rand = new Random();
 
         public LearningInfoRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true)
             : base(directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)), null, shrink)

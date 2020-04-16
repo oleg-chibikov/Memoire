@@ -11,7 +11,7 @@ namespace Remembrance.Core
 {
     public class RemembrancePathsProvider : IRemembrancePathsProvider
     {
-        private readonly IAssemblyInfoProvider _assemblyInfoProvider;
+        readonly IAssemblyInfoProvider _assemblyInfoProvider;
 
         public RemembrancePathsProvider(IOneDrivePathProvider oneDrivePathProvider, IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider)
         {

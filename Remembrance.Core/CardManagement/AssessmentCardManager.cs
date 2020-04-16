@@ -15,34 +15,34 @@ using Remembrance.Contracts.DAL.Shared;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
+using Scar.Common;
 using Scar.Common.View.Contracts;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.Core.CardManagement
 {
-    internal sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, ICardShowTimeProvider, IDisposable
+    sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
-        private readonly DateTime _initTime;
+        readonly DateTime _initTime;
 
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
-        private readonly object _lockObject = new object();
+        readonly object _lockObject = new object();
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IPauseManager _pauseManager;
+        readonly IPauseManager _pauseManager;
 
-        private readonly IScopedWindowProvider _scopedWindowProvider;
+        readonly IScopedWindowProvider _scopedWindowProvider;
 
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+        readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
-        private bool _hasOpenWindows;
+        bool _hasOpenWindows;
 
-        private IDisposable _interval;
+        IDisposable _interval;
 
         public AssessmentCardManager(
             ITranslationEntryRepository translationEntryRepository,
@@ -170,7 +170,7 @@ namespace Remembrance.Core.CardManagement
             return window;
         }
 
-        private void CreateInterval()
+        void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
             Logger.DebugFormat("Next card will be shown in: {0} (frequency is {1})", delay, CardShowFrequency);
@@ -182,7 +182,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private void HandleCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
+        void HandleCardShowFrequencyChanged(TimeSpan newCardShowFrequency)
         {
             CardShowFrequency = newCardShowFrequency;
             if (!_pauseManager.IsPaused)
@@ -199,7 +199,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private async void HandleIntervalHit(long x)
+        async void HandleIntervalHit(long x)
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Logger.Trace("Trying to show next card...");
@@ -230,7 +230,7 @@ namespace Remembrance.Core.CardManagement
             await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
         }
 
-        private void HandlePauseReasonChanged(PauseReason pauseReason)
+        void HandlePauseReasonChanged(PauseReason pauseReason)
         {
             if (_pauseManager.IsPaused)
             {
@@ -245,12 +245,12 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        private IDisposable ProvideInterval(TimeSpan delay)
+        IDisposable ProvideInterval(TimeSpan delay)
         {
             return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHit);
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        void Window_Closed(object sender, EventArgs e)
         {
             _hasOpenWindows = false;
             ((IDisplayable)sender).Closed -= Window_Closed;

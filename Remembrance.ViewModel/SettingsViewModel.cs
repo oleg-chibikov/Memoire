@@ -27,25 +27,25 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class SettingsViewModel : BaseViewModel
     {
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private readonly ICardsExchanger _cardsExchanger;
+        readonly ICardsExchanger _cardsExchanger;
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IPauseManager _pauseManager;
+        readonly IPauseManager _pauseManager;
 
-        private readonly ISettingsRepository _settingsRepository;
+        readonly ISettingsRepository _settingsRepository;
 
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly SynchronizationContext _synchronizationContext;
 
-        private bool _saved;
+        bool _saved;
 
-        private string _uiLanguage;
+        string _uiLanguage;
 
         public SettingsViewModel(
             ILocalSettingsRepository localSettingsRepository,
@@ -183,7 +183,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void BeginProgress()
+        void BeginProgress()
         {
             ProgressState = ProgressState.Normal;
             _pauseManager.Pause(PauseReason.OperationInProgress);
@@ -191,7 +191,7 @@ namespace Remembrance.ViewModel
             Progress = 0;
         }
 
-        private void CardsExchanger_Progress(object sender, ProgressEventArgs e)
+        void CardsExchanger_Progress(object sender, ProgressEventArgs e)
         {
             _synchronizationContext.Send(
                 x =>
@@ -210,23 +210,23 @@ namespace Remembrance.ViewModel
                 null);
         }
 
-        private void EndProgress()
+        void EndProgress()
         {
             ProgressState = ProgressState.None;
             _pauseManager.Resume(PauseReason.OperationInProgress);
         }
 
-        private async Task ExportAsync()
+        async Task ExportAsync()
         {
             await _cardsExchanger.ExportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        private async Task ImportAsync()
+        async Task ImportAsync()
         {
             await _cardsExchanger.ImportAsync(_cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        private void Save()
+        void Save()
         {
             _logger.Trace("Saving settings...");
             if (_settingsRepository.PreferredLanguage != SelectedPreferredLanguage)
@@ -275,7 +275,7 @@ namespace Remembrance.ViewModel
             _logger.Info("Settings has been saved");
         }
 
-        private void WindowClosing()
+        void WindowClosing()
         {
             if (!_saved)
             {

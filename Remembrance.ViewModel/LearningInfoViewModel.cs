@@ -14,17 +14,17 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class LearningInfoViewModel : BaseViewModel
     {
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly SynchronizationContext _synchronizationContext;
 
-        private readonly TranslationEntryKey _translationEntryKey;
+        readonly TranslationEntryKey _translationEntryKey;
 
-        private RepeatType _repeatType;
+        RepeatType _repeatType;
 
         public LearningInfoViewModel(
             LearningInfo learningInfo,
@@ -79,7 +79,7 @@ namespace Remembrance.ViewModel
 
         // A hack to raise NotifyPropertyChanged for other properties
         [AlsoNotifyFor(nameof(NextCardShowTime))]
-        private bool ReRenderNextCardShowTimeSwitch { get; set; }
+        bool ReRenderNextCardShowTimeSwitch { get; set; }
 
         public void ReRenderNextCardShowTime()
         {
@@ -98,7 +98,7 @@ namespace Remembrance.ViewModel
             CreatedDate = learningInfo.CreatedDate;
         }
 
-        private void Demote()
+        void Demote()
         {
             var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntryKey);
             learningInfo.DecreaseRepeatType();
@@ -108,7 +108,7 @@ namespace Remembrance.ViewModel
             _logger.InfoFormat("Demoted {0}", learningInfo);
         }
 
-        private void Favorite()
+        void Favorite()
         {
             var learningInfo = _learningInfoRepository.GetOrInsert(_translationEntryKey);
             learningInfo.IsFavorited = IsFavorited = !learningInfo.IsFavorited;

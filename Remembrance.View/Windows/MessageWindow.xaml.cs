@@ -4,7 +4,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class MessageWindow : IMessageWindow
+    sealed partial class MessageWindow : IMessageWindow
     {
         public MessageWindow(MessageViewModel viewModel)
         {

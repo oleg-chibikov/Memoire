@@ -12,21 +12,21 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    internal sealed class Predictor : IPredictor
+    sealed class Predictor : IPredictor
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new PredictionResultContractResolver()
         };
 
-        private readonly HttpClient _httpClient = new HttpClient
+        readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://predictor.yandex.net/api/v1/predict.json/")
         };
 
-        private readonly ILanguageDetector _languageDetector;
+        readonly ILanguageDetector _languageDetector;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public Predictor(ILanguageDetector languageDetector, IMessageHub messageHub)
         {

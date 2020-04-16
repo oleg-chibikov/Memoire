@@ -7,7 +7,7 @@ using Remembrance.Contracts.View;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(ProgressState), typeof(TaskbarItemProgressState))]
-    internal sealed class ProgressStateConverter : IValueConverter
+    sealed class ProgressStateConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

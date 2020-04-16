@@ -8,9 +8,9 @@ using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 
 namespace Remembrance.View.Various
 {
-    internal sealed class SuggestionProvider : IAutoCompleteDataProvider
+    sealed class SuggestionProvider : IAutoCompleteDataProvider
     {
-        private readonly IPredictor _predictor;
+        readonly IPredictor _predictor;
 
         public SuggestionProvider(IPredictor predictor)
         {

@@ -15,19 +15,19 @@ using Scar.Common.Events;
 
 namespace Remembrance.Core.Exchange
 {
-    internal sealed class RemembranceFileExporter : IFileExporter
+    sealed class RemembranceFileExporter : IFileExporter
     {
-        private static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new TranslationEntryContractResolver(),
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
         public RemembranceFileExporter(ITranslationEntryRepository translationEntryRepository, ILog logger, ILearningInfoRepository learningInfoRepository)
         {
@@ -71,7 +71,7 @@ namespace Remembrance.Core.Exchange
             return Task.FromResult(new ExchangeResult(false, null, 0));
         }
 
-        private void OnProgress(int current, int total)
+        void OnProgress(int current, int total)
         {
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }

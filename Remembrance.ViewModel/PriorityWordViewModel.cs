@@ -17,15 +17,15 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly TranslationEntry _translationEntry;
+        readonly TranslationEntry _translationEntry;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
-        private readonly WordKey _wordKey;
+        readonly WordKey _wordKey;
 
         public PriorityWordViewModel(
             TranslationEntry translationEntry,

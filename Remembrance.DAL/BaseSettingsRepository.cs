@@ -5,7 +5,7 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Remembrance.DAL
 {
-    internal abstract class BaseSettingsRepository : TrackedLiteDbRepository<Settings, string>
+    abstract class BaseSettingsRepository : TrackedLiteDbRepository<Settings, string>
     {
         protected BaseSettingsRepository(string directoryPath, string fileName, bool shrink = true)
             : base(directoryPath, fileName, shrink)

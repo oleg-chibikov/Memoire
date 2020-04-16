@@ -11,12 +11,12 @@ using Scar.Common;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
+    sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
     {
-        private readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
-        private readonly ILocalSettingsRepository _localSettingsRepository;
-        private readonly ILog _logger;
-        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+        readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
+        readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILog _logger;
+        readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public SharedRepositoryCloner(
             IReadOnlyCollection<ISharedRepository> cloneableRepositories,
@@ -46,7 +46,7 @@ namespace Remembrance.Core.Sync
             }
         }
 
-        private void Repository_Changed(object sender, EventArgs e)
+        void Repository_Changed(object sender, EventArgs e)
         {
             var repository = (ISharedRepository)sender;
             var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];

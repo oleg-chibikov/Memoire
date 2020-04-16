@@ -11,13 +11,13 @@ using Scar.Common.ApplicationLifetime.Contracts;
 
 namespace Remembrance.DAL.Local
 {
-    internal sealed class LocalSettingsRepository : BaseSettingsRepository, ILocalSettingsRepository
+    sealed class LocalSettingsRepository : BaseSettingsRepository, ILocalSettingsRepository
     {
-        private const string PauseTimeKey = "PauseTime_";
+        const string PauseTimeKey = "PauseTime_";
 
-        private const string SyncTimeKey = "SyncTime_";
+        const string SyncTimeKey = "SyncTime_";
 
-        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+        readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public LocalSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, IAssemblyInfoProvider assemblyInfoProvider)
             : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)), nameof(Settings))

@@ -4,7 +4,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class AssessmentViewOnlyCardWindow : IAssessmentViewOnlyCardWindow
+    sealed partial class AssessmentViewOnlyCardWindow : IAssessmentViewOnlyCardWindow
     {
         public AssessmentViewOnlyCardWindow(AssessmentViewOnlyCardViewModel viewModel, Window? ownerWindow = null)
         {

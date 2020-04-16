@@ -1,6 +1,6 @@
 namespace Remembrance.View.Controls
 {
-    internal sealed partial class AddProcessToBlacklistControl
+    sealed partial class AddProcessToBlacklistControl
     {
         public AddProcessToBlacklistControl()
         {

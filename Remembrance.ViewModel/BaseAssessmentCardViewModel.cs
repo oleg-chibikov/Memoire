@@ -23,11 +23,11 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseAssessmentCardViewModel : BaseViewModel
     {
-        private readonly ICultureManager _cultureManager;
+        readonly ICultureManager _cultureManager;
 
-        private readonly IPauseManager _pauseManager;
+        readonly IPauseManager _pauseManager;
 
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
         protected readonly HashSet<Word> AcceptedAnswers;
 
@@ -137,12 +137,12 @@ namespace Remembrance.ViewModel
             Logger.Debug("Window is closed");
         }
 
-        private static bool HasUppercaseLettersExceptFirst(string text)
+        static bool HasUppercaseLettersExceptFirst(string text)
         {
             return text.Substring(1).Any(letter => char.IsLetter(letter) && char.IsUpper(letter));
         }
 
-        private static void PrepareVerb(string sourceLanguage, BaseWord word)
+        static void PrepareVerb(string sourceLanguage, BaseWord word)
         {
             if (sourceLanguage != Constants.EnLanguageTwoLetters || word.PartOfSpeech != PartOfSpeech.Verb)
             {
@@ -152,7 +152,7 @@ namespace Remembrance.ViewModel
             word.Text = "To " + (HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant());
         }
 
-        private async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
+        async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(TranslationInfo.TranslationEntryKey))
@@ -165,7 +165,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
+        async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
@@ -180,7 +180,7 @@ namespace Remembrance.ViewModel
                 .ConfigureAwait(false);
         }
 
-        private void WindowClosed()
+        void WindowClosed()
         {
             _pauseManager.Resume(PauseReason.CardIsVisible);
         }

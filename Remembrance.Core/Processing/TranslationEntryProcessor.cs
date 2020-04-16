@@ -23,37 +23,37 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.Processing
 {
-    internal sealed class TranslationEntryProcessor : ITranslationEntryProcessor
+    sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
-        private readonly ITranslationDetailsCardManager _cardManager;
+        readonly ITranslationDetailsCardManager _cardManager;
 
-        private readonly ILanguageManager _languageManager;
+        readonly ILanguageManager _languageManager;
 
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
-        private readonly Func<ILoadingWindow> _loadingWindowFactory;
+        readonly Func<ILoadingWindow> _loadingWindowFactory;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
+        readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly SynchronizationContext _synchronizationContext;
 
-        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
-        private readonly ITranslationDetailsRepository _translationDetailsRepository;
+        readonly ITranslationDetailsRepository _translationDetailsRepository;
 
-        private readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
+        readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
-        private readonly IWordImageInfoRepository _wordImageInfoRepository;
+        readonly IWordImageInfoRepository _wordImageInfoRepository;
 
-        private readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
+        readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
 
-        private readonly IWordsTranslator _wordsTranslator;
+        readonly IWordsTranslator _wordsTranslator;
 
         public TranslationEntryProcessor(
             ITextToSpeechPlayer textToSpeechPlayer,
@@ -217,7 +217,7 @@ namespace Remembrance.Core.Processing
             return new TranslationInfo(translationEntry, translationDetails, learningInfo);
         }
 
-        private static void CapitalizeManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations)
+        static void CapitalizeManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
             if (manualTranslations == null)
             {
@@ -232,7 +232,7 @@ namespace Remembrance.Core.Processing
             }
         }
 
-        private static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
+        static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
             string text,
             IReadOnlyCollection<ManualTranslation> manualTranslations,
             IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
@@ -273,7 +273,7 @@ namespace Remembrance.Core.Processing
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
-        private void DeleteFromPriority(TranslationEntry translationEntry, IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationDetails translationDetails)
+        void DeleteFromPriority(TranslationEntry translationEntry, IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
                 .SelectMany(partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants)
@@ -302,7 +302,7 @@ namespace Remembrance.Core.Processing
             }
         }
 
-        private async Task<TranslationEntryKey?> GetTranslationKeyAsync(TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
+        async Task<TranslationEntryKey?> GetTranslationKeyAsync(TranslationEntryAdditionInfo translationEntryAdditionInfo, CancellationToken cancellationToken)
         {
             var text = translationEntryAdditionInfo.Text;
             var sourceLanguage = translationEntryAdditionInfo.SourceLanguage;
@@ -334,7 +334,7 @@ namespace Remembrance.Core.Processing
             return new TranslationEntryKey(text, sourceLanguage, targetLanguage);
         }
 
-        private async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
+        async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             var playTtsTask = _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken);
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
@@ -342,7 +342,7 @@ namespace Remembrance.Core.Processing
             await Task.WhenAll(playTtsTask, showCardTask).ConfigureAwait(false);
         }
 
-        private async Task<(TranslationDetails TranslationDetails, bool AlreadyExists)> ReloadTranslationDetailsIfNeededInternalAsync(
+        async Task<(TranslationDetails TranslationDetails, bool AlreadyExists)> ReloadTranslationDetailsIfNeededInternalAsync(
             TranslationEntryKey translationEntryKey,
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
@@ -372,7 +372,7 @@ namespace Remembrance.Core.Processing
             return (translationDetails, false);
         }
 
-        private async Task<TranslationResult?> TranslateAsync(
+        async Task<TranslationResult?> TranslateAsync(
             TranslationEntryKey translationEntryKey,
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)

@@ -22,19 +22,19 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsCardViewModel : BaseViewModel
     {
-        private readonly ICultureManager _cultureManager;
+        readonly ICultureManager _cultureManager;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IPredictor _predictor;
+        readonly IPredictor _predictor;
 
-        private readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
+        readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
 
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        private readonly TranslationEntryKey _translationEntryKey;
+        readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsCardViewModel(
             TranslationInfo translationInfo,
@@ -104,7 +104,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
+        async Task<PrepositionsCollection?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
         {
             var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
@@ -119,7 +119,7 @@ namespace Remembrance.ViewModel
             return prepositionsCollection;
         }
 
-        private async Task LoadPrepositionsIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
+        async Task LoadPrepositionsIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
         {
             var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
             if (prepositionsInfo == null)
@@ -138,7 +138,7 @@ namespace Remembrance.ViewModel
             PrepositionsCollection = prepositionsInfo.Prepositions;
         }
 
-        private async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
+        async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             if (!learningInfo.Id.Equals(_translationEntryKey))
@@ -151,7 +151,7 @@ namespace Remembrance.ViewModel
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void HandlePriorityChanged(PriorityWordKey priorityWordKey)
+        void HandlePriorityChanged(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
             if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
@@ -188,7 +188,7 @@ namespace Remembrance.ViewModel
                 CancellationToken.None);
         }
 
-        private async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
+        async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
             _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);

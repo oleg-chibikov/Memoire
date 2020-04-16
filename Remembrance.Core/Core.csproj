@@ -10,11 +10,12 @@
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7407.39187" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7407.39186" />
-    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7407.39186" />
-    <PackageReference Include="Scar.Common.Sync" Version="1.1.7407.39187" />
-    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7407.39185" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7411.17541" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7411.17123" />
+    <PackageReference Include="Scar.Common.IO" Version="1.1.7411.17119" />
+    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7411.17123" />
+    <PackageReference Include="Scar.Common.Sync" Version="1.1.7411.17123" />
+    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7411.17774" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>

@@ -11,25 +11,25 @@ using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class SynchronizationManager : ISynchronizationManager, IDisposable
+    sealed class SynchronizationManager : ISynchronizationManager, IDisposable
     {
-        private readonly FileSystemWatcher _fileSystemWatcher;
+        readonly FileSystemWatcher _fileSystemWatcher;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IRemembrancePathsProvider _remembrancePathsProvider;
+        readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        private readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
+        readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
 
-        private readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
+        readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
 
-        private string? _allMachinesSharedBasePath;
+        string? _allMachinesSharedBasePath;
 
-        private string? _thisMachineSharedPath;
+        string? _thisMachineSharedPath;
 
         public SynchronizationManager(
             ILog logger,
@@ -78,7 +78,7 @@ namespace Remembrance.Core.Sync
             _subscriptionTokens.Clear();
         }
 
-        private void OnSyncBusChanged(SyncBus syncBus)
+        void OnSyncBusChanged(SyncBus syncBus)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             if (syncBus == SyncBus.NoSync)
@@ -97,7 +97,7 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);
@@ -111,7 +111,7 @@ namespace Remembrance.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        private void SynchronizeExistingRepositories()
+        void SynchronizeExistingRepositories()
         {
             if (_allMachinesSharedBasePath == null)
             {
@@ -132,7 +132,7 @@ namespace Remembrance.Core.Sync
             }
         }
 
-        private void SynchronizeFile(string filePath)
+        void SynchronizeFile(string filePath)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 

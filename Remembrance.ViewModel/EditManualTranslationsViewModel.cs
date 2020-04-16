@@ -22,13 +22,13 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class EditManualTranslationsViewModel : BaseViewModel
     {
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+        readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
         public EditManualTranslationsViewModel(
             ILog logger,
@@ -69,7 +69,7 @@ namespace Remembrance.ViewModel
 
         public TranslationEntryKey TranslationEntryKey { get; private set; } = new TranslationEntryKey();
 
-        private void AddTranslation()
+        void AddTranslation()
         {
             if (ManualTranslationText == null || string.IsNullOrWhiteSpace(ManualTranslationText))
             {
@@ -87,13 +87,13 @@ namespace Remembrance.ViewModel
             ManualTranslations.Add(newManualTranslation);
         }
 
-        private void Cancel()
+        void Cancel()
         {
             _logger.Trace("Cancelling...");
             IsManualTranslationsDialogOpen = false;
         }
 
-        private async Task DeleteAsync(ManualTranslation manualTranslation)
+        async Task DeleteAsync(ManualTranslation manualTranslation)
         {
             _ = manualTranslation ?? throw new ArgumentNullException(nameof(manualTranslation));
             _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
@@ -112,7 +112,7 @@ namespace Remembrance.ViewModel
             ManualTranslations.Remove(manualTranslation);
         }
 
-        private void EditManualTranslations(TranslationEntryViewModel translationEntryViewModel)
+        void EditManualTranslations(TranslationEntryViewModel translationEntryViewModel)
         {
             _logger.TraceFormat("Editing manual translation for {0}...", translationEntryViewModel);
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
@@ -132,7 +132,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private async Task SaveAsync()
+        async Task SaveAsync()
         {
             _logger.Trace("Saving...");
             IsManualTranslationsDialogOpen = false;

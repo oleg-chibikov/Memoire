@@ -7,19 +7,19 @@ using Scar.Common.DAL.Model;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
+    sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
         where TEntity : IEntity<TId>
         where TDeletionEntity : IEntity<TId>, ITrackedEntity
         where TRepository : IRepository<TEntity, TId>, ITrackedRepository
         where TDeletionEventRepository : class, IRepository<TDeletionEntity, TId>
     {
-        private readonly object _locker = new object();
+        readonly object _locker = new object();
 
-        private readonly IList<TId> _ownDeletionEventsToClear;
+        readonly IList<TId> _ownDeletionEventsToClear;
 
-        private readonly TDeletionEventRepository _ownRepository;
+        readonly TDeletionEventRepository _ownRepository;
 
-        private bool _collectInfo = true;
+        bool _collectInfo = true;
 
         public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository)
         {

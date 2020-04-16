@@ -15,22 +15,22 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    internal sealed class TextToSpeechPlayer : ITextToSpeechPlayer
+    sealed class TextToSpeechPlayer : ITextToSpeechPlayer
     {
-        private const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
+        const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
 
-        private static readonly Regex CyryllicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
+        static readonly Regex CyryllicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
 
-        private readonly HttpClient _httpClient = new HttpClient
+        readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://tts.voicetech.yandex.net/")
         };
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly ISettingsRepository _settingsRepository;
+        readonly ISettingsRepository _settingsRepository;
 
         public TextToSpeechPlayer(ILog logger, ISettingsRepository settingsRepository, IMessageHub messageHub)
         {
@@ -85,7 +85,7 @@ namespace Remembrance.Core.Translation.Yandex
             }
         }
 
-        private static string PrepareLanguage(string lang, string text)
+        static string PrepareLanguage(string lang, string text)
         {
             switch (lang)
             {

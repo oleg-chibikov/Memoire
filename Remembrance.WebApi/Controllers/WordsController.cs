@@ -9,7 +9,7 @@ namespace Remembrance.WebApi.Controllers
 {
     public sealed class WordsController : ApiController
     {
-        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+        readonly ITranslationEntryProcessor _translationEntryProcessor;
 
         public WordsController(ITranslationEntryProcessor translationEntryProcessor)
         {

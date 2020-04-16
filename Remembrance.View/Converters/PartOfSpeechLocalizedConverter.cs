@@ -7,7 +7,7 @@ using Scar.Common.WPF.Localization;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(string))]
-    internal sealed class PartOfSpeechLocalizedConverter : IValueConverter
+    sealed class PartOfSpeechLocalizedConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

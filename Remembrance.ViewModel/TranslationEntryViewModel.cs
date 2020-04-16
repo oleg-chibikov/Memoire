@@ -22,13 +22,13 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel
     {
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
+        readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
 
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly SynchronizationContext _synchronizationContext;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
         public TranslationEntryViewModel(
             TranslationEntry translationEntry,
@@ -150,7 +150,7 @@ namespace Remembrance.ViewModel
             UpdateModifiedDate(learningInfo, translationEntryModifiedDate);
         }
 
-        private void ProcessNonPriority(WordKey wordKey)
+        void ProcessNonPriority(WordKey wordKey)
         {
             var translations = Translations;
             _logger.TraceFormat("Removing non-priority word {1} from the list for {0}...", this, wordKey);
@@ -178,7 +178,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void ProcessPriority(WordKey wordKey)
+        void ProcessPriority(WordKey wordKey)
         {
             _logger.TraceFormat("Removing all non-priority translations for {0} except {1}...", this, wordKey);
             var found = false;
@@ -224,7 +224,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void UpdateModifiedDate(ITrackedEntity learningInfo, DateTime translationEntryModifiedDate)
+        void UpdateModifiedDate(ITrackedEntity learningInfo, DateTime translationEntryModifiedDate)
         {
             ModifiedDate = learningInfo.ModifiedDate > translationEntryModifiedDate ? learningInfo.ModifiedDate : translationEntryModifiedDate;
         }

@@ -13,19 +13,19 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
 {
-    internal sealed class CardsExchanger : ICardsExchanger, IDisposable
+    sealed class CardsExchanger : ICardsExchanger, IDisposable
     {
-        private readonly IFileExporter _exporter;
+        readonly IFileExporter _exporter;
 
-        private readonly IFileImporter[] _importers;
+        readonly IFileImporter[] _importers;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IOpenFileDialogProvider _openFileDialog;
+        readonly IOpenFileDialogProvider _openFileDialog;
 
-        private readonly ISaveFileDialogProvider _saveFileDialog;
+        readonly ISaveFileDialogProvider _saveFileDialog;
 
         public CardsExchanger(
             ILog logger,
@@ -140,22 +140,22 @@ namespace Remembrance.Core.Exchange
             _exporter.Progress -= ImporterExporter_Progress;
         }
 
-        private void ImporterExporter_Progress(object sender, ProgressEventArgs e)
+        void ImporterExporter_Progress(object sender, ProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
         }
 
-        private void OnProgress(int current, int total)
+        void OnProgress(int current, int total)
         {
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
 
-        private string? ShowOpenFileDialog()
+        string? ShowOpenFileDialog()
         {
             return _openFileDialog.ShowDialog() == true ? _openFileDialog.FileName : null;
         }
 
-        private string? ShowSaveFileDialog()
+        string? ShowSaveFileDialog()
         {
             _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
             return _saveFileDialog.ShowDialog() == true ? _saveFileDialog.FileName : null;

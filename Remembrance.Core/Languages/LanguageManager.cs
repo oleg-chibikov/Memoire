@@ -14,17 +14,17 @@ using Remembrance.Contracts.Translate;
 
 namespace Remembrance.Core.Languages
 {
-    internal sealed class LanguageManager : ILanguageManager
+    sealed class LanguageManager : ILanguageManager
     {
-        private readonly AvailableLanguagesInfo _availableLanguages;
+        readonly AvailableLanguagesInfo _availableLanguages;
 
-        private readonly ILanguageDetector _languageDetector;
+        readonly ILanguageDetector _languageDetector;
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly ISettingsRepository _settingsRepository;
+        readonly ISettingsRepository _settingsRepository;
 
         public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISettingsRepository settingsRepository, ILog logger, ILanguageDetector languageDetector)
         {
@@ -141,7 +141,7 @@ namespace Remembrance.Core.Languages
             return ordered.First();
         }
 
-        private static int GetLanguageOrder(string languageCode, string preferred, string currentCultureLanguage, string? lastUsed)
+        static int GetLanguageOrder(string languageCode, string preferred, string currentCultureLanguage, string? lastUsed)
         {
             return languageCode == Constants.AutoDetectLanguage ? 1 :
                 languageCode == preferred ? 2 :
@@ -150,7 +150,7 @@ namespace Remembrance.Core.Languages
                 lastUsed != null && languageCode == lastUsed ? 5 : 6;
         }
 
-        private async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
+        async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
             _logger.Trace("Loading available languages...");
             var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None)

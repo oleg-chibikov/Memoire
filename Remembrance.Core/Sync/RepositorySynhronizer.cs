@@ -10,32 +10,32 @@ using Easy.MessageHub;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
-using Scar.Common.AutofacNamedInstancesFactory;
+using Scar.Common;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
+    sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
         where TRepository : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
-        private readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
+        readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly TRepository _ownRepository;
+        readonly TRepository _ownRepository;
 
-        private readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
+        readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
 
-        private readonly ISyncPostProcessor<TEntity>? _syncPostProcessor;
+        readonly ISyncPostProcessor<TEntity>? _syncPostProcessor;
 
-        private readonly ISyncPreProcessor<TEntity>? _syncPreProcessor;
+        readonly ISyncPreProcessor<TEntity>? _syncPreProcessor;
 
         public RepositorySynhronizer(
             IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
@@ -64,7 +64,7 @@ namespace Remembrance.Core.Sync
             ApplyRemoteRepositoryAction(filePath, SyncInternal);
         }
 
-        private void ApplyRemoteRepositoryAction(string filePath, Action<TRepository> action)
+        void ApplyRemoteRepositoryAction(string filePath, Action<TRepository> action)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
             var extension = Path.GetExtension(filePath);
@@ -100,7 +100,7 @@ namespace Remembrance.Core.Sync
             File.Delete(newFilePath);
         }
 
-        private void SyncInternal(TRepository remoteRepository)
+        void SyncInternal(TRepository remoteRepository)
         {
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
 

@@ -21,9 +21,9 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseViewModelWithAddTranslationControl : BaseViewModel
     {
-        private readonly ILanguageManager _languageManager;
+        readonly ILanguageManager _languageManager;
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
         protected readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
@@ -31,10 +31,10 @@ namespace Remembrance.ViewModel
 
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
-        private string _selectedSourceLanguage;
-        private Language _selectedSourceLanguageItem;
-        private string _selectedTargetLanguage;
-        private Language _selectedTargetLanguageItem;
+        string _selectedSourceLanguage;
+        Language _selectedSourceLanguageItem;
+        string _selectedTargetLanguage;
+        Language _selectedTargetLanguageItem;
 
         protected BaseViewModelWithAddTranslationControl(
             ILocalSettingsRepository localSettingsRepository,
@@ -143,7 +143,7 @@ namespace Remembrance.ViewModel
 
         protected abstract Task<IDisplayable?> GetWindowAsync();
 
-        private async Task SaveAsync()
+        async Task SaveAsync()
         {
             var text = Text;
             var manualTranslation = ManualTranslation == null || string.IsNullOrWhiteSpace(ManualTranslation)

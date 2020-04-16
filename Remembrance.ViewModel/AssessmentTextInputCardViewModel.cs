@@ -20,7 +20,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentTextInputCardViewModel : BaseAssessmentCardViewModel
     {
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
         public AssessmentTextInputCardViewModel(
             TranslationInfo translationInfo,
@@ -59,7 +59,7 @@ namespace Remembrance.ViewModel
 
         public string? ProvidedAnswer { get; set; }
 
-        private TimeSpan ChangeRepeatType(Word mostSuitable, int currentMinDistance)
+        TimeSpan ChangeRepeatType(Word mostSuitable, int currentMinDistance)
         {
             TimeSpan closeTimeout;
             var learningInfo = _learningInfoRepository.GetById(TranslationInfo.TranslationEntryKey);
@@ -90,7 +90,7 @@ namespace Remembrance.ViewModel
             return closeTimeout;
         }
 
-        private void ProvideAnswer()
+        void ProvideAnswer()
         {
             Logger.TraceFormat("Providing answer {0}...", ProvidedAnswer);
             var mostSuitable = AcceptedAnswers.First();

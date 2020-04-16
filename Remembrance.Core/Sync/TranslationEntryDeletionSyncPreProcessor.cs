@@ -6,9 +6,9 @@ using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class TranslationEntryDeletionSyncPreProcessor : ISyncPreProcessor<TranslationEntryDeletion>
+    sealed class TranslationEntryDeletionSyncPreProcessor : ISyncPreProcessor<TranslationEntryDeletion>
     {
-        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+        readonly ITranslationEntryProcessor _translationEntryProcessor;
 
         public TranslationEntryDeletionSyncPreProcessor(ITranslationEntryProcessor translationEntryProcessor)
         {

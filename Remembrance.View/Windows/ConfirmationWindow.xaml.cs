@@ -4,7 +4,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class ConfirmationWindow : IConfirmationWindow
+    sealed partial class ConfirmationWindow : IConfirmationWindow
     {
         public ConfirmationWindow(ConfirmationViewModel confirmationViewModel)
         {

@@ -7,16 +7,16 @@ using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Languages;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.View.Settings;
+using Scar.Common;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.View.Contracts;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl
     {
-        private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
+        readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
         public AddTranslationViewModel(
             ILocalSettingsRepository localSettingsRepository,

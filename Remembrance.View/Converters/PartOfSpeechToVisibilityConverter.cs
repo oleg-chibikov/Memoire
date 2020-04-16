@@ -6,7 +6,7 @@ using Scar.Common.WPF.Converters;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(Visibility))]
-    internal sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>
+    sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>
     {
         protected override bool IsVisible(PartOfSpeech? value)
         {

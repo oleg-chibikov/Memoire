@@ -5,17 +5,17 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel;
+using Scar.Common;
 using Scar.Common.View.Contracts;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.View.WindowCreators
 {
-    internal sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
+    sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
-        private readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
-        private readonly SynchronizationContext _synchronizationContext;
-        private readonly Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
-        private readonly Func<IDisplayable, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
+        readonly Func<LearningInfo, LearningInfoViewModel> _learningInfoViewModelFactory;
+        readonly SynchronizationContext _synchronizationContext;
+        readonly Func<TranslationInfo, LearningInfoViewModel, TranslationDetailsCardViewModel> _translationDetailsCardViewModelFactory;
+        readonly Func<IDisplayable, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> _translationDetailsCardWindowFactory;
 
         public TranslationDetailsCardWindowCreator(
             Func<IDisplayable, TranslationDetailsCardViewModel, ITranslationDetailsCardWindow> translationDetailsCardWindowFactory,

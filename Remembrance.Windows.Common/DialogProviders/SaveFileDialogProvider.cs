@@ -4,9 +4,9 @@ using Remembrance.Resources;
 
 namespace Remembrance.Windows.Common.DialogProviders
 {
-    internal sealed class SaveFileDialogProvider : ISaveFileDialogProvider
+    sealed class SaveFileDialogProvider : ISaveFileDialogProvider
     {
-        private readonly SaveFileDialog _dialog = new SaveFileDialog
+        readonly SaveFileDialog _dialog = new SaveFileDialog
         {
             FileName = DialogProviderConstants.DefaultFilePattern,
             Filter = DialogProviderConstants.JsonFilesFilter,

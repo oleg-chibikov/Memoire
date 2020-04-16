@@ -1,6 +1,6 @@
 ﻿namespace Remembrance.Core.CardManagement.Data
 {
-    internal interface IExchangeEntry
+    interface IExchangeEntry
     {
         string Text { get; }
     }

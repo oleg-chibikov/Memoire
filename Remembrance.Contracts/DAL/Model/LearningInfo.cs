@@ -6,11 +6,11 @@ namespace Remembrance.Contracts.DAL.Model
 {
     public sealed class LearningInfo : TrackedEntity<TranslationEntryKey>
     {
-        private LinkedListNode<RepeatType> _current;
+        LinkedListNode<RepeatType> _current;
 
-        private DateTime _lastCardShowTime;
+        DateTime _lastCardShowTime;
 
-        private RepeatType _repeatType;
+        RepeatType _repeatType;
 
         public LearningInfo()
         {
@@ -75,7 +75,7 @@ namespace Remembrance.Contracts.DAL.Model
             return $"Learning info for {Id}";
         }
 
-        private void SetNextCardShowTime()
+        void SetNextCardShowTime()
         {
             NextCardShowTime = _lastCardShowTime.Add(RepeatTypeSettings.RepeatTimes[_repeatType]);
         }

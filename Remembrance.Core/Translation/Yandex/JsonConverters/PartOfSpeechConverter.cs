@@ -4,7 +4,7 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 
 namespace Remembrance.Core.Translation.Yandex.JsonConverters
 {
-    internal sealed class PartOfSpeechConverter : JsonConverter
+    sealed class PartOfSpeechConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

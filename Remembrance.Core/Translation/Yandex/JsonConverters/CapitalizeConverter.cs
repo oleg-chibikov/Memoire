@@ -4,7 +4,7 @@ using Scar.Common;
 
 namespace Remembrance.Core.Translation.Yandex.JsonConverters
 {
-    internal sealed class CapitalizeConverter : JsonConverter
+    sealed class CapitalizeConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

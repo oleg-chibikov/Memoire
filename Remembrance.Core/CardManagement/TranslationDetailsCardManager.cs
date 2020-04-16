@@ -6,14 +6,14 @@ using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
+using Scar.Common;
 using Scar.Common.View.Contracts;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.Core.CardManagement
 {
-    internal sealed class TranslationDetailsCardManager : BaseCardManager, ITranslationDetailsCardManager
+    sealed class TranslationDetailsCardManager : BaseCardManager, ITranslationDetailsCardManager
     {
-        private readonly IScopedWindowProvider _scopedWindowProvider;
+        readonly IScopedWindowProvider _scopedWindowProvider;
 
         public TranslationDetailsCardManager(
             ILocalSettingsRepository localSettingsRepository,

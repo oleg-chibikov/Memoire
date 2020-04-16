@@ -37,7 +37,7 @@ namespace Remembrance.Contracts.Languages.Data
             return Code;
         }
 
-        private bool Equals(Language other)
+        bool Equals(Language other)
         {
             return Equals(Code, other.Code) && string.Equals(DisplayName, other.DisplayName);
         }

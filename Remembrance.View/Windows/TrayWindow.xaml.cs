@@ -3,7 +3,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class TrayWindow : ITrayWindow
+    sealed partial class TrayWindow : ITrayWindow
     {
         public TrayWindow(TrayViewModel viewModel)
         {

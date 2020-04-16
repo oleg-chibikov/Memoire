@@ -11,7 +11,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsViewModel : BaseViewModel
     {
-        private readonly TranslationEntryKey _translationEntryKey;
+        readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsViewModel(
             Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,

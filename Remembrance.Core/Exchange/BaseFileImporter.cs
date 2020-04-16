@@ -19,18 +19,18 @@ using Scar.Common.Events;
 
 namespace Remembrance.Core.Exchange
 {
-    internal abstract class BaseFileImporter<T> : IFileImporter
+    abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
-        private readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILearningInfoRepository _learningInfoRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messenger;
+        readonly IMessageHub _messenger;
 
-        private readonly ITranslationEntryProcessor _translationEntryProcessor;
+        readonly ITranslationEntryProcessor _translationEntryProcessor;
 
-        private readonly ITranslationEntryRepository _translationEntryRepository;
+        readonly ITranslationEntryRepository _translationEntryRepository;
 
         protected BaseFileImporter(
             ITranslationEntryRepository translationEntryRepository,
@@ -106,7 +106,7 @@ namespace Remembrance.Core.Exchange
 
         protected abstract bool UpdateLearningInfo(T exchangeEntry, LearningInfo learningInfo);
 
-        private static bool UpdateManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationEntry translationEntry)
+        static bool UpdateManualTranslations(IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationEntry translationEntry)
         {
             if (manualTranslations == null)
             {
@@ -122,7 +122,7 @@ namespace Remembrance.Core.Exchange
             return true;
         }
 
-        private T[]? Deserialize(string fileName)
+        T[]? Deserialize(string fileName)
         {
             T[]? deserialized = null;
 
@@ -143,7 +143,7 @@ namespace Remembrance.Core.Exchange
             return deserialized;
         }
 
-        private async Task<TranslationInfo?> ImportNewEntry(
+        async Task<TranslationInfo?> ImportNewEntry(
             CancellationToken cancellationToken,
             TranslationEntryKey translationEntryKey,
             IReadOnlyCollection<ManualTranslation>? manualTranslations)
@@ -157,7 +157,7 @@ namespace Remembrance.Core.Exchange
                 .ConfigureAwait(false);
         }
 
-        private async Task<TranslationEntry?> ImportOneEntry(
+        async Task<TranslationEntry?> ImportOneEntry(
             CancellationToken cancellationToken,
             T exchangeEntry,
             IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
@@ -216,19 +216,19 @@ namespace Remembrance.Core.Exchange
             return changed ? translationEntry : null;
         }
 
-        private void OnProgress(int current, int total)
+        void OnProgress(int current, int total)
         {
             Progress?.Invoke(this, new ProgressEventArgs(current, total));
         }
 
-        private void PublishPriorityWord(TranslationEntry translationEntry, BaseWord priorityTranslation)
+        void PublishPriorityWord(TranslationEntry translationEntry, BaseWord priorityTranslation)
         {
             _logger.InfoFormat("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
             var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
             _messenger.Publish(priorityWordKey);
         }
 
-        private bool UpdatePriorityTranslationsAsync(T exchangeEntry, TranslationEntry translationEntry)
+        bool UpdatePriorityTranslationsAsync(T exchangeEntry, TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
             if (priorityTranslations?.Any() != true)

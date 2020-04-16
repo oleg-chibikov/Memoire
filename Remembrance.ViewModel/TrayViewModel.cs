@@ -12,51 +12,51 @@ using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
+using Scar.Common;
 using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TrayViewModel : BaseViewModel
     {
-        private const string DateTimeFormat = @"HH\:mm\:ss";
+        const string DateTimeFormat = @"HH\:mm\:ss";
 
-        private const string TimeSpanFormat = @"hh\:mm\:ss";
+        const string TimeSpanFormat = @"hh\:mm\:ss";
 
-        private readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
+        readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
 
-        private readonly IApplicationTerminator _applicationTerminator;
+        readonly IApplicationTerminator _applicationTerminator;
 
-        private readonly Func<ICardShowTimeProvider> _cardShowTimeProviderFactory;
+        readonly Func<ICardShowTimeProvider> _cardShowTimeProviderFactory;
 
-        private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+        readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IPauseManager _pauseManager;
+        readonly IPauseManager _pauseManager;
 
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        private readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
+        readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
 
-        private readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
+        readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
 
-        private readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly IList<Guid> _subscriptionTokens = new List<Guid>();
 
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly SynchronizationContext _synchronizationContext;
 
-        private readonly Timer _timer;
+        readonly Timer _timer;
 
-        private ICardShowTimeProvider? _cardShowTimeProvider;
+        ICardShowTimeProvider? _cardShowTimeProvider;
 
-        private bool _isToolTipOpened;
+        bool _isToolTipOpened;
 
         public TrayViewModel(
             ILocalSettingsRepository localSettingsRepository,
@@ -160,24 +160,24 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private async Task AddTranslationAsync()
+        async Task AddTranslationAsync()
         {
             _logger.Trace("Showing Add Translation window...");
             await _addTranslationWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void Exit()
+        void Exit()
         {
             _logger.Trace("Exiting application...");
             _applicationTerminator.Terminate();
         }
 
-        private void HandlePauseReasonChanged(PauseReason reason)
+        void HandlePauseReasonChanged(PauseReason reason)
         {
             IsPaused = _pauseManager.IsPaused;
         }
 
-        private async Task SetTimesInfoAsync()
+        async Task SetTimesInfoAsync()
         {
             CurrentTime = DateTime.Now;
             PauseReasons = _pauseManager.GetPauseReasons();
@@ -194,26 +194,26 @@ namespace Remembrance.ViewModel
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat);
         }
 
-        private async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
+        async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
         {
             var provider = _cardShowTimeProvider = await Task.Run(() => _cardShowTimeProviderFactory());
             IsLoading = false;
             return provider;
         }
 
-        private async Task ShowDictionaryAsync()
+        async Task ShowDictionaryAsync()
         {
             _logger.Trace("Showing dictionary...");
             await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
         }
 
-        private async Task ShowSettingsAsync()
+        async Task ShowSettingsAsync()
         {
             _logger.Trace("Showing settings...");
             await _settingsWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        private void Timer_Tick(object state)
+        void Timer_Tick(object state)
         {
             if (!_isToolTipOpened)
             {
@@ -229,7 +229,7 @@ namespace Remembrance.ViewModel
                 null);
         }
 
-        private void ToggleActive()
+        void ToggleActive()
         {
             _logger.Trace("Toggling state...");
             IsActive = !IsActive;
@@ -245,12 +245,12 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void ToolTipClose()
+        void ToolTipClose()
         {
             _isToolTipOpened = false;
         }
 
-        private async Task ToolTipOpenAsync()
+        async Task ToolTipOpenAsync()
         {
             await SetTimesInfoAsync();
             _isToolTipOpened = true;

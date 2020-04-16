@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Remembrance.Core.CardManagement.Data
 {
-    internal sealed class EachWordExchangeEntry : IExchangeEntry
+    sealed class EachWordExchangeEntry : IExchangeEntry
     {
         public EachWordExchangeEntry(string text, string? translation)
         {

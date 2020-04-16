@@ -11,7 +11,7 @@ using Remembrance.Core.CardManagement.Data;
 
 namespace Remembrance.Core.Exchange
 {
-    internal sealed class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
+    sealed class RemembranceFileImporter : BaseFileImporter<RemembranceExchangeEntry>
     {
         public RemembranceFileImporter(
             ITranslationEntryRepository translationEntryRepository,

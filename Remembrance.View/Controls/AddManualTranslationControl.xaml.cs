@@ -1,6 +1,6 @@
 namespace Remembrance.View.Controls
 {
-    internal sealed partial class AddManualTranslationControl
+    sealed partial class AddManualTranslationControl
     {
         public AddManualTranslationControl()
         {

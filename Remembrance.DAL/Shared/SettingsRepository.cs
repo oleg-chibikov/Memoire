@@ -6,7 +6,7 @@ using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 
 namespace Remembrance.DAL.Shared
 {
-    internal sealed class SettingsRepository : BaseSettingsRepository, ISettingsRepository
+    sealed class SettingsRepository : BaseSettingsRepository, ISettingsRepository
     {
         public SettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true)
             : base(directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)), nameof(Settings), shrink)

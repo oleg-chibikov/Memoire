@@ -6,7 +6,7 @@ using Scar.Common.WPF.View.Contracts;
 
 namespace Remembrance.Windows.Common
 {
-    internal sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
+    sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
     {
         public void AdjustAnyWindowPosition(IDisplayable window)
         {

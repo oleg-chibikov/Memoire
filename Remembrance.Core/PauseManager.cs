@@ -9,9 +9,9 @@ using Remembrance.Resources;
 
 namespace Remembrance.Core
 {
-    internal sealed class PauseManager : IPauseManager, IDisposable
+    sealed class PauseManager : IPauseManager, IDisposable
     {
-        private static readonly IDictionary<PauseReason, string> PauseReasonLabels = new Dictionary<PauseReason, string>
+        static readonly IDictionary<PauseReason, string> PauseReasonLabels = new Dictionary<PauseReason, string>
         {
             { PauseReason.InactiveMode, Texts.PauseReasonInactiveMode },
             { PauseReason.ActiveProcessBlacklisted, Texts.PauseReasonActiveProcessBlacklisted },
@@ -19,17 +19,17 @@ namespace Remembrance.Core
             { PauseReason.OperationInProgress, Texts.PauseReasonOperationInProgress }
         };
 
-        private readonly IDictionary<PauseReason, string> _descriptions = new Dictionary<PauseReason, string>();
+        readonly IDictionary<PauseReason, string> _descriptions = new Dictionary<PauseReason, string>();
 
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly object _lockObject = new object();
+        readonly object _lockObject = new object();
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IDictionary<PauseReason, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReason, PauseInfoCollection>();
+        readonly IDictionary<PauseReason, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReason, PauseInfoCollection>();
 
         public PauseManager(ILog logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
@@ -149,7 +149,7 @@ namespace Remembrance.Core
             _messageHub.Publish(pauseReason);
         }
 
-        private static void ApplyToEveryPauseReason(Action<PauseReason> action)
+        static void ApplyToEveryPauseReason(Action<PauseReason> action)
         {
             foreach (var pauseReason in Enum.GetValues(typeof(PauseReason)).Cast<PauseReason>().Where(p => p != PauseReason.None))
             {

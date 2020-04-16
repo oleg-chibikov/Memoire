@@ -2,14 +2,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Remembrance.Contracts.View.Settings;
-using Scar.Common.View.WindowFactory;
+using Scar.Common;
 
 namespace Remembrance.View.WindowCreators
 {
-    internal sealed class SettingsWindowCreator : IWindowCreator<ISettingsWindow>
+    sealed class SettingsWindowCreator : IWindowCreator<ISettingsWindow>
     {
-        private readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
-        private readonly Func<IDictionaryWindow?, ISettingsWindow> _settingsWindowFactory;
+        readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
+        readonly Func<IDictionaryWindow?, ISettingsWindow> _settingsWindowFactory;
 
         public SettingsWindowCreator(IWindowFactory<IDictionaryWindow> dictionaryWindowFactory, Func<IDictionaryWindow?, ISettingsWindow> settingsWindowFactory)
         {

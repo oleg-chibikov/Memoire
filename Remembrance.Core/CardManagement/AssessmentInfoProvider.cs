@@ -12,11 +12,11 @@ using Scar.Common.Exceptions;
 
 namespace Remembrance.Core.CardManagement
 {
-    internal sealed class AssessmentInfoProvider : IAssessmentInfoProvider
+    sealed class AssessmentInfoProvider : IAssessmentInfoProvider
     {
-        private static readonly Random Random = new Random();
+        static readonly Random Random = new Random();
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
         public AssessmentInfoProvider(ILog logger)
         {
@@ -36,22 +36,22 @@ namespace Remembrance.Core.CardManagement
             return isReverse ? GetReverseAssessmentInfo(randomTranslation, acceptedWordGroups) : GetStraightAssessmentInfo(acceptedWordGroups);
         }
 
-        private static bool HasPriorityItems(TranslationVariant translationVariant, TranslationEntry translationEntry)
+        static bool HasPriorityItems(TranslationVariant translationVariant, TranslationEntry translationEntry)
         {
             return IsPriority(translationVariant, translationEntry) || translationVariant.Synonyms?.Any(synonym => IsPriority(synonym, translationEntry)) == true;
         }
 
-        private static bool HasPriorityItems(PartOfSpeechTranslation partOfSpeechTranslation, TranslationEntry translationEntry)
+        static bool HasPriorityItems(PartOfSpeechTranslation partOfSpeechTranslation, TranslationEntry translationEntry)
         {
             return partOfSpeechTranslation.TranslationVariants.Any(translationVariant => HasPriorityItems(translationVariant, translationEntry));
         }
 
-        private static bool IsPriority(BaseWord word, TranslationEntry translationEntry)
+        static bool IsPriority(BaseWord word, TranslationEntry translationEntry)
         {
             return translationEntry.PriorityWords?.Contains(word) == true;
         }
 
-        private static bool IsReverse(RepeatType repeatType)
+        static bool IsReverse(RepeatType repeatType)
         {
             var isReverse = false;
             if (repeatType >= RepeatType.Advanced)
@@ -62,7 +62,7 @@ namespace Remembrance.Core.CardManagement
             return isReverse;
         }
 
-        private IReadOnlyCollection<GroupingInfo> GetAcceptedWordGroups(
+        IReadOnlyCollection<GroupingInfo> GetAcceptedWordGroups(
             IGrouping<PartOfSpeech, PartOfSpeechTranslation> partOfSpeechGroup,
             TranslationEntry translationEntry,
             bool translationEntryHasPriorityItems)
@@ -94,7 +94,7 @@ namespace Remembrance.Core.CardManagement
             return acceptedWordGroups;
         }
 
-        private IEnumerable<PartOfSpeechTranslation> GetPartOfSpeechTranslationsWithRespectToPriority(
+        IEnumerable<PartOfSpeechTranslation> GetPartOfSpeechTranslationsWithRespectToPriority(
             TranslationResult translationResult,
             TranslationEntry translationEntry,
             out bool hasPriorityItems)
@@ -113,7 +113,7 @@ namespace Remembrance.Core.CardManagement
             return translationResult.PartOfSpeechTranslations;
         }
 
-        private IReadOnlyCollection<Word> GetPossibleTranslations(
+        IReadOnlyCollection<Word> GetPossibleTranslations(
             (TranslationVariant TranslationVariant, bool HasPriorityItems) translationVariantWithPriorityInfo,
             TranslationEntry translationEntry)
         {
@@ -136,7 +136,7 @@ namespace Remembrance.Core.CardManagement
             return result.ToArray();
         }
 
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> GetRandomPartOfSpeechGroup(
+        IGrouping<PartOfSpeech, PartOfSpeechTranslation> GetRandomPartOfSpeechGroup(
             IReadOnlyCollection<IGrouping<PartOfSpeech, PartOfSpeechTranslation>> partOfSpeechGroups)
         {
             _logger.Trace("Getting random part of speech group...");
@@ -145,13 +145,13 @@ namespace Remembrance.Core.CardManagement
             return result;
         }
 
-        private AssessmentInfo GetReverseAssessmentInfo(bool needRandom, IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
+        AssessmentInfo GetReverseAssessmentInfo(bool needRandom, IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting reverse assessment info...");
             return needRandom ? GetReverseAssessmentInfoFromRandomTranslation(acceptedWordGroups) : GetReverseAssessmentInfoFromFirstTranslation(acceptedWordGroups);
         }
 
-        private AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation(IEnumerable<GroupingInfo> acceptedWordGroups)
+        AssessmentInfo GetReverseAssessmentInfoFromFirstTranslation(IEnumerable<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting info from first translation...");
             var acceptedWordGroup = acceptedWordGroups.First();
@@ -168,7 +168,7 @@ namespace Remembrance.Core.CardManagement
                 acceptedWordGroup.Synonyms);
         }
 
-        private AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation(IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
+        AssessmentInfo GetReverseAssessmentInfoFromRandomTranslation(IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting info from random translation...");
             var randomAcceptedWordGroupIndex = Random.Next(acceptedWordGroups.Count);
@@ -187,7 +187,7 @@ namespace Remembrance.Core.CardManagement
                 randomAcceptedWordGroup.Synonyms);
         }
 
-        private AssessmentInfo GetStraightAssessmentInfo(IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
+        AssessmentInfo GetStraightAssessmentInfo(IReadOnlyCollection<GroupingInfo> acceptedWordGroups)
         {
             _logger.Trace("Getting straight assessment info...");
             var acceptedAnswers = new HashSet<Word>(acceptedWordGroups.SelectMany(x => x.Words));
@@ -197,7 +197,7 @@ namespace Remembrance.Core.CardManagement
             return new AssessmentInfo(acceptedAnswers, word, correct, false, acceptedWordGroup.Meanings);
         }
 
-        private IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(bool randomPossible, IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
+        IGrouping<PartOfSpeech, PartOfSpeechTranslation> SelectSinglePartOfSpeechGroup(bool randomPossible, IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             _logger.Trace("Selecting single part of speech group...");
             var partOfSpeechGroups = partOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
@@ -210,7 +210,7 @@ namespace Remembrance.Core.CardManagement
             return partOfSpeechGroup;
         }
 
-        private sealed class GroupingInfo
+        sealed class GroupingInfo
         {
             public GroupingInfo(PartOfSpeechTranslation partOfSpeechTranslation, IReadOnlyCollection<Word> words, IEnumerable<Word> meanings, IEnumerable<Word> synonyms)
             {

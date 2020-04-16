@@ -5,7 +5,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Remembrance.Core
 {
-    internal abstract class CustomContractResolver : DefaultContractResolver
+    abstract class CustomContractResolver : DefaultContractResolver
     {
         protected virtual IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = null;
 

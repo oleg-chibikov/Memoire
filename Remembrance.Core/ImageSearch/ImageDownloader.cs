@@ -11,13 +11,13 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch
 {
-    internal class ImageDownloader : IImageDownloader
+    class ImageDownloader : IImageDownloader
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        readonly HttpClient _httpClient = new HttpClient();
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public ImageDownloader(ILog logger, IMessageHub messageHub)
         {

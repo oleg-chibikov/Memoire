@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Remembrance.ViewModel;
+using Scar.Common;
 using Scar.Common.View.Contracts;
-using Scar.Common.View.WindowFactory;
 
 namespace Remembrance.View.WindowCreators
 {
-    internal sealed class AssessmentViewOnlyCardWindowCreator : IWindowCreator<IAssessmentViewOnlyCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
+    sealed class AssessmentViewOnlyCardWindowCreator : IWindowCreator<IAssessmentViewOnlyCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
-        private readonly Func<TranslationInfo, AssessmentViewOnlyCardViewModel> _assessmentViewOnlyCardViewModelFactory;
-        private readonly Func<IDisplayable, AssessmentViewOnlyCardViewModel, IAssessmentViewOnlyCardWindow> _assessmentViewOnlyCardWindowFactory;
-        private readonly SynchronizationContext _synchronizationContext;
+        readonly Func<TranslationInfo, AssessmentViewOnlyCardViewModel> _assessmentViewOnlyCardViewModelFactory;
+        readonly Func<IDisplayable, AssessmentViewOnlyCardViewModel, IAssessmentViewOnlyCardWindow> _assessmentViewOnlyCardWindowFactory;
+        readonly SynchronizationContext _synchronizationContext;
 
         public AssessmentViewOnlyCardWindowCreator(
             Func<TranslationInfo, AssessmentViewOnlyCardViewModel> assessmentViewOnlyCardViewModelFactory,

@@ -8,9 +8,9 @@ using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Core.Exchange
 {
-    internal sealed class TranslationEntryContractResolver : DefaultContractResolver
+    sealed class TranslationEntryContractResolver : DefaultContractResolver
     {
-        private static readonly IDictionary<Type, string[]> Excluded = new Dictionary<Type, string[]>
+        static readonly IDictionary<Type, string[]> Excluded = new Dictionary<Type, string[]>
         {
             {
                 typeof(LearningInfo), new[]
@@ -20,7 +20,7 @@ namespace Remembrance.Core.Exchange
             }
         };
 
-        private Type? _currentDeclaringType;
+        Type? _currentDeclaringType;
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
@@ -36,7 +36,7 @@ namespace Remembrance.Core.Exchange
             return property;
         }
 
-        private bool ShouldExclude(MemberInfo memberInfo, Type? objectType)
+        bool ShouldExclude(MemberInfo memberInfo, Type? objectType)
         {
             if (objectType == null)
             {

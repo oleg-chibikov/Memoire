@@ -9,7 +9,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class ConfirmationViewModel : BaseViewModel
     {
-        private readonly TaskCompletionSource<bool> _taskCompletionSource;
+        readonly TaskCompletionSource<bool> _taskCompletionSource;
 
         public ConfirmationViewModel(bool showButtons, string text, ICommandManager commandManager)
             : base(commandManager)
@@ -35,7 +35,7 @@ namespace Remembrance.ViewModel
 
         public IRefreshableCommand WindowClosedCommand { get; }
 
-        private void Decline()
+        void Decline()
         {
             if (_taskCompletionSource.Task.IsCompleted)
             {
@@ -46,7 +46,7 @@ namespace Remembrance.ViewModel
             CloseWindow();
         }
 
-        private void Confirm()
+        void Confirm()
         {
             if (_taskCompletionSource.Task.IsCompleted)
             {

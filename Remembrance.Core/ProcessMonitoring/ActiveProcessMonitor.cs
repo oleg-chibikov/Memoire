@@ -9,13 +9,13 @@ using Remembrance.Contracts.ProcessMonitoring;
 
 namespace Remembrance.Core.ProcessMonitoring
 {
-    internal sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
+    sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
     {
-        private readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
-        private readonly IPauseManager _pauseManager;
+        readonly IPauseManager _pauseManager;
 
-        private readonly Timer _timer;
+        readonly Timer _timer;
 
         public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository)
         {
@@ -39,16 +39,16 @@ namespace Remembrance.Core.ProcessMonitoring
             _timer.Dispose();
         }
 
-        private static Process? GetActiveProcess()
+        static Process? GetActiveProcess()
         {
             var hwnd = GetForegroundWindow();
             return GetProcessByHandle(hwnd);
         }
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
+        static extern IntPtr GetForegroundWindow();
 
-        private static Process? GetProcessByHandle(IntPtr hwnd)
+        static Process? GetProcessByHandle(IntPtr hwnd)
         {
             try
             {
@@ -64,9 +64,9 @@ namespace Remembrance.Core.ProcessMonitoring
         [DllImport("user32.dll")]
 
         // ReSharper disable once StyleCop.SA1305
-        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
-        private void CheckActiveProcess()
+        void CheckActiveProcess()
         {
             var activeProcess = GetActiveProcess();
             if (activeProcess != null)
@@ -75,7 +75,7 @@ namespace Remembrance.Core.ProcessMonitoring
             }
         }
 
-        private void PauseOrResumeProcess(Process process)
+        void PauseOrResumeProcess(Process process)
         {
             var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
 
@@ -89,7 +89,7 @@ namespace Remembrance.Core.ProcessMonitoring
             }
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             CheckActiveProcess();
         }

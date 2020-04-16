@@ -9,7 +9,7 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
 {
-    internal abstract class BaseCardManager
+    abstract class BaseCardManager
     {
         protected readonly ILocalSettingsRepository LocalSettingsRepository;
 

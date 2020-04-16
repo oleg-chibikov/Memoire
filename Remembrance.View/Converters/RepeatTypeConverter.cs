@@ -7,7 +7,7 @@ using Scar.Common;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(RepeatType), typeof(string))]
-    internal sealed class RepeatTypeConverter : IValueConverter
+    sealed class RepeatTypeConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
@@ -19,7 +19,7 @@ namespace Remembrance.View.Converters
             throw new NotSupportedException();
         }
 
-        private static string Convert(RepeatType repeatType)
+        static string Convert(RepeatType repeatType)
         {
             return $"{repeatType}: {RepeatTypeSettings.RepeatTimes[repeatType].ToReadableFormat()}";
         }

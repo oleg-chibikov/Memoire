@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace Remembrance.View.Controls
 {
-    internal sealed partial class WordControl
+    sealed partial class WordControl
     {
         public static readonly DependencyProperty SpeakerAlignmentProperty = DependencyProperty.Register(
             nameof(SpeakerAlignment),

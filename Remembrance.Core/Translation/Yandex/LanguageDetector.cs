@@ -13,24 +13,24 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    internal sealed class LanguageDetector : ILanguageDetector
+    sealed class LanguageDetector : ILanguageDetector
     {
-        private static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings
         {
             ContractResolver = new ListResultContractResolver()
         };
 
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new DetectionResultContractResolver()
         };
 
-        private readonly HttpClient _httpClient = new HttpClient
+        readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
         };
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public LanguageDetector(IMessageHub messageHub)
         {

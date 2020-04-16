@@ -1,6 +1,6 @@
 namespace Remembrance.View.Controls
 {
-    internal sealed partial class AnswerControl
+    sealed partial class AnswerControl
     {
         public AnswerControl()
         {

@@ -8,9 +8,9 @@ using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class SettingsSyncPostProcessor : ISyncPostProcessor<Settings>
+    sealed class SettingsSyncPostProcessor : ISyncPostProcessor<Settings>
     {
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public SettingsSyncPostProcessor(IMessageHub messageHub)
         {

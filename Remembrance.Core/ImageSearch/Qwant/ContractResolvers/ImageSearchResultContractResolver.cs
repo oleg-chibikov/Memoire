@@ -7,7 +7,7 @@ using Remembrance.Core.ImageSearch.Qwant.JsonConverters;
 
 namespace Remembrance.Core.ImageSearch.Qwant.ContractResolvers
 {
-    internal sealed class ImageSearchResultContractResolver : CustomContractResolver
+    sealed class ImageSearchResultContractResolver : CustomContractResolver
     {
         protected override IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
         {

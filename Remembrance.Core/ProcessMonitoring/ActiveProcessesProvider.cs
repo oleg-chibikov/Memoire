@@ -7,7 +7,7 @@ using Remembrance.Contracts.ProcessMonitoring.Data;
 
 namespace Remembrance.Core.ProcessMonitoring
 {
-    internal sealed class ActiveProcessesProvider : IActiveProcessesProvider
+    sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {
         public IEnumerable<ProcessInfo> GetActiveProcesses()
         {

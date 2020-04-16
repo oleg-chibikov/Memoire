@@ -17,7 +17,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class WordViewModel : BaseViewModel
     {
-        private readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        readonly ITextToSpeechPlayer _textToSpeechPlayer;
 
         protected readonly ITranslationEntryProcessor TranslationEntryProcessor;
 
@@ -75,7 +75,7 @@ namespace Remembrance.ViewModel
 
         // A hack to raise NotifyPropertyChanged for other properties
         [AlsoNotifyFor(nameof(Word))]
-        private bool ReRenderWordSwitch { get; set; }
+        bool ReRenderWordSwitch { get; set; }
 
         public void ReRenderWord()
         {
@@ -91,12 +91,12 @@ namespace Remembrance.ViewModel
         {
         }
 
-        private async Task LearnWordAsync()
+        async Task LearnWordAsync()
         {
             await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Word.Text, Language), CancellationToken.None).ConfigureAwait(false);
         }
 
-        private async Task PlayTtsAsync()
+        async Task PlayTtsAsync()
         {
             await _textToSpeechPlayer.PlayTtsAsync(Word.Text, Language, CancellationToken.None).ConfigureAwait(false);
         }

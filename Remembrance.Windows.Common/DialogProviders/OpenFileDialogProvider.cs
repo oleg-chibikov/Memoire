@@ -4,9 +4,9 @@ using Remembrance.Resources;
 
 namespace Remembrance.Windows.Common.DialogProviders
 {
-    internal sealed class OpenFileDialogProvider : IOpenFileDialogProvider
+    sealed class OpenFileDialogProvider : IOpenFileDialogProvider
     {
-        private readonly OpenFileDialog _dialog = new OpenFileDialog
+        readonly OpenFileDialog _dialog = new OpenFileDialog
         {
             CheckFileExists = true,
             FileName = DialogProviderConstants.DefaultFilePattern,

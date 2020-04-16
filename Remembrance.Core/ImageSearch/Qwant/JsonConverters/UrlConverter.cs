@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Remembrance.Core.ImageSearch.Qwant.JsonConverters
 {
-    internal sealed class UrlConverter : JsonConverter
+    sealed class UrlConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

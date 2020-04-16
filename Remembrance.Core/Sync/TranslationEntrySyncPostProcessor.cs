@@ -6,9 +6,9 @@ using Remembrance.Contracts.Sync;
 
 namespace Remembrance.Core.Sync
 {
-    internal sealed class TranslationEntrySyncPostProcessor : ISyncPostProcessor<TranslationEntry>
+    sealed class TranslationEntrySyncPostProcessor : ISyncPostProcessor<TranslationEntry>
     {
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
         public TranslationEntrySyncPostProcessor(IMessageHub messageHub)
         {

@@ -4,7 +4,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class DictionaryWindow : IDictionaryWindow
+    sealed partial class DictionaryWindow : IDictionaryWindow
     {
         public DictionaryWindow(DictionaryViewModel viewModel)
         {

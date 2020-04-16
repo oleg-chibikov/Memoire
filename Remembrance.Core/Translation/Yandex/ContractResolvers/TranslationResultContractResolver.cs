@@ -6,7 +6,7 @@ using Remembrance.Core.Translation.Yandex.JsonConverters;
 
 namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
-    internal sealed class TranslationResultContractResolver : CustomContractResolver
+    sealed class TranslationResultContractResolver : CustomContractResolver
     {
         protected override IReadOnlyDictionary<Type, JsonConverter>? PropertyConverters { get; } = new Dictionary<Type, JsonConverter>
         {

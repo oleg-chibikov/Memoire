@@ -1,6 +1,6 @@
 namespace Remembrance.View.Dialogs
 {
-    internal sealed partial class EditManualTranslationsDialog
+    sealed partial class EditManualTranslationsDialog
     {
         public EditManualTranslationsDialog()
         {

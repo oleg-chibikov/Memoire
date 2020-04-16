@@ -4,7 +4,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class AddTranslationWindow : IAddTranslationWindow
+    sealed partial class AddTranslationWindow : IAddTranslationWindow
     {
         public AddTranslationWindow(AddTranslationViewModel viewModel)
         {

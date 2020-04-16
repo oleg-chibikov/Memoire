@@ -17,17 +17,8 @@
     <PackageReference Include="MaterialDesignColors" Version="1.2.3" />
     <PackageReference Include="MaterialDesignThemes" Version="3.1.0" />
     <PackageReference Include="Microsoft.WindowsAPICodePack.Core" Version="1.1.0" />
-    <PackageReference Include="Scar.Common" Version="1.1.7407.39183" />
-    <PackageReference Include="Scar.Common.Installer.UI" Version="1.1.7407.39185" />
-    <PackageReference Include="Scar.Common.MVVM.Commands" Version="1.1.7407.39187" />
-    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7407.39187" />
-    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7407.39186" />
-    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7407.39185" />
-    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7407.39184" />
-    <PackageReference Include="Scar.Common.WPF.View" Version="1.1.7407.39184" />
-    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7407.39185" />
-    <PackageReference Include="Scar.Common.WPF.View.BaseWindow" Version="1.1.7407.39184" />
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7407.39184" />
+    <PackageReference Include="Scar.Common.Installer.UI" Version="1.1.7411.17800" />
+    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7411.17774" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Security.AccessControl" Version="4.7.0" />
     <PackageReference Include="System.Security.Permissions" Version="4.7.0" />

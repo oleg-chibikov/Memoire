@@ -16,13 +16,13 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class ProcessBlacklistViewModel : BaseViewModel
     {
-        private readonly IActiveProcessesProvider _activeProcessesProvider;
+        readonly IActiveProcessesProvider _activeProcessesProvider;
 
-        private readonly ObservableCollection<ProcessInfo> _availableProcesses = new ObservableCollection<ProcessInfo>();
+        readonly ObservableCollection<ProcessInfo> _availableProcesses = new ObservableCollection<ProcessInfo>();
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private string? _filter;
+        string? _filter;
 
         public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILog logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource)
             : base(commandManager)
@@ -76,7 +76,7 @@ namespace Remembrance.ViewModel
 
         public string? Text { get; set; }
 
-        private void AddFromActiveProcesses(IList processesList)
+        void AddFromActiveProcesses(IList processesList)
         {
             _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             var processInfos = processesList.Cast<ProcessInfo>();
@@ -90,7 +90,7 @@ namespace Remembrance.ViewModel
             Filter = null;
         }
 
-        private void AddProcessInfo(ProcessInfo processInfo)
+        void AddProcessInfo(ProcessInfo processInfo)
         {
             _logger.TraceFormat("Adding process info {0} to the blacklist...", processInfo);
 
@@ -105,7 +105,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void AddText()
+        void AddText()
         {
             if (Text == null || string.IsNullOrWhiteSpace(Text))
             {
@@ -116,18 +116,18 @@ namespace Remembrance.ViewModel
             Text = null;
         }
 
-        private void CancelAddition()
+        void CancelAddition()
         {
             IsActiveProcessesDialogOpen = false;
             Filter = null;
         }
 
-        private void ClearFilter()
+        void ClearFilter()
         {
             Filter = null;
         }
 
-        private void Delete(ProcessInfo processInfo)
+        void Delete(ProcessInfo processInfo)
         {
             _ = processInfo ?? throw new ArgumentNullException(nameof(processInfo));
             _logger.TraceFormat("Deleting process info {0} from the blacklist...", processInfo);
@@ -135,7 +135,7 @@ namespace Remembrance.ViewModel
             BlacklistedProcesses.Remove(processInfo);
         }
 
-        private void DeleteBatch(IList processesList)
+        void DeleteBatch(IList processesList)
         {
             _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
             _logger.Trace("Deleting multiple process infos from the blacklist...");
@@ -148,7 +148,7 @@ namespace Remembrance.ViewModel
             }
         }
 
-        private void OpenProcessesList()
+        void OpenProcessesList()
         {
             _availableProcesses.Clear();
             var activeProcesses = _activeProcessesProvider.GetActiveProcesses();

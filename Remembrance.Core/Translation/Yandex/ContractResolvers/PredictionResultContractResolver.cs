@@ -3,7 +3,7 @@ using Remembrance.Contracts.Translate.Data.Predictor;
 
 namespace Remembrance.Core.Translation.Yandex.ContractResolvers
 {
-    internal sealed class PredictionResultContractResolver : CustomContractResolver
+    sealed class PredictionResultContractResolver : CustomContractResolver
     {
         protected override IReadOnlyDictionary<string, string> PropertyMappings { get; } = new Dictionary<string, string>
         {

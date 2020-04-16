@@ -5,7 +5,7 @@ using Remembrance.Contracts.DAL.Model;
 
 namespace Remembrance.Core.CardManagement.Data
 {
-    internal sealed class RemembranceExchangeEntry : IExchangeEntry
+    sealed class RemembranceExchangeEntry : IExchangeEntry
     {
         public RemembranceExchangeEntry(TranslationEntry translationEntry, LearningInfo learningInfo)
         {

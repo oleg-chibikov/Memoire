@@ -5,7 +5,7 @@ using Remembrance.ViewModel;
 
 namespace Remembrance.View.Windows
 {
-    internal sealed partial class SettingsWindow : ISettingsWindow
+    sealed partial class SettingsWindow : ISettingsWindow
     {
         public SettingsWindow(SettingsViewModel viewModel, Window? ownerWindow = null)
         {

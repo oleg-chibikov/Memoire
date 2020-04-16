@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 namespace Remembrance.View.Converters
 {
     [ValueConversion(typeof(byte[]), typeof(BitmapImage))]
-    internal sealed class BytesToImageConverter : IValueConverter
+    sealed class BytesToImageConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {

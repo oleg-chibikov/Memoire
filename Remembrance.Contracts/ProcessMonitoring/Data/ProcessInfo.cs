@@ -32,7 +32,7 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
             return Name;
         }
 
-        private bool Equals(ProcessInfo other)
+        bool Equals(ProcessInfo other)
         {
             return string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
         }

@@ -18,14 +18,14 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
 {
-    internal sealed class ImageSearcher : IImageSearcher
+    sealed class ImageSearcher : IImageSearcher
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new ImageSearchResultContractResolver()
         };
 
-        private readonly HttpClient _httpClient = new HttpClient
+        readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://api.qwant.com/api/search/"),
             DefaultRequestHeaders =
@@ -34,13 +34,13 @@ namespace Remembrance.Core.ImageSearch.Qwant
             }
         };
 
-        private readonly ILog _logger;
+        readonly ILog _logger;
 
-        private readonly IMessageHub _messageHub;
+        readonly IMessageHub _messageHub;
 
-        private readonly IRateLimiter _rateLimiter;
+        readonly IRateLimiter _rateLimiter;
 
-        private readonly ISettingsRepository _settingsRepository;
+        readonly ISettingsRepository _settingsRepository;
 
         public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISettingsRepository settingsRepository)
         {

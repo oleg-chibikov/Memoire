@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7407.39187" />
-    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7407.39184" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7411.17541" />
+    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7411.17773" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 namespace Remembrance.Installer.UI
 {
-    internal sealed partial class App
+    sealed partial class App
     {
     }
 }
