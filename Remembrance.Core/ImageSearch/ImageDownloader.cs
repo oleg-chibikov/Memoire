@@ -41,7 +41,7 @@ namespace Remembrance.Core.ImageSearch
 
                 return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException)
             {
                 _messageHub.Publish(Errors.CannotDownloadImage.ToError(ex));
                 return null;

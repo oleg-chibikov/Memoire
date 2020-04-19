@@ -132,6 +132,7 @@ namespace Remembrance.Launcher
             RegisterLiteDbReadonlyCollection<Word>();
             RegisterLiteDbReadonlyCollection<ManualTranslation>();
             RegisterLiteDbStringReadonlyCollection();
+            RegisterLiteDbIntReadonlyCollection();
             RegisterLiteDbSet<BaseWord>();
         }
 
@@ -153,7 +154,12 @@ namespace Remembrance.Launcher
 
         static void RegisterLiteDbStringReadonlyCollection()
         {
-            BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(o => new BsonArray(o.Select(x => new BsonValue(x))), m => m.AsArray.Select(item => item.AsString).ToArray());
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<string>>(o => new BsonArray(o.Select(x => x == null ? null : new BsonValue(x))), m => m.AsArray.Select(item => item.AsString).ToArray());
+        }
+
+        static void RegisterLiteDbIntReadonlyCollection()
+        {
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<int?>>(o => new BsonArray(o.Select(x => x == null ? null : new BsonValue(x))), m => m.AsArray.Select(item => item.AsInt32).Cast<int?>().ToArray());
         }
 
         static void RegisterNamed<T, TInterface>(ContainerBuilder builder)

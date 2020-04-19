@@ -49,7 +49,7 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<TranslationResult>(result, SerializerSettings);
             }
-            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException || ex is JsonException)
             {
                 _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, text + $" [{sourceLanguage}->{targetLanguage}]").ToError(ex));
                 return null;

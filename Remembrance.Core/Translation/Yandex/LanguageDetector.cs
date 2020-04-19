@@ -49,7 +49,7 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<DetectionResult>(result, SerializerSettings) ?? throw new InvalidOperationException("Cannot deserialize DetectionResult");
             }
-            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex));
                 return new DetectionResult { Code = Constants.EnLanguageTwoLetters, Language = Constants.EnLanguage };
@@ -71,7 +71,7 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<LanguageListResult>(result, ListResultSettings);
             }
-            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
                 return null;

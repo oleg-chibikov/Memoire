@@ -81,7 +81,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 var deserialized = JsonConvert.DeserializeObject<QwantResponse>(result, SerializerSettings);
                 return deserialized?.Data.Result.Items;
             }
-            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex));
                 return null;

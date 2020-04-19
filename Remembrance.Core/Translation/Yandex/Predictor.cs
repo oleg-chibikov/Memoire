@@ -45,7 +45,7 @@ namespace Remembrance.Core.Translation.Yandex
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<PredictionResult>(result, SerializerSettings);
             }
-            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
+            catch (Exception ex) when (ex is HttpRequestException || ex is InvalidOperationException || ex is JsonException)
             {
                 _messageHub.Publish(Errors.CannotPredict.ToError(ex));
                 return null;
