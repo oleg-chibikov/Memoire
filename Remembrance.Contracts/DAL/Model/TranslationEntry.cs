@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
@@ -16,7 +17,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public IReadOnlyCollection<ManualTranslation>? ManualTranslations { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "It is initialized by LiteDB and needs setter")]
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "It is initialized by LiteDB and needs setter")]
         public ISet<BaseWord>? PriorityWords { get; set; }
 
         public override string ToString()

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -36,7 +37,7 @@ namespace Remembrance.Core.Translation.Yandex
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General exception handler")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General exception handler")]
         public async Task<bool> PlayTtsAsync(string text, string lang, CancellationToken cancellationToken)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));

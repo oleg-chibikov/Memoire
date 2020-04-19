@@ -188,7 +188,9 @@ namespace Remembrance.ViewModel
             _semaphore.Release();
 
             TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
-            LastCardShowTime = provider.LastCardShowTime == null ? null : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+            LastCardShowTime = provider.LastCardShowTime == null
+                ? null
+                : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.CardManagement.Data.PauseReasons.CardIsVisible).GetPauseTime();

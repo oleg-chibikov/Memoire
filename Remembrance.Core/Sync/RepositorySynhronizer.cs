@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -101,7 +102,7 @@ namespace Remembrance.Core.Sync
             File.Delete(newFilePath);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General catch for all types of exceptions")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General catch for all types of exceptions")]
         void SyncInternal(TRepository remoteRepository)
         {
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);

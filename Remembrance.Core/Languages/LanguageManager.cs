@@ -74,7 +74,8 @@ namespace Remembrance.Core.Languages
                 toSelect ??= Constants.AutoDetectLanguage;
             }
 
-            var ordered = languages.OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+            var ordered = languages
+                .OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
 
@@ -105,7 +106,8 @@ namespace Remembrance.Core.Languages
 
             var lastUsed = _localSettingsRepository.LastUsedTargetLanguage;
             var toSelect = (lastUsed != null) && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
-            var ordered = languages.OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
+            var ordered = languages
+                .OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
                 .Select(language => new Language(language.Key, language.Value));
             return new LanguagesCollection(ordered, toSelect);

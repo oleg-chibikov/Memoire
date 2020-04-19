@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace Remembrance.Core.ImageSearch
 
         readonly IMessageHub _messageHub;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5359:Do Not Disable Certificate Validation", Justification = "No need for certificate validation")]
+        [SuppressMessage("Security", "CA5359:Do Not Disable Certificate Validation", Justification = "No need for certificate validation")]
         public ImageDownloader(ILog logger, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

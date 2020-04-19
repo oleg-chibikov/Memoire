@@ -159,7 +159,9 @@ namespace Remembrance.Launcher
 
         static void RegisterLiteDbIntReadonlyCollection()
         {
-            BsonMapper.Global.RegisterType<IReadOnlyCollection<int?>>(o => new BsonArray(o.Select(x => x == null ? null : new BsonValue(x))), m => m.AsArray.Select(item => item.AsInt32).Cast<int?>().ToArray());
+            BsonMapper.Global.RegisterType<IReadOnlyCollection<int?>>(
+                o => new BsonArray(o.Select(x => x == null ? null : new BsonValue(x))),
+                m => m.AsArray.Select(item => item.AsInt32).Cast<int?>().ToArray());
         }
 
         static void RegisterNamed<T, TInterface>(ContainerBuilder builder)
