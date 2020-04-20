@@ -21,7 +21,7 @@
   </ItemsControl.Resources>
   <ItemsControl.ItemTemplate>
     <DataTemplate>
-      <Border Margin="0 5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+      <Border Padding="{StaticResource CommonMarginThickness}" Background="{StaticResource Background}" Margin="0 5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
         <ContentControl Content="{Binding Mode=OneTime}">
           <ContentControl.Resources>
             <ResourceDictionary>

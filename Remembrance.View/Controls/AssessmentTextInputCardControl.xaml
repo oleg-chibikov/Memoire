@@ -12,7 +12,7 @@
                         lex:LocalizeDictionary.OutputMissingKeys="True"
                         lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
                         lex:ResxLocalizationProvider.DefaultDictionary="Texts" mc:Ignorable="d"
-                        d:DataContext="{d:DesignInstance viewModel:AssessmentTextInputCardViewModel}" Background="{StaticResource Background}"
+                        d:DataContext="{d:DesignInstance viewModel:AssessmentTextInputCardViewModel}"
                       >
   <commonView:BaseControl.Resources>
     <commonView:DesignTimeResourceDictionary
