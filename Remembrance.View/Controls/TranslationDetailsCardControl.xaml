@@ -24,7 +24,7 @@
     </Grid.RowDefinitions>
     <controls:LearningInfoActionsControl Grid.Row="0" DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
     <StackPanel Orientation="Horizontal" Grid.Row="1" commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-      <TextBlock FontSize="{StaticResource HugeFontSize}" FontWeight="Bold" Text="{Binding Word, Mode=OneTime}" />
+      <TextBlock FontSize="{StaticResource MediumFontSize}" FontWeight="Bold" Text="{Binding Word, Mode=OneTime}" />
       <TextBlock Foreground="{StaticResource WordInfo}" Text="{Binding PrepositionsCollection, Mode=OneWay}" />
       <TextBlock Text="{Binding LanguagePair, Mode=OneTime, StringFormat='({0})'}" />
       <TextBlock>
@@ -43,7 +43,7 @@
             </DataTemplate.Resources>
             <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
               <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
-                <controls:WordControl FontWeight="Bold" FontSize="{StaticResource BigFontSize}"
+                <controls:WordControl FontWeight="Bold" FontSize="{StaticResource MediumFontSize}"
                                       DataContext="{Binding Mode=OneTime}" />
                 <TextBlock
                   Text="{Binding Transcription, Mode=OneTime, StringFormat={StaticResource AdditionalInfoFormat}}"
@@ -60,12 +60,12 @@
                       <StackPanel>
                         <StackPanel Orientation="Horizontal"
                                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-                          <TextBlock FontSize="{StaticResource BigFontSize}"
+                          <TextBlock FontSize="{StaticResource MediumFontSize}"
                                      Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
                           <controls:WordImageViewerControl
                             DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
                           <controls:WordControl DataContext="{Binding Mode=OneTime}" />
-                          <controls:WordsControl ItemsSource="{Binding Synonyms, Mode=OneTime}" />
+                          <controls:WordsControl FontSize="{StaticResource SmallFontSize}" ItemsSource="{Binding Synonyms, Mode=OneTime}" />
                         </StackPanel>
                         <controls:WordsControl Foreground="{StaticResource SelectionCell}" HorizontalAlignment="Left"
                                                FontSize="{StaticResource SmallFontSize}"
@@ -75,9 +75,9 @@
                           <ItemsControl.ItemTemplate>
                             <DataTemplate>
                               <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Text, Mode=OneTime}" />
-                                <TextBlock
-                                  Text="{Binding Translations, Mode=OneTime, Converter={StaticResource WordConcatConverter}, StringFormat=' - {0}'}" />
+                                <TextBlock FontSize="{StaticResource SmallFontSize}"  Text="{Binding Text, Mode=OneTime}" />
+                                <TextBlock FontSize="{StaticResource SmallFontSize}" 
+                                           Text="{Binding Translations, Mode=OneTime, Converter={StaticResource WordConcatConverter}, StringFormat=' - {0}'}" />
                               </StackPanel>
                             </DataTemplate>
                           </ItemsControl.ItemTemplate>

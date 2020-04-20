@@ -18,7 +18,10 @@
   </commonView:BaseControl.Resources>
 
   <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-    <Expander Header="{lex:Loc Details}" Background="{StaticResource DarkerBackground}" ExpandDirection="Down">
+    <Expander Padding="{StaticResource CommonMarginThickness}" Margin="0" ExpandDirection="Down">
+      <Expander.Header>
+        <TextBlock Background="{StaticResource DarkerBackground}" Text="{lex:Loc Details}" Padding="5 2" Margin="0" FontWeight="Bold" />
+      </Expander.Header>
       <controls:TranslationDetailsCardControl DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
     </Expander>
     <controls:LearningInfoActionsControl DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />

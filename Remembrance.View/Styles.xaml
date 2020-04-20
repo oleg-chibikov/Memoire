@@ -196,6 +196,10 @@
   <Style TargetType="Expander" BasedOn="{StaticResource {x:Type Expander}}">
     <Setter Property="Background" Value="{StaticResource Background}" />
     <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+    <Setter Property="materialDesign:ExpanderAssist.DownHeaderPadding" Value="0"/>
+    <Setter Property="materialDesign:ExpanderAssist.UpHeaderPadding" Value="0"/>
+    <Setter Property="materialDesign:ExpanderAssist.LeftHeaderPadding" Value="0"/>
+    <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0"/>
   </Style>
 
   <Style TargetType="autoComplete:CompletableTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
