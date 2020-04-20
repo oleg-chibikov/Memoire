@@ -1,45 +1,51 @@
-<ItemsControl x:Class="Remembrance.View.Controls.AssessmentCardBatchControl"
-              x:ClassModifier="internal"
-              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-              xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-              xmlns:controls="clr-namespace:Remembrance.View.Controls"
-              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-              xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-              mc:Ignorable="d" AlternationCount="100"
-              d:DataContext="{d:DesignInstance viewModel:AssessmentBatchCardViewModel}">
-  <i:Interaction.Triggers>
-    <i:EventTrigger EventName="Closed">
-      <i:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />
-    </i:EventTrigger>
-  </i:Interaction.Triggers>
-  <ItemsControl.Resources>
-    <commonView:DesignTimeResourceDictionary
-      Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
-  </ItemsControl.Resources>
-  <ItemsControl.ItemTemplate>
-    <DataTemplate>
-      <Border Padding="{StaticResource CommonMarginThickness}" Background="{StaticResource Background}" Margin="0 5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
-        <ContentControl Content="{Binding Mode=OneTime}">
-          <ContentControl.Resources>
-            <ResourceDictionary>
-              <DataTemplate DataType="{x:Type viewModel:AssessmentTextInputCardViewModel}">
-                <controls:AssessmentTextInputCardControl DataContext="{Binding Mode=OneTime}" Visibility="{Binding IsHidden, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}" />
-              </DataTemplate>
-              <DataTemplate DataType="{x:Type viewModel:AssessmentViewOnlyCardViewModel}">
-                <controls:AssessmentViewOnlyCardControl DataContext="{Binding Mode=OneTime}" Visibility="{Binding IsHidden, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}" />
-              </DataTemplate>
-            </ResourceDictionary>
-          </ContentControl.Resources>
-        </ContentControl>
-      </Border>
-    </DataTemplate>
-  </ItemsControl.ItemTemplate>
-  <ItemsControl.ItemsPanel>
-    <ItemsPanelTemplate>
-      <VirtualizingStackPanel Orientation="Vertical"/>
-    </ItemsPanelTemplate>
-  </ItemsControl.ItemsPanel>
+<ItemsControl
+    x:Class="Remembrance.View.Controls.AssessmentCardBatchControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    d:DataContext="{d:DesignInstance viewModel:AssessmentBatchCardViewModel}"
+    x:ClassModifier="internal"
+    AlternationCount="100"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <ItemsControl.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
+    </ItemsControl.Resources>
+    <ItemsControl.ItemTemplate>
+        <DataTemplate>
+            <Border
+                Margin="0,5"
+                Padding="{StaticResource CommonMarginThickness}"
+                Background="{StaticResource Background}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1">
+                <ContentControl Content="{Binding Mode=OneTime}">
+                    <ContentControl.Resources>
+                        <ResourceDictionary>
+                            <DataTemplate DataType="{x:Type viewModel:AssessmentTextInputCardViewModel}">
+                                <controls:AssessmentTextInputCardControl DataContext="{Binding Mode=OneTime}" Visibility="{Binding IsHidden, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}" />
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewModel:AssessmentViewOnlyCardViewModel}">
+                                <controls:AssessmentViewOnlyCardControl DataContext="{Binding Mode=OneTime}" Visibility="{Binding IsHidden, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}" />
+                            </DataTemplate>
+                        </ResourceDictionary>
+                    </ContentControl.Resources>
+                </ContentControl>
+            </Border>
+        </DataTemplate>
+    </ItemsControl.ItemTemplate>
+    <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+            <VirtualizingStackPanel Orientation="Vertical" />
+        </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
 </ItemsControl>

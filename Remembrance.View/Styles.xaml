@@ -1,307 +1,209 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib"
-                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
-                    xmlns:converters="clr-namespace:Remembrance.View.Converters"
-                    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
-                    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-                    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
-                    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
-                    xmlns:controls="clr-namespace:Remembrance.View.Controls"
-                    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
-                    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid">
-
-  <commonConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
-  <commonConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-  <commonConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-  <commonConverters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
-  <commonConverters:ReverseBoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter" />
-  <commonConverters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
-  <commonConverters:AddValueConverter x:Key="AddValueConverter" />
-  <commonConverters:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
-  <commonConverters:PercentageIntToDoubleConverter x:Key="PercentageIntToDoubleConverter" />
-  <commonConverters:DoubleToTextTimeSpanConverter x:Key="DoubleToTextTimeSpanConverter" />
-  <commonConverters:FilePathToIconImageSourceConverter x:Key="FilePathToIconImageSourceConverter" />
-  <converters:RepeatTypeConverter x:Key="RepeatTypeConverter" />
-  <converters:DateTimeToBrushConverter x:Key="DateTimeToBrushConverter" />
-  <converters:WordConcatConverter x:Key="WordConcatConverter" />
-  <converters:PartOfSpeechToVisibilityConverter x:Key="PartOfSpeechToVisibilityConverter" />
-  <converters:PriorityWordViewModelToVisibilityConverter x:Key="PriorityWordViewModelToVisibilityConverter" />
-  <converters:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
-  <converters:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
-  <converters:MessageTypeToBackgroundBrushConverter x:Key="MessageTypeToBackgroundBrushConverter" />
-  <converters:MessageTypeToForegroundBrushConverter x:Key="MessageTypeToForegroundBrushConverter" />
-  <xcdg:IndexToOddConverter x:Key="RowIndexConverter" />
-  <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
-  <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
-
-  <Brush x:Key="Foreground">
-    White
-  </Brush>
-
-  <Brush x:Key="Background">
-    #FF464646
-  </Brush>
-
-  <Brush x:Key="DarkerBackground">
-    #FF363636
-  </Brush>
-
-  <Brush x:Key="Border">
-    #FF262626
-  </Brush>
-
-  <Brush x:Key="SelectionRow">
-    #FF565656
-  </Brush>
-
-  <Brush x:Key="SelectionCell">
-    #FF666666
-  </Brush>
-
-  <Brush x:Key="BorderBrush">
-    AntiqueWhite
-  </Brush>
-
-  <Brush x:Key="Hyperlink">
-    #bdb76b
-  </Brush>
-
-  <Brush x:Key="Favorite">
-    Gold
-  </Brush>
-
-  <Brush x:Key="WordInfo">
-    Silver
-  </Brush>
-
-  <Brush x:Key="Red">
-    OrangeRed
-  </Brush>
-
-  <Brush x:Key="Green">
-    MediumSeaGreen
-  </Brush>
-
-  <Color x:Key="GreenColor">
-    MediumSeaGreen
-  </Color>
-
-  <system:Double x:Key="CommonMargin">
-    5
-  </system:Double>
-
-  <Thickness x:Key="CommonMarginThickness">
-    5
-  </Thickness>
-
-  <system:Double x:Key="CommonButtonSize">
-    16
-  </system:Double>
-
-  <system:Double x:Key="HugeFontSize">
-    24
-  </system:Double>
-
-  <system:Double x:Key="BigFontSize">
-    20
-  </system:Double>
-
-  <system:Double x:Key="MediumFontSize">
-    16
-  </system:Double>
-
-  <system:Double x:Key="SmallFontSize">
-    14
-  </system:Double>
-
-  <system:Double x:Key="TinyFontSize">
-    10
-  </system:Double>
-
-  <Style x:Key="Control" TargetType="{x:Type commonView:BaseControl}">
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="Background" Value="{StaticResource Background}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-  </Style>
-
-  <Style TargetType="{x:Type commonView:BaseControl}" BasedOn="{StaticResource {x:Type Control}}" />
-
-  <Style TargetType="{x:Type baseWindow:BaseWindow}" BasedOn="{StaticResource {x:Type Control}}" />
-
-  <Style TargetType="{x:Type animatedWindow:AnimatedWindow}" BasedOn="{StaticResource {x:Type Control}}" />
-
-  <FontFamily x:Key="Font">
-    ./Fonts/#Champagne &amp; Limousines
-  </FontFamily>
-
-  <FontFamily x:Key="LogoFont">
-    ./Fonts/#Cubic
-  </FontFamily>
-
-  <system:String x:Key="AdditionalInfoFormat">
-    ({0})
-  </system:String>
-
-  <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="HorizontalAlignment" Value="Center" />
-    <Setter Property="Padding" Value="0" />
-  </Style>
-
-  <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Padding" Value="0" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-  </Style>
-
-  <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
-  <Style TargetType="Button" x:Key="ImageButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Padding" Value="0" />
-    <Setter Property="Margin" Value="0" />
-    <Setter Property="Width" Value="{StaticResource CommonButtonSize}" />
-    <Setter Property="Height" Value="{StaticResource CommonButtonSize}" />
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-  </Style>
-
-  <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="FontFamily" Value="{StaticResource Font}" />
-    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-  </Style>
-
-  <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-    <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="FontFamily" Value="{StaticResource Font}" />
-    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-  </Style>
-
-  <Style TargetType="Hyperlink" BasedOn="{StaticResource {x:Type Hyperlink}}">
-    <Setter Property="Foreground" Value="{StaticResource Hyperlink}" />
-  </Style>
-
-  <Style TargetType="externalBrowserHyperlink:ExternalBrowserHyperlink" BasedOn="{StaticResource {x:Type Hyperlink}}" />
-
-  <Style TargetType="Expander" BasedOn="{StaticResource {x:Type Expander}}">
-    <Setter Property="Background" Value="{StaticResource Background}" />
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="materialDesign:ExpanderAssist.DownHeaderPadding" Value="0"/>
-    <Setter Property="materialDesign:ExpanderAssist.UpHeaderPadding" Value="0"/>
-    <Setter Property="materialDesign:ExpanderAssist.LeftHeaderPadding" Value="0"/>
-    <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0"/>
-  </Style>
-
-  <Style TargetType="autoComplete:CompletableTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
-
-  <Style x:Key="Logo" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-    <Setter Property="FontFamily" Value="{StaticResource LogoFont}" />
-    <Setter Property="FontSize" Value="{StaticResource HugeFontSize}" />
-  </Style>
-
-  <Style TargetType="controls:WordControl">
-    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-  </Style>
-
-  <Style TargetType="controls:WordsControl">
-    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-  </Style>
-
-  <Style TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
-    <!--Do not use lex:loc in the styles setter - can crash while switching language-->
-    <Setter Property="NoGroupContent" Value="☩" />
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="Background" Value="{StaticResource Background}" />
-    <!--<Setter
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
+    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
+    mc:Ignorable="d">
+    <commonConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+    <commonConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <commonConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <commonConverters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+    <commonConverters:ReverseBoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter" />
+    <commonConverters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+    <commonConverters:AddValueConverter x:Key="AddValueConverter" />
+    <commonConverters:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
+    <commonConverters:PercentageIntToDoubleConverter x:Key="PercentageIntToDoubleConverter" />
+    <commonConverters:DoubleToTextTimeSpanConverter x:Key="DoubleToTextTimeSpanConverter" />
+    <commonConverters:FilePathToIconImageSourceConverter x:Key="FilePathToIconImageSourceConverter" />
+    <converters:RepeatTypeConverter x:Key="RepeatTypeConverter" />
+    <converters:DateTimeToBrushConverter x:Key="DateTimeToBrushConverter" />
+    <converters:WordConcatConverter x:Key="WordConcatConverter" />
+    <converters:PartOfSpeechToVisibilityConverter x:Key="PartOfSpeechToVisibilityConverter" />
+    <converters:PriorityWordViewModelToVisibilityConverter x:Key="PriorityWordViewModelToVisibilityConverter" />
+    <converters:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
+    <converters:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
+    <converters:MessageTypeToBackgroundBrushConverter x:Key="MessageTypeToBackgroundBrushConverter" />
+    <converters:MessageTypeToForegroundBrushConverter x:Key="MessageTypeToForegroundBrushConverter" />
+    <xcdg:IndexToOddConverter x:Key="RowIndexConverter" />
+    <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
+    <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
+    <Brush x:Key="Foreground">White</Brush>
+    <Brush x:Key="Background">#FF464646</Brush>
+    <Brush x:Key="DarkerBackground">#FF363636</Brush>
+    <Brush x:Key="Border">#FF262626</Brush>
+    <Brush x:Key="SelectionRow">#FF565656</Brush>
+    <Brush x:Key="SelectionCell">#FF666666</Brush>
+    <Brush x:Key="BorderBrush">AntiqueWhite</Brush>
+    <Brush x:Key="Hyperlink">#bdb76b</Brush>
+    <Brush x:Key="Favorite">Gold</Brush>
+    <Brush x:Key="WordInfo">Silver</Brush>
+    <Brush x:Key="Red">OrangeRed</Brush>
+    <Brush x:Key="Green">MediumSeaGreen</Brush>
+    <Color x:Key="GreenColor">MediumSeaGreen</Color>
+    <system:Double x:Key="CommonMargin">5</system:Double>
+    <Thickness x:Key="CommonMarginThickness">5</Thickness>
+    <system:Double x:Key="CommonButtonSize">16</system:Double>
+    <system:Double x:Key="HugeFontSize">24</system:Double>
+    <system:Double x:Key="BigFontSize">20</system:Double>
+    <system:Double x:Key="MediumFontSize">16</system:Double>
+    <system:Double x:Key="SmallFontSize">14</system:Double>
+    <system:Double x:Key="TinyFontSize">10</system:Double>
+    <Style x:Key="Control" TargetType="{x:Type commonView:BaseControl}">
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type commonView:BaseControl}" />
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type baseWindow:BaseWindow}" />
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type animatedWindow:AnimatedWindow}" />
+    <FontFamily x:Key="Font">./Fonts/#Champagne &amp; Limousines</FontFamily>
+    <FontFamily x:Key="LogoFont">./Fonts/#Cubic</FontFamily>
+    <system:String x:Key="AdditionalInfoFormat">({0})</system:String>
+    <Style BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}" TargetType="materialDesign:PackIcon">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <!--  ReSharper disable once Xaml.StaticResourceNotResolved  -->
+    <Style
+        x:Key="ImageButton"
+        BasedOn="{StaticResource MaterialDesignRaisedButton}"
+        TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Width" Value="{StaticResource CommonButtonSize}" />
+        <Setter Property="Height" Value="{StaticResource CommonButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource Font}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="TextBox">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource Font}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+        <Setter Property="Foreground" Value="{StaticResource Hyperlink}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="externalBrowserHyperlink:ExternalBrowserHyperlink" />
+    <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="materialDesign:ExpanderAssist.DownHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.UpHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.LeftHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="autoComplete:CompletableTextBox" />
+    <Style
+        x:Key="Logo"
+        BasedOn="{StaticResource {x:Type TextBlock}}"
+        TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource LogoFont}" />
+        <Setter Property="FontSize" Value="{StaticResource HugeFontSize}" />
+    </Style>
+    <Style TargetType="controls:WordControl">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style TargetType="controls:WordsControl">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
+        <!--  Do not use lex:loc in the styles setter - can crash while switching language  -->
+        <Setter Property="NoGroupContent" Value="☩" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <!--<Setter
             Property="BorderThickness"
             Value="0" />
         <Setter
             Property="BorderBrush"
             Value="Transparent" />-->
-  </Style>
-
-  <DataTemplate x:Key="CellTemplate">
-    <TextBlock Style="{StaticResource {x:Type TextBlock}}" Text="{Binding Mode=OneTime}" />
-  </DataTemplate>
-
-  <DataTemplate x:Key="CellEditorTemplate">
-    <TextBox Style="{StaticResource {x:Type TextBox}}" Text="{xcdg:CellEditorBinding}" />
-  </DataTemplate>
-
-  <Style x:Key="ItemIndexSelectorStyle" TargetType="{x:Type xcdg:RowSelector}">
-    <!--<Setter
+    </Style>
+    <DataTemplate x:Key="CellTemplate">
+        <TextBlock Style="{StaticResource {x:Type TextBlock}}" Text="{Binding Mode=OneTime}" />
+    </DataTemplate>
+    <DataTemplate x:Key="CellEditorTemplate">
+        <TextBox Style="{StaticResource {x:Type TextBox}}" Text="{xcdg:CellEditorBinding}" />
+    </DataTemplate>
+    <Style x:Key="ItemIndexSelectorStyle" TargetType="{x:Type xcdg:RowSelector}">
+        <!--<Setter
             Property="Content"
             Value="{Binding RelativeSource={RelativeSource Self}, Path=ItemIndex}" />-->
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="Background" Value="{StaticResource Background}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-  </Style>
-
-  <Style TargetType="{x:Type xcdg:RowSelectorPane}">
-    <Setter Property="Visibility" Value="Collapsed" />
-  </Style>
-
-  <Style TargetType="{x:Type xcdg:DataRow}">
-    <Setter Property="xcdg:RowSelector.RowSelectorStyle" Value="{StaticResource ItemIndexSelectorStyle}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-    <Setter Property="SelectionBackground" Value="{StaticResource SelectionRow}" />
-    <Setter Property="InactiveSelectionBackground" Value="{StaticResource SelectionRow}" />
-    <Setter Property="SelectionForeground" Value="{StaticResource Foreground}" />
-    <Style.Triggers>
-      <DataTrigger
-        Binding="{Binding RelativeSource={RelativeSource Self},
-                                       Path=(xcdg:DataGridVirtualizingPanel.ItemIndex),
-                                       Converter={StaticResource RowIndexConverter}}"
-        Value="True">
-        <Setter Property="Background" Value="{StaticResource DarkerBackground}" />
-      </DataTrigger>
-      <Trigger Property="IsMouseOver" Value="True">
-        <Setter Property="Background" Value="{StaticResource SelectionRow}" />
-      </Trigger>
-    </Style.Triggers>
-  </Style>
-
-  <xcdg:CellEditor x:Key="CellEditor" EditTemplate="{StaticResource CellEditorTemplate}" />
-
-  <Style TargetType="xceed:XceedAutoFitColumnGrid">
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="Background" Value="{StaticResource Background}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-  </Style>
-
-  <Style TargetType="xcdg:Cell">
-    <Setter Property="FontFamily" Value="{StaticResource Font}" />
-    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-    <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-
-    <Setter Property="CurrentBackground" Value="{StaticResource SelectionCell}" />
-    <Setter Property="CurrentForeground" Value="{StaticResource Foreground}" />
-
-    <Style.Triggers>
-      <Trigger Property="IsMouseOver" Value="True">
-        <Setter Property="Background" Value="{StaticResource SelectionCell}" />
-      </Trigger>
-    </Style.Triggers>
-  </Style>
-
-  <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:DataCell" />
-
-  <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:ColumnManagerCell">
-    <Setter Property="Background" Value="{StaticResource Background}" />
-  </Style>
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style TargetType="{x:Type xcdg:RowSelectorPane}">
+        <Setter Property="Visibility" Value="Collapsed" />
+    </Style>
+    <Style TargetType="{x:Type xcdg:DataRow}">
+        <Setter Property="xcdg:RowSelector.RowSelectorStyle" Value="{StaticResource ItemIndexSelectorStyle}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="SelectionBackground" Value="{StaticResource SelectionRow}" />
+        <Setter Property="InactiveSelectionBackground" Value="{StaticResource SelectionRow}" />
+        <Setter Property="SelectionForeground" Value="{StaticResource Foreground}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource RowIndexConverter}}" Value="True">
+                <Setter Property="Background" Value="{StaticResource DarkerBackground}" />
+            </DataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectionRow}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <xcdg:CellEditor x:Key="CellEditor" EditTemplate="{StaticResource CellEditorTemplate}" />
+    <Style TargetType="xceed:XceedAutoFitColumnGrid">
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style TargetType="xcdg:Cell">
+        <Setter Property="FontFamily" Value="{StaticResource Font}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="CurrentBackground" Value="{StaticResource SelectionCell}" />
+        <Setter Property="CurrentForeground" Value="{StaticResource Foreground}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectionCell}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:DataCell" />
+    <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:ColumnManagerCell">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+    </Style>
 </ResourceDictionary>
