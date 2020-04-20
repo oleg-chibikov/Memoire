@@ -95,11 +95,11 @@ namespace Remembrance.ViewModel
             AvailableTranslationLanguages = languageManager.GetAvailableSourceLanguages(false);
             SelectedPreferredLanguage = _sharedSettingsRepository.PreferredLanguage;
             TtsSpeaker = _sharedSettingsRepository.TtsSpeaker;
-            _uiLanguage = _localSettingsRepository.UiLanguage;
-            UiLanguage = _uiLanguage;
             TtsVoiceEmotion = _sharedSettingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _sharedSettingsRepository.CardShowFrequency.TotalMinutes;
             SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
+            CardsToShowAtOnce = _sharedSettingsRepository.CardsToShowAtOnce;
+            UiLanguage = _uiLanguage = _localSettingsRepository.UiLanguage;
             SyncEngine = _localSettingsRepository.SyncEngine;
             OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
             OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
@@ -150,6 +150,8 @@ namespace Remembrance.ViewModel
         public string SelectedPreferredLanguage { get; set; }
 
         public Speaker TtsSpeaker { get; set; }
+
+        public int CardsToShowAtOnce { get; set; }
 
         public SyncEngine SyncEngine { get; set; }
 
@@ -243,6 +245,11 @@ namespace Remembrance.ViewModel
             if (_sharedSettingsRepository.SolveQwantCaptcha != SolveQwantCaptcha)
             {
                 _sharedSettingsRepository.SolveQwantCaptcha = SolveQwantCaptcha;
+            }
+
+            if (_sharedSettingsRepository.CardsToShowAtOnce != CardsToShowAtOnce)
+            {
+                _sharedSettingsRepository.CardsToShowAtOnce = CardsToShowAtOnce;
             }
 
             if (_localSettingsRepository.UiLanguage != UiLanguage)

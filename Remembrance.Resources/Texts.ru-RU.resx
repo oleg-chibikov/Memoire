@@ -369,4 +369,7 @@
   <data name="SolveQwantCaptcha" xml:space="preserve">
     <value>Показывать капчу для картинок</value>
   </data>
+  <data name="CardsToShowAtOnce" xml:space="preserve">
+    <value>Показывать карточек за раз</value>
+  </data>
 </root>

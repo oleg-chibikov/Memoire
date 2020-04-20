@@ -5,7 +5,6 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing.Data;
@@ -24,12 +23,12 @@ namespace Remembrance.ViewModel
 
         public AssessmentTextInputCardViewModel(
             TranslationInfo translationInfo,
+            AssessmentBatchCardViewModel assessmentBatchCardViewModel,
             IMessageHub messageHub,
             ILog logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ILearningInfoRepository learningInfoRepository,
             IAssessmentInfoProvider assessmentInfoProvider,
-            IPauseManager pauseManager,
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
@@ -39,11 +38,11 @@ namespace Remembrance.ViewModel
             logger,
             wordViewModelFactory,
             assessmentInfoProvider,
-            pauseManager,
             wordImageViewerViewModelFactory,
             learningInfoViewModelFactory,
             cultureManager,
-            commandManager)
+            commandManager,
+            assessmentBatchCardViewModel)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
@@ -68,7 +67,7 @@ namespace Remembrance.ViewModel
                 Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
                 learningInfo.IncreaseRepeatType();
 
-                // The inputed answer can differ from the first one
+                // The inputted answer can differ from the first one
                 CorrectAnswer = WordViewModelFactory(mostSuitable, TranslationInfo.TranslationEntryKey.TargetLanguage);
                 closeTimeout = AppSettings.AssessmentCardSuccessCloseTimeout;
             }
@@ -113,7 +112,7 @@ namespace Remembrance.ViewModel
             }
 
             var closeTimeout = ChangeRepeatType(mostSuitable, currentMinDistance);
-            CloseWindowWithTimeout(closeTimeout);
+            _ = HideControlWithTimeoutAsync(closeTimeout);
         }
     }
 }

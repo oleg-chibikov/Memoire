@@ -12,6 +12,7 @@
                                xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
                                xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
                                xmlns:controls="clr-namespace:Remembrance.View.Controls"
+                               xmlns:numericUpDown="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.NumericUpDown"
                                lex:LocalizeDictionary.DesignCulture="en"
                                lex:LocalizeDictionary.OutputMissingKeys="True"
                                lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
@@ -51,6 +52,7 @@
       <Grid Grid.Row="0" commonView:MarginSetter.Orientation="Vertical"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
         <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
           <RowDefinition Height="Auto" />
           <RowDefinition Height="Auto" />
           <RowDefinition Height="Auto" />
@@ -127,21 +129,25 @@
                 Value="{Binding CardShowFrequency, Mode=TwoWay}" AutoToolTipPlacement="None"
                 ToolTip="{Binding Value, Converter={StaticResource DoubleToTextTimeSpanConverter}, ConverterParameter={x:Static commonConverters:DateInterval.Minutes}, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="{lex:Loc SyncBus}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{lex:Loc CardsToShowAtOnce}" />
 
-        <ComboBox Grid.Row="4" Grid.Column="1" IsSynchronizedWithCurrentItem="True"
+        <numericUpDown:NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding CardsToShowAtOnce, Mode=TwoWay}" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{lex:Loc SyncBus}" />
+
+        <ComboBox Grid.Row="5" Grid.Column="1" IsSynchronizedWithCurrentItem="True"
                   ItemsSource="{Binding SyncBuses, Mode=OneTime}" SelectedValue="{Binding SyncEngine, Mode=TwoWay}" />
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="{lex:Loc SolveQwantCaptcha}" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{lex:Loc SolveQwantCaptcha}" />
 
-        <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
+        <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="{lex:Loc ProcessesBlacklist}" />
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="{lex:Loc ProcessesBlacklist}" />
 
-        <controls:ProcessesBlacklistControl Grid.Row="6" Grid.Column="1"
+        <controls:ProcessesBlacklistControl Grid.Row="7" Grid.Column="1"
                                             DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
 
-        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal"
+        <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}" HorizontalAlignment="Right">
           <Button Width="100" IsDefault="True" Command="{Binding SaveCommand, Mode=OneTime}"
                   CommandParameter="{Binding SelectedItems, ElementName=DataGrid, Mode=OneWay}"

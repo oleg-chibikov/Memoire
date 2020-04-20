@@ -369,4 +369,7 @@
   <data name="SolveQwantCaptcha" xml:space="preserve">
     <value>Solve Qwant Captcha</value>
   </data>
+  <data name="CardsToShowAtOnce" xml:space="preserve">
+    <value>Cards to show at once</value>
+  </data>
 </root>

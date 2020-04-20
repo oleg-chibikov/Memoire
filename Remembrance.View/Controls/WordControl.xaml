@@ -30,7 +30,7 @@
     <TextBlock
       Visibility="{Binding Word.PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}"
       Text="{Binding Word.PartOfSpeech, Mode=OneWay, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
-      Foreground="{StaticResource Green}" FontSize="{StaticResource SmallFontSize}" Cursor="Arrow" />
+      Foreground="{StaticResource Green}" FontSize="{StaticResource TinyFontSize}" Cursor="Arrow" />
     <Border Background="Transparent" CornerRadius="0">
       <Border.Style>
         <Style TargetType="Border">

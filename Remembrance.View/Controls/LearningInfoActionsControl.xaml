@@ -19,6 +19,7 @@
     <controls:FavoriteButton />
     <controls:DemoteButton />
     <TextBlock VerticalAlignment="Center"
+               FontSize="{StaticResource SmallFontSize}"
                Text="{Binding RepeatType, Mode=OneWay, Converter={StaticResource RepeatTypeConverter}}" />
     <controls:CardCommonInfoControl HorizontalAlignment="Right" />
   </StackPanel>

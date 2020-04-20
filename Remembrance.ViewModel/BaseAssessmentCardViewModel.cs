@@ -4,13 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -25,9 +23,8 @@ namespace Remembrance.ViewModel
     {
         readonly ICultureManager _cultureManager;
 
-        readonly IPauseManager _pauseManager;
-
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
+        readonly AssessmentBatchCardViewModel _assessmentBatchCardViewModel;
 
         protected BaseAssessmentCardViewModel(
             TranslationInfo translationInfo,
@@ -35,19 +32,19 @@ namespace Remembrance.ViewModel
             ILog logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             IAssessmentInfoProvider assessmentInfoProvider,
-            IPauseManager pauseManager,
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
-            ICommandManager commandManager) : base(commandManager)
+            ICommandManager commandManager,
+            AssessmentBatchCardViewModel assessmentBatchCardViewModel) : base(commandManager)
         {
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
+            _assessmentBatchCardViewModel = assessmentBatchCardViewModel ?? throw new ArgumentNullException(nameof(assessmentBatchCardViewModel));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             LearningInfoViewModel = learningInfoViewModelFactory(translationInfo.LearningInfo);
 
@@ -77,10 +74,6 @@ namespace Remembrance.ViewModel
 
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer), assessmentInfo.Word.Text, true);
 
-            pauseManager.PauseActivity(PauseReasons.CardIsVisible, wordViewModel.ToString());
-
-            WindowClosedCommand = AddCommand(WindowClosed);
-
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
         }
@@ -89,13 +82,13 @@ namespace Remembrance.ViewModel
 
         public WordViewModel CorrectAnswer { get; protected set; }
 
+        public bool IsHidden { get; private set; }
+
         public string LanguagePair { get; }
 
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
         public string? Tooltip { get; }
-
-        public ICommand WindowClosedCommand { get; }
 
         public WordViewModel Word { get; }
 
@@ -125,12 +118,13 @@ namespace Remembrance.ViewModel
             }
         }
 
-        protected async void CloseWindowWithTimeout(TimeSpan closeTimeout)
+        protected async Task HideControlWithTimeoutAsync(TimeSpan closeTimeout)
         {
-            Logger.TraceFormat("Closing window in {0}...", closeTimeout);
+            Logger.TraceFormat("Hiding control in {0}...", closeTimeout);
             await Task.Delay(closeTimeout).ConfigureAwait(true);
-            CloseWindow();
-            Logger.Debug("Window is closed");
+            IsHidden = true;
+            _assessmentBatchCardViewModel.NotifyChildClosed();
+            Logger.Debug("Control is hidden");
         }
 
         static bool HasUppercaseLettersExceptFirst(string text)
@@ -174,11 +168,6 @@ namespace Remembrance.ViewModel
                     },
                     CancellationToken.None)
                 .ConfigureAwait(false);
-        }
-
-        void WindowClosed()
-        {
-            _pauseManager.ResumeActivity(PauseReasons.CardIsVisible);
         }
     }
 }

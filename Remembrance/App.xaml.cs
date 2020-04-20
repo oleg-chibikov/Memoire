@@ -14,11 +14,12 @@ using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
-using Remembrance.DAL.Shared;
-using Remembrance.View.Windows;
+using Remembrance.DAL.SharedBetweenMachines;
+using Remembrance.View.Controls;
 using Remembrance.ViewModel;
 using Remembrance.WebApi;
 using Remembrance.Windows.Common;
@@ -102,8 +103,11 @@ namespace Remembrance.Launcher
             builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody").AsSelf().InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody")
+                .AsSelf() // For ViewModels
+                .AsImplementedInterfaces() // ForWindowCreators //TODO: Separate assembly
+                .InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
         }

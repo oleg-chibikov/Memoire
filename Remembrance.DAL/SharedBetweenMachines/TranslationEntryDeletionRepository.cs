@@ -4,7 +4,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL.Shared
+namespace Remembrance.DAL.SharedBetweenMachines
 {
     sealed class TranslationEntryDeletionRepository : TrackedLiteDbRepository<TranslationEntryDeletion, TranslationEntryKey>, ITranslationEntryDeletionRepository
     {

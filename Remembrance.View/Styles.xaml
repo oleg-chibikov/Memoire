@@ -63,6 +63,10 @@
     #FF666666
   </Brush>
 
+  <Brush x:Key="BorderBrush">
+    AntiqueWhite
+  </Brush>
+
   <Brush x:Key="Hyperlink">
     #bdb76b
   </Brush>
@@ -91,8 +95,12 @@
     5
   </system:Double>
 
+  <Thickness x:Key="CommonMarginThickness">
+    5
+  </Thickness>
+
   <system:Double x:Key="CommonButtonSize">
-    25
+    16
   </system:Double>
 
   <system:Double x:Key="HugeFontSize">
@@ -157,6 +165,7 @@
   <Style TargetType="Button" x:Key="ImageButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="0" />
     <Setter Property="Width" Value="{StaticResource CommonButtonSize}" />
     <Setter Property="Height" Value="{StaticResource CommonButtonSize}" />
     <Setter Property="Background" Value="Transparent" />

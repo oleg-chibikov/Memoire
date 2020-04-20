@@ -36,7 +36,7 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </commonView:BaseControl.Resources>
-  <StackPanel Margin="3" Orientation="Horizontal" commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+  <StackPanel Orientation="Horizontal" commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
     <Button
       Visibility="{Binding IsSetPreviousImageVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
       Style="{StaticResource ImageButton}" ToolTip="{lex:Loc SetPreviousImage}"

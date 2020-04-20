@@ -6,11 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controls\AssessmentCardBatchCOntrol.xaml" />
+    <None Remove="Controls\AssessmentTextInputCardControl.xaml" />
+    <None Remove="Windows\AssessmentBatchCardWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.8" />
     <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7411.17774" />
     <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7411.17774" />
     <PackageReference Include="Scar.Common.WPF.Controls.Behaviors" Version="1.1.7411.17117" />
     <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7411.17118" />
+    <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7411.19507" />
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7411.17119" />
     <PackageReference Include="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid" Version="1.1.7411.17774" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7411.17774" />
@@ -19,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="Controls\AssessmentTextInputCardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AddManualTranslationControl.xaml" />
     <Page Include="Controls\AddProcessToBlacklistControl.xaml" />
     <Page Include="Controls\AddTranslationControl.xaml" />
@@ -34,14 +44,15 @@
     <Page Include="Controls\TrayToolTipControl.xaml" />
     <Page Include="Controls\WordControl.xaml" />
     <Page Include="Controls\WordImageViewerControl.xaml" />
+    <Page Include="Controls\AssessmentCardBatchControl.xaml" />
+    <Page Include="Controls\AssessmentViewOnlyCardControl.xaml" />
     <Page Include="Controls\WordsControl.xaml" />
     <Page Include="DesignTimeResources.xaml" />
     <Page Include="Dialogs\ActiveProcessesDialog.xaml" />
     <Page Include="Dialogs\EditManualTranslationsDialog.xaml" />
     <Page Include="Styles.xaml" />
     <Page Include="Windows\AddTranslationWindow.xaml" />
-    <Page Include="Windows\AssessmentTextInputCardWindow.xaml" />
-    <Page Include="Windows\AssessmentViewOnlyCardWindow.xaml" />
+    <Page Include="Windows\AssessmentBatchCardWindow.xaml" />
     <Page Include="Windows\ConfirmationWindow.xaml" />
     <Page Include="Windows\DictionaryWindow.xaml" />
     <Page Include="Windows\LoadingWindow.xaml" />

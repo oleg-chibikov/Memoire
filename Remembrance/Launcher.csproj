@@ -47,8 +47,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec
-      Command="del &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
+    <Exec Command="del &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
   </Target>
 
 </Project>

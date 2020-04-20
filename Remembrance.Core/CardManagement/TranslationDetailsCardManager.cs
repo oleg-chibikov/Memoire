@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
 using Scar.Common;
@@ -16,24 +15,25 @@ namespace Remembrance.Core.CardManagement
         readonly IScopedWindowProvider _scopedWindowProvider;
 
         public TranslationDetailsCardManager(
-            ILocalSettingsRepository localSettingsRepository,
             ILog logger,
             SynchronizationContext synchronizationContext,
             IScopedWindowProvider scopedWindowProvider,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager) : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager) : base(logger, synchronizationContext, windowPositionAdjustmentManager)
         {
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
         }
 
-        protected override async Task<IDisplayable?> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
+        public async Task ShowCardAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             Logger.TraceFormat("Creating window for {0}...", translationInfo);
 
             var translationDetailsCardWindow = await _scopedWindowProvider
                 .GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                 .ConfigureAwait(false);
             SynchronizationContext.Send(x => WindowPositionAdjustmentManager.AdjustDetailsCardWindowPosition(translationDetailsCardWindow), null);
-            return translationDetailsCardWindow;
+            ShowWindow(translationDetailsCardWindow);
+            Logger.InfoFormat("Window for {0} has been opened", translationInfo);
         }
     }
 }

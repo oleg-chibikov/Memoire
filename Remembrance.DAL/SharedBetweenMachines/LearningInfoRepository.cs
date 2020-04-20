@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL.Shared
+namespace Remembrance.DAL.SharedBetweenMachines
 {
     sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
     {
@@ -22,7 +23,7 @@ namespace Remembrance.DAL.Shared
             Collection.EnsureIndex(x => x.NextCardShowTime);
         }
 
-        public LearningInfo? GetMostSuitable()
+        public IEnumerable<LearningInfo> GetMostSuitable(int count)
         {
             var chooseFavoritedItemsItemsFirst = _rand.Next(100) > 20;
             var chooseItemsWithSmallerShowCountFirst = _rand.Next(100) > 30;
@@ -34,7 +35,7 @@ namespace Remembrance.DAL.Shared
                 .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority. This rule will be applied in 30% cases
                 .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTime.MinValue) // this gives a 30% chance of showing an old card
                 .ThenBy(x => Guid.NewGuid()) // similar values are ordered randomly
-                .FirstOrDefault();
+                .Take(count);
         }
 
         public LearningInfo GetOrInsert(TranslationEntryKey translationEntryKey)

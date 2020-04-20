@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -26,6 +27,10 @@ namespace Remembrance.Core.CardManagement
 
         readonly ILearningInfoRepository _learningInfoRepository;
 
+        readonly ILocalSettingsRepository _localSettingsRepository;
+
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
+
         readonly object _lockObject = new object();
 
         readonly IMessageHub _messageHub;
@@ -42,35 +47,35 @@ namespace Remembrance.Core.CardManagement
 
         bool _hasOpenWindows;
 
-        IDisposable _interval;
+        IDisposable _interval = Disposable.Empty;
 
         public AssessmentCardManager(
             ITranslationEntryRepository translationEntryRepository,
-            ILocalSettingsRepository localSettingsRepository,
             ILog logger,
             IMessageHub messageHub,
             ITranslationEntryProcessor translationEntryProcessor,
-            ISharedSettingsRepository sharedSettingsRepository,
+            ILocalSettingsRepository localSettingsRepository,
             SynchronizationContext synchronizationContext,
             ILearningInfoRepository learningInfoRepository,
             IScopedWindowProvider scopedWindowProvider,
             IPauseManager pauseManager,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager) : base(localSettingsRepository, logger, synchronizationContext, windowPositionAdjustmentManager)
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
+            ISharedSettingsRepository sharedSettingsRepository) : base(logger, synchronizationContext, windowPositionAdjustmentManager)
         {
-            logger.Trace("Starting showing cards...");
-            _ = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
-
-            // Just to assign the field in the constructor
-            _interval = Disposable.Empty;
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
+            _ = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
+            _localSettingsRepository = localSettingsRepository;
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _initTime = DateTime.Now;
             CardShowFrequency = sharedSettingsRepository.CardShowFrequency;
             LastCardShowTime = localSettingsRepository.LastCardShowTime;
+
+            logger.Trace("Starting showing cards...");
             if (!_pauseManager.IsPaused)
             {
                 CreateInterval();
@@ -114,67 +119,6 @@ namespace Remembrance.Core.CardManagement
             Logger.Debug("Finished showing cards");
         }
 
-        protected override async Task<IDisplayable?> TryCreateWindowAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
-        {
-            if (_hasOpenWindows)
-            {
-                Logger.Trace("There is another window opened. Skipping creation...");
-                return null;
-            }
-
-            Logger.TraceFormat("Creating window for {0}...", translationInfo);
-            var learningInfo = translationInfo.LearningInfo;
-            var repeatType = learningInfo.RepeatType;
-            var window = await GetWindowByRepeatType(translationInfo, ownerWindow, repeatType);
-
-            window.Closed += Window_Closed;
-            _hasOpenWindows = true;
-            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
-            learningInfo.LastCardShowTime = DateTime.Now;
-            _learningInfoRepository.Update(learningInfo);
-            _messageHub.Publish(learningInfo);
-            return window;
-        }
-
-        async Task<IDisplayable> GetWindowByRepeatType(TranslationInfo translationInfo, IDisplayable? ownerWindow, RepeatType repeatType)
-        {
-            IDisplayable window;
-            switch (repeatType)
-            {
-                case RepeatType.Elementary:
-                case RepeatType.Beginner:
-                case RepeatType.Novice:
-                    {
-                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentViewOnlyCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                            .ConfigureAwait(false);
-                        break;
-                    }
-
-                case RepeatType.PreIntermediate:
-                case RepeatType.Intermediate:
-                case RepeatType.UpperIntermediate:
-                    {
-                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                            .ConfigureAwait(false);
-                        break;
-                    }
-
-                case RepeatType.Advanced:
-                case RepeatType.Proficiency:
-                case RepeatType.Expert:
-                    {
-                        window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentTextInputCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
-                            .ConfigureAwait(false);
-                        break;
-                    }
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(repeatType));
-            }
-
-            return window;
-        }
-
         void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
@@ -209,29 +153,77 @@ namespace Remembrance.Core.CardManagement
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             Logger.Trace("Trying to show next card...");
 
-            if (!LocalSettingsRepository.IsActive)
+            if (!_localSettingsRepository.IsActive)
             {
                 Logger.Debug("Skipped showing card due to inactivity");
                 return;
             }
 
+            if (_hasOpenWindows)
+            {
+                Logger.Trace("There is another window opened. Skipping creation...");
+                return;
+            }
+
             _pauseManager.ResetPauseTimes();
 
-            LocalSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
-            var mostSuitableLearningInfo = _learningInfoRepository.GetMostSuitable();
-            if (mostSuitableLearningInfo == null)
+            _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
+            var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
+            if (mostSuitableLearningInfos.Length == 0)
             {
                 Logger.Debug("Skipped showing card due to absence of suitable cards");
                 return;
             }
 
-            var translationEntry = _translationEntryRepository.GetById(mostSuitableLearningInfo.Id);
+            IReadOnlyCollection<TranslationInfo> translationInfos;
+            try
+            {
+                translationInfos = await GetTranslationInfosForAllWords(mostSuitableLearningInfos).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // If the word cannot be found in DB // TODO: additional handling? get it from somewhere
+                _messageHub.Publish(ex);
+                return;
+            }
 
-            var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+            await CreateAndShowWindowAsync(translationInfos).ConfigureAwait(false);
+        }
+
+        async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)
+        {
+            Logger.TraceFormat("Creating window...");
+            var window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentBatchCardWindow, IReadOnlyCollection<TranslationInfo>>(translationInfos, CancellationToken.None)
                 .ConfigureAwait(false);
-            var translationInfo = new TranslationInfo(translationEntry, translationDetails, mostSuitableLearningInfo);
-            Logger.TraceFormat("Trying to show {0}...", translationInfo);
-            await ShowCardAsync(translationInfo, null).ConfigureAwait(false);
+
+            window.Closed += Window_Closed;
+            _hasOpenWindows = true;
+            ShowWindow(window);
+            Logger.InfoFormat("Window has been opened");
+        }
+
+        async Task<IReadOnlyCollection<TranslationInfo>> GetTranslationInfosForAllWords(IEnumerable<LearningInfo> mostSuitableLearningInfos)
+        {
+            // TODO: would be good to use AsyncEnumerable (but is it supported for .net framework?)
+            var translationInfos = new List<TranslationInfo>();
+            foreach (var learningInfo in mostSuitableLearningInfos)
+            {
+                var translationEntry = _translationEntryRepository.GetById(learningInfo.Id);
+                var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
+                    .ConfigureAwait(false);
+                translationInfos.Add(new TranslationInfo(translationEntry, translationDetails, learningInfo));
+                UpdateShowCount(learningInfo);
+            }
+
+            return translationInfos;
+        }
+
+        void UpdateShowCount(LearningInfo learningInfo)
+        {
+            learningInfo.ShowCount++; // single place to update show count - no need to synchronize
+            learningInfo.LastCardShowTime = DateTime.Now;
+            _learningInfoRepository.Update(learningInfo);
+            _messageHub.Publish(learningInfo);
         }
 
         void HandlePauseReasonChanged(PauseReasons pauseReasons)

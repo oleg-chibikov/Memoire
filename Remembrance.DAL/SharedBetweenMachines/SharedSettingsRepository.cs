@@ -4,7 +4,7 @@ using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
 
-namespace Remembrance.DAL.Shared
+namespace Remembrance.DAL.SharedBetweenMachines
 {
     sealed class SharedSettingsRepository : BaseSettingsRepository, ISharedSettingsRepository
     {
@@ -43,6 +43,12 @@ namespace Remembrance.DAL.Shared
         {
             get => TryGetValue<VoiceEmotion>(nameof(TtsVoiceEmotion));
             set => RemoveUpdateOrInsert(nameof(TtsVoiceEmotion), value);
+        }
+
+        public int CardsToShowAtOnce
+        {
+            get => TryGetValue(nameof(CardsToShowAtOnce), 1);
+            set => RemoveUpdateOrInsert(nameof(CardsToShowAtOnce), value);
         }
     }
 }

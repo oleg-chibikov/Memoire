@@ -3,7 +3,6 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
@@ -17,12 +16,12 @@ namespace Remembrance.ViewModel
     {
         public AssessmentViewOnlyCardViewModel(
             TranslationInfo translationInfo,
+            AssessmentBatchCardViewModel assessmentBatchCardViewModel,
             IMessageHub messageHub,
             ILog logger,
             Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             IAssessmentInfoProvider assessmentInfoProvider,
-            IPauseManager pauseManager,
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
@@ -32,11 +31,11 @@ namespace Remembrance.ViewModel
             logger,
             wordViewModelFactory,
             assessmentInfoProvider,
-            pauseManager,
             wordImageViewerViewModelFactory,
             learningInfoViewModelFactory,
             cultureManager,
-            commandManager)
+            commandManager,
+            assessmentBatchCardViewModel)
         {
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
