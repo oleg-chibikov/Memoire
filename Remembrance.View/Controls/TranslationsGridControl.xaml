@@ -11,8 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000"
@@ -25,7 +23,7 @@
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
-    <xceed:XceedAutoFitColumnGrid
+    <!--<xceed:XceedAutoFitColumnGrid
         AutoCreateColumns="False"
         AutoScrollCurrentItem="All"
         IsFixedHeadersHost="True"
@@ -241,5 +239,5 @@
                 </xcdg:UnboundColumn.CellContentTemplate>
             </xcdg:UnboundColumn>
         </xceed:XceedAutoFitColumnGrid.Columns>
-    </xceed:XceedAutoFitColumnGrid>
+    </xceed:XceedAutoFitColumnGrid>-->
 </commonView:BaseControl>

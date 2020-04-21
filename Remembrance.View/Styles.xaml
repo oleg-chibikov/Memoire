@@ -13,8 +13,6 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
-    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     mc:Ignorable="d">
     <commonConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
     <commonConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
@@ -35,9 +33,9 @@
     <converters:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
     <converters:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
     <converters:MessageTypeToBackgroundBrushConverter x:Key="MessageTypeToBackgroundBrushConverter" />
-    <converters:MessageTypeToForegroundBrushConverter x:Key="MessageTypeToForegroundBrushConverter" />
-    <xcdg:IndexToOddConverter x:Key="RowIndexConverter" />
-    <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
+  <converters:MessageTypeToForegroundBrushConverter
+    x:Key="MessageTypeToForegroundBrushConverter" />
+  <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
     <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
     <Brush x:Key="Foreground">White</Brush>
     <Brush x:Key="Background">#FF464646</Brush>
@@ -132,78 +130,10 @@
     <Style TargetType="controls:WordControl">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
     </Style>
-    <Style TargetType="controls:WordsControl">
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-    </Style>
-    <Style TargetType="{x:Type xcdg:HierarchicalGroupByControl}">
-        <!--  Do not use lex:loc in the styles setter - can crash while switching language  -->
-        <Setter Property="NoGroupContent" Value="☩" />
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <!--<Setter
-            Property="BorderThickness"
-            Value="0" />
-        <Setter
-            Property="BorderBrush"
-            Value="Transparent" />-->
-    </Style>
-    <DataTemplate x:Key="CellTemplate">
-        <TextBlock Style="{StaticResource {x:Type TextBlock}}" Text="{Binding Mode=OneTime}" />
-    </DataTemplate>
-    <DataTemplate x:Key="CellEditorTemplate">
-        <TextBox Style="{StaticResource {x:Type TextBox}}" Text="{xcdg:CellEditorBinding}" />
-    </DataTemplate>
-    <Style x:Key="ItemIndexSelectorStyle" TargetType="{x:Type xcdg:RowSelector}">
-        <!--<Setter
-            Property="Content"
-            Value="{Binding RelativeSource={RelativeSource Self}, Path=ItemIndex}" />-->
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-    </Style>
-    <Style TargetType="{x:Type xcdg:RowSelectorPane}">
-        <Setter Property="Visibility" Value="Collapsed" />
-    </Style>
-    <Style TargetType="{x:Type xcdg:DataRow}">
-        <Setter Property="xcdg:RowSelector.RowSelectorStyle" Value="{StaticResource ItemIndexSelectorStyle}" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="SelectionBackground" Value="{StaticResource SelectionRow}" />
-        <Setter Property="InactiveSelectionBackground" Value="{StaticResource SelectionRow}" />
-        <Setter Property="SelectionForeground" Value="{StaticResource Foreground}" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(xcdg:DataGridVirtualizingPanel.ItemIndex), Converter={StaticResource RowIndexConverter}}" Value="True">
-                <Setter Property="Background" Value="{StaticResource DarkerBackground}" />
-            </DataTrigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectionRow}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <xcdg:CellEditor x:Key="CellEditor" EditTemplate="{StaticResource CellEditorTemplate}" />
-    <Style TargetType="xceed:XceedAutoFitColumnGrid">
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-    </Style>
-    <Style TargetType="xcdg:Cell">
-        <Setter Property="FontFamily" Value="{StaticResource Font}" />
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="CurrentBackground" Value="{StaticResource SelectionCell}" />
-        <Setter Property="CurrentForeground" Value="{StaticResource Foreground}" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectionCell}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:DataCell" />
-    <Style BasedOn="{StaticResource {x:Type xcdg:Cell}}" TargetType="xcdg:ColumnManagerCell">
-        <Setter Property="Background" Value="{StaticResource Background}" />
-    </Style>
+  <Style
+    TargetType="controls:WordsControl">
+    <Setter
+      Property="FontSize"
+      Value="{StaticResource MediumFontSize}" />
+  </Style>
 </ResourceDictionary>

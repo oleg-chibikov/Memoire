@@ -12,14 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer", "Remembrance.In
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30} = {6F4F5769-673C-436C-9F84-0CAFAF21AA30}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Remembrance.WebApi\WebApi.csproj", "{14958824-6559-4EDE-9954-42E5A22B2144}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "Remembrance\Launcher.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer.UI", "Remembrance.Installer.UI\Installer.UI.csproj", "{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26} = {A2E7DAAE-8DF9-42AE-A433-8810248A0E26}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "Remembrance.ViewModel\ViewModel.csproj", "{75074E3A-94AF-42CA-B90A-B1F194D7D812}"
 EndProject
@@ -91,18 +84,6 @@ Global
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhone.Build.0 = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|iPhone.Build.0 = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{14958824-6559-4EDE-9954-42E5A22B2144}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Debug|iPhone.ActiveCfg = Debug|Any CPU
@@ -115,18 +96,6 @@ Global
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Release|iPhone.Build.0 = Release|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{6F4F5769-673C-436C-9F84-0CAFAF21AA30}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|iPhone.Build.0 = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{F99FFE25-B2D3-4FD3-A25B-BBC554CD815A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75074E3A-94AF-42CA-B90A-B1F194D7D812}.Debug|iPhone.ActiveCfg = Debug|Any CPU

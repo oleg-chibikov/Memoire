@@ -14,14 +14,12 @@ using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Contracts.View.Card;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
 using Remembrance.Core.Sync;
 using Remembrance.DAL.SharedBetweenMachines;
 using Remembrance.View.Controls;
 using Remembrance.ViewModel;
-using Remembrance.WebApi;
 using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.ApplicationLifetime;
@@ -68,10 +66,11 @@ namespace Remembrance.Launcher
             Logger.Info("Tray window is loaded");
 
             ResolveInSeparateTaskAsync<ISynchronizationManager>();
-            ResolveInSeparateTaskAsync<ApiHoster>();
             ResolveInSeparateTaskAsync<IAssessmentCardManager>();
             ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
             ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
+
+            // TODO: ResolveInSeparateTaskAsync<ApiHoster>();
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
@@ -102,7 +101,6 @@ namespace Remembrance.Launcher
             builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody")
                 .AsSelf() // For ViewModels
                 .AsImplementedInterfaces() // ForWindowCreators //TODO: Separate assembly
@@ -110,13 +108,15 @@ namespace Remembrance.Launcher
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
+
+            // TODO builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
         }
 
         protected override void ShowMessage(Message message)
         {
             var nestedLifeTimeScope = Container.BeginLifetimeScope();
             var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
-            var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current;
+            var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null");
             synchronizationContext.Post(
                 x =>
                 {
@@ -172,7 +172,7 @@ namespace Remembrance.Launcher
             where T : TInterface
             where TInterface : class
         {
-            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName).As<TInterface>().InstancePerDependency();
+            builder.RegisterType<T>().Named<TInterface>(typeof(TInterface).FullName ?? throw new InvalidOperationException("Interface FullName is null")).As<TInterface>().InstancePerDependency();
         }
 
         static void RegisterRepositorySynchronizer<TEntity, TId, TRepositoryInterface, TRepository>(ContainerBuilder builder)

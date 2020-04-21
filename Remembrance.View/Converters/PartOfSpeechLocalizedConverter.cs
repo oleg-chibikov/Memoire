@@ -11,7 +11,7 @@ namespace Remembrance.View.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            return !(value is PartOfSpeech) ? null : CultureUtilities.GetLocalizedValue<string, WordMetadata>(value.ToString());
+            return !(value is PartOfSpeech) ? null : CultureUtilities.GetLocalizedValue<string, WordMetadata>(value.ToString() ?? throw new InvalidOperationException("Value.ToString() is null"));
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

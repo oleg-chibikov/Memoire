@@ -6,13 +6,10 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:engine="http://wpflocalizeextension.codeplex.com"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:ProcessBlacklistViewModel}"
     engine:LocalizeDictionary.DesignCulture="en"
@@ -53,7 +50,7 @@
             </Button>
         </Grid>
 
-        <xceed:XceedAutoFitColumnGrid
+        <!--<xceed:XceedAutoFitColumnGrid
             x:Name="DataGrid"
             Width="400"
             MaxHeight="400"
@@ -103,8 +100,9 @@
                     <i:InvokeCommandAction Command="{Binding AddFromActiveProcessesCommand, Mode=OneTime}" CommandParameter="{Binding SelectedItems, ElementName=DataGrid, Mode=OneWay}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </xceed:XceedAutoFitColumnGrid>
+        </xceed:XceedAutoFitColumnGrid>-->
 
+        <!--  TODO Datagrid bindings below  -->
         <StackPanel
             HorizontalAlignment="Right"
             commonView:MarginSetter.Margin="{StaticResource CommonMargin}"

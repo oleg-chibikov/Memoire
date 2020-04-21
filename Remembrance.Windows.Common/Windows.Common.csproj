@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
     <Description>Windows OS specific classes for remembrance</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7411.17774" />
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7411.17773" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7415.42365" />
+    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7415.37883" />
   </ItemGroup>
 
   <ItemGroup>

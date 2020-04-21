@@ -7,11 +7,11 @@
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     Title="{lex:Loc Title}"
     Width="1200"
     Height="400"
@@ -36,11 +36,11 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="ContentRenderAnimationFinished">
-            <i:InvokeCommandAction Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="ContentRenderAnimationFinished">
+            <b:InvokeCommandAction Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <materialDesign:DialogHost IsOpen="{Binding EditManualTranslationsViewModel.IsManualTranslationsDialogOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
             <dialogs:EditManualTranslationsDialog DataContext="{Binding EditManualTranslationsViewModel, Mode=OneTime}" />

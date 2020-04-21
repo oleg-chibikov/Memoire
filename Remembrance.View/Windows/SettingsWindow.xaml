@@ -8,12 +8,12 @@
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:numericUpDown="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.NumericUpDown"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     Width="700"
     d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -25,11 +25,11 @@
     Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico"
     SizeToContent="Height"
     mc:Ignorable="d">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding WindowClosingCommand, Mode=OneTime}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Closing">
+            <b:InvokeCommandAction Command="{Binding WindowClosingCommand, Mode=OneTime}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <animatedWindow:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

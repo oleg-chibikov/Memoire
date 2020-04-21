@@ -10,8 +10,6 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-    xmlns:xceed="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.XceedAutoFitColumnGrid"
     Width="800"
     d:DataContext="{d:DesignInstance Type=viewModel:EditManualTranslationsViewModel,
                                      IsDesignTimeCreatable=False}"
@@ -34,7 +32,7 @@
             <TextBlock Text="{Binding TranslationEntryKey, Mode=OneWay}" />
             <controls:AddManualTranslationControl />
         </StackPanel>
-        <xceed:XceedAutoFitColumnGrid
+        <!--<xceed:XceedAutoFitColumnGrid
             Grid.Row="1"
             AutoCreateColumns="False"
             AutoScrollCurrentItem="All"
@@ -120,7 +118,7 @@
                     </xcdg:UnboundColumn.CellContentTemplate>
                 </xcdg:UnboundColumn>
             </xceed:XceedAutoFitColumnGrid.Columns>
-        </xceed:XceedAutoFitColumnGrid>
+        </xceed:XceedAutoFitColumnGrid>-->
         <StackPanel
             Grid.Row="2"
             HorizontalAlignment="Right"

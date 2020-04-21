@@ -6,12 +6,12 @@
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
@@ -32,14 +32,14 @@
             DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
             LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
             ToolTipText="{lex:Loc Scar.Remembrance.Resources:Texts:Title}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="TrayToolTipClose">
-                    <i:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="TrayToolTipOpen">
-                    <i:InvokeCommandAction Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="TrayToolTipClose">
+                    <b:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
+                </b:EventTrigger>
+                <b:EventTrigger EventName="TrayToolTipOpen">
+                    <b:InvokeCommandAction Command="{Binding ToolTipOpenCommand, Mode=OneTime}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <ContextMenu.Resources>

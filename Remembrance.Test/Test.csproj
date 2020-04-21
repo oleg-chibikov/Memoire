@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
     <Description>Tests for Remembrance</Description>
   </PropertyGroup>
 
@@ -18,7 +17,6 @@
     <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
     <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
     <ProjectReference Include="..\Remembrance.View\View.csproj" />
-    <ProjectReference Include="..\Remembrance.WebApi\WebApi.csproj" />
     <ProjectReference Include="..\Remembrance.Windows.Common\Windows.Common.csproj" />
   </ItemGroup>
 
