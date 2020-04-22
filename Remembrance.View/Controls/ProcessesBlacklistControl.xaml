@@ -2,6 +2,7 @@
     x:Class="Remembrance.View.Controls.ProcessesBlacklistControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:columns="clr-namespace:Remembrance.View.Controls.Columns"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,6 +10,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:processesBlacklist="clr-namespace:Remembrance.View.Controls.Columns.ProcessesBlacklist"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:ProcessBlacklistViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -22,72 +24,18 @@
     </commonView:BaseControl.Resources>
     <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Vertical">
         <controls:AddProcessToBlacklistControl />
-        <!--<xceed:XceedAutoFitColumnGrid
+        <DataGrid
             MaxHeight="400"
-            AutoCreateColumns="False"
-            AutoScrollCurrentItem="All"
-            IsFixedHeadersHost="True"
-            ItemsSource="{Binding BlacklistedProcessesView, Mode=OneWay}"
-            SynchronizeCurrent="True">
-            <xcdg:DataGridControl.View>
-                <xcdg:TableflowView UseDefaultHeadersFooters="False">
-                    <xcdg:TableflowView.FixedHeaders>
-                        <DataTemplate>
-                            <xcdg:ColumnManagerRow />
-                        </DataTemplate>
-                    </xcdg:TableflowView.FixedHeaders>
-                </xcdg:TableflowView>
-            </xcdg:DataGridControl.View>
-            <xceed:XceedAutoFitColumnGrid.Columns>
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:ProcessIcon}"
-                    AllowGroup="False"
-                    AllowSort="False"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="FilePath"
-                    ReadOnly="True">
-                    <xcdg:Column.CellContentTemplate>
-                        <DataTemplate>
-                            <Image
-                                MaxWidth="50"
-                                MaxHeight="50"
-                                Source="{Binding Converter={StaticResource FilePathToIconImageSourceConverter}, Mode=OneWay}"
-                                ToolTip="{Binding Mode=OneWay}" />
-                        </DataTemplate>
-                    </xcdg:Column.CellContentTemplate>
-                </xcdg:Column>
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Process}"
-                    Width="*"
-                    CellContentTemplate="{StaticResource CellTemplate}"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="Name"
-                    IsMainColumn="True"
-                    ReadOnly="True" />
-                <xcdg:UnboundColumn
-                    CellVerticalContentAlignment="Center"
-                    FieldName="This"
-                    ReadOnly="True">
-                    <xcdg:UnboundColumn.CellContentTemplate>
-                        <DataTemplate>
-                            <Button
-                                Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Foreground="{StaticResource Red}"
-                                Style="{StaticResource ImageButton}"
-                                ToolTip="{lex:Loc DeleteTranslation}">
-                                <materialDesign:PackIcon Kind="Delete" />
-                            </Button>
-                        </DataTemplate>
-                    </xcdg:UnboundColumn.CellContentTemplate>
-                </xcdg:UnboundColumn>
-            </xceed:XceedAutoFitColumnGrid.Columns>
-            <xceed:XceedAutoFitColumnGrid.InputBindings>
-                <KeyBinding
-                    Key="Delete"
-                    Command="{Binding DeleteBatchCommand, Mode=OneTime}"
-                    CommandParameter="{Binding SelectedItems, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xceed:XceedAutoFitColumnGrid}}}" />
-            </xceed:XceedAutoFitColumnGrid.InputBindings>
-        </xceed:XceedAutoFitColumnGrid>-->
+            AlternatingRowBackground="{StaticResource DataGridAlternativeRowColor}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            ItemsSource="{Binding BlacklistedProcesses, Mode=OneTime}"
+            RowBackground="{StaticResource DataGridRowColor}">
+            <DataGrid.Columns>
+                <processesBlacklist:ProcessIconColumn />
+                <processesBlacklist:ProcessNameColumn />
+                <columns:DeleteColumn />
+            </DataGrid.Columns>
+        </DataGrid>
     </StackPanel>
 </commonView:BaseControl>

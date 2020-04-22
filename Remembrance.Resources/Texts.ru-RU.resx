@@ -216,8 +216,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
-  <data name="DeleteTranslation" xml:space="preserve">
-    <value>Удалить перевод</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>

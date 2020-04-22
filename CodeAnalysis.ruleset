@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="WTG Logistics Services Ruleset" ToolsVersion="16.0">
-  <Include Path="..\packages\build\wtg.analyzers\build\warnall.ruleset" Action="Default" />
-  <Include Path="..\packages\build\wtg.buildconfiguration.analysis\buildcomponents\wtgruleset.ruleset" Action="Default" />
+<RuleSet Name="Scar Ruleset" ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1005" Action="Info" />
     <Rule Id="CA1011" Action="Warning" />

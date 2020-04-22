@@ -14,11 +14,9 @@ using Scar.Common.MVVM.ViewModel;
 namespace Remembrance.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public sealed class ProcessBlacklistViewModel : BaseViewModel
+    public sealed class ProcessBlacklistViewModel : BaseViewModel, IWithDeleteCommand
     {
         readonly IActiveProcessesProvider _activeProcessesProvider;
-
-        readonly ObservableCollection<ProcessInfo> _availableProcesses = new ObservableCollection<ProcessInfo>();
 
         readonly ILog _logger;
 
@@ -38,8 +36,7 @@ namespace Remembrance.ViewModel
             DeleteCommand = AddCommand<ProcessInfo>(Delete);
             DeleteBatchCommand = AddCommand<IList>(DeleteBatch);
             ClearFilterCommand = AddCommand(ClearFilter);
-            AvailableProcessesView = collectionViewSource.GetDefaultView(_availableProcesses);
-            BlacklistedProcessesView = collectionViewSource.GetDefaultView(BlacklistedProcesses);
+            AvailableProcessesView = collectionViewSource.GetDefaultView(AvailableProcesses);
             AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || (((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
@@ -47,11 +44,11 @@ namespace Remembrance.ViewModel
 
         public ICommand AddTextCommand { get; }
 
+        public ObservableCollection<ProcessInfo> AvailableProcesses { get; } = new ObservableCollection<ProcessInfo>();
+
         public ICollectionView AvailableProcessesView { get; }
 
         public ObservableCollection<ProcessInfo> BlacklistedProcesses { get; } = new ObservableCollection<ProcessInfo>();
-
-        public ICollectionView BlacklistedProcessesView { get; }
 
         public ICommand CancelAdditionCommand { get; }
 
@@ -151,11 +148,11 @@ namespace Remembrance.ViewModel
 
         void OpenProcessesList()
         {
-            _availableProcesses.Clear();
+            AvailableProcesses.Clear();
             var activeProcesses = _activeProcessesProvider.GetActiveProcesses();
             foreach (var activeProcess in activeProcesses.Where(processInfo => !BlacklistedProcesses.Contains(processInfo)))
             {
-                _availableProcesses.Add(activeProcess);
+                AvailableProcesses.Add(activeProcess);
             }
 
             IsActiveProcessesDialogOpen = true;

@@ -127,8 +127,9 @@ namespace Remembrance.ViewModel
         {
             if (disposing)
             {
-                CancellationTokenSource.Dispose();
+                CancellationTokenSource.Cancel();
                 Cleanup();
+                CancellationTokenSource.Dispose();
             }
 
             base.Dispose(disposing);

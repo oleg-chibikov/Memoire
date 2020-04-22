@@ -161,6 +161,15 @@ namespace Remembrance.ViewModel
 
         protected override void Cleanup()
         {
+            try
+            {
+                _semaphore.Wait(CancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing, it's a normal behavior
+            }
+
             _translationList.CollectionChanged -= TranslationList_CollectionChanged;
             _timer.Dispose();
             foreach (var subscriptionToken in _subscriptionTokens)

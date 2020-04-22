@@ -33,11 +33,13 @@
     <converters:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
     <converters:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
     <converters:MessageTypeToBackgroundBrushConverter x:Key="MessageTypeToBackgroundBrushConverter" />
-  <converters:MessageTypeToForegroundBrushConverter
-    x:Key="MessageTypeToForegroundBrushConverter" />
-  <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
+    <converters:MessageTypeToForegroundBrushConverter x:Key="MessageTypeToForegroundBrushConverter" />
+    <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
     <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
     <Brush x:Key="Foreground">White</Brush>
+    <Brush x:Key="DataGridRowColor">#4D4D4D</Brush>
+    <Brush x:Key="DataGridAlternativeRowColor">#222222</Brush>
+    <Brush x:Key="DataGridCellSeparatorColor">#252526</Brush>
     <Brush x:Key="Background">#FF464646</Brush>
     <Brush x:Key="DarkerBackground">#FF363636</Brush>
     <Brush x:Key="Border">#FF262626</Brush>
@@ -120,6 +122,11 @@
         <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="autoComplete:CompletableTextBox" />
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
     <Style
         x:Key="Logo"
         BasedOn="{StaticResource {x:Type TextBlock}}"
@@ -130,10 +137,110 @@
     <Style TargetType="controls:WordControl">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
     </Style>
-  <Style
-    TargetType="controls:WordsControl">
-    <Setter
-      Property="FontSize"
-      Value="{StaticResource MediumFontSize}" />
-  </Style>
+    <Style TargetType="controls:WordsControl">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="ColumnWidth" Value="Auto" />
+        <Setter Property="RowHeaderWidth" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource DataGridCellSeparatorColor}" />
+    </Style>
+    <Style TargetType="DataGridCell">
+        <Setter Property="BorderBrush" Value="{StaticResource DataGridCellSeparatorColor}" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="BorderThickness" Value="0,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+    </Style>
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                    <Grid Name="HeaderGrid" Background="{StaticResource DataGridRowColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="BackgroundBorder"
+                            Grid.ColumnSpan="2"
+                            BorderBrush="{StaticResource DataGridCellSeparatorColor}"
+                            BorderThickness="0,0,1,1" />
+                        <ContentPresenter
+                            Grid.Column="0"
+                            Margin="6,3,6,3"
+                            VerticalAlignment="Center" />
+                        <Path
+                            x:Name="SortArrow"
+                            Grid.Column="1"
+                            Width="8"
+                            Height="6"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Data="M0,0 L1,0 0.5,1 z"
+                            Fill="{StaticResource DataGridCellSeparatorColor}"
+                            RenderTransformOrigin="0.5,0.4"
+                            Stretch="Fill"
+                            Visibility="Collapsed" />
+                        <Thumb
+                            x:Name="PART_RightHeaderGripper"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Cursor="SizeWE">
+                            <Thumb.Style>
+                                <Style TargetType="{x:Type Thumb}">
+                                    <Setter Property="Width" Value="2" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                <Border Background="Transparent" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Thumb.Style>
+                        </Thumb>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="HeaderGrid" Property="Background" Value="LightBlue" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="HeaderGrid" Property="Background" Value="#21ffaabb" />
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Ascending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SortArrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="180" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Descending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

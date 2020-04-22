@@ -5,6 +5,10 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
 {
     public sealed class ProcessInfo
     {
+        public ProcessInfo()
+        {
+        }
+
         public ProcessInfo(string name, string? filePath = null)
         {
             _ = name ?? throw new ArgumentNullException(nameof(name));
@@ -13,9 +17,9 @@ namespace Remembrance.Contracts.ProcessMonitoring.Data
             FilePath = filePath;
         }
 
-        public string? FilePath { get; }
+        public string? FilePath { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; } = string.Empty;
 
         public override bool Equals(object obj)
         {

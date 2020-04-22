@@ -2,15 +2,13 @@
     x:Class="Remembrance.View.Controls.TranslationsGridControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:columns="clr-namespace:Remembrance.View.Controls.Columns"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:translationsGrid="clr-namespace:Remembrance.View.Controls.Columns.TranslationsGrid"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000"
@@ -23,221 +21,29 @@
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
-    <!--<xceed:XceedAutoFitColumnGrid
-        AutoCreateColumns="False"
-        AutoScrollCurrentItem="All"
-        IsFixedHeadersHost="True"
+    <DataGrid
+        AlternatingRowBackground="{StaticResource DataGridAlternativeRowColor}"
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
+        IsReadOnly="True"
         ItemsSource="{Binding View, Mode=OneTime}"
-        SynchronizeCurrent="True">
-        <xceed:XceedAutoFitColumnGrid.Resources>
-            <DataTemplate DataType="{x:Type system:DateTime}">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource TinyFontSize}"
-                    Text="{Binding StringFormat=dd MMM yy HH:mm, Mode=OneWay}" />
-            </DataTemplate>
-        </xceed:XceedAutoFitColumnGrid.Resources>
-        <xceed:XceedAutoFitColumnGrid.Columns>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:IsFavorited}"
-                AllowGroup="True"
-                AllowSort="True"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.IsFavorited"
-                ReadOnly="True">
-                <xcdg:Column.CellContentTemplate>
-                    <DataTemplate>
-                        <StackPanel d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}" DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}">
-                            <controls:FavoriteButton DataContext="{Binding LearningInfoViewModel, Mode=OneWay}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </xcdg:Column.CellContentTemplate>
-            </xcdg:Column>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Word}"
-                CellVerticalContentAlignment="Center"
-                FieldName="Text"
-                IsMainColumn="True"
-                ReadOnly="True">
-                <xcdg:Column.CellContentTemplate>
-                    <DataTemplate>
-                        <controls:WordControl
-                            HorizontalAlignment="Stretch"
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            SpeakerAlignment="Right" />
-                    </DataTemplate>
-                </xcdg:Column.CellContentTemplate>
-            </xcdg:Column>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Translation}"
-                Width="*"
-                AllowGroup="False"
-                AllowSort="False"
-                CellVerticalContentAlignment="Center"
-                FieldName="Translations"
-                ReadOnly="True">
-                <xcdg:Column.CellContentTemplate>
-                    <DataTemplate>
-                        <StackPanel
-                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            Background="Transparent"
-                            Cursor="Hand"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Orientation="Horizontal">
-                            <StackPanel.InputBindings>
-                                <MouseBinding
-                                    Command="{Binding DataContext.OpenDetailsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                                    CommandParameter="{Binding Mode=OneWay}"
-                                    MouseAction="LeftDoubleClick" />
-                            </StackPanel.InputBindings>
-                            <Button
-                                Command="{Binding DataContext.OpenDetailsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                                CommandParameter="{Binding Mode=OneWay}"
-                                Style="{StaticResource ImageButton}"
-                                ToolTip="{lex:Loc OpenDetails}">
-                                <materialDesign:PackIcon Kind="FileDocument" />
-                            </Button>
-                            <controls:WordsControl MaxWidth="Infinity" ItemsSource="{Binding Translations, Mode=OneWay}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </xcdg:Column.CellContentTemplate>
-            </xcdg:Column>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:FromCap}"
-                CellVerticalContentAlignment="Center"
-                FieldName="Language"
-                ReadOnly="True" />
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ToCap}"
-                CellVerticalContentAlignment="Center"
-                FieldName="TargetLanguage"
-                ReadOnly="True" />
-            <xcdg:UnboundColumn
-                Title=""
-                CellVerticalContentAlignment="Center"
-                FieldName="ReversoContextColumn"
-                ReadOnly="True">
-                <xcdg:UnboundColumn.CellContentTemplate>
-                    <DataTemplate>
-                        <TextBlock d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}" DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}">
-                            <externalBrowserHyperlink:ExternalBrowserHyperlink NavigateUri="{Binding ReversoContextLink, Mode=OneWay}">
-                                Reverso
-                            </externalBrowserHyperlink:ExternalBrowserHyperlink></TextBlock>
-                    </DataTemplate>
-                </xcdg:UnboundColumn.CellContentTemplate>
-            </xcdg:UnboundColumn>
-            <xcdg:UnboundColumn
-                Title=""
-                CellVerticalContentAlignment="Center"
-                FieldName="DemoteColumn"
-                ReadOnly="True">
-                <xcdg:UnboundColumn.CellContentTemplate>
-                    <DataTemplate>
-                        <StackPanel
-                            commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Orientation="Horizontal">
-                            <controls:DemoteButton DataContext="{Binding LearningInfoViewModel, Mode=OneWay}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </xcdg:UnboundColumn.CellContentTemplate>
-            </xcdg:UnboundColumn>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:Repeat}"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.RepeatType"
-                ReadOnly="True">
-                <xcdg:Column.CellContentTemplate>
-                    <DataTemplate>
-                        <TextBlock
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Text="{Binding LearningInfoViewModel.RepeatType, Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
-                    </DataTemplate>
-                </xcdg:Column.CellContentTemplate>
-            </xcdg:Column>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:LastCardShowTime}"
-                AllowGroup="False"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.LastCardShowTime"
-                ReadOnly="True" />
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:NextCardShowTime}"
-                AllowGroup="False"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.NextCardShowTime"
-                ReadOnly="True">
-                <xcdg:Column.CellContentTemplate>
-                    <DataTemplate>
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="{StaticResource TinyFontSize}"
-                            Foreground="{Binding Converter={StaticResource DateTimeToBrushConverter}, Mode=OneWay}"
-                            Text="{Binding StringFormat=dd MMM yy HH:mm, Mode=OneWay}" />
-                    </DataTemplate>
-                </xcdg:Column.CellContentTemplate>
-            </xcdg:Column>
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ShowCount}"
-                AllowGroup="True"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.ShowCount"
-                ReadOnly="True" />
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:ModifiedDate}"
-                AllowGroup="False"
-                CellVerticalContentAlignment="Center"
-                FieldName="ModifiedDate"
-                ReadOnly="True" />
-            <xcdg:Column
-                Title="{lex:Loc Scar.Remembrance.Resources:Texts:CreatedDate}"
-                AllowGroup="False"
-                CellVerticalContentAlignment="Center"
-                FieldName="LearningInfoViewModel.CreatedDate"
-                ReadOnly="True" />
-            <xcdg:UnboundColumn
-                Title=""
-                CellVerticalContentAlignment="Center"
-                FieldName="EditManualTranslationsColumn"
-                ReadOnly="True">
-                <xcdg:UnboundColumn.CellContentTemplate>
-                    <DataTemplate>
-                        <Button
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            Command="{Binding DataContext.EditManualTranslationsViewModel.EditManualTranslationsCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                            CommandParameter="{Binding Mode=OneWay}"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Style="{StaticResource ImageButton}"
-                            ToolTip="{lex:Loc EditManualTranslations}">
-                            <materialDesign:PackIcon Kind="TooltipEdit" />
-                        </Button>
-                    </DataTemplate>
-                </xcdg:UnboundColumn.CellContentTemplate>
-            </xcdg:UnboundColumn>
-            <xcdg:UnboundColumn
-                Title=""
-                CellVerticalContentAlignment="Center"
-                FieldName="DeleteColumn"
-                ReadOnly="True">
-                <xcdg:UnboundColumn.CellContentTemplate>
-                    <DataTemplate>
-                        <Button
-                            d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
-                            Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                            CommandParameter="{Binding Mode=OneWay}"
-                            DataContext="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                            Foreground="{StaticResource Red}"
-                            Style="{StaticResource ImageButton}"
-                            ToolTip="{lex:Loc DeleteTranslation}">
-                            <materialDesign:PackIcon Kind="Delete" />
-                        </Button>
-                    </DataTemplate>
-                </xcdg:UnboundColumn.CellContentTemplate>
-            </xcdg:UnboundColumn>
-        </xceed:XceedAutoFitColumnGrid.Columns>
-    </xceed:XceedAutoFitColumnGrid>-->
+        RowBackground="{StaticResource DataGridRowColor}">
+        <DataGrid.Columns>
+            <translationsGrid:IsFavoritedColumn />
+            <translationsGrid:WordColumn />
+            <translationsGrid:TranslationsColumn />
+            <translationsGrid:LanguageColumn />
+            <translationsGrid:TargetLanguageColumn />
+            <translationsGrid:ReversoColumn />
+            <translationsGrid:DemoteColumn />
+            <translationsGrid:RepeatTypeColumn />
+            <translationsGrid:LastCardShowTimeColumn />
+            <translationsGrid:NextCardShowTimeColumn />
+            <translationsGrid:ShowCountColumn />
+            <translationsGrid:ModifiedDateColumn />
+            <translationsGrid:CreatedDateColumn />
+            <translationsGrid:EditManualTranslationsColumn />
+            <columns:DeleteColumn />
+        </DataGrid.Columns>
+    </DataGrid>
 </commonView:BaseControl>

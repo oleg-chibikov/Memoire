@@ -2,12 +2,12 @@
     x:Class="Remembrance.View.Dialogs.EditManualTranslationsDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:columns="clr-namespace:Remembrance.View.Controls.Columns"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:manualTranslations="clr-namespace:Remembrance.View.Controls.Columns.ManualTranslations"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     Width="800"
@@ -19,6 +19,7 @@
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
+    <!--  OneWay bindings are used instead of OneTime as the whole underlying viewmodel might be exchanged  -->
     <Grid
         Margin="5"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
@@ -32,93 +33,21 @@
             <TextBlock Text="{Binding TranslationEntryKey, Mode=OneWay}" />
             <controls:AddManualTranslationControl />
         </StackPanel>
-        <!--<xceed:XceedAutoFitColumnGrid
+        <DataGrid
             Grid.Row="1"
-            AutoCreateColumns="False"
-            AutoScrollCurrentItem="All"
-            IsFixedHeadersHost="True"
+            AlternatingRowBackground="{StaticResource DataGridAlternativeRowColor}"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
             ItemsSource="{Binding ManualTranslations, Mode=OneWay}"
-            SynchronizeCurrent="True">
-            <xcdg:DataGridControl.View>
-                <xcdg:TableflowView UseDefaultHeadersFooters="False">
-                    <xcdg:TableflowView.FixedHeaders>
-                        <DataTemplate>
-                            <xcdg:ColumnManagerRow />
-                        </DataTemplate>
-                    </xcdg:TableflowView.FixedHeaders>
-                </xcdg:TableflowView>
-            </xcdg:DataGridControl.View>
-            <xceed:XceedAutoFitColumnGrid.Columns>
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Translation}"
-                    Width="*"
-                    CellContentTemplate="{StaticResource CellTemplate}"
-                    CellEditor="{StaticResource CellEditor}"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="Text"
-                    IsMainColumn="True"
-                    ReadOnly="False" />
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Example}"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="Example"
-                    ReadOnly="False" />
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:Meaning}"
-                    CellContentTemplate="{StaticResource CellTemplate}"
-                    CellEditor="{StaticResource CellEditor}"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="Meaning"
-                    ReadOnly="False" />
-                <xcdg:Column
-                    Title="{lex:Loc Scar.Remembrance.Resources:Texts:PartOfSpeech}"
-                    CellVerticalContentAlignment="Center"
-                    FieldName="PartOfSpeech"
-                    ReadOnly="False">
-                    <xcdg:Column.CellEditor>
-                        <xcdg:CellEditor>
-                            <xcdg:CellEditor.EditTemplate>
-                                <DataTemplate>
-                                    <ComboBox
-                                        IsEditable="True"
-                                        IsSynchronizedWithCurrentItem="True"
-                                        ItemsSource="{Binding Path=DataContext.AvailablePartsOfSpeech, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type dialogs:EditManualTranslationsDialog}}}"
-                                        SelectedValue="{xcdg:CellEditorBinding}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </DataTemplate>
-                            </xcdg:CellEditor.EditTemplate>
-                        </xcdg:CellEditor>
-                    </xcdg:Column.CellEditor>
-                    <xcdg:Column.CellContentTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Mode=OneTime, Converter={StaticResource PartOfSpeechLocalizedConverter}}" />
-                        </DataTemplate>
-                    </xcdg:Column.CellContentTemplate>
-                </xcdg:Column>
-                <xcdg:UnboundColumn
-                    CellVerticalContentAlignment="Center"
-                    FieldName="This"
-                    ReadOnly="True">
-                    <xcdg:UnboundColumn.CellContentTemplate>
-                        <DataTemplate>
-                            <Button
-                                Command="{Binding DataContext.DeleteCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType=xcdg:DataGridControl}}"
-                                CommandParameter="{Binding DataContext, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type xcdg:DataRow}}}"
-                                Foreground="{StaticResource Red}"
-                                Style="{StaticResource ImageButton}"
-                                ToolTip="{lex:Loc DeleteTranslation}">
-                                <materialDesign:PackIcon Kind="Delete" />
-                            </Button>
-                        </DataTemplate>
-                    </xcdg:UnboundColumn.CellContentTemplate>
-                </xcdg:UnboundColumn>
-            </xceed:XceedAutoFitColumnGrid.Columns>
-        </xceed:XceedAutoFitColumnGrid>-->
+            RowBackground="{StaticResource DataGridRowColor}">
+            <DataGrid.Columns>
+                <manualTranslations:ManualTranslationWordColumn />
+                <manualTranslations:ManualTranslationExampleColumn />
+                <manualTranslations:ManualTranslationMeaningColumn />
+                <manualTranslations:ManualTranslationPartOfSpeechColumn />
+                <columns:DeleteColumn />
+            </DataGrid.Columns>
+        </DataGrid>
         <StackPanel
             Grid.Row="2"
             HorizontalAlignment="Right"

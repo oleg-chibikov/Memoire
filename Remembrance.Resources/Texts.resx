@@ -219,8 +219,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="DeleteTranslation" xml:space="preserve">
-    <value>Delete translation</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="EditManualTranslations" xml:space="preserve">
     <value>Edit manual translations</value>

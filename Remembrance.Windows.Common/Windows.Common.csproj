@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7415.42365" />
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7415.37883" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7416.33883" />
+    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7416.33882" />
   </ItemGroup>
 
   <ItemGroup>
