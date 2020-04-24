@@ -1,13 +1,15 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Remembrance.Contracts.Processing;
 using Remembrance.Contracts.Processing.Data;
 
 namespace Remembrance.WebApi.Controllers
 {
-    public sealed class WordsController : ApiController
+    [Route("api/words")]
+    [ApiController]
+    public sealed class WordsController : ControllerBase
     {
         readonly ITranslationEntryProcessor _translationEntryProcessor;
 
@@ -18,6 +20,13 @@ namespace Remembrance.WebApi.Controllers
 
         [HttpPut]
         public async Task PutAsync([FromBody] string word)
+        {
+            _ = word ?? throw new ArgumentNullException(nameof(word));
+            await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [HttpPut("{word}")]
+        public async Task PutFromUriAsync(string word)
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
             await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);

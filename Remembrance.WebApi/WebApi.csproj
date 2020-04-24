@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
     <Description>Remembrance WebApi functionality</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7411.17774" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7411.17774" />
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7411.17773" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7419.19425" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
   </ItemGroup>
 </Project>

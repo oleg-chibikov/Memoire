@@ -19,11 +19,11 @@
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="NLog.Config" Version="4.7.0" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7416.33888" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7416.33888" />
-    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7416.33883" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7416.33888" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7416.33882" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7418.38407" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7418.38407" />
+    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7418.38404" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7418.38407" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7418.38402" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
     <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
     <ProjectReference Include="..\Remembrance.View\View.csproj" />
+    <ProjectReference Include="..\Remembrance.WebApi\WebApi.csproj" />
     <ProjectReference Include="..\Remembrance.Windows.Common\Windows.Common.csproj" />
   </ItemGroup>
 

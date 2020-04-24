@@ -7,8 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     xmlns:translationsGrid="clr-namespace:Remembrance.View.Controls.Columns.TranslationsGrid"
+    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="1000"
@@ -25,6 +25,7 @@
         AlternatingRowBackground="{StaticResource DataGridAlternativeRowColor}"
         AutoGenerateColumns="False"
         CanUserAddRows="False"
+        EnableRowVirtualization="True"
         IsReadOnly="True"
         ItemsSource="{Binding View, Mode=OneTime}"
         RowBackground="{StaticResource DataGridRowColor}">

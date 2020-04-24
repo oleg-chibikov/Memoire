@@ -21,37 +21,27 @@ using Scar.Common.View.Contracts;
 
 namespace Remembrance.Core.CardManagement
 {
-    sealed class AssessmentCardManager : BaseCardManager, IAssessmentCardManager, ICardShowTimeProvider, IDisposable
+    sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
         readonly DateTime _initTime;
-
         readonly ILearningInfoRepository _learningInfoRepository;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly ISharedSettingsRepository _sharedSettingsRepository;
-
         readonly object _lockObject = new object();
-
         readonly IMessageHub _messageHub;
-
         readonly IPauseManager _pauseManager;
-
         readonly IScopedWindowProvider _scopedWindowProvider;
-
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
         readonly ITranslationEntryProcessor _translationEntryProcessor;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
-
+        readonly ILog _logger;
+        readonly SynchronizationContext _synchronizationContext;
+        readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
         bool _hasOpenWindows;
-
         IDisposable _interval = Disposable.Empty;
 
         public AssessmentCardManager(
             ITranslationEntryRepository translationEntryRepository,
-            ILog logger,
             IMessageHub messageHub,
             ITranslationEntryProcessor translationEntryProcessor,
             ILocalSettingsRepository localSettingsRepository,
@@ -59,13 +49,17 @@ namespace Remembrance.Core.CardManagement
             ILearningInfoRepository learningInfoRepository,
             IScopedWindowProvider scopedWindowProvider,
             IPauseManager pauseManager,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
-            ISharedSettingsRepository sharedSettingsRepository) : base(logger, synchronizationContext, windowPositionAdjustmentManager)
+            ISharedSettingsRepository sharedSettingsRepository,
+            ILog logger,
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _ = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _windowPositionAdjustmentManager = windowPositionAdjustmentManager ?? throw new ArgumentNullException(nameof(windowPositionAdjustmentManager));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -116,13 +110,13 @@ namespace Remembrance.Core.CardManagement
                 _interval.Dispose();
             }
 
-            Logger.Debug("Finished showing cards");
+            _logger.Debug("Finished showing cards");
         }
 
         void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
-            Logger.DebugFormat("Next card will be shown in: {0} (frequency is {1})", delay, CardShowFrequency);
+            _logger.DebugFormat("Next card will be shown in: {0} (frequency is {1})", delay, CardShowFrequency);
 
             lock (_lockObject)
             {
@@ -136,7 +130,7 @@ namespace Remembrance.Core.CardManagement
             CardShowFrequency = newCardShowFrequency;
             if (!_pauseManager.IsPaused)
             {
-                Logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
+                _logger.TraceFormat("Recreating interval for new frequency {0}...", newCardShowFrequency);
                 lock (_lockObject)
                 {
                     CreateInterval();
@@ -144,24 +138,24 @@ namespace Remembrance.Core.CardManagement
             }
             else
             {
-                Logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
+                _logger.DebugFormat("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
             }
         }
 
         async void HandleIntervalHit(long x)
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            Logger.Trace("Trying to show next card...");
+            _logger.Trace("Trying to show next card...");
 
             if (!_localSettingsRepository.IsActive)
             {
-                Logger.Debug("Skipped showing card due to inactivity");
+                _logger.Debug("Skipped showing card due to inactivity");
                 return;
             }
 
             if (_hasOpenWindows)
             {
-                Logger.Trace("There is another window opened. Skipping creation...");
+                _logger.Trace("There is another window opened. Skipping creation...");
                 return;
             }
 
@@ -171,7 +165,7 @@ namespace Remembrance.Core.CardManagement
             var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
             if (mostSuitableLearningInfos.Length == 0)
             {
-                Logger.Debug("Skipped showing card due to absence of suitable cards");
+                _logger.Debug("Skipped showing card due to absence of suitable cards");
                 return;
             }
 
@@ -192,14 +186,22 @@ namespace Remembrance.Core.CardManagement
 
         async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)
         {
-            Logger.TraceFormat("Creating window...");
+            _logger.TraceFormat("Creating window...");
             var window = await _scopedWindowProvider.GetScopedWindowAsync<IAssessmentBatchCardWindow, IReadOnlyCollection<TranslationInfo>>(translationInfos, CancellationToken.None)
                 .ConfigureAwait(false);
 
             window.Closed += Window_Closed;
             _hasOpenWindows = true;
-            ShowWindow(window);
-            Logger.InfoFormat("Window has been opened");
+
+            // CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
+            _synchronizationContext.Send(
+                x =>
+                {
+                    _windowPositionAdjustmentManager.AdjustAnyWindowPosition(window);
+                    window.Restore();
+                },
+                null);
+            _logger.InfoFormat("Window has been opened");
         }
 
         async Task<IReadOnlyCollection<TranslationInfo>> GetTranslationInfosForAllWords(IEnumerable<LearningInfo> mostSuitableLearningInfos)

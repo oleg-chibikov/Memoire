@@ -34,6 +34,10 @@ namespace Remembrance.Windows.Common
             }
 
             wpfWindow.AdvancedWindowStartupLocation = AdvancedWindowStartupLocation.TopRight;
+            wpfWindow.Draggable = false;
+            wpfWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            wpfWindow.ShowActivated = false;
+            wpfWindow.Topmost = true;
             wpfWindow.AutoCloseTimeout = AppSettings.TranslationCardCloseTimeout;
         }
 

@@ -20,6 +20,7 @@ using Remembrance.Core.Sync;
 using Remembrance.DAL.SharedBetweenMachines;
 using Remembrance.View.Controls;
 using Remembrance.ViewModel;
+using Remembrance.WebApi;
 using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.ApplicationLifetime;
@@ -30,6 +31,7 @@ using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.Sync.Windows;
 using Scar.Common.View;
+using Scar.Common.WebApi;
 using Scar.Common.WPF.CollectionView;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.Localization;
@@ -69,8 +71,8 @@ namespace Remembrance.Launcher
             ResolveInSeparateTaskAsync<IAssessmentCardManager>();
             ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
             ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
-
-            // TODO: ResolveInSeparateTaskAsync<ApiHoster>();
+            var apiHoster = Container.Resolve<IApiHoster>();
+            _ = apiHoster.RegisterWebApiHostAsync().ConfigureAwait(false);
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
@@ -108,8 +110,7 @@ namespace Remembrance.Launcher
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
-
-            // TODO builder.RegisterType<ApiHoster>().AsSelf().SingleInstance();
+            builder.RegisterType<RemembranceApiHoster>().AsImplementedInterfaces().SingleInstance();
         }
 
         protected override void ShowMessage(Message message)
