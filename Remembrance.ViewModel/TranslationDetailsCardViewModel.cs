@@ -8,6 +8,8 @@ using Common.Logging;
 using Easy.MessageHub;
 using PropertyChanged;
 using Remembrance.Contracts;
+using Remembrance.Contracts.Classification;
+using Remembrance.Contracts.Classification.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.Languages;
@@ -46,8 +48,10 @@ namespace Remembrance.ViewModel
             IPredictor predictor,
             ILanguageManager languageManager,
             ICultureManager cultureManager,
-            ICommandManager commandManager) : base(commandManager)
+            ICommandManager commandManager,
+            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater) : base(commandManager)
         {
+            _ = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
@@ -73,6 +77,10 @@ namespace Remembrance.ViewModel
             // ReSharper disable once AssignmentIsFullyDiscarded
             _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
 
+            // no await here
+            // ReSharper disable once AssignmentIsFullyDiscarded
+            _ = LoadClassificationCategoriesIfNotExistsAsync(translationInfo, learningInfoCategoriesUpdater);
+
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChanged));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
@@ -85,6 +93,8 @@ namespace Remembrance.ViewModel
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
         public Prepositions? PrepositionsCollection { get; private set; }
+
+        public IReadOnlyCollection<ClassificationCategory>? ClassificationCategories { get; set; }
 
         public TranslationDetailsViewModel TranslationDetails { get; }
 
@@ -133,6 +143,11 @@ namespace Remembrance.ViewModel
             }
 
             PrepositionsCollection = prepositionsInfo.Prepositions;
+        }
+
+        async Task LoadClassificationCategoriesIfNotExistsAsync(TranslationInfo translationInfo, ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater)
+        {
+            ClassificationCategories = await learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, CancellationToken.None);
         }
 
         async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)

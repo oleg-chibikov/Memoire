@@ -61,6 +61,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot get categories for the word..
+        /// </summary>
+        public static string CannotCategorize {
+            get {
+                return ResourceManager.GetString("CannotCategorize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot delete the manual translation because it will lead to the abscence of translations..
         /// </summary>
         public static string CannotDeleteManual {

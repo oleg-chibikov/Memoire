@@ -9,6 +9,7 @@ using System.Windows;
 using Autofac;
 using LiteDB;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.Classification.Data;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ProcessMonitoring;
@@ -136,6 +137,7 @@ namespace Remembrance.Launcher
             RegisterLiteDbReadonlyCollection<TextEntry>();
             RegisterLiteDbReadonlyCollection<Word>();
             RegisterLiteDbReadonlyCollection<ManualTranslation>();
+            RegisterLiteDbReadonlyCollection<ClassificationCategory>();
             RegisterLiteDbStringReadonlyCollection();
             RegisterLiteDbIntReadonlyCollection();
             RegisterLiteDbSet<BaseWord>();

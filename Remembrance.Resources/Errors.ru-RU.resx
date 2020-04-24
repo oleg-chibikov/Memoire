@@ -144,6 +144,9 @@
   <data name="CannotDetectLanguage" xml:space="preserve">
     <value>Не получилось определить язык.</value>
   </data>
+  <data name="CannotCategorize" xml:space="preserve">
+    <value>Не получилось определить категории слова.</value>
+  </data>
   <data name="CannotTranslate" xml:space="preserve">
     <value>Не получилось перевести слово '{0}'.</value>
   </data>

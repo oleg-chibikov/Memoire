@@ -8,6 +8,7 @@ using Common.Logging;
 using Easy.MessageHub;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
+using Remembrance.Contracts.Classification;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -44,6 +45,7 @@ namespace Remembrance.Core.Processing
         readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
         readonly IWordsTranslator _wordsTranslator;
         readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILearningInfoCategoriesUpdater _learningInfoCategoriesUpdater;
 
         public TranslationEntryProcessor(
             ITextToSpeechPlayer textToSpeechPlayer,
@@ -62,7 +64,8 @@ namespace Remembrance.Core.Processing
             Func<ILoadingWindow> loadingWindowFactory,
             SynchronizationContext synchronizationContext,
             ICultureManager cultureManager,
-            ILocalSettingsRepository localSettingsRepository)
+            ILocalSettingsRepository localSettingsRepository,
+            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater)
         {
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
@@ -74,6 +77,7 @@ namespace Remembrance.Core.Processing
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
+            _learningInfoCategoriesUpdater = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
@@ -125,12 +129,18 @@ namespace Remembrance.Core.Processing
                     return null;
                 }
 
-                var translationEntry = new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
+                var translationEntry =
+                    new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
                 _translationEntryRepository.Upsert(translationEntry);
                 var translationDetails = new TranslationDetails(translationResult, translationEntryKey);
                 _translationDetailsRepository.Upsert(translationDetails);
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryKey);
+
                 var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
+
+                // no await here
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = _learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
                 if (needPostProcess)
                 {
                     // no await here
@@ -225,7 +235,7 @@ namespace Remembrance.Core.Processing
 
         static IEnumerable<PartOfSpeechTranslation> ConcatTranslationsWithManual(
             string text,
-            IReadOnlyCollection<ManualTranslation> manualTranslations,
+            IEnumerable<ManualTranslation> manualTranslations,
             IEnumerable<PartOfSpeechTranslation> partOfSpeechTranslations)
         {
             var groups = manualTranslations.GroupBy(x => x.PartOfSpeech);

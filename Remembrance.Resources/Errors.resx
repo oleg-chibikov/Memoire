@@ -144,6 +144,9 @@
   <data name="CannotDetectLanguage" xml:space="preserve">
     <value>Cannot detect language for the word.</value>
   </data>
+  <data name="CannotCategorize" xml:space="preserve">
+    <value>Cannot get categories for the word.</value>
+  </data>
   <data name="CannotListLanguages" xml:space="preserve">
     <value>Cannot list languages.</value>
   </data>
