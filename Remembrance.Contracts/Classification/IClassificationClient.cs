@@ -7,6 +7,6 @@ namespace Remembrance.Contracts.Classification
 {
     public interface IClassificationClient
     {
-        Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(string text, CancellationToken cancellationToken);
+        Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(string text, string? classifier = null, CancellationToken cancellationToken = default);
     }
 }

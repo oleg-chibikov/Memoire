@@ -16,6 +16,7 @@
     <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.Sync" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7418.38402" />
+    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>

@@ -70,7 +70,7 @@ namespace Remembrance.Core.Exchange
             {
                 _logger.InfoFormat("Export to {0} has been performed", fileName);
                 _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
-                Process.Start(fileName);
+                Process.Start(@"cmd.exe ", @$"/c {fileName}");
             }
             else
             {

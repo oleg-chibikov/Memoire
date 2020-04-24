@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Remembrance.Contracts.Classification.Data;
 using Scar.Common.DAL.Model;
 
 namespace Remembrance.Contracts.DAL.Model
@@ -47,7 +46,7 @@ namespace Remembrance.Contracts.DAL.Model
 
         public int ShowCount { get; set; }
 
-        public IReadOnlyCollection<ClassificationCategory>? ClassificationCategories { get; set; }
+        public LearningInfoClassificationCategories? ClassificationCategories { get; set; }
 
         public override string ToString()
         {

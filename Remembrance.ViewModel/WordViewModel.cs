@@ -51,8 +51,6 @@ namespace Remembrance.ViewModel
 
         public ICommand PlayTtsCommand { get; }
 
-        public int? PriorityGroup { get; protected set; }
-
         public ICommand TogglePriorityCommand { get; }
 
         [DoNotNotify]

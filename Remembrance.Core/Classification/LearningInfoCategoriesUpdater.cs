@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Classification;
 using Remembrance.Contracts.Classification.Data;
+using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing.Data;
 
@@ -13,7 +14,7 @@ namespace Remembrance.Core.Classification
 {
     sealed class LearningInfoCategoriesUpdater : ILearningInfoCategoriesUpdater
     {
-        const decimal MinMatchThreshold = 0.4M;
+        const decimal MinMatchThreshold = 0.3M;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly IClassificationClient _classificationClient;
 
@@ -27,34 +28,72 @@ namespace Remembrance.Core.Classification
         {
             // This will replace old categories if min threshold changes
             if (translationInfo.LearningInfo.ClassificationCategories == null ||
-                translationInfo.LearningInfo.ClassificationCategories.Count == 0 ||
-                translationInfo.LearningInfo.ClassificationCategories.Any(x => x.Match < MinMatchThreshold))
+                translationInfo.LearningInfo.ClassificationCategories.Items.Count == 0 ||
+                translationInfo.LearningInfo.ClassificationCategories.MinMatchThreshold != MinMatchThreshold)
             {
-                var classificationCategories = await GetClassificationCategoriesAsync(translationInfo, cancellationToken);
-                translationInfo.LearningInfo.ClassificationCategories = classificationCategories.Where(x => x.Match >= MinMatchThreshold).ToArray();
+                var classificationCategories = await GetClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
+                if (classificationCategories.Count > 0)
+                {
+                    translationInfo.LearningInfo.ClassificationCategories = new LearningInfoClassificationCategories { Items = classificationCategories, MinMatchThreshold = MinMatchThreshold };
+                }
+
                 _learningInfoRepository.Update(translationInfo.LearningInfo);
+                return classificationCategories;
             }
 
-            return translationInfo.LearningInfo.ClassificationCategories;
+            return Array.Empty<ClassificationCategory>();
         }
 
-        async Task<IEnumerable<ClassificationCategory>?> GetClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
+        async Task<IReadOnlyCollection<ClassificationCategory>> GetClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
-            IEnumerable<ClassificationCategory>? classificationCategories = null;
+            string? text = null;
             if (translationInfo.TranslationEntryKey.SourceLanguage == Constants.EnLanguageTwoLetters)
             {
-                classificationCategories = await _classificationClient.GetCategoriesAsync(translationInfo.TranslationEntryKey.Text, cancellationToken);
+                text = translationInfo.TranslationEntryKey.Text;
             }
-            else if (translationInfo.TranslationEntryKey.TargetLanguage == Constants.EnLanguageTwoLetters && translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.Count > 0)
+            else if (translationInfo.TranslationEntryKey.TargetLanguage == Constants.EnLanguageTwoLetters)
             {
-                var firstPartOfSpeechTranslation = translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.First();
-                if (firstPartOfSpeechTranslation.TranslationVariants.Count > 0)
+                if (translationInfo.TranslationEntry.PriorityWords?.Count > 0)
                 {
-                    classificationCategories = await _classificationClient.GetCategoriesAsync(firstPartOfSpeechTranslation.TranslationVariants.First().Text, cancellationToken);
+                    text = translationInfo.TranslationEntry.PriorityWords.First().Text;
+                }
+                else
+                {
+                    if (translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.Count > 0)
+                    {
+                        var firstPartOfSpeechTranslation = translationInfo.TranslationDetails.TranslationResult.PartOfSpeechTranslations.First();
+                        if (firstPartOfSpeechTranslation.TranslationVariants.Count > 0)
+                        {
+                            text = firstPartOfSpeechTranslation.TranslationVariants.First().Text;
+                        }
+                    }
                 }
             }
 
-            return classificationCategories;
+            if (text != null)
+            {
+                var classificationCategories = await _classificationClient.GetCategoriesAsync(text, null, cancellationToken);
+                var limitedCategories = classificationCategories.Where(x => x.Match >= MinMatchThreshold);
+                var tasks = limitedCategories.Select(category => GetInnerCategoriesAsync(category, text, cancellationToken));
+                var results = await Task.WhenAll(tasks);
+                return results.SelectMany(x => x).ToArray();
+            }
+
+            return Array.Empty<ClassificationCategory>();
+        }
+
+        async Task<IReadOnlyCollection<ClassificationCategory>> GetInnerCategoriesAsync(ClassificationCategory category, string text, CancellationToken cancellationToken)
+        {
+            var currentCategories = new List<ClassificationCategory> { category };
+            var innerClassifier = category.ClassName.TrimEnd('s') + " Topics";
+            var innerCategories = await _classificationClient.GetCategoriesAsync(text, innerClassifier, cancellationToken);
+            var limitedInnerCategories = innerCategories.Where(x => x.Match >= MinMatchThreshold);
+            foreach (var innerCategory in limitedInnerCategories)
+            {
+                currentCategories.Add(innerCategory);
+            }
+
+            return currentCategories;
         }
     }
 }

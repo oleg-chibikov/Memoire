@@ -21,7 +21,7 @@ namespace Remembrance.Core.Classification
     sealed class UClassifyTopicsClient : IDisposable, IClassificationClient
     {
         const string UserName = "uclassify";
-        const string UriPart = UserName + "/Topics/classify";
+        const string RootClassifier = "Topics";
         const string Token = "UDZpCiVwonVZ";
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new UClassifyTopicsResponseContractResolver() };
 
@@ -38,13 +38,13 @@ namespace Remembrance.Core.Classification
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
         }
 
-        public async Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(string text, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(string text, string? classifier, CancellationToken cancellationToken)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             try
             {
                 using var content = CreateHttpContent(new UClassifyTopicsRequest(text));
-                var response = await _httpClient.PostAsync(UriPart, content, cancellationToken).ConfigureAwait(false);
+                var response = await _httpClient.PostAsync(GetUriPart(classifier ?? RootClassifier), content, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new InvalidOperationException($"{response.StatusCode}: {response.ReasonPhrase}");
@@ -90,5 +90,7 @@ namespace Remembrance.Core.Classification
             js.Serialize(jtw, value);
             jtw.Flush();
         }
+
+        string GetUriPart(string classifier) => UserName + $"/{classifier}/classify";
     }
 }
