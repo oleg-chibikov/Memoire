@@ -81,12 +81,10 @@ namespace Remembrance.DAL.Local
                     () =>
                     {
                         var uiLanguage = Thread.CurrentThread.CurrentUICulture.Name;
-                        if ((uiLanguage == Constants.EnLanguage) || (uiLanguage == Constants.RuLanguage))
-                        {
-                            return uiLanguage;
-                        }
+                        var newUiLanguage = (uiLanguage == Constants.EnLanguage) || (uiLanguage == Constants.RuLanguage) ? uiLanguage : Constants.EnLanguage;
 
-                        return Constants.EnLanguage;
+                        RemoveUpdateOrInsert(nameof(UiLanguage), newUiLanguage);
+                        return newUiLanguage;
                     });
 
             set => RemoveUpdateOrInsert(nameof(UiLanguage), value);

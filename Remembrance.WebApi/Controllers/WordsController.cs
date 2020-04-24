@@ -22,6 +22,7 @@ namespace Remembrance.WebApi.Controllers
         public async Task PutAsync([FromBody] string word)
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
+
             await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
         }
 
@@ -29,6 +30,7 @@ namespace Remembrance.WebApi.Controllers
         public async Task PutFromUriAsync(string word)
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
+
             await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
         }
     }

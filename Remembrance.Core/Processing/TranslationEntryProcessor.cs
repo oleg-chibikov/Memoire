@@ -19,6 +19,7 @@ using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Resources;
 using Scar.Common;
+using Scar.Common.Localization;
 using Scar.Common.Messages;
 using Scar.Common.View.Contracts;
 
@@ -27,34 +28,22 @@ namespace Remembrance.Core.Processing
     sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
         readonly ITranslationDetailsCardManager _cardManager;
-
+        readonly ICultureManager _cultureManager;
         readonly ILanguageManager _languageManager;
-
         readonly ILearningInfoRepository _learningInfoRepository;
-
         readonly Func<ILoadingWindow> _loadingWindowFactory;
-
         readonly ILog _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
-
         readonly SynchronizationContext _synchronizationContext;
-
         readonly ITextToSpeechPlayer _textToSpeechPlayer;
-
         readonly ITranslationDetailsRepository _translationDetailsRepository;
-
         readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
-
         readonly IWordImageInfoRepository _wordImageInfoRepository;
-
         readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
-
         readonly IWordsTranslator _wordsTranslator;
+        readonly ILocalSettingsRepository _localSettingsRepository;
 
         public TranslationEntryProcessor(
             ITextToSpeechPlayer textToSpeechPlayer,
@@ -71,7 +60,9 @@ namespace Remembrance.Core.Processing
             IWordImageSearchIndexRepository wordImageSearchIndexRepository,
             ILanguageManager languageManager,
             Func<ILoadingWindow> loadingWindowFactory,
-            SynchronizationContext synchronizationContext)
+            SynchronizationContext synchronizationContext,
+            ICultureManager cultureManager,
+            ILocalSettingsRepository localSettingsRepository)
         {
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
@@ -81,6 +72,8 @@ namespace Remembrance.Core.Processing
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _loadingWindowFactory = loadingWindowFactory ?? throw new ArgumentNullException(nameof(loadingWindowFactory));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
+            _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
@@ -97,6 +90,7 @@ namespace Remembrance.Core.Processing
             bool needPostProcess,
             IReadOnlyCollection<ManualTranslation>? manualTranslations)
         {
+            _cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
 

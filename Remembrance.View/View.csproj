@@ -20,7 +20,7 @@
     <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7418.38402" />
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7418.38403" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7418.38403" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7418.38403" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7419.27598" />
     <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7418.38402" />
   </ItemGroup>
 

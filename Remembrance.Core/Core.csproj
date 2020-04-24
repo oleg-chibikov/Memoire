@@ -12,6 +12,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7418.38407" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.Sync" Version="1.1.7418.38407" />
     <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7418.38402" />
