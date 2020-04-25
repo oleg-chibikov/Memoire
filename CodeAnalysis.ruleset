@@ -17,7 +17,7 @@
     <Rule Id="CA1711" Action="Warning" />
     <Rule Id="CA1715" Action="Warning" />
     <Rule Id="CA1809" Action="Info" />
-    <Rule Id="CA2007" Action="None" />
+    <Rule Id="CA2007" Action="Warning" />
     <Rule Id="CA2204" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">

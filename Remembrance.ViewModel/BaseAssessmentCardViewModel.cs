@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
@@ -25,11 +25,12 @@ namespace Remembrance.ViewModel
 
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
         readonly AssessmentBatchCardViewModel _assessmentBatchCardViewModel;
+        readonly ILogger _logger;
 
         protected BaseAssessmentCardViewModel(
             TranslationInfo translationInfo,
             IMessageHub messageHub,
-            ILog logger,
+            ILogger<BaseAssessmentCardViewModel> logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             IAssessmentInfoProvider assessmentInfoProvider,
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
@@ -42,7 +43,7 @@ namespace Remembrance.ViewModel
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
-            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _assessmentBatchCardViewModel = assessmentBatchCardViewModel ?? throw new ArgumentNullException(nameof(assessmentBatchCardViewModel));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
@@ -96,8 +97,6 @@ namespace Remembrance.ViewModel
 
         protected HashSet<Word> AcceptedAnswers { get; }
 
-        protected ILog Logger { get; }
-
         protected IMessageHub MessageHub { get; }
 
         protected TranslationInfo TranslationInfo { get; }
@@ -120,11 +119,11 @@ namespace Remembrance.ViewModel
 
         protected async Task HideControlWithTimeoutAsync(TimeSpan closeTimeout)
         {
-            Logger.TraceFormat("Hiding control in {0}...", closeTimeout);
+            _logger.LogTrace("Hiding control in {0}...", closeTimeout);
             await Task.Delay(closeTimeout).ConfigureAwait(true);
             IsHidden = true;
             _assessmentBatchCardViewModel.NotifyChildClosed();
-            Logger.Debug("Control is hidden");
+            _logger.LogDebug("Control is hidden");
         }
 
         static bool HasUppercaseLettersExceptFirst(string text)
@@ -150,7 +149,7 @@ namespace Remembrance.ViewModel
                 return;
             }
 
-            Logger.DebugFormat("Received {0} from external source", learningInfo);
+            _logger.LogDebug("Received {0} from external source", learningInfo);
 
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
@@ -158,7 +157,7 @@ namespace Remembrance.ViewModel
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
-            Logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
+            _logger.LogTrace("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(
                     () =>

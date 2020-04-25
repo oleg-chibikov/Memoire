@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Resources;
@@ -25,13 +25,13 @@ namespace Remembrance.Core
 
         readonly object _lockObject = new object();
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
         readonly IDictionary<PauseReasons, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReasons, PauseInfoCollection>();
 
-        public PauseManager(ILog logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
+        public PauseManager(ILogger<PauseManager> logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -111,7 +111,7 @@ namespace Remembrance.Core
                     return;
                 }
 
-                _logger.Info($"Paused: {pauseReasons}");
+                _logger.LogInformation($"Paused: {pauseReasons}");
             }
 
             _messageHub.Publish(pauseReasons);
@@ -129,7 +129,7 @@ namespace Remembrance.Core
                     });
             }
 
-            _logger.Debug("Paused time is resetted");
+            _logger.LogDebug("Paused time is reset");
         }
 
         public void ResumeActivity(PauseReasons pauseReasons)
@@ -143,7 +143,7 @@ namespace Remembrance.Core
 
                 _descriptions.Remove(pauseReasons);
                 _localSettingsRepository.AddOrUpdatePauseInfo(pauseReasons, _pauseInfos[pauseReasons]);
-                _logger.Info($"Resumed: {pauseReasons}");
+                _logger.LogInformation($"Resumed: {pauseReasons}");
             }
 
             _messageHub.Publish(pauseReasons);

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -17,7 +17,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -33,7 +33,7 @@ namespace Remembrance.ViewModel
             ITextToSpeechPlayer textToSpeechPlayer,
             IMessageHub messageHub,
             ITranslationEntryProcessor translationEntryProcessor,
-            ILog logger,
+            ILogger<PriorityWordViewModel> logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager) : base(
@@ -66,7 +66,7 @@ namespace Remembrance.ViewModel
         protected override void TogglePriority()
         {
             var isPriority = !IsPriority;
-            _logger.TraceFormat("Changing priority for {0} to {1}...", _wordKey, isPriority);
+            _logger.LogTrace("Changing priority for {0} to {1}...", _wordKey, isPriority);
             if (isPriority)
             {
                 if (_translationEntry.PriorityWords == null)
@@ -94,7 +94,7 @@ namespace Remembrance.ViewModel
 
             _translationEntryRepository.Update(_translationEntry);
             IsPriority = isPriority;
-            _logger.InfoFormat("Priority has been changed for {0}", _wordKey);
+            _logger.LogInformation("Priority has been changed for {0}", _wordKey);
 
             var priorityWordKey = new PriorityWordKey(isPriority, _wordKey);
             _messageHub.Publish(priorityWordKey);

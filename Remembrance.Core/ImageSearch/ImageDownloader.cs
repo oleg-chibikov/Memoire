@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.ImageSearch;
 using Remembrance.Resources;
 using Scar.Common.Messages;
@@ -17,12 +17,12 @@ namespace Remembrance.Core.ImageSearch
     {
         readonly HttpClient _httpClient = new HttpClient();
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
         [SuppressMessage("Security", "CA5359:Do Not Disable Certificate Validation", Justification = "No need for certificate validation")]
-        public ImageDownloader(ILog logger, IMessageHub messageHub)
+        public ImageDownloader(ILogger<ImageDownloader> logger, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -33,7 +33,7 @@ namespace Remembrance.Core.ImageSearch
         {
             try
             {
-                _logger.TraceFormat("Loading image {0}...", imageUrl);
+                _logger.LogTrace("Loading image {0}...", imageUrl);
                 var response = await _httpClient.GetAsync(imageUrl, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Languages;
@@ -27,7 +27,7 @@ namespace Remembrance.Core.Exchange
 
         public EachWordFileImporter(
             ITranslationEntryRepository translationEntryRepository,
-            ILog logger,
+            ILogger<EachWordFileImporter> logger,
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messenger,
             ILanguageManager languageManager,

@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -33,7 +33,7 @@ namespace Remembrance.ViewModel
 
         readonly bool _isReadonly;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -52,7 +52,7 @@ namespace Remembrance.ViewModel
         public WordImageViewerViewModel(
             WordKey wordKey,
             string parentText,
-            ILog logger,
+            ILogger<WordImageViewerViewModel> logger,
             IWordImageInfoRepository wordImageInfoRepository,
             ICancellationTokenSourceProvider cancellationTokenSourceProvider,
             IImageDownloader imageDownloader,
@@ -166,7 +166,7 @@ namespace Remembrance.ViewModel
             var searchIndex = SearchIndex;
             if (!_shouldRepeat)
             {
-                _logger.TraceFormat("Setting {1} image for {0}...", this, increase ? "next" : "previous");
+                _logger.LogTrace("Setting {1} image for {0}...", this, increase ? "next" : "previous");
                 var swappedPosition = IsAlternate ? 0 : 1;
                 var position = IsAlternate ? 1 : 0;
 
@@ -215,7 +215,7 @@ namespace Remembrance.ViewModel
         async Task SetWordImageAsync(int index, string searchText)
         {
             WordImageInfo wordImageInfo;
-            _logger.TraceFormat("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
+            _logger.LogTrace("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
             try
             {
                 await _cancellationTokenSourceProvider.ExecuteAsyncOperation(
@@ -247,7 +247,7 @@ namespace Remembrance.ViewModel
                                     imageInfoWithBitmap = (await Task.WhenAll(imageDownloadTasks).ConfigureAwait(false)).SingleOrDefault();
                                     if (imageInfoWithBitmap == null)
                                     {
-                                        _logger.WarnFormat("Cannot download image for {0}", _wordKey);
+                                        _logger.LogWarning("Cannot download image for {0}", _wordKey);
                                     }
                                 }
                                 else
@@ -274,7 +274,7 @@ namespace Remembrance.ViewModel
                                     }
                                 }
 
-                                _logger.DebugFormat("Image for {0} at search index {1} was saved", _wordKey, index);
+                                _logger.LogDebug("Image for {0} at search index {1} was saved", _wordKey, index);
 
                                 await UpdateImageViewAsync(wordImageInfo, wordImageSearchIndex).ConfigureAwait(false);
                             }

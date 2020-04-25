@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using LiteDB;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Classification.Data;
 using Remembrance.Contracts.DAL.Model;
@@ -21,7 +23,7 @@ using Remembrance.Core.Sync;
 using Remembrance.DAL.SharedBetweenMachines;
 using Remembrance.View.Controls;
 using Remembrance.ViewModel;
-using Remembrance.WebApi;
+using Remembrance.WebApi.Controllers;
 using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.ApplicationLifetime;
@@ -49,16 +51,24 @@ namespace Remembrance.Launcher
     // TODO: Feature: if the word level is low, replace textbox with dropdown
     sealed partial class App
     {
-        public App()
+        public App() : base(
+            hostBuilder => ApiHostingHelper.RegisterWebApiHost(hostBuilder, new Uri("http://localhost:2053")).UseNLog(),
+            serviceCollection => ApiHostingHelper.RegisterServices(serviceCollection, typeof(WordsController).Assembly),
+            (h, loggingBuilder) =>
+            {
+                NLogBuilder.ConfigureNLog("NLog.config");
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+            },
+            newInstanceHandling: NewInstanceHandling.Restart)
         {
             InitializeComponent();
         }
 
-        protected override NewInstanceHandling NewInstanceHandling => NewInstanceHandling.Restart;
-
-        protected override void OnStartup()
+        protected override async Task OnStartupAsync()
         {
-            Logger.Trace("Starting...");
+            var logger = Container.Resolve<ILogger<App>>();
+            logger.LogTrace("Starting...");
             RegisterLiteDbCustomTypes();
             Current.Resources.MergedDictionaries.Add(new ResourceDictionary { { "SuggestionProvider", Container.Resolve<IAutoCompleteDataProvider>() } });
 
@@ -66,14 +76,22 @@ namespace Remembrance.Launcher
             var trayWindow = Container.Resolve<ITrayWindow>();
             trayWindow.ShowDialog();
 
-            Logger.Info("Tray window is loaded");
+            logger.LogInformation("Tray window is loaded");
 
-            ResolveInSeparateTaskAsync<ISynchronizationManager>();
-            ResolveInSeparateTaskAsync<IAssessmentCardManager>();
-            ResolveInSeparateTaskAsync<IActiveProcessMonitor>();
-            ResolveInSeparateTaskAsync<ISharedRepositoryCloner>();
-            var apiHoster = Container.Resolve<IApiHoster>();
-            _ = apiHoster.RegisterWebApiHostAsync().ConfigureAwait(false);
+            var tasks = new[]
+            {
+                ResolveInSeparateTaskAsync<ISynchronizationManager>(),
+                ResolveInSeparateTaskAsync<IAssessmentCardManager>(),
+                ResolveInSeparateTaskAsync<IActiveProcessMonitor>(),
+                ResolveInSeparateTaskAsync<ISharedRepositoryCloner>()
+            };
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            NLog.LogManager.Shutdown();
+            base.OnExit(e);
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
@@ -111,7 +129,6 @@ namespace Remembrance.Launcher
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<RemembranceApiHoster>().AsImplementedInterfaces().SingleInstance();
         }
 
         protected override void ShowMessage(Message message)
@@ -187,10 +204,10 @@ namespace Remembrance.Launcher
             RegisterNamed<TRepository, TRepositoryInterface>(builder);
         }
 
-        void ResolveInSeparateTaskAsync<T>()
+        async Task ResolveInSeparateTaskAsync<T>()
             where T : class
         {
-            Task.Run(() => Container.Resolve<T>());
+            await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
         }
     }
 }

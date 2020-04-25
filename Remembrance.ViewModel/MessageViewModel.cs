@@ -1,5 +1,5 @@
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Resources;
 using Scar.Common.Messages;
@@ -11,12 +11,12 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel : BaseViewModel
     {
-        public MessageViewModel(Message message, ILog logger, ICommandManager commandManager) : base(commandManager)
+        public MessageViewModel(Message message, ILogger<MessageViewModel> logger, ICommandManager commandManager) : base(commandManager)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             AutoCloseTimeout = AppSettings.MessageCloseTimeout;
             Message = message ?? throw new ArgumentNullException(nameof(message));
-            logger.TraceFormat("Showing message {0} and closing window in {1}...", message, AutoCloseTimeout);
+            logger.LogTrace("Showing message {0} and closing window in {1}...", message, AutoCloseTimeout);
         }
 
         public TimeSpan AutoCloseTimeout { get; }

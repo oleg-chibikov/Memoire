@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
 using Remembrance.Resources;
@@ -27,7 +27,7 @@ namespace Remembrance.Core.Sync
 
         readonly ILocalSettingsRepository _localSettingsRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -41,7 +41,7 @@ namespace Remembrance.Core.Sync
 
         public RepositorySynhronizer(
             IAutofacNamedInstancesFactory autofacNamedInstancesFactory,
-            ILog logger,
+            ILogger<RepositorySynhronizer<TEntity, TId, TRepository>> logger,
             TRepository ownRepository,
             IMessageHub messageHub,
             ILocalSettingsRepository localSettingsRepository,
@@ -120,7 +120,7 @@ namespace Remembrance.Core.Sync
                 {
                     try
                     {
-                        // _logger.TraceFormat("Processing {0}...", remoteEntity);
+                        // _logger.LogTrace("Processing {0}...", remoteEntity);
                         var existingEntity = _ownRepository.TryGetById(remoteEntity.Id);
                         var insert = false;
                         if (!Equals(existingEntity, default))
@@ -139,7 +139,7 @@ namespace Remembrance.Core.Sync
                         {
                             if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(false))
                             {
-                                _logger.DebugFormat("Preprocessor condition not satisfied for {0}", remoteEntity);
+                                _logger.LogDebug("Preprocessor condition not satisfied for {0}", remoteEntity);
                                 return;
                             }
                         }
@@ -147,12 +147,12 @@ namespace Remembrance.Core.Sync
                         if (insert)
                         {
                             _ownRepository.Insert(remoteEntity, true);
-                            _logger.InfoFormat("{0} inserted", remoteEntity);
+                            _logger.LogInformation("{0} inserted", remoteEntity);
                         }
                         else
                         {
                             _ownRepository.Update(remoteEntity, true);
-                            _logger.InfoFormat("{0} updated", remoteEntity);
+                            _logger.LogInformation("{0} updated", remoteEntity);
                         }
 
                         if (_syncPostProcessor != null)

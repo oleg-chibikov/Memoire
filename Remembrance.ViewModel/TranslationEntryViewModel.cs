@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Model;
@@ -23,7 +23,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel
     {
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
 
@@ -35,7 +35,7 @@ namespace Remembrance.ViewModel
             TranslationEntry translationEntry,
             ITextToSpeechPlayer textToSpeechPlayer,
             ITranslationEntryProcessor translationEntryProcessor,
-            ILog logger,
+            ILogger<TranslationEntryViewModel> logger,
             SynchronizationContext synchronizationContext,
             ITranslationEntryRepository translationEntryRepository,
             Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
@@ -145,14 +145,14 @@ namespace Remembrance.ViewModel
         void ProcessNonPriority(WordKey wordKey)
         {
             var translations = Translations;
-            _logger.TraceFormat("Removing non-priority word {1} from the list for {0}...", this, wordKey);
+            _logger.LogTrace("Removing non-priority word {1} from the list for {0}...", this, wordKey);
             for (var i = 0; i < translations.Count; i++)
             {
                 var translation = translations[i];
 
                 if (translation.Word.Equals(wordKey.Word))
                 {
-                    _logger.TraceFormat("Removing {0} from the list...", wordKey);
+                    _logger.LogTrace("Removing {0} from the list...", wordKey);
 
                     // ReSharper disable once AccessToModifiedClosure
                     _synchronizationContext.Send(x => Translations.RemoveAt(i--), null);
@@ -161,7 +161,7 @@ namespace Remembrance.ViewModel
 
             if (!translations.Any())
             {
-                _logger.Debug("No more translations left in the list. Restoring default...");
+                _logger.LogDebug("No more translations left in the list. Restoring default...");
                 var translationEntry = _translationEntryRepository.GetById(Id);
 
                 // no await here
@@ -172,7 +172,7 @@ namespace Remembrance.ViewModel
 
         void ProcessPriority(WordKey wordKey)
         {
-            _logger.TraceFormat("Removing all non-priority translations for {0} except {1}...", this, wordKey);
+            _logger.LogTrace("Removing all non-priority translations for {0} except {1}...", this, wordKey);
             var found = false;
             for (var i = 0; i < Translations.Count; i++)
             {
@@ -181,13 +181,13 @@ namespace Remembrance.ViewModel
                 {
                     if (!translation.IsPriority)
                     {
-                        _logger.TraceFormat("Found {0} in the list. Marking as priority...", wordKey);
+                        _logger.LogTrace("Found {0} in the list. Marking as priority...", wordKey);
                         translation.SetIsPriority(true);
-                        _logger.DebugFormat("{0} has been marked as priority", wordKey);
+                        _logger.LogDebug("{0} has been marked as priority", wordKey);
                     }
                     else
                     {
-                        _logger.DebugFormat("Found {0} in the list but it is already priority", wordKey);
+                        _logger.LogDebug("Found {0} in the list but it is already priority", wordKey);
                     }
 
                     found = true;
@@ -202,13 +202,13 @@ namespace Remembrance.ViewModel
 
             if (!found)
             {
-                _logger.TraceFormat("Not found {0} in the list. Adding...", wordKey);
+                _logger.LogTrace("Not found {0} in the list. Adding...", wordKey);
 
                 var translationEntry = _translationEntryRepository.GetById(wordKey.TranslationEntryKey);
                 var word = new Word { Text = wordKey.Word.Text, PartOfSpeech = wordKey.Word.PartOfSpeech };
                 var priorityWordViewModel = _priorityWordViewModelFactory(word, translationEntry);
                 _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);
-                _logger.DebugFormat("{0} has been added to the list", wordKey);
+                _logger.LogDebug("{0} has been added to the list", wordKey);
             }
         }
 

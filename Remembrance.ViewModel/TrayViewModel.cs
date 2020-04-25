@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
@@ -37,7 +37,7 @@ namespace Remembrance.ViewModel
 
         readonly ILocalSettingsRepository _localSettingsRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -61,7 +61,7 @@ namespace Remembrance.ViewModel
 
         public TrayViewModel(
             ILocalSettingsRepository localSettingsRepository,
-            ILog logger,
+            ILogger<TrayViewModel> logger,
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             IWindowFactory<ISettingsWindow> settingsWindowFactory,
@@ -163,13 +163,13 @@ namespace Remembrance.ViewModel
 
         async Task AddTranslationAsync()
         {
-            _logger.Trace("Showing Add Translation window...");
+            _logger.LogTrace("Showing Add Translation window...");
             await _addTranslationWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         void Exit()
         {
-            _logger.Trace("Exiting application...");
+            _logger.LogTrace("Exiting application...");
             _applicationTerminator.Terminate();
         }
 
@@ -183,8 +183,8 @@ namespace Remembrance.ViewModel
             CurrentTime = DateTime.Now;
             PauseReasons = _pauseManager.GetPauseReasons();
 
-            await _semaphore.WaitAsync();
-            var provider = _cardShowTimeProvider ?? await SetupCardShowTimeProviderAsync();
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            var provider = _cardShowTimeProvider ?? await SetupCardShowTimeProviderAsync().ConfigureAwait(false);
             _semaphore.Release();
 
             TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
@@ -199,20 +199,20 @@ namespace Remembrance.ViewModel
 
         async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
         {
-            var provider = _cardShowTimeProvider = await Task.Run(() => _cardShowTimeProviderFactory());
+            var provider = _cardShowTimeProvider = await Task.Run(() => _cardShowTimeProviderFactory()).ConfigureAwait(false);
             IsLoading = false;
             return provider;
         }
 
         async Task ShowDictionaryAsync()
         {
-            _logger.Trace("Showing dictionary...");
+            _logger.LogTrace("Showing dictionary...");
             await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
         }
 
         async Task ShowSettingsAsync()
         {
-            _logger.Trace("Showing settings...");
+            _logger.LogTrace("Showing settings...");
             await _settingsWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
@@ -234,10 +234,10 @@ namespace Remembrance.ViewModel
 
         void ToggleActive()
         {
-            _logger.Trace("Toggling state...");
+            _logger.LogTrace("Toggling state...");
             IsActive = !IsActive;
             _localSettingsRepository.IsActive = IsActive;
-            _logger.InfoFormat("New state is {0}", IsActive);
+            _logger.LogInformation("New state is {0}", IsActive);
             if (IsActive)
             {
                 _pauseManager.ResumeActivity(Contracts.CardManagement.Data.PauseReasons.InactiveMode);
@@ -255,7 +255,7 @@ namespace Remembrance.ViewModel
 
         async Task ToolTipOpenAsync()
         {
-            await SetTimesInfoAsync();
+            await SetTimesInfoAsync().ConfigureAwait(false);
             _isToolTipOpened = true;
         }
     }

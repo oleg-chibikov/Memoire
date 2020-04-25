@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Processing.Data;
 using Remembrance.Contracts.View.Card;
@@ -13,12 +13,12 @@ namespace Remembrance.Core.CardManagement
     sealed class TranslationDetailsCardManager : ITranslationDetailsCardManager
     {
         readonly IScopedWindowProvider _scopedWindowProvider;
-        readonly ILog _logger;
+        readonly ILogger _logger;
         readonly SynchronizationContext _synchronizationContext;
         readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
 
         public TranslationDetailsCardManager(
-            ILog logger,
+            ILogger<TranslationDetailsCardManager> logger,
             SynchronizationContext synchronizationContext,
             IScopedWindowProvider scopedWindowProvider,
             IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
@@ -32,7 +32,7 @@ namespace Remembrance.Core.CardManagement
         public async Task ShowCardAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)
         {
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
-            _logger.TraceFormat("Creating window for {0}...", translationInfo);
+            _logger.LogTrace("Creating window for {0}...", translationInfo);
 
             var window = await _scopedWindowProvider.GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable?, TranslationInfo)>((ownerWindow, translationInfo), CancellationToken.None)
                 .ConfigureAwait(false);
@@ -43,7 +43,7 @@ namespace Remembrance.Core.CardManagement
                     window.Restore();
                 },
                 null);
-            _logger.InfoFormat("Window for {0} has been opened", translationInfo);
+            _logger.LogInformation("Window for {0} has been opened", translationInfo);
         }
     }
 }

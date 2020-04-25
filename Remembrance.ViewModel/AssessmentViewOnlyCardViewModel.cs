@@ -1,6 +1,6 @@
 using System;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
@@ -18,7 +18,8 @@ namespace Remembrance.ViewModel
             TranslationInfo translationInfo,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel,
             IMessageHub messageHub,
-            ILog logger,
+            ILogger<AssessmentTextInputCardViewModel> logger,
+            ILogger<BaseAssessmentCardViewModel> baseLogger,
             Func<TranslationInfo, TranslationDetailsCardViewModel> translationDetailsCardViewModelFactory,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             IAssessmentInfoProvider assessmentInfoProvider,
@@ -28,7 +29,7 @@ namespace Remembrance.ViewModel
             ICommandManager commandManager) : base(
             translationInfo,
             messageHub,
-            logger,
+            baseLogger,
             wordViewModelFactory,
             assessmentInfoProvider,
             wordImageViewerViewModelFactory,
@@ -37,16 +38,17 @@ namespace Remembrance.ViewModel
             commandManager,
             assessmentBatchCardViewModel)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
             TranslationDetailsCardViewModel = translationDetailsCardViewModel ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
 
-            Logger.Trace("Showing view only card...");
+            logger.LogTrace("Showing view only card...");
 
             // Learning info will be saved and published by the caller
             var learningInfo = TranslationInfo.LearningInfo;
             learningInfo.IncreaseRepeatType();
-            Logger.InfoFormat("Increased repeat type for {0}", learningInfo);
+            logger.LogInformation("Increased repeat type for {0}", learningInfo);
         }
 
         public TranslationDetailsCardViewModel TranslationDetailsCardViewModel { get; }

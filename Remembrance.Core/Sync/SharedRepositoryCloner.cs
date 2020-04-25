@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -15,14 +15,14 @@ namespace Remembrance.Core.Sync
     {
         readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
         readonly ILocalSettingsRepository _localSettingsRepository;
-        readonly ILog _logger;
+        readonly ILogger _logger;
         readonly IRemembrancePathsProvider _remembrancePathsProvider;
 
         public SharedRepositoryCloner(
             IReadOnlyCollection<ISharedRepository> cloneableRepositories,
             Func<IRateLimiter> rateLimiterFactory,
             ILocalSettingsRepository localSettingsRepository,
-            ILog logger,
+            ILogger<SharedRepositoryCloner> logger,
             IRemembrancePathsProvider remembrancePathsProvider)
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
@@ -83,11 +83,11 @@ namespace Remembrance.Core.Sync
                         }
 
                         File.Copy(oldFilePath, newFilePath);
-                        _logger.InfoFormat("Cloned repository {0} to {1}", oldFilePath, newFilePath);
+                        _logger.LogInformation("Cloned repository {0} to {1}", oldFilePath, newFilePath);
                     }
                     catch (IOException ex)
                     {
-                        _logger.WarnFormat("Cannot clone repository {0} to {1}. Retrying...", ex, oldFilePath, newFilePath);
+                        _logger.LogWarning(ex, "Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
                         Repository_Changed(sender, e);
                     }
                 });

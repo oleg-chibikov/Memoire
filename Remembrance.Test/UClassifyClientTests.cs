@@ -16,7 +16,7 @@ namespace Remembrance.Test
             using var sut = new UClassifyTopicsClient(Mock.Of<IMessageHub>());
 
             // Act
-            var categories = await sut.GetCategoriesAsync("Genesis", null, default);
+            var categories = await sut.GetCategoriesAsync("Genesis", null, default).ConfigureAwait(false);
 
             // Assert
             Assert.That(categories.Count(), Is.GreaterThan(0));

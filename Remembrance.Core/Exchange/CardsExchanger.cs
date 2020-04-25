@@ -1,15 +1,15 @@
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Exchange;
 using Remembrance.Contracts.Exchange.Data;
 using Remembrance.Resources;
 using Scar.Common.Events;
+using Scar.Common.IO;
 using Scar.Common.Messages;
 
 namespace Remembrance.Core.Exchange
@@ -20,7 +20,7 @@ namespace Remembrance.Core.Exchange
 
         readonly IFileImporter[] _importers;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -28,7 +28,7 @@ namespace Remembrance.Core.Exchange
 
         readonly ISaveFileDialogProvider _saveFileDialog;
 
-        public CardsExchanger(ILog logger, IFileExporter exporter, IFileImporter[] importers, IMessageHub messageHub, IOpenFileDialogProvider openFileDialog, ISaveFileDialogProvider saveFileDialog)
+        public CardsExchanger(ILogger<CardsExchanger> logger, IFileExporter exporter, IFileImporter[] importers, IMessageHub messageHub, IOpenFileDialogProvider openFileDialog, ISaveFileDialogProvider saveFileDialog)
         {
             _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
             _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));
@@ -54,7 +54,7 @@ namespace Remembrance.Core.Exchange
                 return;
             }
 
-            _logger.TraceFormat("Performing export to {0}...", fileName);
+            _logger.LogTrace("Performing export to {0}...", fileName);
             ExchangeResult? exchangeResult = null;
             OnProgress(0, 1);
             try
@@ -68,13 +68,13 @@ namespace Remembrance.Core.Exchange
 
             if (exchangeResult?.Success ?? throw new InvalidOperationException(nameof(ExchangeResult)))
             {
-                _logger.InfoFormat("Export to {0} has been performed", fileName);
+                _logger.LogInformation("Export to {0} has been performed", fileName);
                 _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
-                Process.Start(@"cmd.exe ", @$"/c {fileName}");
+                fileName.OpenFileInExplorer();
             }
             else
             {
-                _logger.WarnFormat("Export to {0} failed", fileName);
+                _logger.LogWarning("Export to {0} failed", fileName);
                 _messageHub.Publish(Errors.ExportFailed.ToError());
             }
         }
@@ -95,12 +95,12 @@ namespace Remembrance.Core.Exchange
                         {
                             foreach (var importer in _importers)
                             {
-                                _logger.TraceFormat("Performing import from {0} with {1}...", fileName, importer.GetType().Name);
+                                _logger.LogTrace("Performing import from {0} with {1}...", fileName, importer.GetType().Name);
                                 var exchangeResult = await importer.ImportAsync(fileName, cancellationToken).ConfigureAwait(false);
 
                                 if (exchangeResult.Success)
                                 {
-                                    _logger.InfoFormat("Import from {0} has been performed", fileName);
+                                    _logger.LogInformation("Import from {0} has been performed", fileName);
                                     var mainMessage = string.Format(CultureInfo.InvariantCulture, Texts.ImportSucceeded, exchangeResult.Count);
                                     _messageHub.Publish(
                                         exchangeResult.Errors != null
@@ -110,7 +110,7 @@ namespace Remembrance.Core.Exchange
                                     return;
                                 }
 
-                                _logger.WarnFormat("ImportAsync from {0} failed", fileName);
+                                _logger.LogWarning("ImportAsync from {0} failed", fileName);
                             }
 
                             _messageHub.Publish(Errors.ImportFailed.ToError());

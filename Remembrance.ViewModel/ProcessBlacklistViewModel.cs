@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.ProcessMonitoring;
 using Remembrance.Contracts.ProcessMonitoring.Data;
@@ -18,11 +18,11 @@ namespace Remembrance.ViewModel
     {
         readonly IActiveProcessesProvider _activeProcessesProvider;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         string? _filter;
 
-        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILog logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource) : base(
+        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILogger<ProcessBlacklistViewModel> logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource) : base(
             commandManager)
         {
             _ = collectionViewSource ?? throw new ArgumentNullException(nameof(collectionViewSource));
@@ -90,16 +90,16 @@ namespace Remembrance.ViewModel
 
         void AddProcessInfo(ProcessInfo processInfo)
         {
-            _logger.TraceFormat("Adding process info {0} to the blacklist...", processInfo);
+            _logger.LogTrace("Adding process info {0} to the blacklist...", processInfo);
 
             if (!BlacklistedProcesses.Contains(processInfo))
             {
                 BlacklistedProcesses.Add(processInfo);
-                _logger.InfoFormat("Process info {0} is added to the blacklist...", processInfo);
+                _logger.LogInformation("Process info {0} is added to the blacklist...", processInfo);
             }
             else
             {
-                _logger.DebugFormat("Process info {0} is already in the blacklist...", processInfo);
+                _logger.LogDebug("Process info {0} is already in the blacklist...", processInfo);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Remembrance.ViewModel
         void Delete(ProcessInfo processInfo)
         {
             _ = processInfo ?? throw new ArgumentNullException(nameof(processInfo));
-            _logger.TraceFormat("Deleting process info {0} from the blacklist...", processInfo);
+            _logger.LogTrace("Deleting process info {0} from the blacklist...", processInfo);
 
             BlacklistedProcesses.Remove(processInfo);
         }
@@ -136,7 +136,7 @@ namespace Remembrance.ViewModel
         void DeleteBatch(IList processesList)
         {
             _ = processesList ?? throw new ArgumentNullException(nameof(processesList));
-            _logger.Trace("Deleting multiple process infos from the blacklist...");
+            _logger.LogTrace("Deleting multiple process infos from the blacklist...");
 
             var processInfos = processesList.Cast<ProcessInfo>().ToArray();
 

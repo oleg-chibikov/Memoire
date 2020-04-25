@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.ImageSearch;
@@ -28,7 +28,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             DefaultRequestHeaders = { { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36" } }
         };
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -36,7 +36,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public ImageSearcher(ILog logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISharedSettingsRepository sharedSettingsRepository)
+        public ImageSearcher(ILogger<ImageSearcher> logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISharedSettingsRepository sharedSettingsRepository)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
@@ -49,7 +49,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
             _ = text ?? throw new ArgumentNullException(nameof(text));
             language = language != null ? $"&locale={language}_{language}" : null;
             var uriPart = $"images?count={count}&offset={skip}&q={text}&t=images{language}&uiv=4";
-            _logger.TraceFormat("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
+            _logger.LogTrace("Searching images: {0}...", _httpClient.BaseAddress + uriPart);
             try
             {
                 var response = await _httpClient.GetAsync(uriPart, cancellationToken).ConfigureAwait(false);
@@ -66,14 +66,14 @@ namespace Remembrance.Core.ImageSearch.Qwant
                             TimeSpan.FromSeconds(10),
                             () =>
                             {
-                                _logger.TraceFormat("Opening browser at Qwant.com to solve the captcha...");
+                                _logger.LogTrace("Opening browser at Qwant.com to solve the captcha...");
                                 Process.Start($"https://www.qwant.com/?q={text}&t=images");
                                 _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
                             },
                             skipLast: true);
                     }
 
-                    _logger.WarnFormat("Cannot search images for {0}. Response StatusCode is {1} and ReasonPhrase {2}", text, response.StatusCode, response.ReasonPhrase);
+                    _logger.LogWarning("Cannot search images for {0}. Response StatusCode is {1} and ReasonPhrase {2}", text, response.StatusCode, response.ReasonPhrase);
                     return null;
                 }
 

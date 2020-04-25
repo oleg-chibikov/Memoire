@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Classification;
@@ -33,7 +33,7 @@ namespace Remembrance.Core.Processing
         readonly ILanguageManager _languageManager;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly Func<ILoadingWindow> _loadingWindowFactory;
-        readonly ILog _logger;
+        readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
         readonly SynchronizationContext _synchronizationContext;
@@ -49,7 +49,7 @@ namespace Remembrance.Core.Processing
 
         public TranslationEntryProcessor(
             ITextToSpeechPlayer textToSpeechPlayer,
-            ILog logger,
+            ILogger<TranslationEntryProcessor> logger,
             ITranslationDetailsCardManager cardManager,
             IMessageHub messageHub,
             ITranslationDetailsRepository translationDetailsRepository,
@@ -96,7 +96,7 @@ namespace Remembrance.Core.Processing
         {
             _cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
-            _logger.TraceFormat("Adding new word translation for {0}...", translationEntryAdditionInfo);
+            _logger.LogTrace("Adding new word translation for {0}...", translationEntryAdditionInfo);
 
             IDisplayable? loadingWindow = null;
             _synchronizationContext.Send(
@@ -148,7 +148,7 @@ namespace Remembrance.Core.Processing
                     _ = PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
                 }
 
-                _logger.InfoFormat("Processing finished for word {0}", translationEntryKey);
+                _logger.LogInformation("Processing finished for word {0}", translationEntryKey);
                 return translationInfo;
             }
             finally
@@ -160,7 +160,7 @@ namespace Remembrance.Core.Processing
         public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord)
         {
             _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
-            _logger.TraceFormat("Deleting {0}{1}...", translationEntryKey, needDeletionRecord ? " with creating deletion event" : null);
+            _logger.LogTrace("Deleting {0}{1}...", translationEntryKey, needDeletionRecord ? " with creating deletion event" : null);
             _prepositionsInfoRepository.Delete(translationEntryKey);
             _translationDetailsRepository.Delete(translationEntryKey);
             _wordImageInfoRepository.ClearForTranslationEntry(translationEntryKey);
@@ -172,7 +172,7 @@ namespace Remembrance.Core.Processing
                 _translationEntryDeletionRepository.Upsert(new TranslationEntryDeletion(translationEntryKey));
             }
 
-            _logger.InfoFormat("Deleted {0}", translationEntryKey);
+            _logger.LogInformation("Deleted {0}", translationEntryKey);
         }
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
@@ -188,7 +188,7 @@ namespace Remembrance.Core.Processing
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
-            _logger.TraceFormat("Updating manual translations for {0}...", translationEntryKey);
+            _logger.LogTrace("Updating manual translations for {0}...", translationEntryKey);
             _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             if (!manualTranslations?.Any() == true)
             {
@@ -387,7 +387,7 @@ namespace Remembrance.Core.Processing
             {
                 // replace the original text with the corrected one
                 translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().Text;
-                _logger.TraceFormat("Received translation for {0}", translationEntryKey);
+                _logger.LogTrace("Received translation for {0}", translationEntryKey);
             }
             else
             {

@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -24,7 +24,7 @@ namespace Remembrance.Core.Exchange
     {
         readonly ILearningInfoRepository _learningInfoRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messenger;
 
@@ -34,7 +34,7 @@ namespace Remembrance.Core.Exchange
 
         protected BaseFileImporter(
             ITranslationEntryRepository translationEntryRepository,
-            ILog logger,
+            ILogger<BaseFileImporter<T>> logger,
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messenger,
             ILearningInfoRepository learningInfoRepository)
@@ -68,7 +68,7 @@ namespace Remembrance.Core.Exchange
                     async (exchangeEntriesBlock, index, blocksCount) =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        _logger.TraceFormat("Processing block {0} out of {1} ({2} files)...", index, blocksCount, exchangeEntriesBlock.Length);
+                        _logger.LogTrace("Processing block {0} out of {1} ({2} files)...", index, blocksCount, exchangeEntriesBlock.Length);
                         var importTasks = exchangeEntriesBlock.Select(
                             async exchangeEntry =>
                             {
@@ -133,11 +133,11 @@ namespace Remembrance.Core.Exchange
             }
             catch (IOException ex)
             {
-                _logger.Warn("Cannot load file from disk", ex);
+                _logger.LogWarning(ex, "Cannot load file from disk");
             }
             catch (JsonException ex)
             {
-                _logger.Warn("Cannot deserialize object", ex);
+                _logger.LogWarning(ex, "Cannot deserialize object");
             }
 
             return deserialized;
@@ -161,7 +161,7 @@ namespace Remembrance.Core.Exchange
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            _logger.TraceFormat("Importing {0}...", exchangeEntry.Text);
+            _logger.LogTrace("Importing {0}...", exchangeEntry.Text);
             var translationEntryKey = await GetTranslationEntryKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
             TranslationEntry? translationEntry = null;
             if (existingTranslationEntries.ContainsKey(translationEntryKey))
@@ -198,7 +198,7 @@ namespace Remembrance.Core.Exchange
             var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, learningInfo);
             var priorityTranslationsUpdated = UpdatePriorityTranslationsAsync(exchangeEntry, translationEntry);
             changed |= priorityTranslationsUpdated;
-            _logger.InfoFormat("Imported {0}", exchangeEntry.Text);
+            _logger.LogInformation("Imported {0}", exchangeEntry.Text);
             if (changed)
             {
                 _translationEntryRepository.Update(translationEntry);
@@ -220,7 +220,7 @@ namespace Remembrance.Core.Exchange
 
         void PublishPriorityWord(TranslationEntry translationEntry, BaseWord priorityTranslation)
         {
-            _logger.InfoFormat("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
+            _logger.LogInformation("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
             var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
             _messenger.Publish(priorityWordKey);
         }

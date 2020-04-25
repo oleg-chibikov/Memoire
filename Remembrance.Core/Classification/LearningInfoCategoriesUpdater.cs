@@ -72,10 +72,10 @@ namespace Remembrance.Core.Classification
 
             if (text != null)
             {
-                var classificationCategories = await _classificationClient.GetCategoriesAsync(text, null, cancellationToken);
+                var classificationCategories = await _classificationClient.GetCategoriesAsync(text, null, cancellationToken).ConfigureAwait(false);
                 var limitedCategories = classificationCategories.Where(x => x.Match >= MinMatchThreshold);
                 var tasks = limitedCategories.Select(category => GetInnerCategoriesAsync(category, text, cancellationToken));
-                var results = await Task.WhenAll(tasks);
+                var results = await Task.WhenAll(tasks).ConfigureAwait(false);
                 return results.SelectMany(x => x).ToArray();
             }
 
@@ -86,7 +86,7 @@ namespace Remembrance.Core.Classification
         {
             var currentCategories = new List<ClassificationCategory> { category };
             var innerClassifier = category.ClassName.TrimEnd('s') + " Topics";
-            var innerCategories = await _classificationClient.GetCategoriesAsync(text, innerClassifier, cancellationToken);
+            var innerCategories = await _classificationClient.GetCategoriesAsync(text, innerClassifier, cancellationToken).ConfigureAwait(false);
             var limitedInnerCategories = innerCategories.Where(x => x.Match >= MinMatchThreshold);
             foreach (var innerCategory in limitedInnerCategories)
             {

@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -16,7 +16,7 @@ namespace Remembrance.ViewModel
     {
         readonly ILearningInfoRepository _learningInfoRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -29,7 +29,7 @@ namespace Remembrance.ViewModel
         public LearningInfoViewModel(
             LearningInfo learningInfo,
             ILearningInfoRepository learningInfoRepository,
-            ILog logger,
+            ILogger<LearningInfoViewModel> logger,
             IMessageHub messageHub,
             SynchronizationContext synchronizationContext,
             ICommandManager commandManager) : base(commandManager)
@@ -104,7 +104,7 @@ namespace Remembrance.ViewModel
             RepeatType = learningInfo.RepeatType;
             _learningInfoRepository.Update(learningInfo);
             _messageHub.Publish(learningInfo);
-            _logger.InfoFormat("Demoted {0}", learningInfo);
+            _logger.LogInformation("Demoted {0}", learningInfo);
         }
 
         void Favorite()
@@ -114,7 +114,7 @@ namespace Remembrance.ViewModel
             _learningInfoRepository.Update(learningInfo);
             RepeatType = learningInfo.RepeatType;
             _messageHub.Publish(learningInfo);
-            _logger.InfoFormat("{0} {1}", IsFavorited ? "Favorited" : "Unfavorited", learningInfo);
+            _logger.LogInformation("{0} {1}", IsFavorited ? "Favorited" : "Unfavorited", learningInfo);
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Sync;
@@ -15,7 +15,7 @@ namespace Remembrance.Core.Sync
     {
         readonly FileSystemWatcher _fileSystemWatcher;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -32,7 +32,7 @@ namespace Remembrance.Core.Sync
         string? _thisMachineSharedPath;
 
         public SynchronizationManager(
-            ILog logger,
+            ILogger<SynchronizationManager> logger,
             ILocalSettingsRepository localSettingsRepository,
             IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
             IReadOnlyCollection<ISyncExtender> syncExtenders,
@@ -101,7 +101,7 @@ namespace Remembrance.Core.Sync
                 return;
             }
 
-            _logger.InfoFormat("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
+            _logger.LogInformation("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
             SynchronizeFile(e.FullPath);
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
@@ -118,7 +118,7 @@ namespace Remembrance.Core.Sync
                 paths,
                 filePath =>
                 {
-                    _logger.TraceFormat("Processing file {0}...", filePath);
+                    _logger.LogTrace("Processing file {0}...", filePath);
                     SynchronizeFile(filePath);
                 });
             foreach (var syncExtender in _syncExtenders)
@@ -133,7 +133,7 @@ namespace Remembrance.Core.Sync
 
             if (!_synchronizers.ContainsKey(fileName ?? throw new InvalidOperationException("fileName should not be null")))
             {
-                _logger.WarnFormat("Unknown type of repository: {0}", filePath);
+                _logger.LogWarning("Unknown type of repository: {0}", filePath);
                 return;
             }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Sync;
@@ -37,7 +36,7 @@ namespace Remembrance.Core
 
         public void OpenSettingsFolder()
         {
-            Process.Start($@"{_assemblyInfoProvider.SettingsPath}");
+            $@"{_assemblyInfoProvider.SettingsPath}".OpenDirectoryInExplorer();
         }
 
         public void OpenSharedFolder(SyncEngine syncEngine)
@@ -48,12 +47,12 @@ namespace Remembrance.Core
                 return;
             }
 
-            Process.Start($@"{GetSharedPath(syncEngine)}");
+            $@"{GetSharedPath(syncEngine)}".OpenDirectoryInExplorer();
         }
 
         public void ViewLogs()
         {
-            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log");
+            $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Remembrance\Logs\Full.log".OpenPathWithDefaultAction();
         }
     }
 }

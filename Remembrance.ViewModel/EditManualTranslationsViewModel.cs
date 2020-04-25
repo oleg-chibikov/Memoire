@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -22,7 +22,7 @@ namespace Remembrance.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class EditManualTranslationsViewModel : BaseViewModel
     {
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -31,7 +31,7 @@ namespace Remembrance.ViewModel
         readonly ITranslationEntryRepository _translationEntryRepository;
 
         public EditManualTranslationsViewModel(
-            ILog logger,
+            ILogger<EditManualTranslationsViewModel> logger,
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messageHub,
             ITranslationEntryRepository translationEntryRepository,
@@ -76,7 +76,7 @@ namespace Remembrance.ViewModel
             }
 
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
-            _logger.TraceFormat("Adding {0}...", ManualTranslationText);
+            _logger.LogTrace("Adding {0}...", ManualTranslationText);
             ManualTranslationText = null;
             if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.OrdinalIgnoreCase)))
             {
@@ -88,14 +88,14 @@ namespace Remembrance.ViewModel
 
         void Cancel()
         {
-            _logger.Trace("Cancelling...");
+            _logger.LogTrace("Cancelling...");
             IsManualTranslationsDialogOpen = false;
         }
 
         async Task DeleteAsync(ManualTranslation manualTranslation)
         {
             _ = manualTranslation ?? throw new ArgumentNullException(nameof(manualTranslation));
-            _logger.TraceFormat("Deleting manual translation {0}...", manualTranslation);
+            _logger.LogTrace("Deleting manual translation {0}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
                 var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
@@ -112,7 +112,7 @@ namespace Remembrance.ViewModel
 
         void EditManualTranslations(TranslationEntryViewModel translationEntryViewModel)
         {
-            _logger.TraceFormat("Editing manual translation for {0}...", translationEntryViewModel);
+            _logger.LogTrace("Editing manual translation for {0}...", translationEntryViewModel);
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             TranslationEntryKey = translationEntryViewModel.Id;
             ManualTranslations.Clear();
@@ -132,7 +132,7 @@ namespace Remembrance.ViewModel
 
         async Task SaveAsync()
         {
-            _logger.Trace("Saving...");
+            _logger.LogTrace("Saving...");
             IsManualTranslationsDialogOpen = false;
             var translationInfo = await _translationEntryProcessor.UpdateManualTranslationsAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
             _messageHub.Publish(translationInfo.TranslationEntry);

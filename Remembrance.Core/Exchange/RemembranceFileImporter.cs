@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Remembrance.Contracts.Processing;
@@ -15,7 +15,7 @@ namespace Remembrance.Core.Exchange
     {
         public RemembranceFileImporter(
             ITranslationEntryRepository translationEntryRepository,
-            ILog logger,
+            ILogger<RemembranceFileImporter> logger,
             ITranslationEntryProcessor translationEntryProcessor,
             IMessageHub messenger,
             ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)

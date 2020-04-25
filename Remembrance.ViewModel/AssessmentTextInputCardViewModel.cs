@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.DAL.Model;
@@ -20,22 +20,24 @@ namespace Remembrance.ViewModel
     public sealed class AssessmentTextInputCardViewModel : BaseAssessmentCardViewModel
     {
         readonly ILearningInfoRepository _learningInfoRepository;
+        readonly ILogger _logger;
 
         public AssessmentTextInputCardViewModel(
             TranslationInfo translationInfo,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel,
             IMessageHub messageHub,
-            ILog logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ILearningInfoRepository learningInfoRepository,
             IAssessmentInfoProvider assessmentInfoProvider,
             Func<WordKey, string, bool, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ICultureManager cultureManager,
-            ICommandManager commandManager) : base(
+            ICommandManager commandManager,
+            ILogger<AssessmentTextInputCardViewModel> logger,
+            ILogger<BaseAssessmentCardViewModel> baseLogger) : base(
             translationInfo,
             messageHub,
-            logger,
+            baseLogger,
             wordViewModelFactory,
             assessmentInfoProvider,
             wordImageViewerViewModelFactory,
@@ -45,8 +47,9 @@ namespace Remembrance.ViewModel
             assessmentBatchCardViewModel)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            Logger.Trace("Showing text input card...");
+            _logger.LogTrace("Showing text input card...");
 
             ProvideAnswerCommand = AddCommand(ProvideAnswer);
         }
@@ -64,7 +67,7 @@ namespace Remembrance.ViewModel
 
             if (Accepted == true)
             {
-                Logger.InfoFormat("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
+                _logger.LogInformation("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
                 learningInfo.IncreaseRepeatType();
 
                 // The inputted answer can differ from the first one
@@ -73,7 +76,7 @@ namespace Remembrance.ViewModel
             }
             else
             {
-                Logger.InfoFormat("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
+                _logger.LogInformation("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
                 Accepted = false;
                 learningInfo.DecreaseRepeatType();
                 closeTimeout = AppSettings.AssessmentCardFailureCloseTimeout;
@@ -86,7 +89,7 @@ namespace Remembrance.ViewModel
 
         void ProvideAnswer()
         {
-            Logger.TraceFormat("Providing answer {0}...", ProvidedAnswer);
+            _logger.LogTrace("Providing answer {0}...", ProvidedAnswer);
             var mostSuitable = AcceptedAnswers.First();
             var currentMinDistance = int.MaxValue;
             if (!string.IsNullOrWhiteSpace(ProvidedAnswer))

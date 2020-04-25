@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.CardManagement.Data;
@@ -33,7 +33,7 @@ namespace Remembrance.ViewModel
 
         readonly ILocalSettingsRepository _localSettingsRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -50,7 +50,7 @@ namespace Remembrance.ViewModel
         public SettingsViewModel(
             ILocalSettingsRepository localSettingsRepository,
             ISharedSettingsRepository sharedSettingsRepository,
-            ILog logger,
+            ILogger<SettingsViewModel> logger,
             IMessageHub messageHub,
             ICardsExchanger cardsExchanger,
             SynchronizationContext synchronizationContext,
@@ -226,7 +226,7 @@ namespace Remembrance.ViewModel
 
         void Save()
         {
-            _logger.Trace("Saving settings...");
+            _logger.LogTrace("Saving settings...");
             if (_sharedSettingsRepository.PreferredLanguage != SelectedPreferredLanguage)
             {
                 _sharedSettingsRepository.PreferredLanguage = SelectedPreferredLanguage;
@@ -275,7 +275,7 @@ namespace Remembrance.ViewModel
             _saved = true;
 
             CloseWindow();
-            _logger.Info("Settings has been saved");
+            _logger.LogInformation("Settings has been saved");
         }
 
         void WindowClosing()

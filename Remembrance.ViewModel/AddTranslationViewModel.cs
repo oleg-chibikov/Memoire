@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.Languages;
@@ -22,9 +22,9 @@ namespace Remembrance.ViewModel
             ILocalSettingsRepository localSettingsRepository,
             ILanguageManager languageManager,
             ITranslationEntryProcessor translationEntryProcessor,
-            ILog logger,
+            ILogger<BaseViewModelWithAddTranslationControl> baseLogger,
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
-            ICommandManager commandManager) : base(localSettingsRepository, languageManager, translationEntryProcessor, logger, commandManager)
+            ICommandManager commandManager) : base(localSettingsRepository, languageManager, translationEntryProcessor, baseLogger, commandManager)
         {
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
         }

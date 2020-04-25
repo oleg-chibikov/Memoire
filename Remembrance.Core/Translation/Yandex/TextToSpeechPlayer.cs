@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using NAudio.Wave;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -24,13 +24,13 @@ namespace Remembrance.Core.Translation.Yandex
 
         readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://tts.voicetech.yandex.net/") };
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public TextToSpeechPlayer(ILog logger, ISharedSettingsRepository sharedSettingsRepository, IMessageHub messageHub)
+        public TextToSpeechPlayer(ILogger<TextToSpeechPlayer> logger, ISharedSettingsRepository sharedSettingsRepository, IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
@@ -42,7 +42,7 @@ namespace Remembrance.Core.Translation.Yandex
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             _ = lang ?? throw new ArgumentNullException(nameof(lang));
-            _logger.TraceFormat("Starting speaking {0}...", text);
+            _logger.LogTrace("Starting speaking {0}...", text);
             using var reset = new AutoResetEvent(false);
             var uriPart =
                 $"generate?text={text}&format={Format.Mp3.ToString().ToLowerInvariant()}&lang={PrepareLanguage(lang, text)}&speaker={_sharedSettingsRepository.TtsSpeaker.ToString().ToLowerInvariant()}&emotion={_sharedSettingsRepository.TtsVoiceEmotion.ToString().ToLowerInvariant()}&key={ApiKey}";
@@ -72,7 +72,7 @@ namespace Remembrance.Core.Translation.Yandex
                 // Wait for tts to be finished not longer than 5 seconds (if PlaybackStopped is not firing)
                 reset.WaitOne(TimeSpan.FromSeconds(5));
 
-                _logger.DebugFormat("Finished speaking {0}", text);
+                _logger.LogDebug("Finished speaking {0}", text);
                 return true;
             }
             catch (Exception ex)

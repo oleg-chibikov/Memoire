@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.CardManagement.Data;
 using Remembrance.Contracts.DAL.Model;
@@ -21,7 +21,7 @@ namespace Remembrance.ViewModel
         int _closedCount;
 
         public AssessmentBatchCardViewModel(
-            ILog logger,
+            ILogger<AssessmentBatchCardViewModel> logger,
             ICommandManager commandManager,
             IReadOnlyCollection<TranslationInfo> translationInfos,
             Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentTextInputCardViewModel> assessmentTextInputCardViewModelFactory,
@@ -34,7 +34,7 @@ namespace Remembrance.ViewModel
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationInfos ?? throw new ArgumentNullException(nameof(translationInfos));
 
-            logger.Trace("Showing batch assessment window...");
+            logger.LogTrace("Showing batch assessment window...");
 
             Title = string.Join(", ", translationInfos.Select(x => x.TranslationEntryKey.ToString()));
             pauseManager.PauseActivity(PauseReasons.CardIsVisible, Title);

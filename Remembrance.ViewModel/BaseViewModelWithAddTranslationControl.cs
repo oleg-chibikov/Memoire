@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -23,6 +23,7 @@ namespace Remembrance.ViewModel
     {
         readonly ILanguageManager _languageManager;
         readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ILogger _logger;
         string _selectedSourceLanguage;
         Language _selectedSourceLanguageItem;
         string _selectedTargetLanguage;
@@ -32,11 +33,11 @@ namespace Remembrance.ViewModel
             ILocalSettingsRepository localSettingsRepository,
             ILanguageManager languageManager,
             ITranslationEntryProcessor translationEntryProcessor,
-            ILog logger,
+            ILogger<BaseViewModelWithAddTranslationControl> logger,
             ICommandManager commandManager) : base(commandManager)
         {
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
-            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
@@ -51,7 +52,7 @@ namespace Remembrance.ViewModel
             AvailableTargetLanguages = new ObservableCollection<Language>(targetLanguages);
             _selectedTargetLanguage = targetLanguages.SelectedLanguage;
             _selectedTargetLanguageItem = sourceLanguages.SelectedLanguageItem;
-            logger.Debug("Languages have been loaded");
+            logger.LogDebug("Languages have been loaded");
         }
 
         public IReadOnlyCollection<Language> AvailableSourceLanguages { get; }
@@ -119,8 +120,6 @@ namespace Remembrance.ViewModel
 
         protected CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource();
 
-        protected ILog Logger { get; }
-
         protected ITranslationEntryProcessor TranslationEntryProcessor { get; }
 
         protected override void Dispose(bool disposing)
@@ -152,7 +151,7 @@ namespace Remembrance.ViewModel
                 };
             var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage, SelectedTargetLanguage);
             var addition = manualTranslation == null ? null : $" with manual translation {ManualTranslation}";
-            Logger.Info($"Adding translation for {translationEntryAdditionInfo}{addition}...");
+            _logger.LogInformation($"Adding translation for {translationEntryAdditionInfo}{addition}...");
             Text = null;
             ManualTranslation = null;
 

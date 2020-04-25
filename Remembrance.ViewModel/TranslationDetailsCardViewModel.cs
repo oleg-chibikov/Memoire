@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts;
 using Remembrance.Contracts.Classification;
@@ -26,7 +26,7 @@ namespace Remembrance.ViewModel
     {
         readonly ICultureManager _cultureManager;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly IMessageHub _messageHub;
 
@@ -42,7 +42,7 @@ namespace Remembrance.ViewModel
             TranslationInfo translationInfo,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             Func<TranslationInfo, TranslationDetailsViewModel> translationDetailsViewModelFactory,
-            ILog logger,
+            ILogger<TranslationDetailsCardViewModel> logger,
             IMessageHub messageHub,
             IPrepositionsInfoRepository prepositionsInfoRepository,
             IPredictor predictor,
@@ -131,7 +131,7 @@ namespace Remembrance.ViewModel
             var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
             if (prepositionsInfo == null)
             {
-                _logger.TraceFormat("Reloading preposition for {0}...", translationDetails.Id);
+                _logger.LogTrace("Reloading preposition for {0}...", translationDetails.Id);
                 var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
                 if (prepositions == null)
                 {
@@ -147,7 +147,7 @@ namespace Remembrance.ViewModel
 
         async Task LoadClassificationCategoriesIfNotExistsAsync(TranslationInfo translationInfo, ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater)
         {
-            ClassificationCategories = await learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, CancellationToken.None);
+            ClassificationCategories = await learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, CancellationToken.None).ConfigureAwait(false);
         }
 
         async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
@@ -158,7 +158,7 @@ namespace Remembrance.ViewModel
                 return;
             }
 
-            _logger.DebugFormat("Received {0} from external source", learningInfo);
+            _logger.LogDebug("Received {0} from external source", learningInfo);
 
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
         }
@@ -178,7 +178,7 @@ namespace Remembrance.ViewModel
                     {
                         if (translationVariant.Word.Equals(priorityWordKey.WordKey.Word))
                         {
-                            _logger.TraceFormat("Setting priority: {0} in translations details for translation variant...", priorityWordKey);
+                            _logger.LogTrace("Setting priority: {0} in translations details for translation variant...", priorityWordKey);
                             translationVariant.SetIsPriority(priorityWordKey.IsPriority);
                             return;
                         }
@@ -190,7 +190,7 @@ namespace Remembrance.ViewModel
 
                         foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.Word.Equals(priorityWordKey.WordKey.Word)))
                         {
-                            _logger.TraceFormat("Setting priority: {0} in translations details for synonym...", priorityWordKey);
+                            _logger.LogTrace("Setting priority: {0} in translations details for synonym...", priorityWordKey);
                             synonym.SetIsPriority(priorityWordKey.IsPriority);
                             return;
                         }
@@ -202,7 +202,7 @@ namespace Remembrance.ViewModel
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
-            _logger.TraceFormat("Changing UI language to {0}...", cultureInfo);
+            _logger.LogTrace("Changing UI language to {0}...", cultureInfo);
 
             await Task.Run(
                     () =>

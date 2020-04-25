@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -19,16 +19,17 @@ namespace Remembrance.Core.Exchange
     {
         static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
         {
-            ContractResolver = new TranslationEntryContractResolver(), NullValueHandling = NullValueHandling.Ignore
+            ContractResolver = new TranslationEntryContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         readonly ILearningInfoRepository _learningInfoRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly ITranslationEntryRepository _translationEntryRepository;
 
-        public RemembranceFileExporter(ITranslationEntryRepository translationEntryRepository, ILog logger, ILearningInfoRepository learningInfoRepository)
+        public RemembranceFileExporter(ITranslationEntryRepository translationEntryRepository, ILogger<RemembranceFileExporter> logger, ILearningInfoRepository learningInfoRepository)
         {
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -60,11 +61,11 @@ namespace Remembrance.Core.Exchange
             }
             catch (IOException ex)
             {
-                _logger.Warn("Cannot save file to disk", ex);
+                _logger.LogWarning(ex, "Cannot save file to disk");
             }
             catch (JsonSerializationException ex)
             {
-                _logger.Warn("Cannot serialize object", ex);
+                _logger.LogWarning(ex, "Cannot serialize object");
             }
 
             return Task.FromResult(new ExchangeResult(false, null, 0));

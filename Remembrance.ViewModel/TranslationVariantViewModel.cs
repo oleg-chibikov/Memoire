@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
 using Easy.MessageHub;
+using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Remembrance.Contracts.DAL.Model;
 using Remembrance.Contracts.DAL.SharedBetweenMachines;
@@ -26,7 +26,7 @@ namespace Remembrance.ViewModel
             Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
-            ILog logger,
+            ILogger<PriorityWordViewModel> baseLogger,
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager) : base(
             translationEntry,
@@ -34,7 +34,7 @@ namespace Remembrance.ViewModel
             textToSpeechPlayer,
             messageHub,
             translationEntryProcessor,
-            logger,
+            baseLogger,
             wordViewModelFactory,
             translationEntryRepository,
             commandManager)

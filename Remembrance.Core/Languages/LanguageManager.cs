@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Remembrance.Contracts;
 using Remembrance.Contracts.DAL.Local;
 using Remembrance.Contracts.DAL.Model;
@@ -22,11 +22,11 @@ namespace Remembrance.Core.Languages
 
         readonly ILocalSettingsRepository _localSettingsRepository;
 
-        readonly ILog _logger;
+        readonly ILogger _logger;
 
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISharedSettingsRepository sharedSettingsRepository, ILog logger, ILanguageDetector languageDetector)
+        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISharedSettingsRepository sharedSettingsRepository, ILogger<LanguageManager> logger, ILanguageDetector languageDetector)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
@@ -149,7 +149,7 @@ namespace Remembrance.Core.Languages
 
         async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
-            _logger.Trace("Loading available languages...");
+            _logger.LogTrace("Loading available languages...");
             var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None).ConfigureAwait(false);
             if (languageListResult == null)
             {
