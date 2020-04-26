@@ -270,7 +270,7 @@ namespace Remembrance.ViewModel
                 _localSettingsRepository.SyncEngine = SyncEngine;
             }
 
-            _localSettingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Any() ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
+            _localSettingsRepository.BlacklistedProcesses = (ProcessBlacklistViewModel.BlacklistedProcesses.Count > 0) ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
 
             _saved = true;
 

@@ -159,7 +159,7 @@ namespace Remembrance.ViewModel
                 }
             }
 
-            if (!translations.Any())
+            if (!(translations.Count > 0))
             {
                 _logger.LogDebug("No more translations left in the list. Restoring default...");
                 var translationEntry = _translationEntryRepository.GetById(Id);

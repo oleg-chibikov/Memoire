@@ -83,7 +83,7 @@ namespace Remembrance.Core.CardManagement
                                 translationVariantWithPriorityInfo.TranslationVariant.Synonyms ?? Enumerable.Empty<Word>())))
                 .ToArray();
 
-            if (!acceptedWordGroups.Any())
+            if (!(acceptedWordGroups.Length > 0))
             {
                 throw new LocalizableException(Errors.NoAssessmentTranslations, "No translations found");
             }
@@ -98,7 +98,7 @@ namespace Remembrance.Core.CardManagement
             _logger.LogTrace("Getting translations with respect to priority...");
             var priorityPartOfSpeechTranslations = translationResult.PartOfSpeechTranslations.ToList();
             priorityPartOfSpeechTranslations.RemoveAll(partOfSpeechTranslation => !HasPriorityItems(partOfSpeechTranslation, translationEntry));
-            hasPriorityItems = priorityPartOfSpeechTranslations.Any();
+            hasPriorityItems = priorityPartOfSpeechTranslations.Count > 0;
             if (hasPriorityItems)
             {
                 _logger.LogDebug("There are {0} priority translations", priorityPartOfSpeechTranslations.Count);
@@ -178,7 +178,7 @@ namespace Remembrance.Core.CardManagement
         {
             _logger.LogTrace("Selecting single part of speech group...");
             var partOfSpeechGroups = partOfSpeechTranslations.GroupBy(x => x.PartOfSpeech).ToArray();
-            var partOfSpeechGroup = randomPossible ? GetRandomPartOfSpeechGroup(partOfSpeechGroups) : partOfSpeechGroups.First();
+            var partOfSpeechGroup = randomPossible ? GetRandomPartOfSpeechGroup(partOfSpeechGroups) : partOfSpeechGroups[0];
             if (partOfSpeechGroup == null)
             {
                 throw new LocalizableException(Errors.NoAssessmentTranslations, "No translations found");

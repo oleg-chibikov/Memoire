@@ -151,7 +151,7 @@ namespace Remembrance.ViewModel
 
             _logger.LogDebug("Received {0} from external source", learningInfo);
 
-            await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
+            await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(true);
         }
 
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
@@ -166,7 +166,7 @@ namespace Remembrance.ViewModel
                         Word.ReRenderWord();
                     },
                     CancellationToken.None)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
     }
 }

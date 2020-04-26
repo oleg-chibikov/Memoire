@@ -59,7 +59,7 @@ namespace Remembrance.Core.Exchange
             OnProgress(0, 1);
             try
             {
-                await Task.Run(async () => { exchangeResult = await _exporter.ExportAsync(fileName, cancellationToken).ConfigureAwait(false); }, cancellationToken).ConfigureAwait(false);
+                await Task.Run(() => { exchangeResult = _exporter.Export(fileName); }, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

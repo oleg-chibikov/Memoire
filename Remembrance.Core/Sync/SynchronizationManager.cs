@@ -41,7 +41,7 @@ namespace Remembrance.Core.Sync
         {
             _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
-            if (!synchronizers.Any())
+            if (!(synchronizers.Count > 0))
             {
                 throw new ArgumentNullException(nameof(synchronizers));
             }

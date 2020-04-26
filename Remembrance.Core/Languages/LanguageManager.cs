@@ -60,7 +60,7 @@ namespace Remembrance.Core.Languages
             var languages = _availableLanguages.Languages.Where(availableLanguage => _availableLanguages.Directions.Keys.Contains(availableLanguage.Key))
                 .ToDictionary(language => language.Key, language => language.Value);
 
-            if (!languages.Any())
+            if (!(languages.Count > 0))
             {
                 throw new InvalidOperationException("No source languages available");
             }
@@ -94,7 +94,7 @@ namespace Remembrance.Core.Languages
             else
             {
                 var acceptableTargetLanguages = _availableLanguages.Directions[sourceLanguage];
-                if (!acceptableTargetLanguages.Any())
+                if (!(acceptableTargetLanguages.Count > 0))
                 {
                     throw new InvalidOperationException("No target languages available");
                 }
@@ -123,7 +123,7 @@ namespace Remembrance.Core.Languages
         public string GetTargetAutoSubstitute(string sourceLanguage)
         {
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
-            if (!_availableLanguages.Directions.TryGetValue(sourceLanguage, out var availableTargetLanguages) || !availableTargetLanguages.Any())
+            if (!_availableLanguages.Directions.TryGetValue(sourceLanguage, out var availableTargetLanguages) || !(availableTargetLanguages.Count > 0))
             {
                 throw new InvalidOperationException($"No target languages available for source language {sourceLanguage}");
             }

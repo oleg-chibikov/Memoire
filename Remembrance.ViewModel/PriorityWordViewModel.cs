@@ -86,7 +86,7 @@ namespace Remembrance.ViewModel
                 }
 
                 _translationEntry.PriorityWords.Remove(_wordKey.Word);
-                if (!_translationEntry.PriorityWords.Any())
+                if (!(_translationEntry.PriorityWords.Count > 0))
                 {
                     _translationEntry.PriorityWords = null;
                 }

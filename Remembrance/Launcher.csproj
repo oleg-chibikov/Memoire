@@ -20,12 +20,12 @@
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="NLog.Config" Version="4.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7420.22307" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7420.22307" />
-    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7420.22305" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7420.21421" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7420.22307" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7420.22354" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7421.20137" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7421.20137" />
+    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7421.20137" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7421.20056" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7421.20068" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7421.19796" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 

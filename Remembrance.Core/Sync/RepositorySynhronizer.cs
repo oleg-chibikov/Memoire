@@ -108,7 +108,7 @@ namespace Remembrance.Core.Sync
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
 
             var changed = remoteRepository.GetModifiedAfter(lastSyncedRecordModifiedTime).Cast<TEntity>().ToArray();
-            if (!changed.Any())
+            if (!(changed.Length > 0))
             {
                 return;
             }
@@ -137,7 +137,7 @@ namespace Remembrance.Core.Sync
 
                         if (_syncPreProcessor != null)
                         {
-                            if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(false))
+                            if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(true))
                             {
                                 _logger.LogDebug("Preprocessor condition not satisfied for {0}", remoteEntity);
                                 return;
@@ -157,7 +157,7 @@ namespace Remembrance.Core.Sync
 
                         if (_syncPostProcessor != null)
                         {
-                            await _syncPostProcessor.AfterEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(false);
+                            await _syncPostProcessor.AfterEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(true);
                         }
                     }
                     catch (Exception ex)

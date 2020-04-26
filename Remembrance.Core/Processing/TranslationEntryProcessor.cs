@@ -383,7 +383,7 @@ namespace Remembrance.Core.Processing
                 return null;
             }
 
-            if (translationResult.PartOfSpeechTranslations.Any())
+            if (translationResult.PartOfSpeechTranslations.Count > 0)
             {
                 // replace the original text with the corrected one
                 translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().Text;

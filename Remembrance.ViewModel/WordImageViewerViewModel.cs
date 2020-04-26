@@ -79,7 +79,7 @@ namespace Remembrance.ViewModel
 
             var wordImageInfo = _wordImageInfoRepository.TryGetById(_wordKey);
             _shouldRepeat = true;
-            ConstructionTask = wordImageInfo != null ? LoadInitialImage(wordImageInfo) : SetNextOrPreviousImageAsync(true);
+            ConstructionTask = wordImageInfo != null ? LoadInitialImageAsync(wordImageInfo) : SetNextOrPreviousImageAsync(true);
         }
 
         public IReadOnlyCollection<byte>? ThumbnailBytes { get; private set; }
@@ -141,7 +141,7 @@ namespace Remembrance.ViewModel
             await SetNextOrPreviousImageAsync(false).ConfigureAwait(false);
         }
 
-        async Task LoadInitialImage(WordImageInfo wordImageInfo)
+        async Task LoadInitialImageAsync(WordImageInfo wordImageInfo)
         {
             IsLoading = true;
             var wordImageSearchIndex = _wordImageSearchIndexRepository.TryGetById(wordImageInfo.Id);
@@ -218,7 +218,7 @@ namespace Remembrance.ViewModel
             _logger.LogTrace("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
             try
             {
-                await _cancellationTokenSourceProvider.ExecuteAsyncOperation(
+                await _cancellationTokenSourceProvider.ExecuteOperationAsync(
                         async cancellationToken =>
                         {
                             var imagesUrls = await _imageSearcher.SearchImagesAsync(searchText, cancellationToken, index).ConfigureAwait(false);
@@ -235,7 +235,7 @@ namespace Remembrance.ViewModel
                                 }
 
                                 ImageInfoWithBitmap? imageInfoWithBitmap = null;
-                                if (imagesUrls.Any())
+                                if (imagesUrls.Count > 0)
                                 {
                                     var imageDownloadTasks = imagesUrls.Select(
                                         async image => new ImageInfoWithBitmap

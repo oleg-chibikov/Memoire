@@ -142,7 +142,7 @@ namespace Remembrance.Core.CardManagement
             }
         }
 
-        async void HandleIntervalHit(long x)
+        async void HandleIntervalHitAsync(long x)
         {
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             _logger.LogTrace("Trying to show next card...");
@@ -172,7 +172,7 @@ namespace Remembrance.Core.CardManagement
             IReadOnlyCollection<TranslationInfo> translationInfos;
             try
             {
-                translationInfos = await GetTranslationInfosForAllWords(mostSuitableLearningInfos).ConfigureAwait(false);
+                translationInfos = await GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos).ConfigureAwait(true);
             }
             catch (InvalidOperationException ex)
             {
@@ -181,7 +181,7 @@ namespace Remembrance.Core.CardManagement
                 return;
             }
 
-            await CreateAndShowWindowAsync(translationInfos).ConfigureAwait(false);
+            await CreateAndShowWindowAsync(translationInfos).ConfigureAwait(true);
         }
 
         async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)
@@ -204,7 +204,7 @@ namespace Remembrance.Core.CardManagement
             _logger.LogInformation("Window has been opened");
         }
 
-        async Task<IReadOnlyCollection<TranslationInfo>> GetTranslationInfosForAllWords(IEnumerable<LearningInfo> mostSuitableLearningInfos)
+        async Task<IReadOnlyCollection<TranslationInfo>> GetTranslationInfosForAllWordsAsync(IEnumerable<LearningInfo> mostSuitableLearningInfos)
         {
             // TODO: would be good to use AsyncEnumerable (but is it supported for .net framework?)
             var translationInfos = new List<TranslationInfo>();
@@ -245,7 +245,7 @@ namespace Remembrance.Core.CardManagement
 
         IDisposable ProvideInterval(TimeSpan delay)
         {
-            return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHit);
+            return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHitAsync);
         }
 
         void Window_Closed(object sender, EventArgs e)

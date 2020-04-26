@@ -72,7 +72,7 @@ namespace Remembrance.Core.Exchange
                         var importTasks = exchangeEntriesBlock.Select(
                             async exchangeEntry =>
                             {
-                                var translationEntry = await ImportOneEntry(exchangeEntry, existingTranslationEntries, errorsList, cancellationToken).ConfigureAwait(false);
+                                var translationEntry = await ImportOneEntryAsync(exchangeEntry, existingTranslationEntries, errorsList, cancellationToken).ConfigureAwait(false);
                                 if (translationEntry != null)
                                 {
                                     Interlocked.Increment(ref successCount);
@@ -83,7 +83,7 @@ namespace Remembrance.Core.Exchange
                             });
                         var blockResult = await Task.WhenAll(importTasks).ConfigureAwait(false);
 
-                        if (blockResult.Any())
+                        if (blockResult.Length > 0)
                         {
                             _messenger.Publish(blockResult.Where(x => x != null).ToArray());
                         }
@@ -92,7 +92,7 @@ namespace Remembrance.Core.Exchange
                     })
                 .ConfigureAwait(false);
 
-            return new ExchangeResult(true, errorsList.Any() ? errorsList : null, successCount);
+            return new ExchangeResult(true, (errorsList.Count > 0) ? errorsList : null, successCount);
         }
 
         protected virtual IReadOnlyCollection<ManualTranslation>? GetManualTranslations(T exchangeEntry)
@@ -143,7 +143,7 @@ namespace Remembrance.Core.Exchange
             return deserialized;
         }
 
-        async Task<TranslationInfo?> ImportNewEntry(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken)
+        async Task<TranslationInfo?> ImportNewEntryAsync(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken)
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
@@ -154,7 +154,7 @@ namespace Remembrance.Core.Exchange
                 .ConfigureAwait(false);
         }
 
-        async Task<TranslationEntry?> ImportOneEntry(
+        async Task<TranslationEntry?> ImportOneEntryAsync(
             T exchangeEntry,
             IDictionary<TranslationEntryKey, TranslationEntry> existingTranslationEntries,
             List<string> errorsList,
@@ -174,7 +174,7 @@ namespace Remembrance.Core.Exchange
             var changed = false;
             if (translationEntry == null)
             {
-                var translationInfo = await ImportNewEntry(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
+                var translationInfo = await ImportNewEntryAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
                 if (translationInfo == null)
                 {
                     lock (errorsList)
@@ -196,7 +196,7 @@ namespace Remembrance.Core.Exchange
             }
 
             var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, learningInfo);
-            var priorityTranslationsUpdated = UpdatePriorityTranslationsAsync(exchangeEntry, translationEntry);
+            var priorityTranslationsUpdated = UpdatePriorityTranslations(exchangeEntry, translationEntry);
             changed |= priorityTranslationsUpdated;
             _logger.LogInformation("Imported {0}", exchangeEntry.Text);
             if (changed)
@@ -225,7 +225,7 @@ namespace Remembrance.Core.Exchange
             _messenger.Publish(priorityWordKey);
         }
 
-        bool UpdatePriorityTranslationsAsync(T exchangeEntry, TranslationEntry translationEntry)
+        bool UpdatePriorityTranslations(T exchangeEntry, TranslationEntry translationEntry)
         {
             var priorityTranslations = GetPriorityTranslations(exchangeEntry);
             if (priorityTranslations?.Any() != true)

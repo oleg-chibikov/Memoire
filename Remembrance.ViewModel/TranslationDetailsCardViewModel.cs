@@ -160,7 +160,7 @@ namespace Remembrance.ViewModel
 
             _logger.LogDebug("Received {0} from external source", learningInfo);
 
-            await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(false);
+            await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(true);
         }
 
         void HandlePriorityChanged(PriorityWordKey priorityWordKey)
@@ -234,7 +234,7 @@ namespace Remembrance.ViewModel
                         }
                     },
                     CancellationToken.None)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
     }
 }

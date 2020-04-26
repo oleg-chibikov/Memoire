@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Remembrance.Contracts.DAL.Model;
@@ -38,7 +37,7 @@ namespace Remembrance.Core.Exchange
 
         public event EventHandler<ProgressEventArgs>? Progress;
 
-        public Task<ExchangeResult> ExportAsync(string fileName, CancellationToken cancellationToken)
+        public ExchangeResult Export(string fileName)
         {
             _ = fileName ?? throw new ArgumentNullException(nameof(fileName));
             var translationEntries = _translationEntryRepository.GetAll();
@@ -57,7 +56,7 @@ namespace Remembrance.Core.Exchange
             {
                 var json = JsonConvert.SerializeObject(exportEntries, Formatting.Indented, ExportEntrySerializerSettings);
                 File.WriteAllText(fileName, json);
-                return Task.FromResult(new ExchangeResult(true, null, exportEntries.Count));
+                return new ExchangeResult(true, null, exportEntries.Count);
             }
             catch (IOException ex)
             {
@@ -68,7 +67,7 @@ namespace Remembrance.Core.Exchange
                 _logger.LogWarning(ex, "Cannot serialize object");
             }
 
-            return Task.FromResult(new ExchangeResult(false, null, 0));
+            return new ExchangeResult(false, null, 0);
         }
 
         void OnProgress(int current, int total)

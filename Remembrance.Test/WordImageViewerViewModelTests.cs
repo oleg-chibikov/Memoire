@@ -38,13 +38,13 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task IsLoadingIsTrueDuringProcessing()
+        public async Task IsLoadingIsTrueDuringProcessingAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
             using var semaphore = new SemaphoreSlim(0, 1);
             var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
-            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Returns(runningTask);
+            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteOperationAsync(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Returns(runningTask);
 
             // Act
             var sut = await CreateViewModelAsync(autoMock, false, false).ConfigureAwait(false);
@@ -56,7 +56,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task PerformsReload()
+        public async Task PerformsReloadAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -78,13 +78,13 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task ReloadIsNotVisibleDuringProcessing()
+        public async Task ReloadIsNotVisibleDuringProcessingAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
             using var semaphore = new SemaphoreSlim(0, 1);
             var runningTask = Task.Run(async () => await semaphore.WaitAsync().ConfigureAwait(false));
-            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Returns(runningTask);
+            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteOperationAsync(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Returns(runningTask);
 
             // Act
             var sut = await CreateViewModelAsync(autoMock, false, false).ConfigureAwait(false);
@@ -100,7 +100,7 @@ namespace Remembrance.Test
         {
             // Arrange
             using var autoMock = CreateAutoMock();
-            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Throws(new OperationCanceledException());
+            autoMock.Mock<ICancellationTokenSourceProvider>().Setup(x => x.ExecuteOperationAsync(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>())).Throws(new OperationCanceledException());
 
             // Assert
             Assert.That(
@@ -113,7 +113,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_DownloadsEmptyImage_ShouldTrySearchWithDifferentText()
+        public async Task When_DownloadsEmptyImage_ShouldTrySearchWithDifferentTextAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -133,7 +133,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_ErrorOccursDuringSearch_StopsSearch()
+        public async Task When_ErrorOccursDuringSearch_StopsSearchAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -152,7 +152,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_GoingBackwards_AlternatesSearchTextForEveryRequest()
+        public async Task When_GoingBackwards_AlternatesSearchTextForEveryRequestAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -185,7 +185,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_GoingForwards_AlternatesSearchTextForEveryRequest()
+        public async Task When_GoingForwards_AlternatesSearchTextForEveryRequestAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -218,7 +218,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_ImageBytesAreNull_Then_ShouldRepeatSearchInitially()
+        public async Task When_ImageBytesAreNull_Then_ShouldRepeatSearchInitiallyAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -238,7 +238,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_ImageIsEmpty_ReloadIsVisible()
+        public async Task When_ImageIsEmpty_ReloadIsVisibleAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -253,7 +253,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_IndexIsZero_And_IsAlternate_PreviousSearchShouldUseDefaultSearchText()
+        public async Task When_IndexIsZero_And_IsAlternate_PreviousSearchShouldUseDefaultSearchTextAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -274,7 +274,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_IndexIsZero_AndNot_IsAlternate_PreviousButton_Should_DoNothing()
+        public async Task When_IndexIsZero_AndNot_IsAlternate_PreviousButton_Should_DoNothingAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -294,7 +294,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_InitialImageIsEmpty_PerformsSearchWithDefaultSearchText()
+        public async Task When_InitialImageIsEmpty_PerformsSearchWithDefaultSearchTextAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -313,7 +313,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_IsInitializedWithImage_NoSearchAndDownloadOccurs()
+        public async Task When_IsInitializedWithImage_NoSearchAndDownloadOccursAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -332,7 +332,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_MoreThanOneImageIsReturned_Throws()
+        public async Task When_MoreThanOneImageIsReturned_ThrowsAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -346,7 +346,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_NoImagesAvailableForBothSearchTexts_PerformsTwoAttemptsWithDifferentSearchTexts()
+        public async Task When_NoImagesAvailableForBothSearchTexts_PerformsTwoAttemptsWithDifferentSearchTextsAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -366,7 +366,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_OnlyDefaultSearchTextReturnsResults_IndexIncreasesEveryTime()
+        public async Task When_OnlyDefaultSearchTextReturnsResults_IndexIncreasesEveryTimeAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -398,7 +398,7 @@ namespace Remembrance.Test
         }
 
         [Test]
-        public async Task When_OnlyFallbackSearchTextReturnsResults_IndexIncreasesEveryTime()
+        public async Task When_OnlyFallbackSearchTextReturnsResults_IndexIncreasesEveryTimeAsync()
         {
             // Arrange
             using var autoMock = CreateAutoMock();
@@ -432,7 +432,7 @@ namespace Remembrance.Test
         {
             var autoMock = AutoMock.GetLoose();
             autoMock.Mock<ICancellationTokenSourceProvider>()
-                .Setup(x => x.ExecuteAsyncOperation(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
+                .Setup(x => x.ExecuteOperationAsync(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
                 .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
             autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
             return autoMock;

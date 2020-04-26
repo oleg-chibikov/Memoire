@@ -9,7 +9,7 @@ namespace Remembrance.Contracts.Languages.Data
         {
             if ((selectedLanguage == null) || (selectedLanguage == Constants.AutoDetectLanguage))
             {
-                SelectedLanguageItem = this.First();
+                SelectedLanguageItem = this[0];
                 SelectedLanguage = SelectedLanguageItem.Code;
             }
             else

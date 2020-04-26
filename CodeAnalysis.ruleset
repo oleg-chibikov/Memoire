@@ -130,4 +130,7 @@
     <Rule Id="SX1309" Action="Warning" />
     <Rule Id="SX1309S" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="WTG.Analyzers" RuleNamespace="WTG.Analyzers">
+    <Rule Id="WTG3002" Action="Warning" />
+  </Rules>
 </RuleSet>

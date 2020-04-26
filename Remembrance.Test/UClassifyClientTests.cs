@@ -10,7 +10,7 @@ namespace Remembrance.Test
     class UClassifyClientTests
     {
         [Test]
-        public async Task ReturnsClassificationsForWord()
+        public async Task ReturnsClassificationsForWordAsync()
         {
             // Arrange
             using var sut = new UClassifyTopicsClient(Mock.Of<IMessageHub>());

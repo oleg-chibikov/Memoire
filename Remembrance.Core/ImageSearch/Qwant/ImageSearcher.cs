@@ -62,7 +62,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
                     if (_sharedSettingsRepository.SolveQwantCaptcha)
                     {
-                        _rateLimiter.Throttle(
+                        await _rateLimiter.ThrottleAsync(
                             TimeSpan.FromSeconds(10),
                             () =>
                             {
@@ -70,7 +70,7 @@ namespace Remembrance.Core.ImageSearch.Qwant
                                 Process.Start($"https://www.qwant.com/?q={text}&t=images");
                                 _messageHub.Publish(Texts.BrowserWasOpened.ToWarning());
                             },
-                            skipLast: true);
+                            skipLast: true).ConfigureAwait(false);
                     }
 
                     _logger.LogWarning("Cannot search images for {0}. Response StatusCode is {1} and ReasonPhrase {2}", text, response.StatusCode, response.ReasonPhrase);

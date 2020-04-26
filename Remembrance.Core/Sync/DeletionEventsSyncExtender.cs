@@ -32,7 +32,7 @@ namespace Remembrance.Core.Sync
             lock (_locker)
             {
                 _collectInfo = false;
-                if (_ownDeletionEventsToClear.Any())
+                if (_ownDeletionEventsToClear.Count > 0)
                 {
                     _ownRepository.Delete(_ownDeletionEventsToClear);
                 }

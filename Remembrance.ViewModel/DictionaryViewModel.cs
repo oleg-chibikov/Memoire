@@ -132,7 +132,7 @@ namespace Remembrance.ViewModel
 
             _logger.LogTrace("Creating NextCardShowTime update timer...");
 
-            _timer = new Timer(Timer_Tick, null, 0, 10000);
+            _timer = new Timer(Timer_TickAsync, null, 0, 10000);
 
             _logger.LogTrace("Subscribing to the events...");
 
@@ -241,7 +241,7 @@ namespace Remembrance.ViewModel
 
             _logger.LogTrace("Receiving translations page {0}...", pageNumber);
             var translationEntries = _translationEntryRepository.GetPage(pageNumber, AppSettings.DictionaryPageSize, nameof(TranslationEntry.ModifiedDate), SortOrder.Descending);
-            if (!translationEntries.Any())
+            if (!(translationEntries.Count > 0))
             {
                 return false;
             }
@@ -288,7 +288,7 @@ namespace Remembrance.ViewModel
                         ScrollTo(translationEntryViewModel);
                     },
                     CancellationTokenSource.Token)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
 
         async void HandlePriorityChangedAsync(PriorityWordKey priorityWordKey)
@@ -313,7 +313,7 @@ namespace Remembrance.ViewModel
                         ScrollTo(translationEntryViewModel);
                     },
                     CancellationTokenSource.Token)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
 
         async void HandleTranslationEntriesBatchReceivedAsync(IReadOnlyCollection<TranslationEntry> translationEntries)
@@ -330,7 +330,7 @@ namespace Remembrance.ViewModel
                         }
                     },
                     CancellationTokenSource.Token)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
 
         async void HandleTranslationEntryReceivedAsync(TranslationEntry translationEntry)
@@ -338,7 +338,7 @@ namespace Remembrance.ViewModel
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
             _logger.LogDebug("Received {0} from external source", translationEntry);
 
-            await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(false);
+            await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(true);
         }
 
         async Task OnTranslationEntryReceivedInternalAsync(TranslationEntry translationEntry)
@@ -392,7 +392,7 @@ namespace Remembrance.ViewModel
                         _semaphore.Release();
                     },
                     CancellationTokenSource.Token)
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
         }
 
         async Task OpenDetailsAsync(TranslationEntryViewModel translationEntryViewModel)
@@ -431,11 +431,11 @@ namespace Remembrance.ViewModel
                 {
                     if (View.CurrentItem == translationEntryViewModel)
                     {
-                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+                        await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(true);
 
-                        if (_translationList.Any())
+                        if (_translationList.Count > 0)
                         {
-                            View.MoveCurrentTo(_translationList.First());
+                            View.MoveCurrentTo(_translationList[0]);
                         }
 
                         _semaphore.Release();
@@ -465,9 +465,9 @@ namespace Remembrance.ViewModel
             // Count = View.Cast<object>().Count();
         }
 
-        async void Timer_Tick(object state)
+        async void Timer_TickAsync(object state)
         {
-            await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
+            await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(true);
             foreach (var translation in _translationList)
             {
                 var time = translation.LearningInfoViewModel.NextCardShowTime;
@@ -504,7 +504,7 @@ namespace Remembrance.ViewModel
 
             if (_loaded)
             {
-                _rateLimiter.Throttle(TimeSpan.FromSeconds(1), UpdateCount);
+                _rateLimiter.ThrottleAsync(TimeSpan.FromSeconds(1), UpdateCount).ConfigureAwait(true);
             }
         }
 
@@ -526,7 +526,7 @@ namespace Remembrance.ViewModel
             await LoadTranslationsAsync().ConfigureAwait(false);
         }
 
-        Task<bool> ConfirmDeletionAsync(string name)
+        async Task<bool> ConfirmDeletionAsync(string name)
         {
             var confirmationViewModel = _confirmationViewModelFactory(string.Format(CultureInfo.InvariantCulture, Texts.AreYouSureDelete, name), true);
 
@@ -537,7 +537,7 @@ namespace Remembrance.ViewModel
                     confirmationWindow.ShowDialog();
                 },
                 null);
-            return confirmationViewModel.UserInput;
+            return await confirmationViewModel.UserInput.ConfigureAwait(false);
         }
     }
 }

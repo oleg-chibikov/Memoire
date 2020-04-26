@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="0e3f124a-557b-47b6-9ce0-e7352a8dff7e" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="0.0.0.0" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b">
+  <Product Id="5b6a8511-6a28-458f-874f-827e73611750" Name="Remembrance" Language="1033" Codepage="Windows-1252" Version="0.0.0.0" UpgradeCode="a235657a-58d6-4239-9428-9d0f8840a45b">
     <Package InstallerVersion="200" Compressed="yes" SummaryCodepage="Windows-1252" Languages="1033" />
     <Media Id="1" Cabinet="Remembrance.cab" EmbedCab="yes" />
 
@@ -9,647 +9,651 @@
         <Directory Id="ProgramFilesFolder.Scar" Name="Scar">
           <Directory Id="INSTALLDIR" Name="Remembrance">
 
-            <Component Id="Component.Autofac.dll_1565309459" Guid="0e3f124a-557b-47b6-9ce0-e73510cbb341">
+            <Component Id="Component.Autofac.dll_1565309459" Guid="5b6a8511-6a28-458f-874f-827e599fcb13">
               <File Id="Autofac.dll_1565309459" Source="..\Build\Autofac.dll" />
             </Component>
 
-            <Component Id="Component.Autofac.Extensions.DependencyInjection.dll_246674726" Guid="0e3f124a-557b-47b6-9ce0-e7355d6549d6">
+            <Component Id="Component.Autofac.Extensions.DependencyInjection.dll_246674726" Guid="5b6a8511-6a28-458f-874f-827ea63961a8">
               <File Id="Autofac.Extensions.DependencyInjection.dll_246674726" Source="..\Build\Autofac.Extensions.DependencyInjection.dll" />
             </Component>
 
-            <Component Id="Component.Autofac.Integration.Owin.dll_528045759" Guid="0e3f124a-557b-47b6-9ce0-e73550b282ed">
+            <Component Id="Component.Autofac.Integration.Owin.dll_528045759" Guid="5b6a8511-6a28-458f-874f-827e99869abf">
               <File Id="Autofac.Integration.Owin.dll_528045759" Source="..\Build\Autofac.Integration.Owin.dll" />
             </Component>
 
-            <Component Id="Component.Autofac.Integration.WebApi.dll_2397530274" Guid="0e3f124a-557b-47b6-9ce0-e7359337bfa4">
+            <Component Id="Component.Autofac.Integration.WebApi.dll_2397530274" Guid="5b6a8511-6a28-458f-874f-827edc0bd776">
               <File Id="Autofac.Integration.WebApi.dll_2397530274" Source="..\Build\Autofac.Integration.WebApi.dll" />
             </Component>
 
-            <Component Id="Component.Autofac.Integration.WebApi.Owin.dll_2707033600" Guid="0e3f124a-557b-47b6-9ce0-e735b78cf377">
+            <Component Id="Component.Autofac.Integration.WebApi.Owin.dll_2707033600" Guid="5b6a8511-6a28-458f-874f-827e00600b49">
               <File Id="Autofac.Integration.WebApi.Owin.dll_2707033600" Source="..\Build\Autofac.Integration.WebApi.Owin.dll" />
             </Component>
 
-            <Component Id="Component.Common.Logging.Core.dll_2094081848" Guid="0e3f124a-557b-47b6-9ce0-e7351aa11580">
+            <Component Id="Component.Common.Logging.Core.dll_2094081848" Guid="5b6a8511-6a28-458f-874f-827e63752d52">
               <File Id="Common.Logging.Core.dll_2094081848" Source="..\Build\Common.Logging.Core.dll" />
             </Component>
 
-            <Component Id="Component.Common.Logging.dll_1546198439" Guid="0e3f124a-557b-47b6-9ce0-e735973703e6">
+            <Component Id="Component.Common.Logging.dll_1546198439" Guid="5b6a8511-6a28-458f-874f-827ee00b1bb8">
               <File Id="Common.Logging.dll_1546198439" Source="..\Build\Common.Logging.dll" />
             </Component>
 
-            <Component Id="Component.Common.Logging.NLog41.dll_151566983" Guid="0e3f124a-557b-47b6-9ce0-e73574953f12">
+            <Component Id="Component.Common.Logging.NLog41.dll_151566983" Guid="5b6a8511-6a28-458f-874f-827ebd6957e4">
               <File Id="Common.Logging.NLog41.dll_151566983" Source="..\Build\Common.Logging.NLog41.dll" />
             </Component>
 
-            <Component Id="Component.Costura.dll_2933374176" Guid="0e3f124a-557b-47b6-9ce0-e735eb569de0">
+            <Component Id="Component.Costura.dll_2933374176" Guid="5b6a8511-6a28-458f-874f-827e342ab5b2">
               <File Id="Costura.dll_2933374176" Source="..\Build\Costura.dll" />
             </Component>
 
-            <Component Id="Component.Easy.MessageHub.dll_2423824093" Guid="0e3f124a-557b-47b6-9ce0-e735b9cbb38c">
+            <Component Id="Component.Easy.MessageHub.dll_2423824093" Guid="5b6a8511-6a28-458f-874f-827e029fcb5e">
               <File Id="Easy.MessageHub.dll_2423824093" Source="..\Build\Easy.MessageHub.dll" />
             </Component>
 
-            <Component Id="Component.Hardcodet.Wpf.TaskbarNotification.dll_3051332400" Guid="0e3f124a-557b-47b6-9ce0-e7353768277d">
+            <Component Id="Component.Hardcodet.Wpf.TaskbarNotification.dll_3051332400" Guid="5b6a8511-6a28-458f-874f-827e803c3f4f">
               <File Id="Hardcodet.Wpf.TaskbarNotification.dll_3051332400" Source="..\Build\Hardcodet.Wpf.TaskbarNotification.dll" />
             </Component>
 
-            <Component Id="Component.LiteDB.dll_1656934653" Guid="0e3f124a-557b-47b6-9ce0-e735081f3cbe">
+            <Component Id="Component.LiteDB.dll_1656934653" Guid="5b6a8511-6a28-458f-874f-827e51f35490">
               <File Id="LiteDB.dll_1656934653" Source="..\Build\LiteDB.dll" />
             </Component>
 
-            <Component Id="Component.MaterialDesignColors.dll_2288395770" Guid="0e3f124a-557b-47b6-9ce0-e73503bc3ff4">
+            <Component Id="Component.MaterialDesignColors.dll_2288395770" Guid="5b6a8511-6a28-458f-874f-827e4c9057c6">
               <File Id="MaterialDesignColors.dll_2288395770" Source="..\Build\MaterialDesignColors.dll" />
             </Component>
 
-            <Component Id="Component.MaterialDesignThemes.Wpf.dll_2542164679" Guid="0e3f124a-557b-47b6-9ce0-e735a7cb4f96">
+            <Component Id="Component.MaterialDesignThemes.Wpf.dll_2542164679" Guid="5b6a8511-6a28-458f-874f-827ef09f6768">
               <File Id="MaterialDesignThemes.Wpf.dll_2542164679" Source="..\Build\MaterialDesignThemes.Wpf.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Bcl.AsyncInterfaces.dll_3011504708" Guid="0e3f124a-557b-47b6-9ce0-e73523629a5d">
+            <Component Id="Component.Microsoft.Bcl.AsyncInterfaces.dll_3011504708" Guid="5b6a8511-6a28-458f-874f-827e6c36b22f">
               <File Id="Microsoft.Bcl.AsyncInterfaces.dll_3011504708" Source="..\Build\Microsoft.Bcl.AsyncInterfaces.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Expression.Interactions.dll_731963354" Guid="0e3f124a-557b-47b6-9ce0-e735cf89d989">
+            <Component Id="Component.Microsoft.Expression.Interactions.dll_731963354" Guid="5b6a8511-6a28-458f-874f-827e185df15b">
               <File Id="Microsoft.Expression.Interactions.dll_731963354" Source="..\Build\Microsoft.Expression.Interactions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.Abstractions.dll_411160850" Guid="0e3f124a-557b-47b6-9ce0-e735784ba080">
+            <Component Id="Component.Microsoft.Extensions.Configuration.Abstractions.dll_411160850" Guid="5b6a8511-6a28-458f-874f-827ec11fb852">
               <File Id="Microsoft.Extensions.Configuration.Abstractions.dll_411160850" Source="..\Build\Microsoft.Extensions.Configuration.Abstractions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.Binder.dll_3141463690" Guid="0e3f124a-557b-47b6-9ce0-e735c608038c">
+            <Component Id="Component.Microsoft.Extensions.Configuration.Binder.dll_3141463690" Guid="5b6a8511-6a28-458f-874f-827e0fdc1b5e">
               <File Id="Microsoft.Extensions.Configuration.Binder.dll_3141463690" Source="..\Build\Microsoft.Extensions.Configuration.Binder.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.CommandLine.dll_370871245" Guid="0e3f124a-557b-47b6-9ce0-e7357a539eeb">
+            <Component Id="Component.Microsoft.Extensions.Configuration.CommandLine.dll_370871245" Guid="5b6a8511-6a28-458f-874f-827ec327b6bd">
               <File Id="Microsoft.Extensions.Configuration.CommandLine.dll_370871245" Source="..\Build\Microsoft.Extensions.Configuration.CommandLine.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.dll_384906935" Guid="0e3f124a-557b-47b6-9ce0-e7354d08b058">
+            <Component Id="Component.Microsoft.Extensions.Configuration.dll_384906935" Guid="5b6a8511-6a28-458f-874f-827e96dcc82a">
               <File Id="Microsoft.Extensions.Configuration.dll_384906935" Source="..\Build\Microsoft.Extensions.Configuration.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.EnvironmentVariables.dll_4240446862" Guid="0e3f124a-557b-47b6-9ce0-e7359c32bbff">
+            <Component Id="Component.Microsoft.Extensions.Configuration.EnvironmentVariables.dll_4240446862" Guid="5b6a8511-6a28-458f-874f-827ee506d3d1">
               <File Id="Microsoft.Extensions.Configuration.EnvironmentVariables.dll_4240446862" Source="..\Build\Microsoft.Extensions.Configuration.EnvironmentVariables.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.FileExtensions.dll_3926551354" Guid="0e3f124a-557b-47b6-9ce0-e7358fa9709c">
+            <Component Id="Component.Microsoft.Extensions.Configuration.FileExtensions.dll_3926551354" Guid="5b6a8511-6a28-458f-874f-827ed87d886e">
               <File Id="Microsoft.Extensions.Configuration.FileExtensions.dll_3926551354" Source="..\Build\Microsoft.Extensions.Configuration.FileExtensions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.Json.dll_1905637632" Guid="0e3f124a-557b-47b6-9ce0-e735587ba41e">
+            <Component Id="Component.Microsoft.Extensions.Configuration.Json.dll_1905637632" Guid="5b6a8511-6a28-458f-874f-827ea14fbcf0">
               <File Id="Microsoft.Extensions.Configuration.Json.dll_1905637632" Source="..\Build\Microsoft.Extensions.Configuration.Json.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Configuration.UserSecrets.dll_3442614636" Guid="0e3f124a-557b-47b6-9ce0-e735c4c484be">
+            <Component Id="Component.Microsoft.Extensions.Configuration.UserSecrets.dll_3442614636" Guid="5b6a8511-6a28-458f-874f-827e0d989c90">
               <File Id="Microsoft.Extensions.Configuration.UserSecrets.dll_3442614636" Source="..\Build\Microsoft.Extensions.Configuration.UserSecrets.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.DependencyInjection.Abstractions.dll_2025899613" Guid="0e3f124a-557b-47b6-9ce0-e73588bffc3d">
+            <Component Id="Component.Microsoft.Extensions.DependencyInjection.Abstractions.dll_2025899613" Guid="5b6a8511-6a28-458f-874f-827ed193140f">
               <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll_2025899613" Source="..\Build\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.DependencyInjection.dll_3443959609" Guid="0e3f124a-557b-47b6-9ce0-e7359b71a70f">
+            <Component Id="Component.Microsoft.Extensions.DependencyInjection.dll_3443959609" Guid="5b6a8511-6a28-458f-874f-827ee445bfe1">
               <File Id="Microsoft.Extensions.DependencyInjection.dll_3443959609" Source="..\Build\Microsoft.Extensions.DependencyInjection.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.FileProviders.Abstractions.dll_3404656230" Guid="0e3f124a-557b-47b6-9ce0-e7355416642a">
+            <Component Id="Component.Microsoft.Extensions.FileProviders.Abstractions.dll_3404656230" Guid="5b6a8511-6a28-458f-874f-827e9dea7cfc">
               <File Id="Microsoft.Extensions.FileProviders.Abstractions.dll_3404656230" Source="..\Build\Microsoft.Extensions.FileProviders.Abstractions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.FileProviders.Physical.dll_4141036275" Guid="0e3f124a-557b-47b6-9ce0-e7358c184b0c">
+            <Component Id="Component.Microsoft.Extensions.FileProviders.Physical.dll_4141036275" Guid="5b6a8511-6a28-458f-874f-827ed5ec63de">
               <File Id="Microsoft.Extensions.FileProviders.Physical.dll_4141036275" Source="..\Build\Microsoft.Extensions.FileProviders.Physical.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.FileSystemGlobbing.dll_3222292683" Guid="0e3f124a-557b-47b6-9ce0-e735a8aa6aee">
+            <Component Id="Component.Microsoft.Extensions.FileSystemGlobbing.dll_3222292683" Guid="5b6a8511-6a28-458f-874f-827ef17e82c0">
               <File Id="Microsoft.Extensions.FileSystemGlobbing.dll_3222292683" Source="..\Build\Microsoft.Extensions.FileSystemGlobbing.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Hosting.Abstractions.dll_631539445" Guid="0e3f124a-557b-47b6-9ce0-e735d33b000f">
+            <Component Id="Component.Microsoft.Extensions.Hosting.Abstractions.dll_631539445" Guid="5b6a8511-6a28-458f-874f-827e1c0f18e1">
               <File Id="Microsoft.Extensions.Hosting.Abstractions.dll_631539445" Source="..\Build\Microsoft.Extensions.Hosting.Abstractions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Hosting.dll_2264695195" Guid="0e3f124a-557b-47b6-9ce0-e7350c8f47da">
+            <Component Id="Component.Microsoft.Extensions.Hosting.dll_2264695195" Guid="5b6a8511-6a28-458f-874f-827e55635fac">
               <File Id="Microsoft.Extensions.Hosting.dll_2264695195" Source="..\Build\Microsoft.Extensions.Hosting.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.Abstractions.dll_1610504880" Guid="0e3f124a-557b-47b6-9ce0-e73548f59565">
+            <Component Id="Component.Microsoft.Extensions.Logging.Abstractions.dll_1610504880" Guid="5b6a8511-6a28-458f-874f-827e91c9ad37">
               <File Id="Microsoft.Extensions.Logging.Abstractions.dll_1610504880" Source="..\Build\Microsoft.Extensions.Logging.Abstractions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.Configuration.dll_1969607452" Guid="0e3f124a-557b-47b6-9ce0-e7355b6d56da">
+            <Component Id="Component.Microsoft.Extensions.Logging.Configuration.dll_1969607452" Guid="5b6a8511-6a28-458f-874f-827ea4416eac">
               <File Id="Microsoft.Extensions.Logging.Configuration.dll_1969607452" Source="..\Build\Microsoft.Extensions.Logging.Configuration.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.Console.dll_3528499646" Guid="0e3f124a-557b-47b6-9ce0-e7356396ef22">
+            <Component Id="Component.Microsoft.Extensions.Logging.Console.dll_3528499646" Guid="5b6a8511-6a28-458f-874f-827eac6a07f4">
               <File Id="Microsoft.Extensions.Logging.Console.dll_3528499646" Source="..\Build\Microsoft.Extensions.Logging.Console.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.Debug.dll_2644514117" Guid="0e3f124a-557b-47b6-9ce0-e735ae0309f4">
+            <Component Id="Component.Microsoft.Extensions.Logging.Debug.dll_2644514117" Guid="5b6a8511-6a28-458f-874f-827ef7d721c6">
               <File Id="Microsoft.Extensions.Logging.Debug.dll_2644514117" Source="..\Build\Microsoft.Extensions.Logging.Debug.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.dll_910459913" Guid="0e3f124a-557b-47b6-9ce0-e7355ff27c81">
+            <Component Id="Component.Microsoft.Extensions.Logging.dll_910459913" Guid="5b6a8511-6a28-458f-874f-827ea8c69453">
               <File Id="Microsoft.Extensions.Logging.dll_910459913" Source="..\Build\Microsoft.Extensions.Logging.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.EventLog.dll_234552410" Guid="0e3f124a-557b-47b6-9ce0-e7350fe26324">
+            <Component Id="Component.Microsoft.Extensions.Logging.EventLog.dll_234552410" Guid="5b6a8511-6a28-458f-874f-827e58b67bf6">
               <File Id="Microsoft.Extensions.Logging.EventLog.dll_234552410" Source="..\Build\Microsoft.Extensions.Logging.EventLog.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Logging.EventSource.dll_3689090797" Guid="0e3f124a-557b-47b6-9ce0-e7358cef09b2">
+            <Component Id="Component.Microsoft.Extensions.Logging.EventSource.dll_3689090797" Guid="5b6a8511-6a28-458f-874f-827ed5c32184">
               <File Id="Microsoft.Extensions.Logging.EventSource.dll_3689090797" Source="..\Build\Microsoft.Extensions.Logging.EventSource.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Options.ConfigurationExtensions.dll_647457899" Guid="0e3f124a-557b-47b6-9ce0-e73572920647">
+            <Component Id="Component.Microsoft.Extensions.Options.ConfigurationExtensions.dll_647457899" Guid="5b6a8511-6a28-458f-874f-827ebb661e19">
               <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll_647457899" Source="..\Build\Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Options.dll_4140424266" Guid="0e3f124a-557b-47b6-9ce0-e7359a556ac5">
+            <Component Id="Component.Microsoft.Extensions.Options.dll_4140424266" Guid="5b6a8511-6a28-458f-874f-827ee3298297">
               <File Id="Microsoft.Extensions.Options.dll_4140424266" Source="..\Build\Microsoft.Extensions.Options.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Extensions.Primitives.dll_1666262601" Guid="0e3f124a-557b-47b6-9ce0-e7357ac0325c">
+            <Component Id="Component.Microsoft.Extensions.Primitives.dll_1666262601" Guid="5b6a8511-6a28-458f-874f-827ec3944a2e">
               <File Id="Microsoft.Extensions.Primitives.dll_1666262601" Source="..\Build\Microsoft.Extensions.Primitives.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Owin.dll_1671295812" Guid="0e3f124a-557b-47b6-9ce0-e735ff06a87d">
+            <Component Id="Component.Microsoft.Owin.dll_1671295812" Guid="5b6a8511-6a28-458f-874f-827e48dac04f">
               <File Id="Microsoft.Owin.dll_1671295812" Source="..\Build\Microsoft.Owin.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Owin.Host.HttpListener.dll_1584533368" Guid="0e3f124a-557b-47b6-9ce0-e735f79306d1">
+            <Component Id="Component.Microsoft.Owin.Host.HttpListener.dll_1584533368" Guid="5b6a8511-6a28-458f-874f-827e40671ea3">
               <File Id="Microsoft.Owin.Host.HttpListener.dll_1584533368" Source="..\Build\Microsoft.Owin.Host.HttpListener.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Owin.Hosting.dll_2634282066" Guid="0e3f124a-557b-47b6-9ce0-e7352e9241c6">
+            <Component Id="Component.Microsoft.Owin.Hosting.dll_2634282066" Guid="5b6a8511-6a28-458f-874f-827e77665998">
               <File Id="Microsoft.Owin.Hosting.dll_2634282066" Source="..\Build\Microsoft.Owin.Hosting.dll" />
             </Component>
 
-            <Component Id="Component.Microsoft.Xaml.Behaviors.dll_3267909527" Guid="0e3f124a-557b-47b6-9ce0-e73576edc56b">
+            <Component Id="Component.Microsoft.Xaml.Behaviors.dll_3267909527" Guid="5b6a8511-6a28-458f-874f-827ebfc1dd3d">
               <File Id="Microsoft.Xaml.Behaviors.dll_3267909527" Source="..\Build\Microsoft.Xaml.Behaviors.dll" />
             </Component>
 
-            <Component Id="Component.NAudio.dll_2411958299" Guid="0e3f124a-557b-47b6-9ce0-e7356c34a0d3">
+            <Component Id="Component.NAudio.dll_2411958299" Guid="5b6a8511-6a28-458f-874f-827eb508b8a5">
               <File Id="NAudio.dll_2411958299" Source="..\Build\NAudio.dll" />
             </Component>
 
-            <Component Id="Component.Newtonsoft.Json.dll_4124752783" Guid="0e3f124a-557b-47b6-9ce0-e735552d3124">
+            <Component Id="Component.Newtonsoft.Json.dll_4124752783" Guid="5b6a8511-6a28-458f-874f-827e9e0149f6">
               <File Id="Newtonsoft.Json.dll_4124752783" Source="..\Build\Newtonsoft.Json.dll" />
             </Component>
 
-            <Component Id="Component.NLog.config_2185781715" Guid="0e3f124a-557b-47b6-9ce0-e73541aebf50">
+            <Component Id="Component.NLog.config_2185781715" Guid="5b6a8511-6a28-458f-874f-827e8a82d722">
               <File Id="NLog.config_2185781715" Source="..\Build\NLog.config" />
             </Component>
 
-            <Component Id="Component.NLog.dll_2794754415" Guid="0e3f124a-557b-47b6-9ce0-e7357f53788f">
+            <Component Id="Component.NLog.dll_2794754415" Guid="5b6a8511-6a28-458f-874f-827ec8279061">
               <File Id="NLog.dll_2794754415" Source="..\Build\NLog.dll" />
             </Component>
 
-            <Component Id="Component.NLog.Extensions.Logging.dll_4144433134" Guid="0e3f124a-557b-47b6-9ce0-e7355846b2e5">
+            <Component Id="Component.NLog.Extensions.Logging.dll_4144433134" Guid="5b6a8511-6a28-458f-874f-827ea11acab7">
               <File Id="NLog.Extensions.Logging.dll_4144433134" Source="..\Build\NLog.Extensions.Logging.dll" />
             </Component>
 
-            <Component Id="Component.NLog.Web.AspNetCore.dll_3943054666" Guid="0e3f124a-557b-47b6-9ce0-e735859e4c71">
+            <Component Id="Component.NLog.Web.AspNetCore.dll_3943054666" Guid="5b6a8511-6a28-458f-874f-827ece726443">
               <File Id="NLog.Web.AspNetCore.dll_3943054666" Source="..\Build\NLog.Web.AspNetCore.dll" />
             </Component>
 
-            <Component Id="Component.Owin.dll_2670368414" Guid="0e3f124a-557b-47b6-9ce0-e735cbcb0fe1">
+            <Component Id="Component.Owin.dll_2670368414" Guid="5b6a8511-6a28-458f-874f-827e149f27b3">
               <File Id="Owin.dll_2670368414" Source="..\Build\Owin.dll" />
             </Component>
 
-            <Component Id="Component.PropertyChanged.dll_3470996966" Guid="0e3f124a-557b-47b6-9ce0-e7358efbd034">
+            <Component Id="Component.PropertyChanged.dll_3470996966" Guid="5b6a8511-6a28-458f-874f-827ed7cfe806">
               <File Id="PropertyChanged.dll_3470996966" Source="..\Build\PropertyChanged.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.ApplicationLifetime.Contracts.dll_78434711" Guid="0e3f124a-557b-47b6-9ce0-e7352bd6bca1">
+            <Component Id="Component.Scar.Common.ApplicationLifetime.Contracts.dll_78434711" Guid="5b6a8511-6a28-458f-874f-827e74aad473">
               <File Id="Scar.Common.ApplicationLifetime.Contracts.dll_78434711" Source="..\Build\Scar.Common.ApplicationLifetime.Contracts.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.ApplicationLifetime.dll_652430162" Guid="0e3f124a-557b-47b6-9ce0-e7353c7d6714">
+            <Component Id="Component.Scar.Common.ApplicationLifetime.dll_652430162" Guid="5b6a8511-6a28-458f-874f-827e85517fe6">
               <File Id="Scar.Common.ApplicationLifetime.dll_652430162" Source="..\Build\Scar.Common.ApplicationLifetime.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.Async.dll_452714103" Guid="0e3f124a-557b-47b6-9ce0-e73569dc15ab">
+            <Component Id="Component.Scar.Common.Async.dll_452714103" Guid="5b6a8511-6a28-458f-874f-827eb2b02d7d">
               <File Id="Scar.Common.Async.dll_452714103" Source="..\Build\Scar.Common.Async.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.AutofacNamedInstancesFactory.dll_62172589" Guid="0e3f124a-557b-47b6-9ce0-e735a7107b7d">
+            <Component Id="Component.Scar.Common.AutofacNamedInstancesFactory.dll_62172589" Guid="5b6a8511-6a28-458f-874f-827ef0e4934f">
               <File Id="Scar.Common.AutofacNamedInstancesFactory.dll_62172589" Source="..\Build\Scar.Common.AutofacNamedInstancesFactory.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.DAL.dll_2310777146" Guid="0e3f124a-557b-47b6-9ce0-e7352fde30ba">
+            <Component Id="Component.Scar.Common.DAL.dll_2310777146" Guid="5b6a8511-6a28-458f-874f-827e78b2488c">
               <File Id="Scar.Common.DAL.dll_2310777146" Source="..\Build\Scar.Common.DAL.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.DAL.LiteDB.dll_3617488890" Guid="0e3f124a-557b-47b6-9ce0-e735b42be02e">
+            <Component Id="Component.Scar.Common.DAL.LiteDB.dll_3617488890" Guid="5b6a8511-6a28-458f-874f-827efdfff800">
               <File Id="Scar.Common.DAL.LiteDB.dll_3617488890" Source="..\Build\Scar.Common.DAL.LiteDB.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.dll_1964448064" Guid="0e3f124a-557b-47b6-9ce0-e735d38875f5">
+            <Component Id="Component.Scar.Common.dll_1964448064" Guid="5b6a8511-6a28-458f-874f-827e1c5c8dc7">
               <File Id="Scar.Common.dll_1964448064" Source="..\Build\Scar.Common.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.IO.dll_3636313339" Guid="0e3f124a-557b-47b6-9ce0-e7350bcc60bc">
+            <Component Id="Component.Scar.Common.IO.dll_3636313339" Guid="5b6a8511-6a28-458f-874f-827e54a0788e">
               <File Id="Scar.Common.IO.dll_3636313339" Source="..\Build\Scar.Common.IO.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.Localization.dll_2625084424" Guid="0e3f124a-557b-47b6-9ce0-e73550d2c029">
+            <Component Id="Component.Scar.Common.Localization.dll_2625084424" Guid="5b6a8511-6a28-458f-874f-827e99a6d8fb">
               <File Id="Scar.Common.Localization.dll_2625084424" Source="..\Build\Scar.Common.Localization.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.Logging.Autofac.dll_3379093468" Guid="0e3f124a-557b-47b6-9ce0-e735d9d8130d">
+            <Component Id="Component.Scar.Common.Logging.Autofac.dll_3379093468" Guid="5b6a8511-6a28-458f-874f-827e22ac2bdf">
               <File Id="Scar.Common.Logging.Autofac.dll_3379093468" Source="..\Build\Scar.Common.Logging.Autofac.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.MVVM.CollectionView.dll_914517104" Guid="0e3f124a-557b-47b6-9ce0-e735fbbfd2c1">
+            <Component Id="Component.Scar.Common.MVVM.CollectionView.dll_914517104" Guid="5b6a8511-6a28-458f-874f-827e4493ea93">
               <File Id="Scar.Common.MVVM.CollectionView.dll_914517104" Source="..\Build\Scar.Common.MVVM.CollectionView.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.MVVM.Commands.dll_2245560233" Guid="0e3f124a-557b-47b6-9ce0-e7350565507d">
+            <Component Id="Component.Scar.Common.MVVM.Commands.dll_2245560233" Guid="5b6a8511-6a28-458f-874f-827e4e39684f">
               <File Id="Scar.Common.MVVM.Commands.dll_2245560233" Source="..\Build\Scar.Common.MVVM.Commands.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.MVVM.ViewModel.dll_1491087826" Guid="0e3f124a-557b-47b6-9ce0-e73553d26d56">
+            <Component Id="Component.Scar.Common.MVVM.ViewModel.dll_1491087826" Guid="5b6a8511-6a28-458f-874f-827e9ca68528">
               <File Id="Scar.Common.MVVM.ViewModel.dll_1491087826" Source="..\Build\Scar.Common.MVVM.ViewModel.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.RateLimiter.dll_200042745" Guid="0e3f124a-557b-47b6-9ce0-e735952afac0">
+            <Component Id="Component.Scar.Common.RateLimiter.dll_200042745" Guid="5b6a8511-6a28-458f-874f-827edefe1292">
               <File Id="Scar.Common.RateLimiter.dll_200042745" Source="..\Build\Scar.Common.RateLimiter.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.Sync.dll_832999855" Guid="0e3f124a-557b-47b6-9ce0-e73554c4112a">
+            <Component Id="Component.Scar.Common.Sync.dll_832999855" Guid="5b6a8511-6a28-458f-874f-827e9d9829fc">
               <File Id="Scar.Common.Sync.dll_832999855" Source="..\Build\Scar.Common.Sync.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.Sync.Windows.dll_2418816246" Guid="0e3f124a-557b-47b6-9ce0-e73575eaae6f">
+            <Component Id="Component.Scar.Common.Sync.Windows.dll_2418816246" Guid="5b6a8511-6a28-458f-874f-827ebebec641">
               <File Id="Scar.Common.Sync.Windows.dll_2418816246" Source="..\Build\Scar.Common.Sync.Windows.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.View.AutofacScopedWindowProvider.dll_762444463" Guid="0e3f124a-557b-47b6-9ce0-e735a7d43a39">
+            <Component Id="Component.Scar.Common.View.AutofacScopedWindowProvider.dll_762444463" Guid="5b6a8511-6a28-458f-874f-827ef0a8520b">
               <File Id="Scar.Common.View.AutofacScopedWindowProvider.dll_762444463" Source="..\Build\Scar.Common.View.AutofacScopedWindowProvider.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.View.Contracts.dll_201695691" Guid="0e3f124a-557b-47b6-9ce0-e735cdd66d2e">
+            <Component Id="Component.Scar.Common.View.Contracts.dll_201695691" Guid="5b6a8511-6a28-458f-874f-827e16aa8500">
               <File Id="Scar.Common.View.Contracts.dll_201695691" Source="..\Build\Scar.Common.View.Contracts.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.View.WindowFactory.dll_4162443735" Guid="0e3f124a-557b-47b6-9ce0-e735cadc4d27">
+            <Component Id="Component.Scar.Common.View.WindowFactory.dll_4162443735" Guid="5b6a8511-6a28-458f-874f-827e13b065f9">
               <File Id="Scar.Common.View.WindowFactory.dll_4162443735" Source="..\Build\Scar.Common.View.WindowFactory.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WebApi.dll_2417713163" Guid="0e3f124a-557b-47b6-9ce0-e7358aaf5c40">
+            <Component Id="Component.Scar.Common.WebApi.dll_2417713163" Guid="5b6a8511-6a28-458f-874f-827ed3837412">
               <File Id="Scar.Common.WebApi.dll_2417713163" Source="..\Build\Scar.Common.WebApi.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.CollectionView.dll_2613620209" Guid="0e3f124a-557b-47b6-9ce0-e735aa54aa8b">
+            <Component Id="Component.Scar.Common.WPF.CollectionView.dll_2613620209" Guid="5b6a8511-6a28-458f-874f-827ef328c25d">
               <File Id="Scar.Common.WPF.CollectionView.dll_2613620209" Source="..\Build\Scar.Common.WPF.CollectionView.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.AutoCompleteTextBox.dll_923092416" Guid="0e3f124a-557b-47b6-9ce0-e73506f9a532">
+            <Component Id="Component.Scar.Common.WPF.Controls.AutoCompleteTextBox.dll_923092416" Guid="5b6a8511-6a28-458f-874f-827e4fcdbd04">
               <File Id="Scar.Common.WPF.Controls.AutoCompleteTextBox.dll_923092416" Source="..\Build\Scar.Common.WPF.Controls.AutoCompleteTextBox.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.Behaviors.dll_3490251729" Guid="0e3f124a-557b-47b6-9ce0-e735e5c0d454">
+            <Component Id="Component.Scar.Common.WPF.Controls.Behaviors.dll_3490251729" Guid="5b6a8511-6a28-458f-874f-827e2e94ec26">
               <File Id="Scar.Common.WPF.Controls.Behaviors.dll_3490251729" Source="..\Build\Scar.Common.WPF.Controls.Behaviors.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll_219868730" Guid="0e3f124a-557b-47b6-9ce0-e735c2534977">
+            <Component Id="Component.Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll_219868730" Guid="5b6a8511-6a28-458f-874f-827e0b276149">
               <File Id="Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll_219868730" Source="..\Build\Scar.Common.WPF.Controls.ExternalBrowserHyperlink.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.NumericUpDown.dll_1524962069" Guid="0e3f124a-557b-47b6-9ce0-e7356e802445">
+            <Component Id="Component.Scar.Common.WPF.Controls.NumericUpDown.dll_1524962069" Guid="5b6a8511-6a28-458f-874f-827eb7543c17">
               <File Id="Scar.Common.WPF.Controls.NumericUpDown.dll_1524962069" Source="..\Build\Scar.Common.WPF.Controls.NumericUpDown.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.Styles.dll_1703376152" Guid="0e3f124a-557b-47b6-9ce0-e7359e64f3f2">
+            <Component Id="Component.Scar.Common.WPF.Controls.Styles.dll_1703376152" Guid="5b6a8511-6a28-458f-874f-827ee7380bc4">
               <File Id="Scar.Common.WPF.Controls.Styles.dll_1703376152" Source="..\Build\Scar.Common.WPF.Controls.Styles.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll_4126433733" Guid="0e3f124a-557b-47b6-9ce0-e735a512294e">
+            <Component Id="Component.Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll_4126433733" Guid="5b6a8511-6a28-458f-874f-827eeee64120">
               <File Id="Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll_4126433733" Source="..\Build\Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Converters.dll_857263327" Guid="0e3f124a-557b-47b6-9ce0-e7357fdf2476">
+            <Component Id="Component.Scar.Common.WPF.Converters.dll_857263327" Guid="5b6a8511-6a28-458f-874f-827ec8b33c48">
               <File Id="Scar.Common.WPF.Converters.dll_857263327" Source="..\Build\Scar.Common.WPF.Converters.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Localization.dll_2166138592" Guid="0e3f124a-557b-47b6-9ce0-e7356f9c197b">
+            <Component Id="Component.Scar.Common.WPF.Localization.dll_2166138592" Guid="5b6a8511-6a28-458f-874f-827eb870314d">
               <File Id="Scar.Common.WPF.Localization.dll_2166138592" Source="..\Build\Scar.Common.WPF.Localization.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.Startup.dll_1150588371" Guid="0e3f124a-557b-47b6-9ce0-e73538e787df">
+            <Component Id="Component.Scar.Common.WPF.Screen.dll_442485209" Guid="5b6a8511-6a28-458f-874f-827e101c9543">
+              <File Id="Scar.Common.WPF.Screen.dll_442485209" Source="..\Build\Scar.Common.WPF.Screen.dll" />
+            </Component>
+
+            <Component Id="Component.Scar.Common.WPF.Startup.dll_1150588371" Guid="5b6a8511-6a28-458f-874f-827e81bb9fb1">
               <File Id="Scar.Common.WPF.Startup.dll_1150588371" Source="..\Build\Scar.Common.WPF.Startup.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.View.AnimatedWindow.dll_419884835" Guid="0e3f124a-557b-47b6-9ce0-e735e5a1f1b9">
+            <Component Id="Component.Scar.Common.WPF.View.AnimatedWindow.dll_419884835" Guid="5b6a8511-6a28-458f-874f-827e2e75098b">
               <File Id="Scar.Common.WPF.View.AnimatedWindow.dll_419884835" Source="..\Build\Scar.Common.WPF.View.AnimatedWindow.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.View.BaseWindow.dll_3428546997" Guid="0e3f124a-557b-47b6-9ce0-e735a3aab9bf">
+            <Component Id="Component.Scar.Common.WPF.View.BaseWindow.dll_3428546997" Guid="5b6a8511-6a28-458f-874f-827eec7ed191">
               <File Id="Scar.Common.WPF.View.BaseWindow.dll_3428546997" Source="..\Build\Scar.Common.WPF.View.BaseWindow.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.View.Contracts.dll_846864227" Guid="0e3f124a-557b-47b6-9ce0-e735f53cb98e">
+            <Component Id="Component.Scar.Common.WPF.View.Contracts.dll_846864227" Guid="5b6a8511-6a28-458f-874f-827e3e10d160">
               <File Id="Scar.Common.WPF.View.Contracts.dll_846864227" Source="..\Build\Scar.Common.WPF.View.Contracts.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Common.WPF.View.dll_1088513829" Guid="0e3f124a-557b-47b6-9ce0-e735c338fbc4">
+            <Component Id="Component.Scar.Common.WPF.View.dll_1088513829" Guid="5b6a8511-6a28-458f-874f-827e0c0c1396">
               <File Id="Scar.Common.WPF.View.dll_1088513829" Source="..\Build\Scar.Common.WPF.View.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Contracts.dll_3150547485" Guid="0e3f124a-557b-47b6-9ce0-e73552380ae9">
+            <Component Id="Component.Scar.Remembrance.Contracts.dll_3150547485" Guid="5b6a8511-6a28-458f-874f-827e9b0c22bb">
               <File Id="Scar.Remembrance.Contracts.dll_3150547485" Source="..\Build\Scar.Remembrance.Contracts.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Contracts.pdb_3622275621" Guid="0e3f124a-557b-47b6-9ce0-e735496afa9d">
+            <Component Id="Component.Scar.Remembrance.Contracts.pdb_3622275621" Guid="5b6a8511-6a28-458f-874f-827e923e126f">
               <File Id="Scar.Remembrance.Contracts.pdb_3622275621" Source="..\Build\Scar.Remembrance.Contracts.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Core.dll_4276972072" Guid="0e3f124a-557b-47b6-9ce0-e7355edb17e0">
+            <Component Id="Component.Scar.Remembrance.Core.dll_4276972072" Guid="5b6a8511-6a28-458f-874f-827ea7af2fb2">
               <File Id="Scar.Remembrance.Core.dll_4276972072" Source="..\Build\Scar.Remembrance.Core.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Core.dll.config_215752214" Guid="0e3f124a-557b-47b6-9ce0-e735291915f6">
+            <Component Id="Component.Scar.Remembrance.Core.dll.config_215752214" Guid="5b6a8511-6a28-458f-874f-827e72ed2dc8">
               <File Id="Scar.Remembrance.Core.dll.config_215752214" Source="..\Build\Scar.Remembrance.Core.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Core.pdb_65794794" Guid="0e3f124a-557b-47b6-9ce0-e7356150a9e3">
+            <Component Id="Component.Scar.Remembrance.Core.pdb_65794794" Guid="5b6a8511-6a28-458f-874f-827eaa24c1b5">
               <File Id="Scar.Remembrance.Core.pdb_65794794" Source="..\Build\Scar.Remembrance.Core.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.DAL.dll_1202619358" Guid="0e3f124a-557b-47b6-9ce0-e73515d5f567">
+            <Component Id="Component.Scar.Remembrance.DAL.dll_1202619358" Guid="5b6a8511-6a28-458f-874f-827e5ea90d39">
               <File Id="Scar.Remembrance.DAL.dll_1202619358" Source="..\Build\Scar.Remembrance.DAL.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.DAL.dll.config_3324603025" Guid="0e3f124a-557b-47b6-9ce0-e73563e847fc">
+            <Component Id="Component.Scar.Remembrance.DAL.dll.config_3324603025" Guid="5b6a8511-6a28-458f-874f-827eacbc5fce">
               <File Id="Scar.Remembrance.DAL.dll.config_3324603025" Source="..\Build\Scar.Remembrance.DAL.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.DAL.pdb_3521961734" Guid="0e3f124a-557b-47b6-9ce0-e7357a76e665">
+            <Component Id="Component.Scar.Remembrance.DAL.pdb_3521961734" Guid="5b6a8511-6a28-458f-874f-827ec34afe37">
               <File Id="Scar.Remembrance.DAL.pdb_3521961734" Source="..\Build\Scar.Remembrance.DAL.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.deps.json_4251929240" Guid="0e3f124a-557b-47b6-9ce0-e735e9c93daf">
+            <Component Id="Component.Scar.Remembrance.Launcher.deps.json_4251929240" Guid="5b6a8511-6a28-458f-874f-827e329d5581">
               <File Id="Scar.Remembrance.Launcher.deps.json_4251929240" Source="..\Build\Scar.Remembrance.Launcher.deps.json" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.dll_2465923162" Guid="0e3f124a-557b-47b6-9ce0-e735f36bc677">
+            <Component Id="Component.Scar.Remembrance.Launcher.dll_2465923162" Guid="5b6a8511-6a28-458f-874f-827e3c3fde49">
               <File Id="Scar.Remembrance.Launcher.dll_2465923162" Source="..\Build\Scar.Remembrance.Launcher.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.dll.config_3108384448" Guid="0e3f124a-557b-47b6-9ce0-e735511d2650">
+            <Component Id="Component.Scar.Remembrance.Launcher.dll.config_3108384448" Guid="5b6a8511-6a28-458f-874f-827e9af13e22">
               <File Id="Scar.Remembrance.Launcher.dll.config_3108384448" Source="..\Build\Scar.Remembrance.Launcher.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.exe_2031061960" Guid="0e3f124a-557b-47b6-9ce0-e735089651e8">
+            <Component Id="Component.Scar.Remembrance.Launcher.exe_2031061960" Guid="5b6a8511-6a28-458f-874f-827e516a69ba">
               <File Id="Scar.Remembrance.Launcher.exe_2031061960" Source="..\Build\Scar.Remembrance.Launcher.exe" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.pdb_2382133164" Guid="0e3f124a-557b-47b6-9ce0-e735afe24193">
+            <Component Id="Component.Scar.Remembrance.Launcher.pdb_2382133164" Guid="5b6a8511-6a28-458f-874f-827ef8b65965">
               <File Id="Scar.Remembrance.Launcher.pdb_2382133164" Source="..\Build\Scar.Remembrance.Launcher.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.runtimeconfig.dev.json_1271837235" Guid="0e3f124a-557b-47b6-9ce0-e73537d9ff51">
+            <Component Id="Component.Scar.Remembrance.Launcher.runtimeconfig.dev.json_1271837235" Guid="5b6a8511-6a28-458f-874f-827e80ad1723">
               <File Id="Scar.Remembrance.Launcher.runtimeconfig.dev.json_1271837235" Source="..\Build\Scar.Remembrance.Launcher.runtimeconfig.dev.json" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Launcher.runtimeconfig.json_1882620559" Guid="0e3f124a-557b-47b6-9ce0-e73531334b46">
+            <Component Id="Component.Scar.Remembrance.Launcher.runtimeconfig.json_1882620559" Guid="5b6a8511-6a28-458f-874f-827e7a076318">
               <File Id="Scar.Remembrance.Launcher.runtimeconfig.json_1882620559" Source="..\Build\Scar.Remembrance.Launcher.runtimeconfig.json" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Resources.dll_2258290020" Guid="0e3f124a-557b-47b6-9ce0-e735e86acf55">
+            <Component Id="Component.Scar.Remembrance.Resources.dll_2258290020" Guid="5b6a8511-6a28-458f-874f-827e313ee727">
               <File Id="Scar.Remembrance.Resources.dll_2258290020" Source="..\Build\Scar.Remembrance.Resources.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Resources.dll.config_3319877535" Guid="0e3f124a-557b-47b6-9ce0-e73550756c7c">
+            <Component Id="Component.Scar.Remembrance.Resources.dll.config_3319877535" Guid="5b6a8511-6a28-458f-874f-827e9949844e">
               <File Id="Scar.Remembrance.Resources.dll.config_3319877535" Source="..\Build\Scar.Remembrance.Resources.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Resources.pdb_1787610476" Guid="0e3f124a-557b-47b6-9ce0-e735d42f87d7">
+            <Component Id="Component.Scar.Remembrance.Resources.pdb_1787610476" Guid="5b6a8511-6a28-458f-874f-827e1d039fa9">
               <File Id="Scar.Remembrance.Resources.pdb_1787610476" Source="..\Build\Scar.Remembrance.Resources.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.View.dll_548220596" Guid="0e3f124a-557b-47b6-9ce0-e735434f5daf">
+            <Component Id="Component.Scar.Remembrance.View.dll_548220596" Guid="5b6a8511-6a28-458f-874f-827e8c237581">
               <File Id="Scar.Remembrance.View.dll_548220596" Source="..\Build\Scar.Remembrance.View.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.View.dll.config_1964140597" Guid="0e3f124a-557b-47b6-9ce0-e735fbc4464f">
+            <Component Id="Component.Scar.Remembrance.View.dll.config_1964140597" Guid="5b6a8511-6a28-458f-874f-827e44985e21">
               <File Id="Scar.Remembrance.View.dll.config_1964140597" Source="..\Build\Scar.Remembrance.View.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.View.pdb_275780242" Guid="0e3f124a-557b-47b6-9ce0-e7359d6ab522">
+            <Component Id="Component.Scar.Remembrance.View.pdb_275780242" Guid="5b6a8511-6a28-458f-874f-827ee63ecdf4">
               <File Id="Scar.Remembrance.View.pdb_275780242" Source="..\Build\Scar.Remembrance.View.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.ViewModel.dll_687183623" Guid="0e3f124a-557b-47b6-9ce0-e735e4b0dfb8">
+            <Component Id="Component.Scar.Remembrance.ViewModel.dll_687183623" Guid="5b6a8511-6a28-458f-874f-827e2d84f78a">
               <File Id="Scar.Remembrance.ViewModel.dll_687183623" Source="..\Build\Scar.Remembrance.ViewModel.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.ViewModel.dll.config_3621474445" Guid="0e3f124a-557b-47b6-9ce0-e735158f7696">
+            <Component Id="Component.Scar.Remembrance.ViewModel.dll.config_3621474445" Guid="5b6a8511-6a28-458f-874f-827e5e638e68">
               <File Id="Scar.Remembrance.ViewModel.dll.config_3621474445" Source="..\Build\Scar.Remembrance.ViewModel.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.ViewModel.pdb_1159173887" Guid="0e3f124a-557b-47b6-9ce0-e735942536b7">
+            <Component Id="Component.Scar.Remembrance.ViewModel.pdb_1159173887" Guid="5b6a8511-6a28-458f-874f-827eddf94e89">
               <File Id="Scar.Remembrance.ViewModel.pdb_1159173887" Source="..\Build\Scar.Remembrance.ViewModel.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.WebApi.dll_4276637926" Guid="0e3f124a-557b-47b6-9ce0-e735c31cfc17">
+            <Component Id="Component.Scar.Remembrance.WebApi.dll_4276637926" Guid="5b6a8511-6a28-458f-874f-827e0cf014e9">
               <File Id="Scar.Remembrance.WebApi.dll_4276637926" Source="..\Build\Scar.Remembrance.WebApi.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.WebApi.dll.config_2064231425" Guid="0e3f124a-557b-47b6-9ce0-e7351c189481">
+            <Component Id="Component.Scar.Remembrance.WebApi.dll.config_2064231425" Guid="5b6a8511-6a28-458f-874f-827e65ecac53">
               <File Id="Scar.Remembrance.WebApi.dll.config_2064231425" Source="..\Build\Scar.Remembrance.WebApi.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.WebApi.pdb_3825774932" Guid="0e3f124a-557b-47b6-9ce0-e735878f222e">
+            <Component Id="Component.Scar.Remembrance.WebApi.pdb_3825774932" Guid="5b6a8511-6a28-458f-874f-827ed0633a00">
               <File Id="Scar.Remembrance.WebApi.pdb_3825774932" Source="..\Build\Scar.Remembrance.WebApi.pdb" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Windows.Common.dll_277952368" Guid="0e3f124a-557b-47b6-9ce0-e735bf80204b">
+            <Component Id="Component.Scar.Remembrance.Windows.Common.dll_277952368" Guid="5b6a8511-6a28-458f-874f-827e0854381d">
               <File Id="Scar.Remembrance.Windows.Common.dll_277952368" Source="..\Build\Scar.Remembrance.Windows.Common.dll" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Windows.Common.dll.config_454400557" Guid="0e3f124a-557b-47b6-9ce0-e7354e875afa">
+            <Component Id="Component.Scar.Remembrance.Windows.Common.dll.config_454400557" Guid="5b6a8511-6a28-458f-874f-827e975b72cc">
               <File Id="Scar.Remembrance.Windows.Common.dll.config_454400557" Source="..\Build\Scar.Remembrance.Windows.Common.dll.config" />
             </Component>
 
-            <Component Id="Component.Scar.Remembrance.Windows.Common.pdb_3054414190" Guid="0e3f124a-557b-47b6-9ce0-e735b2e3332e">
+            <Component Id="Component.Scar.Remembrance.Windows.Common.pdb_3054414190" Guid="5b6a8511-6a28-458f-874f-827efbb74b00">
               <File Id="Scar.Remembrance.Windows.Common.pdb_3054414190" Source="..\Build\Scar.Remembrance.Windows.Common.pdb" />
             </Component>
 
-            <Component Id="Component.System.ComponentModel.Composition.dll_2040856255" Guid="0e3f124a-557b-47b6-9ce0-e7355fed8b1d">
+            <Component Id="Component.System.ComponentModel.Composition.dll_2040856255" Guid="5b6a8511-6a28-458f-874f-827ea8c1a3ef">
               <File Id="System.ComponentModel.Composition.dll_2040856255" Source="..\Build\System.ComponentModel.Composition.dll" />
             </Component>
 
-            <Component Id="Component.System.ComponentModel.Composition.Registration.dll_2821413788" Guid="0e3f124a-557b-47b6-9ce0-e735da78195b">
+            <Component Id="Component.System.ComponentModel.Composition.Registration.dll_2821413788" Guid="5b6a8511-6a28-458f-874f-827e234c312d">
               <File Id="System.ComponentModel.Composition.Registration.dll_2821413788" Source="..\Build\System.ComponentModel.Composition.Registration.dll" />
             </Component>
 
-            <Component Id="Component.System.Configuration.ConfigurationManager.dll_618027017" Guid="0e3f124a-557b-47b6-9ce0-e73526c0fac0">
+            <Component Id="Component.System.Configuration.ConfigurationManager.dll_618027017" Guid="5b6a8511-6a28-458f-874f-827e6f941292">
               <File Id="System.Configuration.ConfigurationManager.dll_618027017" Source="..\Build\System.Configuration.ConfigurationManager.dll" />
             </Component>
 
-            <Component Id="Component.System.Data.Odbc.dll_404020339" Guid="0e3f124a-557b-47b6-9ce0-e7350969fa35">
+            <Component Id="Component.System.Data.Odbc.dll_404020339" Guid="5b6a8511-6a28-458f-874f-827e523d1207">
               <File Id="System.Data.Odbc.dll_404020339" Source="..\Build\System.Data.Odbc.dll" />
             </Component>
 
-            <Component Id="Component.System.Data.OleDb.dll_1955108169" Guid="0e3f124a-557b-47b6-9ce0-e7358d517f36">
+            <Component Id="Component.System.Data.OleDb.dll_1955108169" Guid="5b6a8511-6a28-458f-874f-827ed6259708">
               <File Id="System.Data.OleDb.dll_1955108169" Source="..\Build\System.Data.OleDb.dll" />
             </Component>
 
-            <Component Id="Component.System.Data.SqlClient.dll_614441652" Guid="0e3f124a-557b-47b6-9ce0-e735aa20fabe">
+            <Component Id="Component.System.Data.SqlClient.dll_614441652" Guid="5b6a8511-6a28-458f-874f-827ef3f41290">
               <File Id="System.Data.SqlClient.dll_614441652" Source="..\Build\System.Data.SqlClient.dll" />
             </Component>
 
-            <Component Id="Component.System.DirectoryServices.AccountManagement.dll_3222317355" Guid="0e3f124a-557b-47b6-9ce0-e735120c52a2">
+            <Component Id="Component.System.DirectoryServices.AccountManagement.dll_3222317355" Guid="5b6a8511-6a28-458f-874f-827e5be06a74">
               <File Id="System.DirectoryServices.AccountManagement.dll_3222317355" Source="..\Build\System.DirectoryServices.AccountManagement.dll" />
             </Component>
 
-            <Component Id="Component.System.DirectoryServices.Protocols.dll_690446288" Guid="0e3f124a-557b-47b6-9ce0-e735044fcd3a">
+            <Component Id="Component.System.DirectoryServices.Protocols.dll_690446288" Guid="5b6a8511-6a28-458f-874f-827e4d23e50c">
               <File Id="System.DirectoryServices.Protocols.dll_690446288" Source="..\Build\System.DirectoryServices.Protocols.dll" />
             </Component>
 
-            <Component Id="Component.System.IO.Ports.dll_2620202904" Guid="0e3f124a-557b-47b6-9ce0-e73587fb5c72">
+            <Component Id="Component.System.IO.Ports.dll_2620202904" Guid="5b6a8511-6a28-458f-874f-827ed0cf7444">
               <File Id="System.IO.Ports.dll_2620202904" Source="..\Build\System.IO.Ports.dll" />
             </Component>
 
-            <Component Id="Component.System.Linq.Async.dll_1089142376" Guid="0e3f124a-557b-47b6-9ce0-e735c82fecaa">
+            <Component Id="Component.System.Linq.Async.dll_1089142376" Guid="5b6a8511-6a28-458f-874f-827e1103047c">
               <File Id="System.Linq.Async.dll_1089142376" Source="..\Build\System.Linq.Async.dll" />
             </Component>
 
-            <Component Id="Component.System.Management.dll_2344043819" Guid="0e3f124a-557b-47b6-9ce0-e735a6ca9c9e">
+            <Component Id="Component.System.Management.dll_2344043819" Guid="5b6a8511-6a28-458f-874f-827eef9eb470">
               <File Id="System.Management.dll_2344043819" Source="..\Build\System.Management.dll" />
             </Component>
 
-            <Component Id="Component.System.Net.Http.Formatting.dll_3104397470" Guid="0e3f124a-557b-47b6-9ce0-e7352dc4748c">
+            <Component Id="Component.System.Net.Http.Formatting.dll_3104397470" Guid="5b6a8511-6a28-458f-874f-827e76988c5e">
               <File Id="System.Net.Http.Formatting.dll_3104397470" Source="..\Build\System.Net.Http.Formatting.dll" />
             </Component>
 
-            <Component Id="Component.System.Private.ServiceModel.dll_2637077066" Guid="0e3f124a-557b-47b6-9ce0-e7353ac5a448">
+            <Component Id="Component.System.Private.ServiceModel.dll_2637077066" Guid="5b6a8511-6a28-458f-874f-827e8399bc1a">
               <File Id="System.Private.ServiceModel.dll_2637077066" Source="..\Build\System.Private.ServiceModel.dll" />
             </Component>
 
-            <Component Id="Component.System.Reactive.dll_2669697024" Guid="0e3f124a-557b-47b6-9ce0-e735c39e576c">
+            <Component Id="Component.System.Reactive.dll_2669697024" Guid="5b6a8511-6a28-458f-874f-827e0c726f3e">
               <File Id="System.Reactive.dll_2669697024" Source="..\Build\System.Reactive.dll" />
             </Component>
 
-            <Component Id="Component.System.Reactive.Linq.dll_771143398" Guid="0e3f124a-557b-47b6-9ce0-e73572a88f01">
+            <Component Id="Component.System.Reactive.Linq.dll_771143398" Guid="5b6a8511-6a28-458f-874f-827ebb7ca7d3">
               <File Id="System.Reactive.Linq.dll_771143398" Source="..\Build\System.Reactive.Linq.dll" />
             </Component>
 
-            <Component Id="Component.System.Reactive.xml_2669631508" Guid="0e3f124a-557b-47b6-9ce0-e735376143c2">
+            <Component Id="Component.System.Reactive.xml_2669631508" Guid="5b6a8511-6a28-458f-874f-827e80355b94">
               <File Id="System.Reactive.xml_2669631508" Source="..\Build\System.Reactive.xml" />
             </Component>
 
-            <Component Id="Component.System.Reflection.Context.dll_100916637" Guid="0e3f124a-557b-47b6-9ce0-e735299d3287">
+            <Component Id="Component.System.Reflection.Context.dll_100916637" Guid="5b6a8511-6a28-458f-874f-827e72714a59">
               <File Id="System.Reflection.Context.dll_100916637" Source="..\Build\System.Reflection.Context.dll" />
             </Component>
 
-            <Component Id="Component.System.Runtime.Caching.dll_1682552321" Guid="0e3f124a-557b-47b6-9ce0-e7354f2b757c">
+            <Component Id="Component.System.Runtime.Caching.dll_1682552321" Guid="5b6a8511-6a28-458f-874f-827e98ff8d4e">
               <File Id="System.Runtime.Caching.dll_1682552321" Source="..\Build\System.Runtime.Caching.dll" />
             </Component>
 
-            <Component Id="Component.System.Runtime.CompilerServices.Unsafe.dll_2093282870" Guid="0e3f124a-557b-47b6-9ce0-e735271fea95">
+            <Component Id="Component.System.Runtime.CompilerServices.Unsafe.dll_2093282870" Guid="5b6a8511-6a28-458f-874f-827e70f30267">
               <File Id="System.Runtime.CompilerServices.Unsafe.dll_2093282870" Source="..\Build\System.Runtime.CompilerServices.Unsafe.dll" />
             </Component>
 
-            <Component Id="Component.System.Security.AccessControl.dll_405541947" Guid="0e3f124a-557b-47b6-9ce0-e7358c746b39">
+            <Component Id="Component.System.Security.AccessControl.dll_405541947" Guid="5b6a8511-6a28-458f-874f-827ed548830b">
               <File Id="System.Security.AccessControl.dll_405541947" Source="..\Build\System.Security.AccessControl.dll" />
             </Component>
 
-            <Component Id="Component.System.Security.Permissions.dll_3498470240" Guid="0e3f124a-557b-47b6-9ce0-e735cc299007">
+            <Component Id="Component.System.Security.Permissions.dll_3498470240" Guid="5b6a8511-6a28-458f-874f-827e15fda8d9">
               <File Id="System.Security.Permissions.dll_3498470240" Source="..\Build\System.Security.Permissions.dll" />
             </Component>
 
-            <Component Id="Component.System.Security.Principal.Windows.dll_490031499" Guid="0e3f124a-557b-47b6-9ce0-e735dc964637">
+            <Component Id="Component.System.Security.Principal.Windows.dll_490031499" Guid="5b6a8511-6a28-458f-874f-827e256a5e09">
               <File Id="System.Security.Principal.Windows.dll_490031499" Source="..\Build\System.Security.Principal.Windows.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.dll_2683140664" Guid="0e3f124a-557b-47b6-9ce0-e735e85c0138">
+            <Component Id="Component.System.ServiceModel.dll_2683140664" Guid="5b6a8511-6a28-458f-874f-827e3130190a">
               <File Id="System.ServiceModel.dll_2683140664" Source="..\Build\System.ServiceModel.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.Duplex.dll_2236439571" Guid="0e3f124a-557b-47b6-9ce0-e735c384207a">
+            <Component Id="Component.System.ServiceModel.Duplex.dll_2236439571" Guid="5b6a8511-6a28-458f-874f-827e0c58384c">
               <File Id="System.ServiceModel.Duplex.dll_2236439571" Source="..\Build\System.ServiceModel.Duplex.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.Http.dll_3515112244" Guid="0e3f124a-557b-47b6-9ce0-e7351b5b17d2">
+            <Component Id="Component.System.ServiceModel.Http.dll_3515112244" Guid="5b6a8511-6a28-458f-874f-827e642f2fa4">
               <File Id="System.ServiceModel.Http.dll_3515112244" Source="..\Build\System.ServiceModel.Http.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.NetTcp.dll_1204864960" Guid="0e3f124a-557b-47b6-9ce0-e7357c6bec60">
+            <Component Id="Component.System.ServiceModel.NetTcp.dll_1204864960" Guid="5b6a8511-6a28-458f-874f-827ec53f0432">
               <File Id="System.ServiceModel.NetTcp.dll_1204864960" Source="..\Build\System.ServiceModel.NetTcp.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.Primitives.dll_2859199681" Guid="0e3f124a-557b-47b6-9ce0-e73556f001da">
+            <Component Id="Component.System.ServiceModel.Primitives.dll_2859199681" Guid="5b6a8511-6a28-458f-874f-827e9fc419ac">
               <File Id="System.ServiceModel.Primitives.dll_2859199681" Source="..\Build\System.ServiceModel.Primitives.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.Security.dll_827555949" Guid="0e3f124a-557b-47b6-9ce0-e735e845697a">
+            <Component Id="Component.System.ServiceModel.Security.dll_827555949" Guid="5b6a8511-6a28-458f-874f-827e3119814c">
               <File Id="System.ServiceModel.Security.dll_827555949" Source="..\Build\System.ServiceModel.Security.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceModel.Syndication.dll_1350409591" Guid="0e3f124a-557b-47b6-9ce0-e735594c9dc3">
+            <Component Id="Component.System.ServiceModel.Syndication.dll_1350409591" Guid="5b6a8511-6a28-458f-874f-827ea220b595">
               <File Id="System.ServiceModel.Syndication.dll_1350409591" Source="..\Build\System.ServiceModel.Syndication.dll" />
             </Component>
 
-            <Component Id="Component.System.ServiceProcess.ServiceController.dll_2812074780" Guid="0e3f124a-557b-47b6-9ce0-e7353d17d903">
+            <Component Id="Component.System.ServiceProcess.ServiceController.dll_2812074780" Guid="5b6a8511-6a28-458f-874f-827e86ebf1d5">
               <File Id="System.ServiceProcess.ServiceController.dll_2812074780" Source="..\Build\System.ServiceProcess.ServiceController.dll" />
             </Component>
 
-            <Component Id="Component.System.Threading.Tasks.Extensions.dll_2138674601" Guid="0e3f124a-557b-47b6-9ce0-e73555b2074f">
+            <Component Id="Component.System.Threading.Tasks.Extensions.dll_2138674601" Guid="5b6a8511-6a28-458f-874f-827e9e861f21">
               <File Id="System.Threading.Tasks.Extensions.dll_2138674601" Source="..\Build\System.Threading.Tasks.Extensions.dll" />
             </Component>
 
-            <Component Id="Component.System.ValueTuple.dll_3730162639" Guid="0e3f124a-557b-47b6-9ce0-e735b3eb7c80">
+            <Component Id="Component.System.ValueTuple.dll_3730162639" Guid="5b6a8511-6a28-458f-874f-827efcbf9452">
               <File Id="System.ValueTuple.dll_3730162639" Source="..\Build\System.ValueTuple.dll" />
             </Component>
 
-            <Component Id="Component.System.Web.Http.dll_3341862581" Guid="0e3f124a-557b-47b6-9ce0-e7356eb66f55">
+            <Component Id="Component.System.Web.Http.dll_3341862581" Guid="5b6a8511-6a28-458f-874f-827eb78a8727">
               <File Id="System.Web.Http.dll_3341862581" Source="..\Build\System.Web.Http.dll" />
             </Component>
 
-            <Component Id="Component.System.Web.Http.Owin.dll_2410863969" Guid="0e3f124a-557b-47b6-9ce0-e735a74403ba">
+            <Component Id="Component.System.Web.Http.Owin.dll_2410863969" Guid="5b6a8511-6a28-458f-874f-827ef0181b8c">
               <File Id="System.Web.Http.Owin.dll_2410863969" Source="..\Build\System.Web.Http.Owin.dll" />
             </Component>
 
-            <Component Id="Component.System.Windows.Interactivity.dll_1403288095" Guid="0e3f124a-557b-47b6-9ce0-e735c5fd5290">
+            <Component Id="Component.System.Windows.Interactivity.dll_1403288095" Guid="5b6a8511-6a28-458f-874f-827e0ed16a62">
               <File Id="System.Windows.Interactivity.dll_1403288095" Source="..\Build\System.Windows.Interactivity.dll" />
             </Component>
 
-            <Component Id="Component.WPFLocalizeExtension.dll_4097767406" Guid="0e3f124a-557b-47b6-9ce0-e735ada59737">
+            <Component Id="Component.WPFLocalizeExtension.dll_4097767406" Guid="5b6a8511-6a28-458f-874f-827ef679af09">
               <File Id="WPFLocalizeExtension.dll_4097767406" Source="..\Build\WPFLocalizeExtension.dll" />
             </Component>
 
-            <Component Id="Component.XAMLMarkupExtensions.dll_3260925179" Guid="0e3f124a-557b-47b6-9ce0-e7351408685a">
+            <Component Id="Component.XAMLMarkupExtensions.dll_3260925179" Guid="5b6a8511-6a28-458f-874f-827e5ddc802c">
               <File Id="XAMLMarkupExtensions.dll_3260925179" Source="..\Build\XAMLMarkupExtensions.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.AvalonDock.dll_1625562319" Guid="0e3f124a-557b-47b6-9ce0-e735efe06682">
+            <Component Id="Component.Xceed.Wpf.AvalonDock.dll_1625562319" Guid="5b6a8511-6a28-458f-874f-827e38b47e54">
               <File Id="Xceed.Wpf.AvalonDock.dll_1625562319" Source="..\Build\Xceed.Wpf.AvalonDock.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.Aero.dll_3513227874" Guid="0e3f124a-557b-47b6-9ce0-e73566b1c2ca">
+            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.Aero.dll_3513227874" Guid="5b6a8511-6a28-458f-874f-827eaf85da9c">
               <File Id="Xceed.Wpf.AvalonDock.Themes.Aero.dll_3513227874" Source="..\Build\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.Metro.dll_3692570740" Guid="0e3f124a-557b-47b6-9ce0-e735fbc31eac">
+            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.Metro.dll_3692570740" Guid="5b6a8511-6a28-458f-874f-827e4497367e">
               <File Id="Xceed.Wpf.AvalonDock.Themes.Metro.dll_3692570740" Source="..\Build\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.VS2010.dll_2587878105" Guid="0e3f124a-557b-47b6-9ce0-e73575fe2430">
+            <Component Id="Component.Xceed.Wpf.AvalonDock.Themes.VS2010.dll_2587878105" Guid="5b6a8511-6a28-458f-874f-827ebed23c02">
               <File Id="Xceed.Wpf.AvalonDock.Themes.VS2010.dll_2587878105" Source="..\Build\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.DataGrid.dll_2664227253" Guid="0e3f124a-557b-47b6-9ce0-e7356884ed3d">
+            <Component Id="Component.Xceed.Wpf.DataGrid.dll_2664227253" Guid="5b6a8511-6a28-458f-874f-827eb158050f">
               <File Id="Xceed.Wpf.DataGrid.dll_2664227253" Source="..\Build\Xceed.Wpf.DataGrid.dll" />
             </Component>
 
-            <Component Id="Component.Xceed.Wpf.Toolkit.dll_3499682582" Guid="0e3f124a-557b-47b6-9ce0-e735a2657313">
+            <Component Id="Component.Xceed.Wpf.Toolkit.dll_3499682582" Guid="5b6a8511-6a28-458f-874f-827eeb398be5">
               <File Id="Xceed.Wpf.Toolkit.dll_3499682582" Source="..\Build\Xceed.Wpf.Toolkit.dll" />
             </Component>
 
-            <Component Id="Component.Uninstall_Remembrance" Guid="0e3f124a-557b-47b6-9ce0-e73512675ff1">
+            <Component Id="Component.Uninstall_Remembrance" Guid="5b6a8511-6a28-458f-874f-827e5b3b77c3">
               <Shortcut Id="INSTALLDIR.Uninstall_Remembrance" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
               <CreateFolder />
@@ -662,7 +666,7 @@
 
             <Directory Id="INSTALLDIR.de" Name="de">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_252986428" Guid="0e3f124a-557b-47b6-9ce0-e7357df0bbe7">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_252986428" Guid="5b6a8511-6a28-458f-874f-827ec6c4d3b9">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_252986428" Source="..\Build\de\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -670,7 +674,7 @@
 
             <Directory Id="INSTALLDIR.es" Name="es">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_3845587354" Guid="0e3f124a-557b-47b6-9ce0-e7353b8a6943">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_3845587354" Guid="5b6a8511-6a28-458f-874f-827e845e8115">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_3845587354" Source="..\Build\es\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -678,7 +682,7 @@
 
             <Directory Id="INSTALLDIR.fr" Name="fr">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2018742262" Guid="0e3f124a-557b-47b6-9ce0-e735c51cc20d">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2018742262" Guid="5b6a8511-6a28-458f-874f-827e0ef0dadf">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_2018742262" Source="..\Build\fr\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -686,7 +690,7 @@
 
             <Directory Id="INSTALLDIR.hu" Name="hu">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2361722931" Guid="0e3f124a-557b-47b6-9ce0-e7354e4dd527">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2361722931" Guid="5b6a8511-6a28-458f-874f-827e9721edf9">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_2361722931" Source="..\Build\hu\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -694,7 +698,7 @@
 
             <Directory Id="INSTALLDIR.it" Name="it">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1558394218" Guid="0e3f124a-557b-47b6-9ce0-e73524f7d131">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1558394218" Guid="5b6a8511-6a28-458f-874f-827e6dcbe903">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_1558394218" Source="..\Build\it\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -702,7 +706,7 @@
 
             <Directory Id="INSTALLDIR.Properties" Name="Properties">
 
-              <Component Id="Component.INSTALLDIR.Properties.EmptyDirectory" Guid="0e3f124a-557b-47b6-9ce0-e73587184487" KeyPath="yes">
+              <Component Id="Component.INSTALLDIR.Properties.EmptyDirectory" Guid="5b6a8511-6a28-458f-874f-827ed0ec5c59" KeyPath="yes">
                 <CreateFolder />
                 <RemoveFolder Id="INSTALLDIR.Properties" On="uninstall" />
               </Component>
@@ -711,7 +715,7 @@
 
             <Directory Id="INSTALLDIR.pt_BR" Name="pt-BR">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_232010779" Guid="0e3f124a-557b-47b6-9ce0-e735a85307ef">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_232010779" Guid="5b6a8511-6a28-458f-874f-827ef1271fc1">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_232010779" Source="..\Build\pt-BR\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -719,7 +723,7 @@
 
             <Directory Id="INSTALLDIR.ro" Name="ro">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1265967109" Guid="0e3f124a-557b-47b6-9ce0-e735accff29c">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1265967109" Guid="5b6a8511-6a28-458f-874f-827ef5a30a6e">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_1265967109" Source="..\Build\ro\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -727,7 +731,7 @@
 
             <Directory Id="INSTALLDIR.ru" Name="ru">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1422095211" Guid="0e3f124a-557b-47b6-9ce0-e735f35cd085">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1422095211" Guid="5b6a8511-6a28-458f-874f-827e3c30e857">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_1422095211" Source="..\Build\ru\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -735,11 +739,11 @@
 
             <Directory Id="INSTALLDIR.ru_RU" Name="ru-RU">
 
-              <Component Id="Component.Scar.Remembrance.Resources.resources.dll_3397886214" Guid="0e3f124a-557b-47b6-9ce0-e735df3153b4">
+              <Component Id="Component.Scar.Remembrance.Resources.resources.dll_3397886214" Guid="5b6a8511-6a28-458f-874f-827e28056b86">
                 <File Id="Scar.Remembrance.Resources.resources.dll_3397886214" Source="..\Build\ru-RU\Scar.Remembrance.Resources.resources.dll" />
               </Component>
 
-              <Component Id="Component.Scar.Remembrance.View.resources.dll_1079541525" Guid="0e3f124a-557b-47b6-9ce0-e73528a6c941">
+              <Component Id="Component.Scar.Remembrance.View.resources.dll_1079541525" Guid="5b6a8511-6a28-458f-874f-827e717ae113">
                 <File Id="Scar.Remembrance.View.resources.dll_1079541525" Source="..\Build\ru-RU\Scar.Remembrance.View.resources.dll" />
               </Component>
 
@@ -750,7 +754,7 @@
                 <Directory Id="INSTALLDIR.runtimes.freebsd.lib" Name="lib">
                   <Directory Id="INSTALLDIR.runtimes.freebsd.lib.netcoreapp2.0" Name="netcoreapp2.0">
 
-                    <Component Id="Component.System.Data.Odbc.dll_2848721767" Guid="0e3f124a-557b-47b6-9ce0-e7355b9ddb3c">
+                    <Component Id="Component.System.Data.Odbc.dll_2848721767" Guid="5b6a8511-6a28-458f-874f-827ea471f30e">
                       <File Id="System.Data.Odbc.dll_2848721767" Source="..\Build\runtimes\freebsd\lib\netcoreapp2.0\System.Data.Odbc.dll" />
                     </Component>
 
@@ -762,7 +766,7 @@
                 <Directory Id="INSTALLDIR.runtimes.linux.lib" Name="lib">
                   <Directory Id="INSTALLDIR.runtimes.linux.lib.netcoreapp2.0" Name="netcoreapp2.0">
 
-                    <Component Id="Component.System.Data.Odbc.dll_419005390" Guid="0e3f124a-557b-47b6-9ce0-e735249c88e7">
+                    <Component Id="Component.System.Data.Odbc.dll_419005390" Guid="5b6a8511-6a28-458f-874f-827e6d70a0b9">
                       <File Id="System.Data.Odbc.dll_419005390" Source="..\Build\runtimes\linux\lib\netcoreapp2.0\System.Data.Odbc.dll" />
                     </Component>
 
@@ -770,7 +774,7 @@
 
                   <Directory Id="INSTALLDIR.runtimes.linux.lib.netstandard2.0" Name="netstandard2.0">
 
-                    <Component Id="Component.System.IO.Ports.dll_1568261234" Guid="0e3f124a-557b-47b6-9ce0-e735b74fda2b">
+                    <Component Id="Component.System.IO.Ports.dll_1568261234" Guid="5b6a8511-6a28-458f-874f-827e0023f2fd">
                       <File Id="System.IO.Ports.dll_1568261234" Source="..\Build\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll" />
                     </Component>
 
@@ -781,7 +785,7 @@
               <Directory Id="INSTALLDIR.runtimes.linux_arm" Name="linux-arm">
                 <Directory Id="INSTALLDIR.runtimes.linux_arm.native" Name="native">
 
-                  <Component Id="Component.System.IO.Ports.Native.so_951831196" Guid="0e3f124a-557b-47b6-9ce0-e735311d735e">
+                  <Component Id="Component.System.IO.Ports.Native.so_951831196" Guid="5b6a8511-6a28-458f-874f-827e7af18b30">
                     <File Id="System.IO.Ports.Native.so_951831196" Source="..\Build\runtimes\linux-arm\native\System.IO.Ports.Native.so" />
                   </Component>
 
@@ -791,7 +795,7 @@
               <Directory Id="INSTALLDIR.runtimes.linux_arm64" Name="linux-arm64">
                 <Directory Id="INSTALLDIR.runtimes.linux_arm64.native" Name="native">
 
-                  <Component Id="Component.System.IO.Ports.Native.so_1892136079" Guid="0e3f124a-557b-47b6-9ce0-e735387315fe">
+                  <Component Id="Component.System.IO.Ports.Native.so_1892136079" Guid="5b6a8511-6a28-458f-874f-827e81472dd0">
                     <File Id="System.IO.Ports.Native.so_1892136079" Source="..\Build\runtimes\linux-arm64\native\System.IO.Ports.Native.so" />
                   </Component>
 
@@ -801,7 +805,7 @@
               <Directory Id="INSTALLDIR.runtimes.linux_x64" Name="linux-x64">
                 <Directory Id="INSTALLDIR.runtimes.linux_x64.native" Name="native">
 
-                  <Component Id="Component.System.IO.Ports.Native.so_3889492481" Guid="0e3f124a-557b-47b6-9ce0-e735060ba7cd">
+                  <Component Id="Component.System.IO.Ports.Native.so_3889492481" Guid="5b6a8511-6a28-458f-874f-827e4fdfbf9f">
                     <File Id="System.IO.Ports.Native.so_3889492481" Source="..\Build\runtimes\linux-x64\native\System.IO.Ports.Native.so" />
                   </Component>
 
@@ -812,7 +816,7 @@
                 <Directory Id="INSTALLDIR.runtimes.osx.lib" Name="lib">
                   <Directory Id="INSTALLDIR.runtimes.osx.lib.netcoreapp2.0" Name="netcoreapp2.0">
 
-                    <Component Id="Component.System.Data.Odbc.dll_2834786236" Guid="0e3f124a-557b-47b6-9ce0-e735c965ae8a">
+                    <Component Id="Component.System.Data.Odbc.dll_2834786236" Guid="5b6a8511-6a28-458f-874f-827e1239c65c">
                       <File Id="System.Data.Odbc.dll_2834786236" Source="..\Build\runtimes\osx\lib\netcoreapp2.0\System.Data.Odbc.dll" />
                     </Component>
 
@@ -820,7 +824,7 @@
 
                   <Directory Id="INSTALLDIR.runtimes.osx.lib.netstandard2.0" Name="netstandard2.0">
 
-                    <Component Id="Component.System.IO.Ports.dll_1395972581" Guid="0e3f124a-557b-47b6-9ce0-e7350625d02b">
+                    <Component Id="Component.System.IO.Ports.dll_1395972581" Guid="5b6a8511-6a28-458f-874f-827e4ff9e8fd">
                       <File Id="System.IO.Ports.dll_1395972581" Source="..\Build\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll" />
                     </Component>
 
@@ -831,7 +835,7 @@
               <Directory Id="INSTALLDIR.runtimes.osx_x64" Name="osx-x64">
                 <Directory Id="INSTALLDIR.runtimes.osx_x64.native" Name="native">
 
-                  <Component Id="Component.System.IO.Ports.Native.dylib_1537472339" Guid="0e3f124a-557b-47b6-9ce0-e735ce674ff4">
+                  <Component Id="Component.System.IO.Ports.Native.dylib_1537472339" Guid="5b6a8511-6a28-458f-874f-827e173b67c6">
                     <File Id="System.IO.Ports.Native.dylib_1537472339" Source="..\Build\runtimes\osx-x64\native\System.IO.Ports.Native.dylib" />
                   </Component>
 
@@ -842,7 +846,7 @@
                 <Directory Id="INSTALLDIR.runtimes.unix.lib" Name="lib">
                   <Directory Id="INSTALLDIR.runtimes.unix.lib.netcoreapp2.1" Name="netcoreapp2.1">
 
-                    <Component Id="Component.System.Data.SqlClient.dll_1220466044" Guid="0e3f124a-557b-47b6-9ce0-e73587161e29">
+                    <Component Id="Component.System.Data.SqlClient.dll_1220466044" Guid="5b6a8511-6a28-458f-874f-827ed0ea36fb">
                       <File Id="System.Data.SqlClient.dll_1220466044" Source="..\Build\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll" />
                     </Component>
 
@@ -854,19 +858,19 @@
                 <Directory Id="INSTALLDIR.runtimes.win.lib" Name="lib">
                   <Directory Id="INSTALLDIR.runtimes.win.lib.netcoreapp2.0" Name="netcoreapp2.0">
 
-                    <Component Id="Component.System.Data.Odbc.dll_3907390518" Guid="0e3f124a-557b-47b6-9ce0-e73517cb01ee">
+                    <Component Id="Component.System.Data.Odbc.dll_3907390518" Guid="5b6a8511-6a28-458f-874f-827e609f19c0">
                       <File Id="System.Data.Odbc.dll_3907390518" Source="..\Build\runtimes\win\lib\netcoreapp2.0\System.Data.Odbc.dll" />
                     </Component>
 
-                    <Component Id="Component.System.DirectoryServices.AccountManagement.dll_4037345235" Guid="0e3f124a-557b-47b6-9ce0-e7358bf2a773">
+                    <Component Id="Component.System.DirectoryServices.AccountManagement.dll_4037345235" Guid="5b6a8511-6a28-458f-874f-827ed4c6bf45">
                       <File Id="System.DirectoryServices.AccountManagement.dll_4037345235" Source="..\Build\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.AccountManagement.dll" />
                     </Component>
 
-                    <Component Id="Component.System.DirectoryServices.Protocols.dll_1883508694" Guid="0e3f124a-557b-47b6-9ce0-e735ba3819f6">
+                    <Component Id="Component.System.DirectoryServices.Protocols.dll_1883508694" Guid="5b6a8511-6a28-458f-874f-827e030c31c8">
                       <File Id="System.DirectoryServices.Protocols.dll_1883508694" Source="..\Build\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll" />
                     </Component>
 
-                    <Component Id="Component.System.Management.dll_1262331677" Guid="0e3f124a-557b-47b6-9ce0-e735603768fa">
+                    <Component Id="Component.System.Management.dll_1262331677" Guid="5b6a8511-6a28-458f-874f-827ea90b80cc">
                       <File Id="System.Management.dll_1262331677" Source="..\Build\runtimes\win\lib\netcoreapp2.0\System.Management.dll" />
                     </Component>
 
@@ -874,7 +878,7 @@
 
                   <Directory Id="INSTALLDIR.runtimes.win.lib.netcoreapp2.1" Name="netcoreapp2.1">
 
-                    <Component Id="Component.System.Data.SqlClient.dll_3481771385" Guid="0e3f124a-557b-47b6-9ce0-e735e9c46b6b">
+                    <Component Id="Component.System.Data.SqlClient.dll_3481771385" Guid="5b6a8511-6a28-458f-874f-827e3298833d">
                       <File Id="System.Data.SqlClient.dll_3481771385" Source="..\Build\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll" />
                     </Component>
 
@@ -882,19 +886,19 @@
 
                   <Directory Id="INSTALLDIR.runtimes.win.lib.netstandard2.0" Name="netstandard2.0">
 
-                    <Component Id="Component.System.Data.OleDb.dll_1717873381" Guid="0e3f124a-557b-47b6-9ce0-e7354dbe9e8e">
+                    <Component Id="Component.System.Data.OleDb.dll_1717873381" Guid="5b6a8511-6a28-458f-874f-827e9692b660">
                       <File Id="System.Data.OleDb.dll_1717873381" Source="..\Build\runtimes\win\lib\netstandard2.0\System.Data.OleDb.dll" />
                     </Component>
 
-                    <Component Id="Component.System.IO.Ports.dll_2991924040" Guid="0e3f124a-557b-47b6-9ce0-e735d6b54fcc">
+                    <Component Id="Component.System.IO.Ports.dll_2991924040" Guid="5b6a8511-6a28-458f-874f-827e1f89679e">
                       <File Id="System.IO.Ports.dll_2991924040" Source="..\Build\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll" />
                     </Component>
 
-                    <Component Id="Component.System.Runtime.Caching.dll_3396951206" Guid="0e3f124a-557b-47b6-9ce0-e735aad44a79">
+                    <Component Id="Component.System.Runtime.Caching.dll_3396951206" Guid="5b6a8511-6a28-458f-874f-827ef3a8624b">
                       <File Id="System.Runtime.Caching.dll_3396951206" Source="..\Build\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll" />
                     </Component>
 
-                    <Component Id="Component.System.ServiceProcess.ServiceController.dll_387453250" Guid="0e3f124a-557b-47b6-9ce0-e735fe442001">
+                    <Component Id="Component.System.ServiceProcess.ServiceController.dll_387453250" Guid="5b6a8511-6a28-458f-874f-827e471838d3">
                       <File Id="System.ServiceProcess.ServiceController.dll_387453250" Source="..\Build\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll" />
                     </Component>
 
@@ -905,7 +909,7 @@
               <Directory Id="INSTALLDIR.runtimes.win_arm64" Name="win-arm64">
                 <Directory Id="INSTALLDIR.runtimes.win_arm64.native" Name="native">
 
-                  <Component Id="Component.sni.dll_2712501699" Guid="0e3f124a-557b-47b6-9ce0-e7354f6664f8">
+                  <Component Id="Component.sni.dll_2712501699" Guid="5b6a8511-6a28-458f-874f-827e983a7cca">
                     <File Id="sni.dll_2712501699" Source="..\Build\runtimes\win-arm64\native\sni.dll" />
                   </Component>
 
@@ -915,7 +919,7 @@
               <Directory Id="INSTALLDIR.runtimes.win_x64" Name="win-x64">
                 <Directory Id="INSTALLDIR.runtimes.win_x64.native" Name="native">
 
-                  <Component Id="Component.sni.dll_1275336326" Guid="0e3f124a-557b-47b6-9ce0-e735b6db148b">
+                  <Component Id="Component.sni.dll_1275336326" Guid="5b6a8511-6a28-458f-874f-827effaf2c5d">
                     <File Id="sni.dll_1275336326" Source="..\Build\runtimes\win-x64\native\sni.dll" />
                   </Component>
 
@@ -925,7 +929,7 @@
               <Directory Id="INSTALLDIR.runtimes.win_x86" Name="win-x86">
                 <Directory Id="INSTALLDIR.runtimes.win_x86.native" Name="native">
 
-                  <Component Id="Component.sni.dll_749520198" Guid="0e3f124a-557b-47b6-9ce0-e735b172b479">
+                  <Component Id="Component.sni.dll_749520198" Guid="5b6a8511-6a28-458f-874f-827efa46cc4b">
                     <File Id="sni.dll_749520198" Source="..\Build\runtimes\win-x86\native\sni.dll" />
                   </Component>
 
@@ -935,7 +939,7 @@
 
             <Directory Id="INSTALLDIR.sv" Name="sv">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_3579322822" Guid="0e3f124a-557b-47b6-9ce0-e735ad76c77d">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_3579322822" Guid="5b6a8511-6a28-458f-874f-827ef64adf4f">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_3579322822" Source="..\Build\sv\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
@@ -943,21 +947,21 @@
 
             <Directory Id="INSTALLDIR.zh_Hans" Name="zh-Hans">
 
-              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_4229198616" Guid="0e3f124a-557b-47b6-9ce0-e7354fe80299">
+              <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_4229198616" Guid="5b6a8511-6a28-458f-874f-827e98bc1a6b">
                 <File Id="Xceed.Wpf.AvalonDock.resources.dll_4229198616" Source="..\Build\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll" />
               </Component>
 
             </Directory>
           </Directory>
 
-          <Component Id="ProgramFilesFolder.Scar" Guid="0e3f124a-557b-47b6-9ce0-e7358163c2cd" KeyPath="yes">
+          <Component Id="ProgramFilesFolder.Scar" Guid="5b6a8511-6a28-458f-874f-827eca37da9f" KeyPath="yes">
             <CreateFolder />
             <RemoveFolder Id="ProgramFilesFolder.Scar" On="uninstall" />
           </Component>
 
         </Directory>
 
-        <Component Id="Registry.1" Guid="0e3f124a-557b-47b6-9ce0-e73527aacdfc" KeyPath="yes">
+        <Component Id="Registry.1" Guid="5b6a8511-6a28-458f-874f-827e707ee5ce" KeyPath="yes">
           <RegistryKey Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Run">
             <RegistryValue Id="RemembranceAutostart" Type="string" KeyPath="no" Value="[INSTALLDIR]Remembrance.exe" Name="Remembrance" />
           </RegistryKey>
@@ -971,7 +975,7 @@
       <Directory Id="ProgramMenuFolder" Name="ProgramMenuFolder">
         <Directory Id="ProgramMenuFolder.Remembrance" Name="Remembrance">
 
-          <Component Id="Component.Uninstall_Remembrance.1" Guid="0e3f124a-557b-47b6-9ce0-e73560deed24">
+          <Component Id="Component.Uninstall_Remembrance.1" Guid="5b6a8511-6a28-458f-874f-827ea9b205f6">
             <Shortcut Id="ProgramMenuFolder.Remembrance.Uninstall_Remembrance.1" WorkingDirectory="System64Folder" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]" Name="Uninstall Remembrance.lnk" />
 
             <CreateFolder />
@@ -982,7 +986,7 @@
             </RegistryKey>
           </Component>
 
-          <Component Id="Component.Remembrance__" Guid="0e3f124a-557b-47b6-9ce0-e735f2e52a15">
+          <Component Id="Component.Remembrance__" Guid="5b6a8511-6a28-458f-874f-827e3bb942e7">
             <Shortcut Id="ProgramMenuFolder.Remembrance.Remembrance__" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
             <CreateFolder />
@@ -997,7 +1001,7 @@
 
       <Directory Id="DesktopFolder" Name="DesktopFolder">
 
-        <Component Id="Component.Remembrance.1" Guid="0e3f124a-557b-47b6-9ce0-e735b75d363b">
+        <Component Id="Component.Remembrance.1" Guid="5b6a8511-6a28-458f-874f-827e00314e0d">
           <Shortcut Id="DesktopFolder.Remembrance.1" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]Remembrance.exe" Name="Remembrance.lnk" />
 
           <CreateFolder />
@@ -1009,7 +1013,7 @@
 
       </Directory>
 
-      <Component Id="TARGETDIR" Guid="0e3f124a-557b-47b6-9ce0-e7359d5d6ff0" KeyPath="yes">
+      <Component Id="TARGETDIR" Guid="5b6a8511-6a28-458f-874f-827ee63187c2" KeyPath="yes">
         <CreateFolder />
         <RemoveFolder Id="TARGETDIR" On="uninstall" />
       </Component>
@@ -1142,6 +1146,7 @@
       <ComponentRef Id="Component.Scar.Common.WPF.Controls.XceedAutoFitColumnGrid.dll_4126433733" />
       <ComponentRef Id="Component.Scar.Common.WPF.Converters.dll_857263327" />
       <ComponentRef Id="Component.Scar.Common.WPF.Localization.dll_2166138592" />
+      <ComponentRef Id="Component.Scar.Common.WPF.Screen.dll_442485209" />
       <ComponentRef Id="Component.Scar.Common.WPF.Startup.dll_1150588371" />
       <ComponentRef Id="Component.Scar.Common.WPF.View.AnimatedWindow.dll_419884835" />
       <ComponentRef Id="Component.Scar.Common.WPF.View.BaseWindow.dll_3428546997" />

@@ -34,7 +34,7 @@ namespace Remembrance.Core.Sync
 
             foreach (var repository in cloneableRepositories)
             {
-                repository.Changed += Repository_Changed;
+                repository.Changed += Repository_ChangedAsync;
             }
         }
 
@@ -42,15 +42,15 @@ namespace Remembrance.Core.Sync
         {
             foreach (var repository in _cloneableRepositoriesWithRateLimiters.Keys)
             {
-                repository.Changed -= Repository_Changed;
+                repository.Changed -= Repository_ChangedAsync;
             }
         }
 
-        void Repository_Changed(object sender, EventArgs e)
+        async void Repository_ChangedAsync(object sender, EventArgs e)
         {
             var repository = (ISharedRepository)sender;
             var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];
-            rateLimiter.Throttle(
+            await rateLimiter.ThrottleAsync(
                 TimeSpan.FromSeconds(5),
                 () =>
                 {
@@ -88,9 +88,9 @@ namespace Remembrance.Core.Sync
                     catch (IOException ex)
                     {
                         _logger.LogWarning(ex, "Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
-                        Repository_Changed(sender, e);
+                        Repository_ChangedAsync(sender, e);
                     }
-                });
+                }).ConfigureAwait(true);
         }
     }
 }
