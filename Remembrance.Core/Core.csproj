@@ -10,12 +10,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7421.20137" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7421.20137" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7421.20137" />
-    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7421.20137" />
-    <PackageReference Include="Scar.Common.Sync" Version="1.1.7421.20137" />
-    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7421.20137" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7422.29078" />
+    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7422.29073" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7422.29078" />
+    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7422.29074" />
+    <PackageReference Include="Scar.Common.Sync" Version="1.1.7422.29075" />
+    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7422.29108" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
