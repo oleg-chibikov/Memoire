@@ -14,7 +14,7 @@ namespace Remembrance.Core.Classification
 {
     sealed class LearningInfoCategoriesUpdater : ILearningInfoCategoriesUpdater
     {
-        const decimal MinMatchThreshold = 0.15M;
+        const decimal MinMatchThreshold = 0.11M;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly IClassificationClient _classificationClient;
 

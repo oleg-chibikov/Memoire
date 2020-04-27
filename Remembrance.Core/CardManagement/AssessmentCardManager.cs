@@ -144,6 +144,7 @@ namespace Remembrance.Core.CardManagement
 
         async void HandleIntervalHitAsync(long x)
         {
+            _pauseManager.PauseActivity(PauseReasons.CardIsVisible);
             Trace.CorrelationManager.ActivityId = Guid.NewGuid();
             _logger.LogTrace("Trying to show next card...");
 
