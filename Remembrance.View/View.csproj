@@ -21,7 +21,7 @@
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7421.19800" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7421.19799" />
     <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7421.19798" />
-    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7421.38137" />
+    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7422.21129" />
   </ItemGroup>
 
   <ItemGroup>

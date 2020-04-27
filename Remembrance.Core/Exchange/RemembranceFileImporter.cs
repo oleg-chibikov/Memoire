@@ -32,9 +32,9 @@ namespace Remembrance.Core.Exchange
             return exchangeEntry.TranslationEntry.PriorityWords?.ToArray();
         }
 
-        protected override async Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
+        protected override Task<TranslationEntryKey> GetTranslationEntryKeyAsync(RemembranceExchangeEntry exchangeEntry, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(exchangeEntry.TranslationEntry.Id).ConfigureAwait(false);
+            return Task.FromResult(exchangeEntry.TranslationEntry.Id);
         }
 
         protected override bool UpdateLearningInfo(RemembranceExchangeEntry exchangeEntry, LearningInfo learningInfo)
