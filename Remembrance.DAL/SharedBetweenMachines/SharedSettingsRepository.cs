@@ -39,6 +39,12 @@ namespace Remembrance.DAL.SharedBetweenMachines
             set => RemoveUpdateOrInsert(nameof(SolveQwantCaptcha), value);
         }
 
+        public bool MuteSounds
+        {
+            get => TryGetValue<bool>(nameof(MuteSounds));
+            set => RemoveUpdateOrInsert(nameof(MuteSounds), value);
+        }
+
         public VoiceEmotion TtsVoiceEmotion
         {
             get => TryGetValue<VoiceEmotion>(nameof(TtsVoiceEmotion));

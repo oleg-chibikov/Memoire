@@ -15,6 +15,8 @@ namespace Remembrance.Contracts.DAL.SharedBetweenMachines
 
         bool SolveQwantCaptcha { get; set; }
 
+        bool MuteSounds { get; set; }
+
         VoiceEmotion TtsVoiceEmotion { get; set; }
 
         int CardsToShowAtOnce { get; set; }

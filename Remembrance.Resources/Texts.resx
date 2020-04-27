@@ -372,4 +372,7 @@
   <data name="CardsToShowAtOnce" xml:space="preserve">
     <value>Cards to show at once</value>
   </data>
+  <data name="MuteSounds" xml:space="preserve">
+    <value>Mute sounds</value>
+  </data>
 </root>

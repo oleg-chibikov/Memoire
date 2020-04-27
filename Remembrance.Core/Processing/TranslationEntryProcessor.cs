@@ -45,6 +45,7 @@ namespace Remembrance.Core.Processing
         readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
         readonly IWordsTranslator _wordsTranslator;
         readonly ILocalSettingsRepository _localSettingsRepository;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
         readonly ILearningInfoCategoriesUpdater _learningInfoCategoriesUpdater;
 
         public TranslationEntryProcessor(
@@ -65,7 +66,8 @@ namespace Remembrance.Core.Processing
             SynchronizationContext synchronizationContext,
             ICultureManager cultureManager,
             ILocalSettingsRepository localSettingsRepository,
-            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater)
+            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater,
+            ISharedSettingsRepository sharedSettingsRepository)
         {
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
@@ -78,6 +80,7 @@ namespace Remembrance.Core.Processing
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _learningInfoCategoriesUpdater = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
@@ -331,7 +334,7 @@ namespace Remembrance.Core.Processing
 
         async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
-            var playTtsTask = _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken);
+            var playTtsTask = !_sharedSettingsRepository.MuteSounds ? _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken) : Task.CompletedTask;
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
             _messageHub.Publish(translationInfo.TranslationEntry);
             await Task.WhenAll(playTtsTask, showCardTask).ConfigureAwait(false);

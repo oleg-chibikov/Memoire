@@ -439,6 +439,15 @@ namespace Remembrance.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mute sounds.
+        /// </summary>
+        public static string MuteSounds {
+            get {
+                return ResourceManager.GetString("MuteSounds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next show.
         /// </summary>
         public static string NextCardShowTime {

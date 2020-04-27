@@ -98,6 +98,7 @@ namespace Remembrance.ViewModel
             TtsVoiceEmotion = _sharedSettingsRepository.TtsVoiceEmotion;
             CardShowFrequency = _sharedSettingsRepository.CardShowFrequency.TotalMinutes;
             SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
+            MuteSounds = _sharedSettingsRepository.MuteSounds;
             CardsToShowAtOnce = _sharedSettingsRepository.CardsToShowAtOnce;
             UiLanguage = _uiLanguage = _localSettingsRepository.UiLanguage;
             SyncEngine = _localSettingsRepository.SyncEngine;
@@ -128,6 +129,8 @@ namespace Remembrance.ViewModel
         public double CardShowFrequency { get; set; }
 
         public bool SolveQwantCaptcha { get; set; }
+
+        public bool MuteSounds { get; set; }
 
         public ICommand ExportCommand { get; }
 
@@ -245,6 +248,11 @@ namespace Remembrance.ViewModel
             if (_sharedSettingsRepository.SolveQwantCaptcha != SolveQwantCaptcha)
             {
                 _sharedSettingsRepository.SolveQwantCaptcha = SolveQwantCaptcha;
+            }
+
+            if (_sharedSettingsRepository.MuteSounds != MuteSounds)
+            {
+                _sharedSettingsRepository.MuteSounds = MuteSounds;
             }
 
             if (_sharedSettingsRepository.CardsToShowAtOnce != CardsToShowAtOnce)

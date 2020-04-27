@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
     xmlns:controls="clr-namespace:Remembrance.View.Controls"
@@ -13,7 +14,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:numericUpDown="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.NumericUpDown"
     xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
-    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     Width="700"
     d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -58,6 +58,7 @@
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 commonView:MarginSetter.Orientation="Vertical">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -197,21 +198,29 @@
                 <TextBlock
                     Grid.Row="6"
                     Grid.Column="0"
-                    Text="{lex:Loc SolveQwantCaptcha}" />
+                    Text="{lex:Loc MuteSounds}" />
                 <CheckBox
                     Grid.Row="6"
                     Grid.Column="1"
-                    IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
+                    IsChecked="{Binding MuteSounds, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="7"
                     Grid.Column="0"
+                    Text="{lex:Loc SolveQwantCaptcha}" />
+                <CheckBox
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    IsChecked="{Binding SolveQwantCaptcha, Mode=TwoWay}" />
+                <TextBlock
+                    Grid.Row="8"
+                    Grid.Column="0"
                     Text="{lex:Loc ProcessesBlacklist}" />
                 <controls:ProcessesBlacklistControl
-                    Grid.Row="7"
+                    Grid.Row="8"
                     Grid.Column="1"
                     DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
                 <StackPanel
-                    Grid.Row="8"
+                    Grid.Row="9"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}"

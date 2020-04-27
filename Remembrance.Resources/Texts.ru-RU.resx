@@ -372,4 +372,7 @@
   <data name="CardsToShowAtOnce" xml:space="preserve">
     <value>Показывать карточек за раз</value>
   </data>
+  <data name="MuteSounds" xml:space="preserve">
+    <value>Не озвучивать переводы</value>
+  </data>
 </root>
