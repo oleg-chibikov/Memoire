@@ -6,12 +6,13 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Scar.NugetCopier/1.1.7421.35491": {
+      "Scar.NugetCopier/1.1.7422.22958": {
         "dependencies": {
           "Microsoft.CodeQuality.Analyzers": "2.9.8",
           "Microsoft.NetCore.Analyzers": "2.9.8",
           "Microsoft.NetFramework.Analyzers": "2.9.8",
-          "Scar.CodeAnalysis": "1.0.7421.35153",
+          "Scar.CodeAnalysis": "1.0.7422.15495",
+          "Scar.Common": "1.1.7421.36987",
           "StyleCop.Analyzers": "1.1.118",
           "WTG.Analyzers": "2.10.0"
         },
@@ -127,9 +128,20 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
-      "Scar.CodeAnalysis/1.0.7421.35153": {
+      "Scar.CodeAnalysis/1.0.7422.15495": {
         "dependencies": {
           "NETStandard.Library": "1.6.1"
+        }
+      },
+      "Scar.Common/1.1.7421.36987": {
+        "dependencies": {
+          "Scar.CodeAnalysis": "1.0.7422.15495"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Scar.Common.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "StyleCop.Analyzers/1.1.118": {},
@@ -698,7 +710,7 @@
     }
   },
   "libraries": {
-    "Scar.NugetCopier/1.1.7421.35491": {
+    "Scar.NugetCopier/1.1.7422.22958": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -864,12 +876,19 @@
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.0",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512"
     },
-    "Scar.CodeAnalysis/1.0.7421.35153": {
+    "Scar.CodeAnalysis/1.0.7422.15495": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-WGlwk8rAfmjkV75GZyI1MP6HT7E4NVAOg8rzBP8v64Hg+31YTpLcPfN1cqXlud39kpeShf/u4+7gfm3rKTHtAg==",
-      "path": "scar.codeanalysis/1.0.7421.35153",
-      "hashPath": "scar.codeanalysis.1.0.7421.35153.nupkg.sha512"
+      "sha512": "sha512-zVTJ/YJRl0eSGmy7CRUwxZy/eorBXwboG3RM5nrLp+afzj2Z6ZIiv1DVXlj2XTx5aFLZIcvzh2l2wy5MDdH1bA==",
+      "path": "scar.codeanalysis/1.0.7422.15495",
+      "hashPath": "scar.codeanalysis.1.0.7422.15495.nupkg.sha512"
+    },
+    "Scar.Common/1.1.7421.36987": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-J185YJQ/zo874MenlZ9jMj6idWepfynK7pe2DdVcN5eH1upRmGERRrBodpXVdhPuXc4/A7lZEY45IQGc71P4lA==",
+      "path": "scar.common/1.1.7421.36987",
+      "hashPath": "scar.common.1.1.7421.36987.nupkg.sha512"
     },
     "StyleCop.Analyzers/1.1.118": {
       "type": "package",
