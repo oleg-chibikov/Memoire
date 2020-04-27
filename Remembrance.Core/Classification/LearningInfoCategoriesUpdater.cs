@@ -14,7 +14,7 @@ namespace Remembrance.Core.Classification
 {
     sealed class LearningInfoCategoriesUpdater : ILearningInfoCategoriesUpdater
     {
-        const decimal MinMatchThreshold = 0.3M;
+        const decimal MinMatchThreshold = 0.15M;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly IClassificationClient _classificationClient;
 
@@ -28,20 +28,16 @@ namespace Remembrance.Core.Classification
         {
             // This will replace old categories if min threshold changes
             if (translationInfo.LearningInfo.ClassificationCategories == null ||
-                translationInfo.LearningInfo.ClassificationCategories.Items.Count == 0 ||
                 translationInfo.LearningInfo.ClassificationCategories.MinMatchThreshold != MinMatchThreshold)
             {
                 var classificationCategories = await GetClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
-                if (classificationCategories.Count > 0)
-                {
-                    translationInfo.LearningInfo.ClassificationCategories = new LearningInfoClassificationCategories { Items = classificationCategories, MinMatchThreshold = MinMatchThreshold };
-                }
+                translationInfo.LearningInfo.ClassificationCategories = new LearningInfoClassificationCategories { Items = classificationCategories, MinMatchThreshold = MinMatchThreshold };
 
                 _learningInfoRepository.Update(translationInfo.LearningInfo);
                 return classificationCategories;
             }
 
-            return Array.Empty<ClassificationCategory>();
+            return translationInfo.LearningInfo.ClassificationCategories?.Items ?? Array.Empty<ClassificationCategory>();
         }
 
         async Task<IReadOnlyCollection<ClassificationCategory>> GetClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
@@ -76,7 +72,7 @@ namespace Remembrance.Core.Classification
                 var limitedCategories = classificationCategories.Where(x => x.Match >= MinMatchThreshold);
                 var tasks = limitedCategories.Select(category => GetInnerCategoriesAsync(category, text, cancellationToken));
                 var results = await Task.WhenAll(tasks).ConfigureAwait(false);
-                return results.SelectMany(x => x).ToArray();
+                return results.SelectMany(x => x).OrderByDescending(x => x.Match).ToArray();
             }
 
             return Array.Empty<ClassificationCategory>();
