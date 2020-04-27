@@ -18,11 +18,12 @@ namespace Remembrance.Core.Translation.Yandex
 {
     sealed class TextToSpeechPlayer : ITextToSpeechPlayer, IDisposable
     {
+        public const string BaseAddress = "https://tts.voicetech.yandex.net/";
         const string ApiKey = "e07b8971-5fcd-477a-b141-c8620e7f06eb";
 
         static readonly Regex CyrillicRegex = new Regex("[а-яА-ЯёЁ]+", RegexOptions.Compiled);
 
-        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://tts.voicetech.yandex.net/") };
+        readonly HttpClient _httpClient;
 
         readonly ILogger _logger;
 
@@ -30,11 +31,12 @@ namespace Remembrance.Core.Translation.Yandex
 
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public TextToSpeechPlayer(ILogger<TextToSpeechPlayer> logger, ISharedSettingsRepository sharedSettingsRepository, IMessageHub messageHub)
+        public TextToSpeechPlayer(ILogger<TextToSpeechPlayer> logger, ISharedSettingsRepository sharedSettingsRepository, IMessageHub messageHub, HttpClient httpClient)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _httpClient = httpClient;
         }
 
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "General exception handler")]
@@ -62,6 +64,8 @@ namespace Remembrance.Core.Translation.Yandex
                 // Thread should be alive while playback is not stopped
                 void PlaybackStoppedHandler(object s, StoppedEventArgs e)
                 {
+                    _ = reset ?? throw new InvalidOperationException("Reset is null");
+
                     ((WaveOutEvent)s).PlaybackStopped -= PlaybackStoppedHandler;
                     reset.Set();
                 }

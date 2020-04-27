@@ -13,19 +13,21 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class LanguageDetector : ILanguageDetector, IDisposable
+    sealed class LanguageDetector : ILanguageDetector
     {
+        public const string BaseAddress = "https://translate.yandex.net/api/v1.5/tr.json/";
         static readonly JsonSerializerSettings ListResultSettings = new JsonSerializerSettings { ContractResolver = new ListResultContractResolver() };
 
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new DetectionResultContractResolver() };
 
-        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/") };
+        readonly HttpClient _httpClient;
 
         readonly IMessageHub _messageHub;
 
-        public LanguageDetector(IMessageHub messageHub)
+        public LanguageDetector(IMessageHub messageHub, HttpClient httpClient)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<DetectionResult> DetectLanguageAsync(string text, CancellationToken cancellationToken)
@@ -76,11 +78,6 @@ namespace Remembrance.Core.Translation.Yandex
                 _messageHub.Publish(Errors.CannotListLanguages.ToError(ex));
                 return null;
             }
-        }
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
         }
     }
 }

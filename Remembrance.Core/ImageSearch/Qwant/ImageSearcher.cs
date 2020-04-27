@@ -18,15 +18,14 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.ImageSearch.Qwant
 {
-    sealed class ImageSearcher : IImageSearcher, IDisposable
+    sealed class ImageSearcher : IImageSearcher
     {
+        public const string BaseAddress = "https://api.qwant.com/api/search/";
+        public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
+
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new ImageSearchResultContractResolver() };
 
-        readonly HttpClient _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://api.qwant.com/api/search/"),
-            DefaultRequestHeaders = { { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36" } }
-        };
+        readonly HttpClient _httpClient;
 
         readonly ILogger _logger;
 
@@ -36,11 +35,12 @@ namespace Remembrance.Core.ImageSearch.Qwant
 
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public ImageSearcher(ILogger<ImageSearcher> logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISharedSettingsRepository sharedSettingsRepository)
+        public ImageSearcher(ILogger<ImageSearcher> logger, IMessageHub messageHub, IRateLimiter rateLimiter, ISharedSettingsRepository sharedSettingsRepository, HttpClient httpClient)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -86,11 +86,6 @@ namespace Remembrance.Core.ImageSearch.Qwant
                 _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex));
                 return null;
             }
-        }
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
         }
     }
 }

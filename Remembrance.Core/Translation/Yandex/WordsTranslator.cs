@@ -13,20 +13,22 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class WordsTranslator : IWordsTranslator, IDisposable
+    sealed class WordsTranslator : IWordsTranslator
     {
+        public const string BaseAddress = "https://dictionary.yandex.net/dicservice.json/";
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new TranslationResultContractResolver() };
 
         /// <summary>
         /// See https://tech.yandex.ru/dictionary/doc/dg/reference/lookup-docpage/.
         /// </summary>
-        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://dictionary.yandex.net/dicservice.json/") };
+        readonly HttpClient _httpClient;
 
         readonly IMessageHub _messageHub;
 
-        public WordsTranslator(IMessageHub messageHub)
+        public WordsTranslator(IMessageHub messageHub, HttpClient httpClient)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<TranslationResult?> GetTranslationAsync(string sourceLanguage, string targetLanguage, string text, string ui, CancellationToken cancellationToken)
@@ -54,62 +56,6 @@ namespace Remembrance.Core.Translation.Yandex
                 _messageHub.Publish(string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, text + $" [{sourceLanguage}->{targetLanguage}]").ToError(ex));
                 return null;
             }
-        }
-
-        /*
-        readonly HttpClient translateClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://translate.yandex.net/api/v1.5/tr.json/")
-        };
-
-        public async Task<TranslationResult> GetTranslationAsync(string from, string to, string text, string ui)
-        {
-            var dictionaryTask = GetDictionaryResultAsync(from, to, text, ui);
-            var translateTask = GetTranslateResultAsync(from, to, text);
-            await Task.WhenAll(dictionaryTask, translateTask).ConfigureAwait(false);
-            var dictionaryResult = dictionaryTask.Result;
-            var translateResult = translateTask.Result;
-            if (string.IsNullOrWhiteSpace(translateResult) || translateResult == text)
-                translateResult = dictionaryResult?.PartOfSpeechTranslations.FirstOrDefault()?.TranslationVariants.FirstOrDefault()?.Text;
-            if (translateResult == null)
-                return null;
-            if (dictionaryResult == null)
-                dictionaryResult = new TranslationResult { PartOfSpeechTranslations = new PartOfSpeechTranslation[0] };
-            dictionaryResult.Text = translateResult;
-            return dictionaryResult;
-        }
-
-        [NotNull, ItemCanBeNull]
-        async Task<TranslationResult?> GetDictionaryResultAsync(string from, string to, string text, string ui)
-        {
-            var uriPart = $"lookup?srv=tr-text&text={text}&type=&lang={from}-{to}&flags=4&ui={ui}";
-            var response = await dictionaryClient.GetAsync(uriPart).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-                return null;
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TranslationResult>(result, TranslationResultSettings);
-        }
-        class TextEntriesContainer
-        {
-            [NotNull, UsedImplicitly, JsonProperty("text")]
-            // ReSharper disable once NotNullMemberIsNotInitialized
-            public string[] Texts { get; set; }
-        }
-
-        async Task<string?> GetTranslateResultAsync(string from, string to, string text)
-        {
-            var uriPart = $"translate?key={YandexConstants.ApiKey}&lang={from}-{to}&text={text}";
-            var response = await translateClient.GetAsync(uriPart).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-                return null;
-            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<TextEntriesContainer>(result, TranslationResultSettings).Texts.First();
-        }
-        */
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
         }
     }
 }

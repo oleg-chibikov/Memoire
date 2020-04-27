@@ -18,24 +18,22 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Classification
 {
-    sealed class UClassifyTopicsClient : IDisposable, IClassificationClient
+    sealed class UClassifyTopicsClient : IClassificationClient
     {
+        public const string BaseAddress = "https://api.uclassify.com/v1/";
+        public const string Token = "UDZpCiVwonVZ";
         const string UserName = "uclassify";
         const string RootClassifier = "Topics";
-        const string Token = "UDZpCiVwonVZ";
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new UClassifyTopicsResponseContractResolver() };
 
-        readonly HttpClient _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://api.uclassify.com/v1/"),
-            DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Token", Token) }
-        };
+        readonly HttpClient _httpClient;
 
         readonly IMessageHub _messageHub;
 
-        public UClassifyTopicsClient(IMessageHub messageHub)
+        public UClassifyTopicsClient(IMessageHub messageHub, HttpClient httpClient)
         {
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(string text, string? classifier, CancellationToken cancellationToken)
@@ -67,11 +65,6 @@ namespace Remembrance.Core.Classification
             return Array.Empty<ClassificationCategory>();
         }
 
-        public void Dispose()
-        {
-            _httpClient.Dispose();
-        }
-
         static HttpContent CreateHttpContent(object content)
         {
             var ms = new MemoryStream();
@@ -91,6 +84,6 @@ namespace Remembrance.Core.Classification
             jtw.Flush();
         }
 
-        string GetUriPart(string classifier) => UserName + $"/{classifier}/classify";
+        static string GetUriPart(string classifier) => UserName + $"/{classifier}/classify";
     }
 }

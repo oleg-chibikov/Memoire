@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -8,7 +9,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using LiteDB;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog;
 using NLog.Web;
 using Remembrance.Contracts.CardManagement;
 using Remembrance.Contracts.Classification.Data;
@@ -19,7 +22,11 @@ using Remembrance.Contracts.Sync;
 using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Remembrance.Contracts.View.Settings;
 using Remembrance.Core.CardManagement;
+using Remembrance.Core.Classification;
+using Remembrance.Core.ImageSearch;
+using Remembrance.Core.ImageSearch.Qwant;
 using Remembrance.Core.Sync;
+using Remembrance.Core.Translation.Yandex;
 using Remembrance.DAL.SharedBetweenMachines;
 using Remembrance.View.Controls;
 using Remembrance.ViewModel;
@@ -28,6 +35,7 @@ using Remembrance.Windows.Common;
 using Scar.Common;
 using Scar.Common.ApplicationLifetime;
 using Scar.Common.Async;
+using Scar.Common.AutofacHttpClientProvider;
 using Scar.Common.DAL;
 using Scar.Common.DAL.Model;
 using Scar.Common.Messages;
@@ -39,6 +47,7 @@ using Scar.Common.WPF.CollectionView;
 using Scar.Common.WPF.Controls.AutoCompleteTextBox.Provider;
 using Scar.Common.WPF.Localization;
 using Scar.Common.WPF.Startup;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: AssemblyCompany("Scar")]
 [assembly: AssemblyCopyright("Copyright © Scar 2016")]
@@ -53,7 +62,11 @@ namespace Remembrance.Launcher
     {
         public App() : base(
             hostBuilder => ApiHostingHelper.RegisterWebApiHost(hostBuilder, new Uri("http://localhost:2053")).UseNLog(),
-            serviceCollection => ApiHostingHelper.RegisterServices(serviceCollection, typeof(WordsController).Assembly),
+            services =>
+            {
+                services.AddHttpClient();
+                ApiHostingHelper.RegisterServices(services, typeof(WordsController).Assembly);
+            },
             (h, loggingBuilder) =>
             {
                 NLogBuilder.ConfigureNLog("NLog.config");
@@ -90,45 +103,20 @@ namespace Remembrance.Launcher
 
         protected override void OnExit(ExitEventArgs e)
         {
-            NLog.LogManager.Shutdown();
+            LogManager.Shutdown();
             base.OnExit(e);
         }
 
         protected override void RegisterDependencies(ContainerBuilder builder)
         {
-            builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<CultureManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApplicationTerminator>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
-
-            RegisterRepositorySynchronizer<ApplicationSettings, string, ISharedSettingsRepository, SharedSettingsRepository>(builder);
-            RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
-            RegisterRepositorySynchronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository, TranslationEntryRepository>(builder);
-            RegisterRepositorySynchronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository, TranslationEntryDeletionRepository>(builder);
-            RegisterRepositorySynchronizer<WordImageSearchIndex, WordKey, IWordImageSearchIndexRepository, WordImageSearchIndexRepository>(builder);
-
-            builder.RegisterType(typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository, ITranslationEntryDeletionRepository>))
-                .SingleInstance()
-                .AsImplementedInterfaces();
-
-            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(WindowsSyncSoftwarePathsProvider).Assembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly).Where(t => t.Name != "ProcessedByFody")
-                .AsSelf() // For ViewModels
-                .AsImplementedInterfaces() // ForWindowCreators //TODO: Separate assembly
-                .InstancePerDependency();
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
+            RegisterHttpClients(builder);
+            RegisterCustomTypes(builder);
+            RegisterRepositorySynchronizers(builder);
+            RegisterCore(builder);
+            RegisterDAL(builder);
+            RegisterGenericWindowCreators(builder);
+            RegisterViewModels(builder);
+            RegisterView(builder);
         }
 
         protected override void ShowMessage(Message message)
@@ -144,6 +132,86 @@ namespace Remembrance.Launcher
                     window.Restore();
                 },
                 null);
+        }
+
+        static void RegisterCustomTypes(ContainerBuilder builder)
+        {
+            builder.RegisterType<CollectionViewSourceAdapter>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterGeneric(typeof(WindowFactory<>)).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<CultureManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationTerminator>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacScopedWindowProvider>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<AutofacNamedInstancesFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ApplicationCommandManager>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowPositionAdjustmentManager).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(WindowsSyncSoftwarePathsProvider).Assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<CancellationTokenSourceProvider>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RateLimiter>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType(typeof(DeletionEventsSyncExtender<TranslationEntry, TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryRepository, ITranslationEntryDeletionRepository>))
+                .SingleInstance()
+                .AsImplementedInterfaces();
+        }
+
+        static void RegisterView(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
+        }
+
+        static void RegisterViewModels(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)
+                .Where(t => t.Name != "ProcessedByFody")
+                .AsSelf() // For ViewModels
+                .AsImplementedInterfaces() // ForWindowCreators //TODO: Separate assembly
+                .InstancePerDependency();
+        }
+
+        static void RegisterCore(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyTypes(typeof(AssessmentCardManager).Assembly).AsImplementedInterfaces().SingleInstance();
+        }
+
+        static void RegisterDAL(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyTypes(typeof(TranslationEntryRepository).Assembly).AsImplementedInterfaces().SingleInstance();
+        }
+
+        static void RegisterGenericWindowCreators(ContainerBuilder builder)
+        {
+            builder.RegisterType<GenericWindowCreator<IDictionaryWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<ISplashScreenWindow>>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<GenericWindowCreator<IAddTranslationWindow>>().AsImplementedInterfaces().SingleInstance();
+        }
+
+        static void RegisterRepositorySynchronizers(ContainerBuilder builder)
+        {
+            RegisterRepositorySynchronizer<ApplicationSettings, string, ISharedSettingsRepository, SharedSettingsRepository>(builder);
+            RegisterRepositorySynchronizer<LearningInfo, TranslationEntryKey, ILearningInfoRepository, LearningInfoRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntry, TranslationEntryKey, ITranslationEntryRepository, TranslationEntryRepository>(builder);
+            RegisterRepositorySynchronizer<TranslationEntryDeletion, TranslationEntryKey, ITranslationEntryDeletionRepository, TranslationEntryDeletionRepository>(builder);
+            RegisterRepositorySynchronizer<WordImageSearchIndex, WordKey, IWordImageSearchIndexRepository, WordImageSearchIndexRepository>(builder);
+        }
+
+        static void RegisterHttpClients(ContainerBuilder builder)
+        {
+            builder.RegisterHttpClient<WordsTranslator>(WordsTranslator.BaseAddress);
+            builder.RegisterHttpClient<TextToSpeechPlayer>(TextToSpeechPlayer.BaseAddress);
+            builder.RegisterHttpClient<Predictor>(Predictor.BaseAddress);
+            builder.RegisterHttpClient<LanguageDetector>(LanguageDetector.BaseAddress);
+            builder.RegisterHttpClient<UClassifyTopicsClient>(
+                UClassifyTopicsClient.BaseAddress,
+                client =>
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", UClassifyTopicsClient.Token);
+                });
+            builder.RegisterHttpClient<ImageSearcher>(
+                ImageSearcher.BaseAddress,
+                client =>
+                {
+                    client.DefaultRequestHeaders.Add("UserAgent", ImageSearcher.UserAgent);
+                });
+            builder.RegisterHttpClient<ImageDownloader>();
         }
 
         static void RegisterLiteDbCustomTypes()

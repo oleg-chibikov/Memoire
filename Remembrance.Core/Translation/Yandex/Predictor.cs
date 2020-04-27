@@ -12,20 +12,22 @@ using Scar.Common.Messages;
 
 namespace Remembrance.Core.Translation.Yandex
 {
-    sealed class Predictor : IPredictor, IDisposable
+    sealed class Predictor : IPredictor
     {
+        public const string BaseAddress = "https://predictor.yandex.net/api/v1/predict.json/";
         static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { ContractResolver = new PredictionResultContractResolver() };
 
-        readonly HttpClient _httpClient = new HttpClient { BaseAddress = new Uri("https://predictor.yandex.net/api/v1/predict.json/") };
+        readonly HttpClient _httpClient;
 
         readonly ILanguageDetector _languageDetector;
 
         readonly IMessageHub _messageHub;
 
-        public Predictor(ILanguageDetector languageDetector, IMessageHub messageHub)
+        public Predictor(ILanguageDetector languageDetector, IMessageHub messageHub, HttpClient httpClient)
         {
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<PredictionResult?> PredictAsync(string text, int limit, CancellationToken cancellationToken)
@@ -50,11 +52,6 @@ namespace Remembrance.Core.Translation.Yandex
                 _messageHub.Publish(Errors.CannotPredict.ToError(ex));
                 return null;
             }
-        }
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
         }
     }
 }
