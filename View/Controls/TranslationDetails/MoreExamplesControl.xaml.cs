@@ -1,3 +1,5 @@
+using System.Windows.Media;
+
 namespace Mémoire.View.Controls.TranslationDetails
 {
     sealed partial class MoreExamplesControl
@@ -6,5 +8,7 @@ namespace Mémoire.View.Controls.TranslationDetails
         {
             InitializeComponent();
         }
+
+        public Brush? ItemBackground { get; set; }
     }
 }

@@ -10,6 +10,21 @@ namespace Mémoire.View.Converters
     [ValueConversion(typeof(string), typeof(Span))]
     sealed class TextToSpanConverter : IValueConverter
     {
+        static readonly char[] Separators = new[]
+        {
+            '<',
+            '>'
+        };
+
+        readonly double _fontSize;
+        readonly Brush _matchForeground;
+
+        public TextToSpanConverter()
+        {
+            _fontSize = (double)Application.Current.FindResource("BigFontSize");
+            _matchForeground = (Brush)Application.Current.FindResource("MoreExamplesMatchForeground");
+        }
+
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value == null || !(value is string stringValue))
@@ -18,7 +33,7 @@ namespace Mémoire.View.Converters
             }
 
             var isInsideTag = stringValue.StartsWith("<", StringComparison.Ordinal);
-            var parts = stringValue.Split('<', '>');
+            var parts = stringValue.Split(Separators, StringSplitOptions.RemoveEmptyEntries);
             var span = new Span();
 
             foreach (var part in parts)
@@ -26,8 +41,8 @@ namespace Mémoire.View.Converters
                 var run = new Run(part);
                 if (isInsideTag)
                 {
-                    run.FontSize = (double)Application.Current.Resources["BigFontSize"];
-                    run.Foreground = (Brush)Application.Current.Resources["MoreExamplesMatchForeground"];
+                    run.FontSize = _fontSize;
+                    run.Foreground = _matchForeground;
                 }
 
                 isInsideTag = !isInsideTag;

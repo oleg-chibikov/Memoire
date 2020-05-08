@@ -14,10 +14,10 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
-    Background="{StaticResource ClassificationCategoriesBackground}"
-    BorderBrush="{StaticResource Border}"
+    Background="{StaticResource ReverseBackground}"
+    BorderBrush="{StaticResource BorderColor}"
     BorderThickness="1"
-    Foreground="{StaticResource Border}"
+    Foreground="{StaticResource ReverseForeground}"
     ItemsSource="{Binding ClassificationCategories, Mode=OneWay}"
     Visibility="{Binding ClassificationCategories, Mode=OneWay, Converter={StaticResource CollectionToVisibilityConverter}}"
     mc:Ignorable="d">

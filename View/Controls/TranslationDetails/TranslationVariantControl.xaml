@@ -23,7 +23,7 @@
         Margin="0,5"
         Padding="{StaticResource CommonMarginThickness}"
         Background="{StaticResource LighterBackground}"
-        BorderBrush="{StaticResource Border}"
+        BorderBrush="{StaticResource BorderColor}"
         BorderThickness="1"
         CornerRadius="0">
         <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
@@ -48,7 +48,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <translationDetails:MoreExamplesControl DataContext="{Binding ExtendedExamplesViewModel, Mode=OneTime}" />
+            <translationDetails:MoreExamplesControl DataContext="{Binding ExtendedExamplesViewModel, Mode=OneTime}" ItemBackground="{StaticResource Background}" />
         </StackPanel>
     </Border>
 </commonView:BaseControl>

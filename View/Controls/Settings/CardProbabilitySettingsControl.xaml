@@ -25,13 +25,9 @@
     <Expander
         Margin="0"
         Padding="{StaticResource CommonMarginThickness}"
-        ExpandDirection="Down"
         IsExpanded="False">
         <Expander.Header>
-            <TextBlock
-                Margin="0"
-                Padding="5,2"
-                Text="{lex:Loc CardProbabilitySettings}" />
+            <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc CardProbabilitySettings}" />
         </Expander.Header>
         <Grid>
             <Grid.RowDefinitions>

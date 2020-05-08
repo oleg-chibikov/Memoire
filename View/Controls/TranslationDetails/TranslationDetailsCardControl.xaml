@@ -26,11 +26,7 @@
         <common:LearningInfoActionsControl DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
         <translationDetails:PrepositionsControl />
         <translationDetails:ClassificationCategoriesControl />
-        <ScrollViewer
-            MaxWidth="1000"
-            MaxHeight="800"
-            HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Auto">
+        <ScrollViewer MaxWidth="1000" MaxHeight="800">
             <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Vertical">
                 <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding TranslationDetails.TranslationResult.PartOfSpeechTranslations, Mode=OneTime}">
                     <ItemsControl.ItemTemplate>
@@ -39,7 +35,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <translationDetails:MoreExamplesControl DataContext="{Binding TranslationDetails.TranslationResult.ExtendedExamplesViewModel, Mode=OneTime}" />
+                <translationDetails:MoreExamplesControl DataContext="{Binding TranslationDetails.TranslationResult.ExtendedExamplesViewModel, Mode=OneTime}" ItemBackground="{StaticResource LighterBackground}" />
             </StackPanel>
         </ScrollViewer>
     </StackPanel>

@@ -10,10 +10,19 @@
     Topmost="True">
     <TextBlock
         Name="MainText"
+        Padding="100"
         DockPanel.Dock="Left"
         Foreground="{StaticResource DarkerBackground}"
         Style="{StaticResource SplashScreen}"
-        Text="Mémoire" />
+        Text="Mémoire">
+        <TextBlock.Effect>
+            <DropShadowEffect
+                BlurRadius="8"
+                Opacity="1"
+                ShadowDepth="0"
+                Color="White" />
+        </TextBlock.Effect>
+    </TextBlock>
     <commonView:AnimatedWindowWithoutTemplate.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:AnimatedWindowWithoutTemplate.Resources>

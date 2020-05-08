@@ -16,20 +16,19 @@
     <FontFamily x:Key="Font">./Fonts/#Sansation Light</FontFamily>
     <FontFamily x:Key="SplashScreenFont">./Fonts/#Ballet Display</FontFamily>
     <FontFamily x:Key="LogoFont">./Fonts/#Modeschrift</FontFamily>
-
     <Brush x:Key="Foreground">White</Brush>
+    <Brush x:Key="ReverseForeground">#FF262626</Brush>
     <Brush x:Key="DataGridRowColor">#FF464646</Brush>
     <Brush x:Key="DataGridAlternativeRowColor">#585858</Brush>
     <Brush x:Key="DataGridCellSeparatorColor">#FF262626</Brush>
-    <Brush x:Key="Background">#FF464646</Brush>
     <Brush x:Key="DarkerBackground">#FF363636</Brush>
-    <Brush x:Key="LighterBackground">#494949</Brush>
-    <Brush x:Key="Border">#FF262626</Brush>
+    <Brush x:Key="Background">#FF464646</Brush>
+    <Brush x:Key="LighterBackground">#5A5959</Brush>
+    <Brush x:Key="ReverseBackground">#B3B3B3</Brush>
+    <Brush x:Key="BorderColor">#FF262626</Brush>
     <Brush x:Key="MoreExamplesSourceForeground">White</Brush>
-    <Brush x:Key="MoreExamplesTargetForeground">#32A883</Brush>
+    <Brush x:Key="MoreExamplesTargetForeground">#E1DCAF</Brush>
     <Brush x:Key="MoreExamplesMatchForeground">#BEB86B</Brush>
-    <Brush x:Key="MoreExamplesBackground">#6F6F6F</Brush>
-    <Brush x:Key="ClassificationCategoriesBackground">#E1DCAF</Brush>
     <Brush x:Key="MeaningsForeground">#E1DCAF</Brush>
     <Brush x:Key="AssessmentCardBorderBrush">#E1DCAF</Brush>
     <Brush x:Key="HyperlinkForeground">#BEB86B</Brush>
@@ -42,10 +41,17 @@
     <Brush x:Key="DemoteButtonForeground">#FFE16830</Brush>
     <Brush x:Key="DeleteButtonForeground">#FFE16830</Brush>
     <Brush x:Key="IncorrectAnswerForeground">#FFE16830</Brush>
-    <Brush x:Key="ExportButtonForeground">#52C94F</Brush>
-    <Brush x:Key="PartOfSpeechForeground">#52C94F</Brush>
-    <Brush x:Key="SuccessfulAnswerForeground">#52C94F</Brush>
-    <Color x:Key="PriorityTranslationBackground">#52C94F</Color>
+    <Brush x:Key="WarningBackground">#E1DCAF</Brush>
+    <Brush x:Key="ErrorBackground">#FFE16830</Brush>
+    <Brush x:Key="WarningForeground">#FF363636</Brush>
+    <Brush x:Key="ErrorForeground">#FF363636</Brush>
+    <Brush x:Key="NotReadyToShowCardForeground">#FFE16830</Brush>
+    <Brush x:Key="ReadyToShowCardForeground">MediumSeaGreen</Brush>
+    <Brush x:Key="ExportButtonForeground">MediumSeaGreen</Brush>
+    <Brush x:Key="PartOfSpeechForeground">MediumSeaGreen</Brush>
+    <Brush x:Key="SuccessfulAnswerForeground">MediumSeaGreen</Brush>
+    <Color x:Key="PriorityTranslationBackground">MediumSeaGreen</Color>
+    <Brush x:Key="HasManualTranslationsForeground">MediumSeaGreen</Brush>
 
     <system:Double x:Key="CommonMargin">5</system:Double>
     <Thickness x:Key="CommonMarginThickness">5</Thickness>
@@ -122,6 +128,12 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
+    <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
     <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="{StaticResource Font}" />
@@ -140,14 +152,22 @@
     </Style>
     <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="externalBrowserHyperlink:ExternalBrowserHyperlink" />
     <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
-        <Setter Property="Padding" Value="{StaticResource CommonMarginThickness}" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="Background" Value="{StaticResource Background}" />
-        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ExpandDirection" Value="Down" />
         <Setter Property="materialDesign:ExpanderAssist.DownHeaderPadding" Value="0" />
         <Setter Property="materialDesign:ExpanderAssist.UpHeaderPadding" Value="0" />
         <Setter Property="materialDesign:ExpanderAssist.LeftHeaderPadding" Value="0" />
         <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0" />
+    </Style>
+    <Style
+        x:Key="ExpanderHeader"
+        BasedOn="{StaticResource {x:Type TextBlock}}"
+        TargetType="TextBlock">
+        <Setter Property="Padding" Value="5,2" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Background" Value="{StaticResource DarkerBackground}" />
     </Style>
     <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="tb:CompletableTextBox" />
     <Style TargetType="ComboBoxItem">

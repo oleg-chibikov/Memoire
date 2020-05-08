@@ -17,12 +17,9 @@
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
-    <Expander ExpandDirection="Down" IsExpanded="False">
+    <Expander IsExpanded="False">
         <Expander.Header>
-            <TextBlock
-                Margin="0"
-                Padding="5,2"
-                Text="{lex:Loc ApiKeys}" />
+            <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc ApiKeys}" />
         </Expander.Header>
         <Grid>
             <Grid.RowDefinitions>

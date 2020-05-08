@@ -31,7 +31,7 @@
     <Border
         Padding="10"
         Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBackgroundBrushConverter}}"
-        BorderBrush="{StaticResource Border}"
+        BorderBrush="{StaticResource BorderColor}"
         BorderThickness="2">
         <TextBlock Foreground="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToForegroundBrushConverter}}" Text="{Binding Message.Text, Mode=OneTime}" />
     </Border>

@@ -27,7 +27,7 @@
                 FontWeight="Bold" />
             <TextBlock Text="{Binding Transcription, Mode=OneTime, StringFormat={StaticResource AdditionalInfoFormat}}" Visibility="{Binding Transcription, Mode=OneTime, Converter={StaticResource StringToVisibilityConverter}}" />
         </StackPanel>
-        <ItemsControl AlternationCount="100" ItemsSource="{Binding TranslationVariants, Mode=OneTime}">
+        <ItemsControl ItemsSource="{Binding TranslationVariants, Mode=OneTime}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <translationDetails:TranslationVariantControl />
