@@ -193,6 +193,11 @@ namespace Mémoire.ViewModel
         async Task ShowDictionaryAsync()
         {
             _logger.LogTrace("Showing dictionary...");
+            if (await _dictionaryWindowFactory.GetWindowIfExistsAsync(CancellationToken.None).ConfigureAwait(false) != null)
+            {
+                return;
+            }
+
             var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
             var executeInDictionaryWindowContext = await _dictionaryWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
 
