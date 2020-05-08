@@ -26,13 +26,14 @@
     </ItemsControl.Resources>
     <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-            <UniformGrid Rows="1" />
+            <WrapPanel />
         </ItemsPanelTemplate>
     </ItemsControl.ItemsPanel>
     <ItemsControl.ItemTemplate>
         <DataTemplate>
             <TextBlock
-                Cursor="Hand"
+                Margin="{StaticResource CommonMarginThickness}"
+                Cursor="Help"
                 FontSize="{StaticResource SmallFontSize}"
                 Text="{Binding ClassName, Mode=OneTime}"
                 ToolTip="{Binding Match, Mode=OneTime}" />

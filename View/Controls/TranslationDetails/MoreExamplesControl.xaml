@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
+    xmlns:controls="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,8 +22,8 @@
     <Expander
         ExpandDirection="Down"
         Foreground="{StaticResource MoreExamplesTargetForeground}"
-        IsExpanded="False"
-        Visibility="{Binding OrphanExtendedExamples, Mode=OneTime, Converter={StaticResource CollectionToVisibilityConverter}}">
+        IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}"
+        Visibility="{Binding HasExtendedExamples, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
         <Expander.Header>
             <TextBlock
                 Margin="0"
@@ -31,15 +32,16 @@
         </Expander.Header>
         <ItemsControl
             AlternationCount="2"
-            ItemsSource="{Binding OrphanExtendedExamples, Mode=OneTime}"
-            Visibility="{Binding OrphanExtendedExamples, Mode=OneTime, Converter={StaticResource CollectionToVisibilityConverter}}">
+            ItemsSource="{Binding ExtendedExamples, Mode=OneWay}"
+            Visibility="{Binding ExtendedExamples, Mode=OneWay, Converter={StaticResource CollectionToVisibilityConverter}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel
                         Margin="0,5"
                         Background="{StaticResource MoreExamplesBackground}"
                         Cursor="Help"
-                        ToolTip="{Binding Reference, Converter={StaticResource ExampleReferenceConverter}}">
+                        ToolTip="{Binding Reference, Converter={StaticResource ExampleReferenceConverter}}"
+                        ToolTipService.Placement="Mouse">
                         <ScrollViewer
                             MaxWidth="800"
                             MaxHeight="400"
@@ -49,8 +51,11 @@
                                 Margin="{StaticResource CommonMarginThickness}"
                                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                                 Orientation="Vertical">
-                                <TextBlock view:TextBlockExtensions.FormattedText="{Binding Path=SourceText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesSourceForeground}" />
-                                <TextBlock view:TextBlockExtensions.FormattedText="{Binding Path=TargetText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesTargetForeground}" />
+                                <TextBlock view:TextBlockExtensions.FormattedText="{Binding SourceText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesSourceForeground}" />
+                                <TextBlock view:TextBlockExtensions.FormattedText="{Binding TargetText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesTargetForeground}" />
+                                <TextBlock Visibility="{Binding Reference.ImdbLink, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"><controls:ExternalBrowserHyperlink NavigateUri="{Binding Reference.ImdbLink, Mode=OneWay}">
+                                        <TextBlock Text="{Binding Reference.ImdbLink, Mode=OneWay}" />
+                                    </controls:ExternalBrowserHyperlink></TextBlock>
                             </StackPanel>
                         </ScrollViewer>
                     </StackPanel>

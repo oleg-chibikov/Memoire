@@ -14,6 +14,9 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentViewOnlyCardViewModel : BaseAssessmentCardViewModel
     {
+        readonly Action _loadDetailsViewModel;
+        bool _isExpanded;
+
         public AssessmentViewOnlyCardViewModel(
             TranslationInfo translationInfo,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel,
@@ -41,7 +44,7 @@ namespace Mémoire.ViewModel
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
-            TranslationDetailsCardViewModel = translationDetailsCardViewModel ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
+            _loadDetailsViewModel = () => TranslationDetailsCardViewModel = translationDetailsCardViewModel ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
 
             logger.LogTrace("Showing view only card...");
 
@@ -51,6 +54,19 @@ namespace Mémoire.ViewModel
             logger.LogInformation("Increased repeat type for {0}", learningInfo);
         }
 
-        public TranslationDetailsCardViewModel TranslationDetailsCardViewModel { get; }
+        public TranslationDetailsCardViewModel? TranslationDetailsCardViewModel { get; private set; }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                _isExpanded = value;
+                if (value && TranslationDetailsCardViewModel == null)
+                {
+                    _loadDetailsViewModel();
+                }
+            }
+        }
     }
 }

@@ -2,13 +2,13 @@
     x:Class="Mémoire.View.Controls.Assessment.AssessmentViewOnlyCardControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
     xmlns:translationDetails="clr-namespace:Mémoire.View.Controls.TranslationDetails"
-    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
     d:DataContext="{d:DesignInstance viewModel:AssessmentViewOnlyCardViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
@@ -20,7 +20,7 @@
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Expander ExpandDirection="Down">
+        <Expander ExpandDirection="Down" IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}">
             <Expander.Header>
                 <TextBlock
                     Margin="0"
@@ -29,7 +29,7 @@
                     FontWeight="Bold"
                     Text="{lex:Loc Details}" />
             </Expander.Header>
-            <translationDetails:TranslationDetailsCardControl DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneTime}" />
+            <translationDetails:TranslationDetailsCardControl DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
         </Expander>
         <common:LearningInfoActionsControl DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
         <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">

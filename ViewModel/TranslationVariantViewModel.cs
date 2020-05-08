@@ -18,6 +18,9 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationVariantViewModel : PriorityWordViewModel, IWithExtendedExamples
     {
+        readonly Action _loadExtendedExamples;
+        bool _isExpanded;
+
         public TranslationVariantViewModel(
             TranslationInfo translationInfo,
             TranslationVariant translationVariant,
@@ -52,17 +55,39 @@ namespace Mémoire.ViewModel
             Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationInfo.TranslationEntry)).ToArray();
             Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationInfo.TranslationEntryKey.SourceLanguage)).ToArray();
             Examples = translationVariant.Examples;
-            var translationVariantAndSynonymsHashSet = new HashSet<BaseWord>(translationVariant.GetTranslationVariantAndSynonyms());
 
-            OrphanExtendedExamples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations
-                .Where(x => x.Translation.Text != null && translationVariantAndSynonymsHashSet.Contains(x.Translation))
-                .SelectMany(x => x.ExtendedExamples).ToArray();
+            var translationVariantAndSynonymsHashSet = new HashSet<BaseWord>(translationVariant.GetTranslationVariantAndSynonyms());
+            var examples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations.Where(
+                x => x.Translation.Text != null && translationVariantAndSynonymsHashSet.Contains(x.Translation)).ToArray();
+            HasExtendedExamples = examples?.Length > 0;
+
+            _loadExtendedExamples = () =>
+            {
+                ExtendedExamples = examples
+                    .SelectMany(x => x.ExtendedExamples)
+                    .ToArray();
+            };
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, Word), parentText);
         }
 
         public IReadOnlyCollection<Example>? Examples { get; }
 
-        public IReadOnlyCollection<ExtendedExample>? OrphanExtendedExamples { get; }
+        public IReadOnlyCollection<ExtendedExample>? ExtendedExamples { get; private set; }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                _isExpanded = value;
+                if (value && ExtendedExamples == null)
+                {
+                    _loadExtendedExamples();
+                }
+            }
+        }
+
+        public bool HasExtendedExamples { get; set; }
 
         public IReadOnlyCollection<WordViewModel>? Meanings { get; }
 

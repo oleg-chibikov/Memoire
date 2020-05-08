@@ -13,6 +13,9 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationResultViewModel : BaseViewModel, IWithExtendedExamples
     {
+        readonly Action _loadExtendedExamples;
+        bool _isExpanded;
+
         public TranslationResultViewModel(
             TranslationInfo translationInfo,
             Func<PartOfSpeechTranslation, TranslationInfo, PartOfSpeechTranslationViewModel> partOfSpeechTranslationViewModelFactory,
@@ -25,16 +28,34 @@ namespace Mémoire.ViewModel
                 .ToArray();
 
             var allTranslationVariantsHashSet = new HashSet<BaseWord>(GetAllTranslationVariantsWithSynonyms(translationInfo));
+            var examples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations.Where(
+                x => x.Translation.Text == null || !allTranslationVariantsHashSet.Contains(x.Translation)).ToArray();
+            HasExtendedExamples = examples?.Length > 0;
 
-            OrphanExtendedExamples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations
-                .Where(x => x.Translation.Text == null || !allTranslationVariantsHashSet.Contains(x.Translation))
-                .SelectMany(x => x.ExtendedExamples)
-                .ToArray();
+            _loadExtendedExamples = () =>
+            {
+                ExtendedExamples = examples.SelectMany(x => x.ExtendedExamples).ToArray();
+            };
         }
 
         public IReadOnlyCollection<PartOfSpeechTranslationViewModel> PartOfSpeechTranslations { get; }
 
-        public IReadOnlyCollection<ExtendedExample>? OrphanExtendedExamples { get; }
+        public IReadOnlyCollection<ExtendedExample>? ExtendedExamples { get; private set; }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                _isExpanded = value;
+                if (value && ExtendedExamples == null)
+                {
+                    _loadExtendedExamples();
+                }
+            }
+        }
+
+        public bool HasExtendedExamples { get; set; }
 
         static IEnumerable<Word> GetAllTranslationVariantsWithSynonyms(TranslationInfo translationInfo)
         {

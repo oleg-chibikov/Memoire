@@ -5,6 +5,10 @@ namespace Mémoire.ViewModel
 {
     public interface IWithExtendedExamples
     {
-        IReadOnlyCollection<ExtendedExample>? OrphanExtendedExamples { get; }
+        IReadOnlyCollection<ExtendedExample>? ExtendedExamples { get; }
+
+        bool IsExpanded { get; set; }
+
+        bool HasExtendedExamples { get; set; }
     }
 }
