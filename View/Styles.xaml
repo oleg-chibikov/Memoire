@@ -1,0 +1,246 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
+    xmlns:autoComplete="clr-namespace:Scar.Common.WPF.Controls.AutoCompleteTextBox.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
+    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
+    xmlns:commonConverters="clr-namespace:Scar.Common.WPF.Converters;assembly=Scar.Common.WPF.Converters"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
+    xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:converters="clr-namespace:Remembrance.View.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:externalBrowserHyperlink="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.ExternalBrowserHyperlink"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d">
+    <commonConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+    <commonConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <commonConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <commonConverters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+    <commonConverters:ReverseBoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter" />
+    <commonConverters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+    <commonConverters:AddValueConverter x:Key="AddValueConverter" />
+    <commonConverters:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
+    <commonConverters:PercentageIntToDoubleConverter x:Key="PercentageIntToDoubleConverter" />
+    <commonConverters:DoubleToTextTimeSpanConverter x:Key="DoubleToTextTimeSpanConverter" />
+    <commonConverters:FilePathToIconImageSourceConverter x:Key="FilePathToIconImageSourceConverter" />
+    <converters:RepeatTypeConverter x:Key="RepeatTypeConverter" />
+    <converters:DateTimeToBrushConverter x:Key="DateTimeToBrushConverter" />
+    <converters:WordConcatConverter x:Key="WordConcatConverter" />
+    <converters:PartOfSpeechToVisibilityConverter x:Key="PartOfSpeechToVisibilityConverter" />
+    <converters:PriorityWordViewModelToVisibilityConverter x:Key="PriorityWordViewModelToVisibilityConverter" />
+    <converters:PriorityWordViewModelToBooleanConverter x:Key="PriorityWordViewModelToBooleanConverter" />
+    <converters:PartOfSpeechLocalizedConverter x:Key="PartOfSpeechLocalizedConverter" />
+    <converters:MessageTypeToBackgroundBrushConverter x:Key="MessageTypeToBackgroundBrushConverter" />
+    <converters:MessageTypeToForegroundBrushConverter x:Key="MessageTypeToForegroundBrushConverter" />
+    <converters:ProgressStateConverter x:Key="ProgressStateConverter" />
+    <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
+    <Brush x:Key="Foreground">White</Brush>
+    <Brush x:Key="DataGridRowColor">#4D4D4D</Brush>
+    <Brush x:Key="DataGridAlternativeRowColor">#222222</Brush>
+    <Brush x:Key="DataGridCellSeparatorColor">#252526</Brush>
+    <Brush x:Key="Background">#FF464646</Brush>
+    <Brush x:Key="DarkerBackground">#FF363636</Brush>
+    <Brush x:Key="Border">#FF262626</Brush>
+    <Brush x:Key="SelectionRow">#FF565656</Brush>
+    <Brush x:Key="SelectionCell">#FF666666</Brush>
+    <Brush x:Key="BorderBrush">AntiqueWhite</Brush>
+    <Brush x:Key="Hyperlink">#bdb76b</Brush>
+    <Brush x:Key="Favorite">Gold</Brush>
+    <Brush x:Key="WordInfo">Silver</Brush>
+    <Brush x:Key="Red">OrangeRed</Brush>
+    <Brush x:Key="Green">MediumSeaGreen</Brush>
+    <Color x:Key="GreenColor">MediumSeaGreen</Color>
+    <system:Double x:Key="CommonMargin">5</system:Double>
+    <Thickness x:Key="CommonMarginThickness">5</Thickness>
+    <system:Double x:Key="CommonButtonSize">16</system:Double>
+    <system:Double x:Key="HugeFontSize">24</system:Double>
+    <system:Double x:Key="BigFontSize">20</system:Double>
+    <system:Double x:Key="MediumFontSize">16</system:Double>
+    <system:Double x:Key="SmallFontSize">14</system:Double>
+    <system:Double x:Key="TinyFontSize">10</system:Double>
+    <Style x:Key="Control" TargetType="{x:Type commonView:BaseControl}">
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type commonView:BaseControl}" />
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type baseWindow:BaseWindow}" />
+    <Style BasedOn="{StaticResource {x:Type Control}}" TargetType="{x:Type animatedWindow:AnimatedWindow}" />
+    <FontFamily x:Key="Font">./Fonts/#Champagne &amp; Limousines</FontFamily>
+    <FontFamily x:Key="LogoFont">./Fonts/#Cubic</FontFamily>
+    <system:String x:Key="AdditionalInfoFormat">({0})</system:String>
+    <Style BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}" TargetType="materialDesign:PackIcon">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <!--  ReSharper disable once Xaml.StaticResourceNotResolved  -->
+    <Style
+        x:Key="ImageButton"
+        BasedOn="{StaticResource MaterialDesignRaisedButton}"
+        TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Width" Value="{StaticResource CommonButtonSize}" />
+        <Setter Property="Height" Value="{StaticResource CommonButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource Font}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="TextBox">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource Font}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+        <Setter Property="Foreground" Value="{StaticResource Hyperlink}" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="externalBrowserHyperlink:ExternalBrowserHyperlink" />
+    <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="materialDesign:ExpanderAssist.DownHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.UpHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.LeftHeaderPadding" Value="0" />
+        <Setter Property="materialDesign:ExpanderAssist.RightHeaderPadding" Value="0" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="autoComplete:CompletableTextBox" />
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style
+        x:Key="Logo"
+        BasedOn="{StaticResource {x:Type TextBlock}}"
+        TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource LogoFont}" />
+        <Setter Property="FontSize" Value="{StaticResource HugeFontSize}" />
+    </Style>
+    <Style TargetType="controls:WordControl">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style TargetType="controls:WordsControl">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="ColumnWidth" Value="Auto" />
+        <Setter Property="RowHeaderWidth" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Background}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource DataGridCellSeparatorColor}" />
+    </Style>
+    <Style TargetType="DataGridCell">
+        <Setter Property="BorderBrush" Value="{StaticResource DataGridCellSeparatorColor}" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="BorderThickness" Value="0,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+    </Style>
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                    <Grid Name="HeaderGrid" Background="{StaticResource DataGridRowColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="BackgroundBorder"
+                            Grid.ColumnSpan="2"
+                            BorderBrush="{StaticResource DataGridCellSeparatorColor}"
+                            BorderThickness="0,0,1,1" />
+                        <ContentPresenter
+                            Grid.Column="0"
+                            Margin="6,3,6,3"
+                            VerticalAlignment="Center" />
+                        <Path
+                            x:Name="SortArrow"
+                            Grid.Column="1"
+                            Width="8"
+                            Height="6"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Data="M0,0 L1,0 0.5,1 z"
+                            Fill="{StaticResource DataGridCellSeparatorColor}"
+                            RenderTransformOrigin="0.5,0.4"
+                            Stretch="Fill"
+                            Visibility="Collapsed" />
+                        <Thumb
+                            x:Name="PART_RightHeaderGripper"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Cursor="SizeWE">
+                            <Thumb.Style>
+                                <Style TargetType="{x:Type Thumb}">
+                                    <Setter Property="Width" Value="2" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                <Border Background="Transparent" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Thumb.Style>
+                        </Thumb>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="HeaderGrid" Property="Background" Value="LightBlue" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="HeaderGrid" Property="Background" Value="#21ffaabb" />
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Ascending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SortArrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="180" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Descending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
