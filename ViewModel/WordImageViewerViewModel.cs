@@ -5,48 +5,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.ImageSearch;
-using Remembrance.Contracts.ImageSearch.Data;
-using Remembrance.Resources;
 using Scar.Common.Async;
 using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.ImageSearch;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class WordImageViewerViewModel : BaseViewModel
     {
         internal const string DefaultSearchTextTemplate = "{0} {1}";
-
         readonly ICancellationTokenSourceProvider _cancellationTokenSourceProvider;
-
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
         readonly IImageDownloader _imageDownloader;
-
         readonly IImageSearcher _imageSearcher;
-
         readonly bool _isReadonly;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly string _thisAndParentSearchText;
-
         readonly IWordImageInfoRepository _wordImageInfoRepository;
-
         readonly IWordImageSearchIndexRepository _wordImageSearchIndexRepository;
-
         readonly WordKey _wordKey;
-
         int?[] _nonAvailableIndexes = new int?[2];
-
         bool _shouldRepeat;
 
         public WordImageViewerViewModel(
@@ -60,6 +49,7 @@ namespace Remembrance.ViewModel
             IMessageHub messageHub,
             IWordImageSearchIndexRepository wordImageSearchIndexRepository,
             ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
             bool isReadonly = false) : base(commandManager)
         {
             _wordKey = wordKey ?? throw new ArgumentNullException(nameof(wordKey));
@@ -70,6 +60,7 @@ namespace Remembrance.ViewModel
             _imageSearcher = imageSearcher ?? throw new ArgumentNullException(nameof(imageSearcher));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _wordImageSearchIndexRepository = wordImageSearchIndexRepository ?? throw new ArgumentNullException(nameof(wordImageSearchIndexRepository));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             SetNextImageCommand = AddCommand(SetNextImageAsync);
             SetPreviousImageCommand = AddCommand(SetPreviousImageAsync);
             ReloadImageCommand = AddCommand(ReloadImageAsync);
@@ -101,7 +92,6 @@ namespace Remembrance.ViewModel
         public ICommand SetPreviousImageCommand { get; }
 
         [DependsOn(nameof(ImageName), nameof(ImageUrl), nameof(SearchIndex), nameof(SearchText), nameof(IsAlternate))]
-
         public string? ToolTip => _isReadonly ? null : $"{SearchIndex + 1}{AlternateInfo}. {SearchText}: {ImageName} ({ImageUrl})";
 
         internal Task ConstructionTask { get; }
@@ -221,27 +211,39 @@ namespace Remembrance.ViewModel
                 await _cancellationTokenSourceProvider.ExecuteOperationAsync(
                         async cancellationToken =>
                         {
-                            var imagesUrls = await _imageSearcher.SearchImagesAsync(searchText, cancellationToken, index).ConfigureAwait(false);
-                            if (imagesUrls == null)
+                            var imageInfos = await _imageSearcher.SearchImagesAsync(
+                                    searchText,
+                                    _sharedSettingsRepository.SolveQwantCaptcha,
+                                    index,
+                                    1,
+                                    null,
+                                    ex => _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex)),
+                                    cancellationToken)
+                                .ConfigureAwait(false);
+                            if (imageInfos == null)
                             {
                                 // Null means error - just displaying Error instead of image. Message is already shown to client;
                                 _shouldRepeat = true;
                             }
                             else
                             {
-                                if (imagesUrls.Count > 1)
+                                if (imageInfos.Count > 1)
                                 {
                                     throw new InvalidOperationException("Search should return only one image");
                                 }
 
                                 ImageInfoWithBitmap? imageInfoWithBitmap = null;
-                                if (imagesUrls.Count > 0)
+                                if (imageInfos.Count > 0)
                                 {
-                                    var imageDownloadTasks = imagesUrls.Select(
+                                    var imageDownloadTasks = imageInfos.Select(
                                         async image => new ImageInfoWithBitmap
                                         {
                                             ImageBitmap = null,
-                                            ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(image.ThumbnailUrl, cancellationToken).ConfigureAwait(false),
+                                            ThumbnailBitmap = await _imageDownloader.DownloadImageAsync(
+                                                    image.ThumbnailUrl,
+                                                    ex => _messageHub.Publish(Errors.CannotDownloadImage.ToError(ex)),
+                                                    cancellationToken)
+                                                .ConfigureAwait(false),
                                             ImageInfo = image
                                         });
                                     imageInfoWithBitmap = (await Task.WhenAll(imageDownloadTasks).ConfigureAwait(false)).SingleOrDefault();
@@ -312,7 +314,7 @@ namespace Remembrance.ViewModel
 
             _shouldRepeat = false;
             ImageName = image.ImageInfo.Name;
-            ImageUrl = image.ImageInfo.Url;
+            ImageUrl = image.ImageInfo.Url.ToString();
             ThumbnailBytes = thumbnailBytes;
         }
     }

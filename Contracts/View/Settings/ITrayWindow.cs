@@ -1,6 +1,6 @@
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.Contracts.View.Settings
+namespace Mémoire.Contracts.View.Settings
 {
     public interface ITrayWindow : IDisplayable
     {

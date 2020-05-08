@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing;
+using Mémoire.Core.CardManagement.Data;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing;
-using Remembrance.Core.CardManagement.Data;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.Core.Exchange
+namespace Mémoire.Core.Exchange
 {
     sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {

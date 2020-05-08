@@ -3,34 +3,45 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Easy.MessageHub;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Resources;
 using PropertyChanged;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.Translation;
 
 // ReSharper disable VirtualMemberCallInConstructor
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class WordViewModel : BaseViewModel
     {
         readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
+        readonly IMessageHub _messageHub;
 
         public WordViewModel(
             Word word,
             string language,
             ITextToSpeechPlayer textToSpeechPlayer,
             ITranslationEntryProcessor translationEntryProcessor,
-            ICommandManager commandManager) : base(commandManager)
+            ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
+            IMessageHub messageHub) : base(commandManager)
         {
             Language = language ?? throw new ArgumentNullException(nameof(language));
             Word = word ?? throw new ArgumentNullException(nameof(word));
 
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+
             PlayTtsCommand = AddCommand(PlayTtsAsync);
             LearnWordCommand = AddCommand(LearnWordAsync, () => CanLearnWord);
             TogglePriorityCommand = AddCommand(TogglePriority);
@@ -95,7 +106,14 @@ namespace Remembrance.ViewModel
 
         async Task PlayTtsAsync()
         {
-            await _textToSpeechPlayer.PlayTtsAsync(Word.Text, Language, CancellationToken.None).ConfigureAwait(false);
+            await _textToSpeechPlayer.PlayTtsAsync(
+                    Word.Text,
+                    Language,
+                    _sharedSettingsRepository.TtsSpeaker,
+                    _sharedSettingsRepository.TtsVoiceEmotion,
+                    ex => _messageHub.Publish(Errors.CannotSpeak.ToError(ex)),
+                    CancellationToken.None)
+                .ConfigureAwait(false);
         }
     }
 }

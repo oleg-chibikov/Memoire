@@ -8,35 +8,28 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.Sync;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.Sync;
-using Remembrance.Resources;
-using Scar.Common;
-using Scar.Common.DAL;
-using Scar.Common.DAL.Model;
+using Scar.Common.AutofacInstantiation;
+using Scar.Common.DAL.Contracts;
+using Scar.Common.DAL.Contracts.Model;
 using Scar.Common.Messages;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
         where TRepository : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
         readonly IAutofacNamedInstancesFactory _autofacNamedInstancesFactory;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly TRepository _ownRepository;
-
         readonly IReadOnlyCollection<ISyncExtender<TRepository>> _syncExtenders;
-
         readonly ISyncPostProcessor<TEntity>? _syncPostProcessor;
-
         readonly ISyncPreProcessor<TEntity>? _syncPreProcessor;
 
         public RepositorySynhronizer(

@@ -1,12 +1,11 @@
 using System;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsViewModel : BaseViewModel
@@ -14,14 +13,14 @@ namespace Remembrance.ViewModel
         readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsViewModel(
-            Func<TranslationResult, TranslationEntry, TranslationResultViewModel> translationResultViewModelFactory,
+            Func<TranslationInfo, TranslationResultViewModel> translationResultViewModelFactory,
             TranslationInfo translationInfo,
             ICommandManager commandManager) : base(commandManager)
         {
             _ = translationResultViewModelFactory ?? throw new ArgumentNullException(nameof(translationResultViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _translationEntryKey = translationInfo.TranslationEntryKey;
-            TranslationResult = translationResultViewModelFactory(translationInfo.TranslationDetails.TranslationResult, translationInfo.TranslationEntry);
+            TranslationResult = translationResultViewModelFactory(translationInfo);
         }
 
         public TranslationResultViewModel TranslationResult { get; }

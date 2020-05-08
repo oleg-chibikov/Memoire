@@ -3,32 +3,33 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.Exchange;
+using Mémoire.Contracts.Exchange.Data;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts;
-using Remembrance.Contracts.Exchange;
-using Remembrance.Contracts.Exchange.Data;
-using Remembrance.Resources;
 using Scar.Common.Events;
 using Scar.Common.IO;
 using Scar.Common.Messages;
 
-namespace Remembrance.Core.Exchange
+namespace Mémoire.Core.Exchange
 {
     sealed class CardsExchanger : ICardsExchanger, IDisposable
     {
         readonly IFileExporter _exporter;
-
         readonly IFileImporter[] _importers;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IOpenFileDialogProvider _openFileDialog;
-
         readonly ISaveFileDialogProvider _saveFileDialog;
 
-        public CardsExchanger(ILogger<CardsExchanger> logger, IFileExporter exporter, IFileImporter[] importers, IMessageHub messageHub, IOpenFileDialogProvider openFileDialog, ISaveFileDialogProvider saveFileDialog)
+        public CardsExchanger(
+            ILogger<CardsExchanger> logger,
+            IFileExporter exporter,
+            IFileImporter[] importers,
+            IMessageHub messageHub,
+            IOpenFileDialogProvider openFileDialog,
+            ISaveFileDialogProvider saveFileDialog)
         {
             _openFileDialog = openFileDialog ?? throw new ArgumentNullException(nameof(openFileDialog));
             _saveFileDialog = saveFileDialog ?? throw new ArgumentNullException(nameof(saveFileDialog));
@@ -151,7 +152,7 @@ namespace Remembrance.Core.Exchange
 
         string? ShowSaveFileDialog()
         {
-            _saveFileDialog.FileName = $"{nameof(Remembrance)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
+            _saveFileDialog.FileName = $"{nameof(Mémoire)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
             return _saveFileDialog.ShowDialog() == true ? _saveFileDialog.FileName : null;
         }
     }

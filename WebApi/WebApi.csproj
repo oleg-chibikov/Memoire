@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Remembrance WebApi functionality</Description>
+    <Description>Mémoire WebApi functionality</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7422.29078" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7428.22704" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 </Project>

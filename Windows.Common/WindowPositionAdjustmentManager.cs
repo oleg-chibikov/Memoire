@@ -1,10 +1,10 @@
 using System.Windows;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Resources;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Resources;
 using Scar.Common.View.Contracts;
 using Scar.Common.WPF.View.Contracts;
 
-namespace Remembrance.Windows.Common
+namespace Mémoire.Windows.Common
 {
     sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
     {

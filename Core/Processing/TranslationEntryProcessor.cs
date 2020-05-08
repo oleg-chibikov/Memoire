@@ -5,26 +5,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.Classification;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Contracts.View.Settings;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.Classification;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Contracts.View.Settings;
-using Remembrance.Resources;
 using Scar.Common;
 using Scar.Common.Localization;
 using Scar.Common.Messages;
 using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowCreation;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data;
+using Scar.Services.Contracts.Data.ExtendedTranslation;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.Core.Processing
+namespace Mémoire.Core.Processing
 {
     sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
@@ -32,11 +34,11 @@ namespace Remembrance.Core.Processing
         readonly ICultureManager _cultureManager;
         readonly ILanguageManager _languageManager;
         readonly ILearningInfoRepository _learningInfoRepository;
+        readonly IWindowDisplayer _windowDisplayer;
         readonly Func<ILoadingWindow> _loadingWindowFactory;
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
-        readonly SynchronizationContext _synchronizationContext;
         readonly ITextToSpeechPlayer _textToSpeechPlayer;
         readonly ITranslationDetailsRepository _translationDetailsRepository;
         readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
@@ -63,11 +65,11 @@ namespace Remembrance.Core.Processing
             IWordImageSearchIndexRepository wordImageSearchIndexRepository,
             ILanguageManager languageManager,
             Func<ILoadingWindow> loadingWindowFactory,
-            SynchronizationContext synchronizationContext,
             ICultureManager cultureManager,
             ILocalSettingsRepository localSettingsRepository,
             ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater,
-            ISharedSettingsRepository sharedSettingsRepository)
+            ISharedSettingsRepository sharedSettingsRepository,
+            IWindowDisplayer windowDisplayer)
         {
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
@@ -76,11 +78,11 @@ namespace Remembrance.Core.Processing
             _wordImageSearchIndexRepository = wordImageSearchIndexRepository ?? throw new ArgumentNullException(nameof(wordImageSearchIndexRepository));
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _loadingWindowFactory = loadingWindowFactory ?? throw new ArgumentNullException(nameof(loadingWindowFactory));
-            _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _learningInfoCategoriesUpdater = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+            _windowDisplayer = windowDisplayer ?? throw new ArgumentNullException(nameof(windowDisplayer));
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
@@ -101,14 +103,7 @@ namespace Remembrance.Core.Processing
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
             _logger.LogTrace("Adding new word translation for {0}...", translationEntryAdditionInfo);
 
-            IDisplayable? loadingWindow = null;
-            _synchronizationContext.Send(
-                x =>
-                {
-                    loadingWindow = _loadingWindowFactory();
-                    loadingWindow.Show();
-                },
-                null);
+            var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
 
             try
             {
@@ -126,16 +121,16 @@ namespace Remembrance.Core.Processing
                     return null;
                 }
 
-                var translationResult = await TranslateAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
+                var (translationResult, extendedTranslationResult) = await GetTranslationsAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
                 if (translationResult == null)
                 {
                     return null;
                 }
 
-                var translationEntry =
-                    new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
+                var translationEntry = new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
                 _translationEntryRepository.Upsert(translationEntry);
-                var translationDetails = new TranslationDetails(translationResult, translationEntryKey);
+
+                var translationDetails = new TranslationDetails(translationResult, extendedTranslationResult, translationEntryKey);
                 _translationDetailsRepository.Upsert(translationDetails);
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryKey);
 
@@ -156,7 +151,10 @@ namespace Remembrance.Core.Processing
             }
             finally
             {
-                _synchronizationContext.Post(x => loadingWindow?.Close(), null);
+                executeInLoadingWindowContext(loadingWindow =>
+                {
+                    loadingWindow.Close();
+                });
             }
         }
 
@@ -271,6 +269,25 @@ namespace Remembrance.Core.Processing
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
         }
 
+        async Task<ExtendedTranslationResult?> GetExtendedTranslationAsync(TranslationEntryKey translationEntryKey, CancellationToken cancellationToken)
+        {
+            // Used En as ui language to simplify conversion of common words to the enums
+            var extendedTranslationResult = await _wordsTranslator.GetExtendedTranslationAsync(
+                    translationEntryKey.SourceLanguage,
+                    translationEntryKey.TargetLanguage,
+                    translationEntryKey.Text,
+                    LanguageConstants.EnLanguage,
+                    ex => _messageHub.Publish(
+                        string.Format(
+                                CultureInfo.InvariantCulture,
+                                Errors.CannotGetExtendedTranslation,
+                                translationEntryKey.Text + $" [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
+                            .ToError(ex)),
+                    cancellationToken)
+                .ConfigureAwait(false);
+            return extendedTranslationResult;
+        }
+
         void DeleteFromPriority(TranslationEntry translationEntry, IReadOnlyCollection<ManualTranslation>? manualTranslations, TranslationDetails translationDetails)
         {
             var remainingManualTranslations = translationDetails.TranslationResult.PartOfSpeechTranslations.Where(x => x.IsManual)
@@ -311,12 +328,12 @@ namespace Remembrance.Core.Processing
                 return null;
             }
 
-            if ((sourceLanguage == null) || (sourceLanguage == Constants.AutoDetectLanguage))
+            if ((sourceLanguage == null) || (sourceLanguage == LanguageConstants.AutoDetectLanguage))
             {
                 sourceLanguage = await _languageManager.GetSourceAutoSubstituteAsync(text, cancellationToken).ConfigureAwait(false);
             }
 
-            if ((targetLanguage == null) || (targetLanguage == Constants.AutoDetectLanguage))
+            if ((targetLanguage == null) || (targetLanguage == LanguageConstants.AutoDetectLanguage))
             {
                 targetLanguage = _languageManager.GetTargetAutoSubstitute(sourceLanguage);
             }
@@ -334,7 +351,15 @@ namespace Remembrance.Core.Processing
 
         async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
-            var playTtsTask = !_sharedSettingsRepository.MuteSounds ? _textToSpeechPlayer.PlayTtsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationEntryKey.SourceLanguage, cancellationToken) : Task.CompletedTask;
+            var playTtsTask = !_sharedSettingsRepository.MuteSounds
+                ? _textToSpeechPlayer.PlayTtsAsync(
+                    translationInfo.TranslationEntryKey.Text,
+                    translationInfo.TranslationEntryKey.SourceLanguage,
+                    _sharedSettingsRepository.TtsSpeaker,
+                    _sharedSettingsRepository.TtsVoiceEmotion,
+                    ex => _messageHub.Publish(Errors.CannotSpeak.ToError(ex)),
+                    cancellationToken)
+                : Task.CompletedTask;
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
             _messageHub.Publish(translationInfo.TranslationEntry);
             await Task.WhenAll(playTtsTask, showCardTask).ConfigureAwait(false);
@@ -351,22 +376,30 @@ namespace Remembrance.Core.Processing
             }
 
             var translationDetails = _translationDetailsRepository.TryGetById(translationEntryKey);
+            if (translationDetails?.ExtendedTranslationResult != null)
+            {
+                return (translationDetails, true);
+            }
+
             if (translationDetails != null)
             {
+                translationDetails.ExtendedTranslationResult = await GetExtendedTranslationAsync(translationEntryKey, cancellationToken).ConfigureAwait(false);
+                _translationDetailsRepository.Update(translationDetails);
                 return (translationDetails, true);
             }
 
             CapitalizeManualTranslations(manualTranslations);
 
-            var translationResult = await TranslateAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
+            var (translationResult, extendedTranslationResult) = await GetTranslationsAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
             if (translationResult == null)
             {
                 throw new InvalidOperationException("Empty translation result for the existing translation entry");
             }
 
             // There are no translation details for this word
-            translationDetails = new TranslationDetails(translationResult, translationEntryKey);
+            translationDetails = new TranslationDetails(translationResult, extendedTranslationResult, translationEntryKey);
             _translationDetailsRepository.Insert(translationDetails);
+
             return (translationDetails, false);
         }
 
@@ -377,7 +410,10 @@ namespace Remembrance.Core.Processing
                     translationEntryKey.SourceLanguage,
                     translationEntryKey.TargetLanguage,
                     translationEntryKey.Text,
-                    Constants.EnLanguage,
+                    LanguageConstants.EnLanguage,
+                    ex => _messageHub.Publish(
+                        string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, translationEntryKey.Text + $" [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
+                            .ToError(ex)),
                     cancellationToken)
                 .ConfigureAwait(false);
 
@@ -409,6 +445,21 @@ namespace Remembrance.Core.Processing
             }
 
             return translationResult;
+        }
+
+        async Task<(TranslationResult? Basic, ExtendedTranslationResult? Extended)> GetTranslationsAsync(
+            TranslationEntryKey translationEntryKey,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
+            CancellationToken cancellationToken)
+        {
+            var getTranslationTask = TranslateAsync(translationEntryKey, manualTranslations, cancellationToken);
+            var getExtendedTranslationTask = GetExtendedTranslationAsync(translationEntryKey, cancellationToken);
+
+            await Task.WhenAll(getTranslationTask, getExtendedTranslationTask).ConfigureAwait(false);
+
+            var translationResult = getTranslationTask.Result;
+            var extendedTranslationResult = getExtendedTranslationTask.Result;
+            return (translationResult, extendedTranslationResult);
         }
     }
 }

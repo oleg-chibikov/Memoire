@@ -1,17 +1,17 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.View.Settings;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.View.Settings;
-using Scar.Common;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowCreation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class AddTranslationViewModel : BaseViewModelWithAddTranslationControl

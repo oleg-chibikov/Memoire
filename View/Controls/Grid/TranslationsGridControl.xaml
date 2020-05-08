@@ -1,0 +1,50 @@
+<commonView:BaseControl
+    x:Class="Mémoire.View.Controls.Grid.TranslationsGridControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:translationsGridColumns="clr-namespace:Mémoire.View.Controls.Grid.TranslationsGridColumns"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
+    d:DesignHeight="200"
+    d:DesignWidth="1000"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    x:ClassModifier="internal"
+    mc:Ignorable="d">
+    <commonView:BaseControl.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+    </commonView:BaseControl.Resources>
+    <DataGrid
+        AlternatingRowBackground="{StaticResource DataGridAlternativeRowColor}"
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
+        EnableRowVirtualization="True"
+        IsReadOnly="True"
+        ItemsSource="{Binding View, Mode=OneTime}"
+        RowBackground="{StaticResource DataGridRowColor}">
+        <DataGrid.Columns>
+            <translationsGridColumns:IsFavoritedColumn />
+            <translationsGridColumns:WordColumn />
+            <translationsGridColumns:TranslationsColumn />
+            <translationsGridColumns:LanguageColumn />
+            <translationsGridColumns:TargetLanguageColumn />
+            <translationsGridColumns:ReversoColumn />
+            <translationsGridColumns:DemoteColumn />
+            <translationsGridColumns:RepeatTypeColumn />
+            <translationsGridColumns:LastCardShowTimeColumn />
+            <translationsGridColumns:NextCardShowTimeColumn />
+            <translationsGridColumns:ShowCountColumn />
+            <translationsGridColumns:ModifiedDateColumn />
+            <translationsGridColumns:CreatedDateColumn />
+            <translationsGridColumns:EditManualTranslationsColumn />
+            <common:DeleteColumn />
+        </DataGrid.Columns>
+    </DataGrid>
+</commonView:BaseControl>

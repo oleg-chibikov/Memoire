@@ -1,7 +1,7 @@
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.Processing.Data;
+using Mémoire.Contracts.CardManagement.Data;
+using Mémoire.Contracts.Processing.Data;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Mémoire.Contracts.CardManagement
 {
     public interface IAssessmentInfoProvider
     {

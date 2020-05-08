@@ -1,47 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.MVVM.Commands;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class PriorityWordViewModel : WordViewModel
     {
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly TranslationEntry _translationEntry;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
-
         readonly WordKey _wordKey;
 
         public PriorityWordViewModel(
             TranslationEntry translationEntry,
             Word word,
             ITextToSpeechPlayer textToSpeechPlayer,
-            IMessageHub messageHub,
             ITranslationEntryProcessor translationEntryProcessor,
             ILogger<PriorityWordViewModel> logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ITranslationEntryRepository translationEntryRepository,
-            ICommandManager commandManager) : base(
+            ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
+            IMessageHub messageHub) : base(
             word,
             translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)),
             textToSpeechPlayer,
             translationEntryProcessor,
-            commandManager)
+            commandManager,
+            sharedSettingsRepository,
+            messageHub)
         {
             _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;

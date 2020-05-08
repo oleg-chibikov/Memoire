@@ -1,4 +1,4 @@
-namespace Remembrance.Contracts.Processing.Data
+namespace Mémoire.Contracts.Processing.Data
 {
     public sealed class TranslationEntryAdditionInfo
     {

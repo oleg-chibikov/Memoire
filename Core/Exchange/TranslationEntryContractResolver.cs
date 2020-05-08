@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Mémoire.Contracts.DAL.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Remembrance.Contracts.DAL.Model;
 
-namespace Remembrance.Core.Exchange
+namespace Mémoire.Core.Exchange
 {
     sealed class TranslationEntryContractResolver : DefaultContractResolver
     {
@@ -36,7 +36,7 @@ namespace Remembrance.Core.Exchange
             return property;
         }
 
-        bool ShouldExclude(MemberInfo memberInfo, Type? objectType)
+        static bool ShouldExclude(MemberInfo memberInfo, Type? objectType)
         {
             if (objectType == null)
             {

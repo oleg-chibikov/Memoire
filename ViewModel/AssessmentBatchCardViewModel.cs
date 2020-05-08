@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentBatchCardViewModel : BaseViewModel
@@ -39,11 +39,12 @@ namespace Remembrance.ViewModel
             Title = string.Join(", ", translationInfos.Select(x => x.TranslationEntryKey.ToString()));
             pauseManager.PauseActivity(PauseReasons.CardIsVisible, Title);
             WindowClosedCommand = AddCommand(WindowClosed);
-            NestedViewModels = translationInfos.Select(x => GetViewModelByRepeatType(x, x.LearningInfo.RepeatType));
+            NestedViewModels = translationInfos.Select(x => GetViewModelByRepeatType(x, x.LearningInfo.RepeatType)).ToArray();
+            NestedViewModels.First().IsFocused = true;
             _closedCount = translationInfos.Count;
         }
 
-        public IEnumerable<BaseAssessmentCardViewModel> NestedViewModels { get; }
+        public IReadOnlyCollection<BaseAssessmentCardViewModel> NestedViewModels { get; }
 
         public string Title { get; }
 
@@ -54,6 +55,15 @@ namespace Remembrance.ViewModel
             if (--_closedCount == 0)
             {
                 CloseWindow();
+            }
+        }
+
+        public void NotifyChildIsClosing()
+        {
+            var firstOtherChild = NestedViewModels.OfType<IFocusableViewModel>().FirstOrDefault(x => !x.IsFocused && !x.IsHidden && !x.IsHiding);
+            if (firstOtherChild != null)
+            {
+                firstOtherChild.IsFocused = true;
             }
         }
 

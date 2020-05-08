@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Remembrance.Core.CardManagement.Data
+namespace Mémoire.Core.CardManagement.Data
 {
     sealed class EachWordExchangeEntry : IExchangeEntry
     {

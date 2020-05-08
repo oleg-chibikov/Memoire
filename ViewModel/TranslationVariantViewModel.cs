@@ -2,55 +2,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.MVVM.Commands;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.ExtendedTranslation;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationVariantViewModel : PriorityWordViewModel
+    public sealed class TranslationVariantViewModel : PriorityWordViewModel, IWithExtendedExamples
     {
         public TranslationVariantViewModel(
-            TranslationEntry translationEntry,
+            TranslationInfo translationInfo,
             TranslationVariant translationVariant,
             string parentText,
             ITextToSpeechPlayer textToSpeechPlayer,
             ITranslationEntryProcessor translationEntryProcessor,
-            IMessageHub messageHub,
             Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             Func<WordKey, string, WordImageViewerViewModel> wordImageViewerViewModelFactory,
             ILogger<PriorityWordViewModel> baseLogger,
             ITranslationEntryRepository translationEntryRepository,
-            ICommandManager commandManager) : base(
-            translationEntry,
+            ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
+            IMessageHub messageHub) : base(
+            translationInfo == null ? throw new ArgumentNullException(nameof(translationInfo)) : translationInfo.TranslationEntry,
             translationVariant,
             textToSpeechPlayer,
-            messageHub,
             translationEntryProcessor,
             baseLogger,
             wordViewModelFactory,
             translationEntryRepository,
-            commandManager)
+            commandManager,
+            sharedSettingsRepository,
+            messageHub)
         {
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = parentText ?? throw new ArgumentNullException(nameof(parentText));
             _ = translationVariant ?? throw new ArgumentNullException(nameof(translationVariant));
             _ = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));
             _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
 
-            Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationEntry)).ToArray();
-            Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationEntry.Id.SourceLanguage)).ToArray();
+            Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationInfo.TranslationEntry)).ToArray();
+            Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationInfo.TranslationEntryKey.SourceLanguage)).ToArray();
             Examples = translationVariant.Examples;
-            WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationEntry.Id, Word), parentText);
+            var translationVariantAndSynonymsHashSet = new HashSet<BaseWord>(translationVariant.GetTranslationVariantAndSynonyms());
+
+            OrphanExtendedExamples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations
+                .Where(x => x.Translation.Text != null && translationVariantAndSynonymsHashSet.Contains(x.Translation))
+                .SelectMany(x => x.ExtendedExamples).ToArray();
+            WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, Word), parentText);
         }
 
         public IReadOnlyCollection<Example>? Examples { get; }
+
+        public IReadOnlyCollection<ExtendedExample>? OrphanExtendedExamples { get; }
 
         public IReadOnlyCollection<WordViewModel>? Meanings { get; }
 

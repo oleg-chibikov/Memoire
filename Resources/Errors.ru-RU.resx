@@ -150,6 +150,9 @@
   <data name="CannotTranslate" xml:space="preserve">
     <value>Не получилось перевести слово '{0}'.</value>
   </data>
+  <data name="CannotGetExtendedTranslation" xml:space="preserve">
+    <value>Не удалось получить дополнительный перевод для слова '{0}'.</value>
+  </data>
   <data name="CannotGetQwantResults" xml:space="preserve">
     <value>Не удалось получить результаты поиска изображения Qwant.</value>
   </data>

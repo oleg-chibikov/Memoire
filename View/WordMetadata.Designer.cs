@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Remembrance.View
+namespace Mémoire.View
 {
 	using System;
 
@@ -45,7 +45,7 @@ namespace Remembrance.View
 			{
 				if (object.ReferenceEquals(resourceMan, null))
 				{
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Remembrance.View.WordMetadata", typeof(WordMetadata).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mémoire.View.WordMetadata", typeof(WordMetadata).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;

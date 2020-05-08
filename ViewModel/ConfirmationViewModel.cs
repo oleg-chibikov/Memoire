@@ -4,7 +4,7 @@ using PropertyChanged;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class ConfirmationViewModel : BaseViewModel
@@ -41,7 +41,7 @@ namespace Remembrance.ViewModel
                 return;
             }
 
-            _taskCompletionSource.SetResult(ShowButtons == false);
+            _taskCompletionSource.SetResult(!ShowButtons);
             CloseWindow();
         }
 

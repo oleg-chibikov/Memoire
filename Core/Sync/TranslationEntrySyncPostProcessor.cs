@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Sync;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Sync;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class TranslationEntrySyncPostProcessor : ISyncPostProcessor<TranslationEntry>
     {

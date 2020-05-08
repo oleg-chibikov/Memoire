@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     public interface IWithDeleteCommand
     {

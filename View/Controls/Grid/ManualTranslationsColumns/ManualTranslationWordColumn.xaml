@@ -1,0 +1,17 @@
+<DataGridTextColumn
+    x:Class="Mémoire.View.Controls.Grid.ManualTranslationsColumns.ManualTranslationWordColumn"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Mémoire.Contracts.DAL.Model;assembly=Scar.Mémoire.Contracts"
+    d:DataContext="{d:DesignInstance d:Type=model:ManualTranslation}"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    x:ClassModifier="internal"
+    Binding="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Header="{lex:Loc Scar.Mémoire.Resources:Texts:Word}"
+    mc:Ignorable="d" />

@@ -1,7 +1,7 @@
 using System;
-using Remembrance.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.Model;
 
-namespace Remembrance.Contracts.Processing.Data
+namespace Mémoire.Contracts.Processing.Data
 {
     public sealed class TranslationInfo
     {

@@ -1,4 +1,4 @@
-namespace Remembrance.Contracts.Sync
+namespace Mémoire.Contracts.Sync
 {
     public interface IRepositorySynhronizer
     {

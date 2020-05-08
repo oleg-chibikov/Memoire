@@ -1,6 +1,6 @@
-using Scar.Common.DAL;
+using Scar.Common.DAL.Contracts;
 
-namespace Remembrance.Contracts.Sync
+namespace Mémoire.Contracts.Sync
 {
     public interface ISyncExtender
     {

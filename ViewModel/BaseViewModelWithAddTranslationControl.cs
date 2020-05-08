@@ -4,19 +4,19 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Languages.Data;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Languages.Data;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseViewModelWithAddTranslationControl : BaseViewModel

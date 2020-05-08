@@ -1,8 +1,8 @@
 using System;
-using Remembrance.Contracts.View;
-using Remembrance.ViewModel;
+using Mémoire.Contracts.View;
+using Mémoire.ViewModel;
 
-namespace Remembrance.View.Windows
+namespace Mémoire.View.Windows
 {
     sealed partial class ConfirmationWindow : IConfirmationWindow
     {

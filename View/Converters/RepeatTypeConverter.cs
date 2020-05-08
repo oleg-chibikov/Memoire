@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Remembrance.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.Model;
 using Scar.Common;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(RepeatType), typeof(string))]
     sealed class RepeatTypeConverter : IValueConverter

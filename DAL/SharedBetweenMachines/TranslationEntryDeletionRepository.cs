@@ -1,15 +1,15 @@
 using System;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL.SharedBetweenMachines
+namespace Mémoire.DAL.SharedBetweenMachines
 {
     sealed class TranslationEntryDeletionRepository : TrackedLiteDbRepository<TranslationEntryDeletion, TranslationEntryKey>, ITranslationEntryDeletionRepository
     {
-        public TranslationEntryDeletionRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true) : base(
-            directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)),
+        public TranslationEntryDeletionRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = true) : base(
+            directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             null,
             shrink)
         {

@@ -9,73 +9,53 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Contracts.View;
+using Mémoire.Contracts.View.Card;
+using Mémoire.Contracts.View.Settings;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.View;
-using Remembrance.Contracts.View.Card;
-using Remembrance.Contracts.View.Settings;
-using Remembrance.Resources;
-using Scar.Common;
-using Scar.Common.DAL;
+using Scar.Common.DAL.Contracts;
 using Scar.Common.Localization;
 using Scar.Common.MVVM.CollectionView;
 using Scar.Common.MVVM.Commands;
+using Scar.Common.RateLimiting;
 using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowCreation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class DictionaryViewModel : BaseViewModelWithAddTranslationControl
     {
         readonly ILogger _logger;
-
         readonly Func<string, bool, ConfirmationViewModel> _confirmationViewModelFactory;
-
         readonly Func<ConfirmationViewModel, IConfirmationWindow> _confirmationWindowFactory;
-
         readonly ICultureManager _cultureManager;
-
         readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
-
         readonly ILearningInfoRepository _learningInfoRepository;
-
         readonly IMessageHub _messageHub;
-
         readonly IRateLimiter _rateLimiter;
-
         readonly IScopedWindowProvider _scopedWindowProvider;
-
         readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
         readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
-
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
         readonly SynchronizationContext _synchronizationContext;
-
         readonly Timer _timer;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
-
         readonly Func<TranslationEntry, TranslationEntryViewModel> _translationEntryViewModelFactory;
-
         readonly ObservableCollection<TranslationEntryViewModel> _translationList;
-
         readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
-
         int _count;
-
         bool _filterChanged;
-
         int _lastRecordedCount;
-
         bool _loaded;
 
         public DictionaryViewModel(
@@ -350,6 +330,7 @@ namespace Remembrance.ViewModel
             if (existingTranslationEntryViewModel != null)
             {
                 _logger.LogTrace("Updating {0} in the list...", existingTranslationEntryViewModel);
+                existingTranslationEntryViewModel.HasManualTranslations = translationEntry.ManualTranslations?.Count > 0;
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
                 existingTranslationEntryViewModel.Update(learningInfo, translationEntry.ModifiedDate);
 

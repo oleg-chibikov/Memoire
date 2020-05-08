@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Description>Installer for Remembrance</Description>
+    <Description>Installer for Mémoire</Description>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Remembrance.Installer.Program</StartupObject>
+    <StartupObject>Mémoire.Installer.Program</StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <OutputPath>..\BuildInstaller\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.Installer" Version="1.1.7422.29078" />
+    <PackageReference Include="Scar.Common.Installer" Version="1.1.7429.16301" />
     <PackageReference Include="WixSharp" Version="1.14.2" />
     <PackageReference Include="WixSharp.wix.bin" Version="3.11.2" />
   </ItemGroup>

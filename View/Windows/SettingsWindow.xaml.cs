@@ -1,9 +1,9 @@
 using System;
 using System.Windows;
-using Remembrance.Contracts.View.Settings;
-using Remembrance.ViewModel;
+using Mémoire.Contracts.View.Settings;
+using Mémoire.ViewModel;
 
-namespace Remembrance.View.Windows
+namespace Mémoire.View.Windows
 {
     sealed partial class SettingsWindow : ISettingsWindow
     {

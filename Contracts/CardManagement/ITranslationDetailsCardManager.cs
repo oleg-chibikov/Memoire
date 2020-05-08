@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Remembrance.Contracts.Processing.Data;
+using Mémoire.Contracts.Processing.Data;
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Mémoire.Contracts.CardManagement
 {
     public interface ITranslationDetailsCardManager
     {

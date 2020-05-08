@@ -1,4 +1,4 @@
-namespace Remembrance.Contracts
+namespace Mémoire.Contracts
 {
     public interface IDialogProvider
     {

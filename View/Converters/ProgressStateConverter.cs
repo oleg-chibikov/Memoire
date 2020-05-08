@@ -2,9 +2,9 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Shell;
-using Remembrance.Contracts.View;
+using Mémoire.Contracts.View;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(ProgressState), typeof(TaskbarItemProgressState))]
     sealed class ProgressStateConverter : IValueConverter

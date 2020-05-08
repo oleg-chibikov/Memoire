@@ -6,45 +6,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Exchange;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Languages.Data;
+using Mémoire.Contracts.View;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Exchange;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Languages.Data;
-using Remembrance.Contracts.Sync;
-using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
-using Remembrance.Contracts.View;
 using Scar.Common.Events;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts.Data;
+using Scar.Services.Contracts.Data.TextToSpeech;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class SettingsViewModel : BaseViewModel
     {
         readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
         readonly ICardsExchanger _cardsExchanger;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IPauseManager _pauseManager;
-
         readonly ISharedSettingsRepository _sharedSettingsRepository;
-
         readonly SynchronizationContext _synchronizationContext;
-
         bool _saved;
-
         string _uiLanguage;
 
         public SettingsViewModel(
@@ -57,7 +49,7 @@ namespace Remembrance.ViewModel
             IPauseManager pauseManager,
             ProcessBlacklistViewModel processBlacklistViewModel,
             ILanguageManager languageManager,
-            IRemembrancePathsProvider remembrancePathsProvider,
+            IPathsProvider pathsProvider,
             ICommandManager commandManager) : base(commandManager)
         {
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
@@ -69,7 +61,7 @@ namespace Remembrance.ViewModel
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             ProcessBlacklistViewModel = processBlacklistViewModel ?? throw new ArgumentNullException(nameof(processBlacklistViewModel));
-            _ = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
+            _ = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
 
             var blacklistedProcesses = _localSettingsRepository.BlacklistedProcesses;
             if (blacklistedProcesses != null)
@@ -81,12 +73,12 @@ namespace Remembrance.ViewModel
             }
 
             IList<SyncEngine> syncBuses = new List<SyncEngine> { SyncEngine.NoSync };
-            if (remembrancePathsProvider.DropBoxPath != null)
+            if (pathsProvider.DropBoxPath != null)
             {
                 syncBuses.Add(SyncEngine.DropBox);
             }
 
-            if (remembrancePathsProvider.OneDrivePath != null)
+            if (pathsProvider.OneDrivePath != null)
             {
                 syncBuses.Add(SyncEngine.OneDrive);
             }
@@ -100,11 +92,14 @@ namespace Remembrance.ViewModel
             SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
             MuteSounds = _sharedSettingsRepository.MuteSounds;
             CardsToShowAtOnce = _sharedSettingsRepository.CardsToShowAtOnce;
+            ClassificationMinimalThreshold = (int)_sharedSettingsRepository.ClassificationMinimalThreshold * 100;
+            ApiKeys = _sharedSettingsRepository.ApiKeys;
+            CardProbabilitySettings = _sharedSettingsRepository.CardProbabilitySettings;
             UiLanguage = _uiLanguage = _localSettingsRepository.UiLanguage;
             SyncEngine = _localSettingsRepository.SyncEngine;
-            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
-            OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
-            ViewLogsCommand = AddCommand(remembrancePathsProvider.ViewLogs);
+            OpenSharedFolderCommand = AddCommand(() => pathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
+            OpenSettingsFolderCommand = AddCommand(pathsProvider.OpenSettingsFolder);
+            ViewLogsCommand = AddCommand(pathsProvider.ViewLogs);
             SaveCommand = AddCommand(Save);
             ExportCommand = AddCommand(ExportAsync);
             ImportCommand = AddCommand(ImportAsync);
@@ -120,8 +115,8 @@ namespace Remembrance.ViewModel
 
         public IEnumerable<Language> AvailableUiLanguages { get; } = new[]
         {
-            new Language(Constants.EnLanguage, "English"),
-            new Language(Constants.RuLanguage, "Русский")
+            new Language(LanguageConstants.EnLanguage, "English"),
+            new Language(LanguageConstants.RuLanguage, "Русский")
         };
 
         public IDictionary<VoiceEmotion, string> AvailableVoiceEmotions { get; } = Enum.GetValues(typeof(VoiceEmotion)).Cast<VoiceEmotion>().ToDictionary(x => x, x => x.ToString());
@@ -155,6 +150,12 @@ namespace Remembrance.ViewModel
         public Speaker TtsSpeaker { get; set; }
 
         public int CardsToShowAtOnce { get; set; }
+
+        public int ClassificationMinimalThreshold { get; set; }
+
+        public ApiKeys ApiKeys { get; set; }
+
+        public CardProbabilitySettings CardProbabilitySettings { get; set; }
 
         public SyncEngine SyncEngine { get; set; }
 
@@ -260,6 +261,22 @@ namespace Remembrance.ViewModel
                 _sharedSettingsRepository.CardsToShowAtOnce = CardsToShowAtOnce;
             }
 
+            if (((int)_sharedSettingsRepository.ClassificationMinimalThreshold * 100) != ClassificationMinimalThreshold)
+            {
+                // ReSharper disable once PossibleLossOfFraction
+                _sharedSettingsRepository.ClassificationMinimalThreshold = ClassificationMinimalThreshold / 100;
+            }
+
+            if (!Equals(_sharedSettingsRepository.ApiKeys, ApiKeys))
+            {
+                _sharedSettingsRepository.ApiKeys = ApiKeys;
+            }
+
+            if (!Equals(_sharedSettingsRepository.CardProbabilitySettings, CardProbabilitySettings))
+            {
+                _sharedSettingsRepository.CardProbabilitySettings = CardProbabilitySettings;
+            }
+
             if (_localSettingsRepository.UiLanguage != UiLanguage)
             {
                 _localSettingsRepository.UiLanguage = UiLanguage;
@@ -278,7 +295,7 @@ namespace Remembrance.ViewModel
                 _localSettingsRepository.SyncEngine = SyncEngine;
             }
 
-            _localSettingsRepository.BlacklistedProcesses = (ProcessBlacklistViewModel.BlacklistedProcesses.Count > 0) ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
+            _localSettingsRepository.BlacklistedProcesses = ProcessBlacklistViewModel.BlacklistedProcesses.Count > 0 ? ProcessBlacklistViewModel.BlacklistedProcesses : null;
 
             _saved = true;
 

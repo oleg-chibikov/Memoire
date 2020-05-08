@@ -3,27 +3,28 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.ProcessMonitoring;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.ProcessMonitoring;
-using Remembrance.Contracts.ProcessMonitoring.Data;
 using Scar.Common.MVVM.CollectionView;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class ProcessBlacklistViewModel : BaseViewModel, IWithDeleteCommand
     {
         readonly IActiveProcessesProvider _activeProcessesProvider;
-
         readonly ILogger _logger;
-
         string? _filter;
 
-        public ProcessBlacklistViewModel(IActiveProcessesProvider activeProcessesProvider, ILogger<ProcessBlacklistViewModel> logger, ICommandManager commandManager, ICollectionViewSource collectionViewSource) : base(
-            commandManager)
+        public ProcessBlacklistViewModel(
+            IActiveProcessesProvider activeProcessesProvider,
+            ILogger<ProcessBlacklistViewModel> logger,
+            ICommandManager commandManager,
+            ICollectionViewSource collectionViewSource) : base(commandManager)
         {
             _ = collectionViewSource ?? throw new ArgumentNullException(nameof(collectionViewSource));
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));

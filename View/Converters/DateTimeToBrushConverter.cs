@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(DateTime), typeof(Brush))]
     sealed class DateTimeToBrushConverter : IValueConverter

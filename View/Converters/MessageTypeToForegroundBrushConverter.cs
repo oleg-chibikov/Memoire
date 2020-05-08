@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Scar.Common.Messages;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(MessageType), typeof(Color))]
     sealed class MessageTypeToForegroundBrushConverter : IValueConverter

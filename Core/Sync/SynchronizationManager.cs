@@ -4,31 +4,24 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Sync;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.Sync;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class SynchronizationManager : ISynchronizationManager, IDisposable
     {
         readonly FileSystemWatcher _fileSystemWatcher;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
-        readonly IRemembrancePathsProvider _remembrancePathsProvider;
-
+        readonly IPathsProvider _pathsProvider;
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
         readonly IReadOnlyCollection<ISyncExtender> _syncExtenders;
-
         readonly IDictionary<string, IRepositorySynhronizer> _synchronizers;
-
         string? _allMachinesSharedBasePath;
-
         string? _thisMachineSharedPath;
 
         public SynchronizationManager(
@@ -37,9 +30,9 @@ namespace Remembrance.Core.Sync
             IReadOnlyCollection<IRepositorySynhronizer> synchronizers,
             IReadOnlyCollection<ISyncExtender> syncExtenders,
             IMessageHub messageHub,
-            IRemembrancePathsProvider remembrancePathsProvider)
+            IPathsProvider pathsProvider)
         {
-            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
+            _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!(synchronizers.Count > 0))
             {
@@ -83,8 +76,14 @@ namespace Remembrance.Core.Sync
             }
 
             {
-                _thisMachineSharedPath = _remembrancePathsProvider.GetSharedPath(syncEngine);
+                _thisMachineSharedPath = _pathsProvider.GetSharedPath(syncEngine);
                 _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
+
+                if (!Directory.Exists(_allMachinesSharedBasePath))
+                {
+                    Directory.CreateDirectory(_allMachinesSharedBasePath);
+                }
+
                 _fileSystemWatcher.Path = _allMachinesSharedBasePath;
             }
 

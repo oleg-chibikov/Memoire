@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>The main business logic assembly of Remembrance</Description>
+    <Description>The main business logic assembly of Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,20 +10,21 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7422.29078" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7422.29073" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7422.29078" />
-    <PackageReference Include="Scar.Common.RateLimiter" Version="1.1.7422.29074" />
-    <PackageReference Include="Scar.Common.Sync" Version="1.1.7422.29075" />
-    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7422.29108" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7427.23079" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7427.23085" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7427.23080" />
+    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7427.23085" />
+    <PackageReference Include="Scar.Common.Sync.Contracts" Version="1.1.7427.23081" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7433.34430" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Resources\Resources.csproj" />
   </ItemGroup>
 
 </Project>

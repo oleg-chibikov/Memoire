@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWpf>True</UseWpf>
-    <Description>Launcher application for Remembrance</Description>
+    <Description>Launcher application for Mémoire</Description>
     <ApplicationIcon>IconAlt.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
-    <StartupObject></StartupObject>
+    <StartupObject>Mémoire.Launcher.App</StartupObject>
     <OutputPath>..\Build\</OutputPath>
   </PropertyGroup>
 
@@ -18,27 +18,36 @@
 
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
     <PackageReference Include="NLog.Config" Version="4.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
-    <PackageReference Include="Scar.Common.AutofacHttpClientProvider" Version="1.1.7423.16637" />
-    <PackageReference Include="Scar.Common.AutofacNamedInstancesFactory" Version="1.1.7422.29073" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7422.29112" />
-    <PackageReference Include="Scar.Common.View.AutofacScopedWindowProvider" Version="1.1.7422.29130" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7422.29078" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7422.29113" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7423.15148" />
+    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7427.23080" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7427.23085" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7427.23114" />
+    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7433.33595" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7433.34430" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7428.22704" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7428.22852" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7428.22998" />
+    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7433.34444" />
+    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7431.28817" />
+    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7431.20504" />
+    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7431.20504" />
+    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7431.28817" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.Core\Core.csproj" />
-    <ProjectReference Include="..\Remembrance.DAL\DAL.csproj" />
-    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
-    <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
-    <ProjectReference Include="..\Remembrance.View\View.csproj" />
-    <ProjectReference Include="..\Remembrance.WebApi\WebApi.csproj" />
-    <ProjectReference Include="..\Remembrance.Windows.Common\Windows.Common.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\Resources\Resources.csproj" />
+    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\View\View.csproj" />
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\WindowCreators\WindowCreators.csproj" />
+    <ProjectReference Include="..\Windows.Common\Windows.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +55,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="del &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Remembrance.Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
+    <Exec Command="del &quot;$(SolutionDir)Release\Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
   </Target>
 
 </Project>

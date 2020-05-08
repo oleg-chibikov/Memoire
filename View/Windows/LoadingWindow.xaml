@@ -1,21 +1,17 @@
-<baseWindow:BaseWindow
-    x:Class="Remembrance.View.Windows.LoadingWindow"
+<core:AnimatedWindowWithoutTemplate
+    x:Class="Mémoire.View.Windows.LoadingWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:baseWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.BaseWindow"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:core="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     x:ClassModifier="internal"
-    AllowsTransparency="True"
     Background="Transparent"
     Focusable="False"
     ShowActivated="False"
     ShowInTaskbar="False"
-    SizeToContent="WidthAndHeight"
-    Topmost="True"
-    WindowStartupLocation="CenterScreen"
-    WindowStyle="None">
-    <baseWindow:BaseWindow.Resources>
+    Topmost="True">
+    <core:BaseWindow.Resources>
         <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
-    </baseWindow:BaseWindow.Resources>
-    <Control Style="{StaticResource BusyAnimationStyle}" ToolTip="{lex:Loc Scar.Remembrance.Resources:Texts:Loading}" />
-</baseWindow:BaseWindow>
+    </core:BaseWindow.Resources>
+    <Control Style="{StaticResource BusyAnimationStyle}" ToolTip="{lex:Loc Scar.Mémoire.Resources:Texts:Loading}" />
+</core:AnimatedWindowWithoutTemplate>

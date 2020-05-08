@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(byte[]), typeof(BitmapImage))]
     sealed class BytesToImageConverter : IValueConverter

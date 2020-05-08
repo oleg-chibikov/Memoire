@@ -1,6 +1,6 @@
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.Contracts.View.Card
+namespace Mémoire.Contracts.View.Card
 {
     public interface IAssessmentBatchCardWindow : IDisplayable
     {

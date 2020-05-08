@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Remembrance.Contracts.Sync;
-using Scar.Common.DAL;
-using Scar.Common.DAL.Model;
+using Mémoire.Contracts.Sync;
+using Scar.Common.DAL.Contracts;
+using Scar.Common.DAL.Contracts.Model;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
         where TEntity : IEntity<TId>
@@ -14,11 +14,8 @@ namespace Remembrance.Core.Sync
         where TDeletionEventRepository : class, IRepository<TDeletionEntity, TId>
     {
         readonly object _locker = new object();
-
         readonly IList<TId> _ownDeletionEventsToClear;
-
         readonly TDeletionEventRepository _ownRepository;
-
         bool _collectInfo = true;
 
         public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository)

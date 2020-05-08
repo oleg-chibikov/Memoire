@@ -1,0 +1,54 @@
+<commonView:BaseControl
+    x:Class="Mémoire.View.Controls.TranslationDetails.TranslationVariantControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:translationDetails="clr-namespace:Mémoire.View.Controls.TranslationDetails"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationVariantViewModel}"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    x:ClassModifier="internal"
+    mc:Ignorable="d">
+    <commonView:BaseControl.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+    </commonView:BaseControl.Resources>
+    <Border
+        Margin="0,5"
+        Padding="{StaticResource CommonMarginThickness}"
+        Background="{StaticResource LighterBackground}"
+        BorderBrush="{StaticResource Border}"
+        BorderThickness="1"
+        CornerRadius="0">
+        <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
+            <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
+                <TextBlock FontSize="{StaticResource MediumFontSize}" Text="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneTime, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddValueConverter}, ConverterParameter=1}" />
+                <common:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
+                <common:WordControl DataContext="{Binding Mode=OneTime}" />
+                <common:WordsControl FontSize="{StaticResource SmallFontSize}" ItemsSource="{Binding Synonyms, Mode=OneTime}" />
+            </StackPanel>
+            <common:WordsControl
+                HorizontalAlignment="Left"
+                FontSize="{StaticResource SmallFontSize}"
+                Foreground="{StaticResource MeaningsForeground}"
+                ItemsSource="{Binding Meanings, Mode=OneTime}" />
+            <ItemsControl ItemsSource="{Binding Examples, Mode=OneTime}" Visibility="{Binding Examples, Mode=OneTime, Converter={StaticResource CollectionToVisibilityConverter}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
+                            <TextBlock Text="{Binding Text, Mode=OneTime}" />
+                            <TextBlock Text="{Binding Translations, Mode=OneTime, Converter={StaticResource WordConcatConverter}, StringFormat=' - {0}'}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <translationDetails:MoreExamplesControl />
+        </StackPanel>
+    </Border>
+</commonView:BaseControl>

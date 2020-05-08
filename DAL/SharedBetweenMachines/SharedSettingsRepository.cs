@@ -1,15 +1,16 @@
 using System;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Translate.Data.TextToSpeechPlayer;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Scar.Services.Contracts.Data;
+using Scar.Services.Contracts.Data.TextToSpeech;
 
-namespace Remembrance.DAL.SharedBetweenMachines
+namespace Mémoire.DAL.SharedBetweenMachines
 {
     sealed class SharedSettingsRepository : BaseSettingsRepository, ISharedSettingsRepository
     {
-        public SharedSettingsRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true) : base(
-            directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)),
+        public SharedSettingsRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = true) : base(
+            directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             nameof(ApplicationSettings),
             shrink)
         {
@@ -23,7 +24,7 @@ namespace Remembrance.DAL.SharedBetweenMachines
 
         public string PreferredLanguage
         {
-            get => TryGetValue(nameof(PreferredLanguage), Constants.EnLanguageTwoLetters);
+            get => TryGetValue(nameof(PreferredLanguage), LanguageConstants.EnLanguageTwoLetters);
             set => RemoveUpdateOrInsert(nameof(PreferredLanguage), value);
         }
 
@@ -55,6 +56,24 @@ namespace Remembrance.DAL.SharedBetweenMachines
         {
             get => TryGetValue(nameof(CardsToShowAtOnce), 1);
             set => RemoveUpdateOrInsert(nameof(CardsToShowAtOnce), value);
+        }
+
+        public double ClassificationMinimalThreshold
+        {
+            get => TryGetValue(nameof(ClassificationMinimalThreshold), 0.11);
+            set => RemoveUpdateOrInsert(nameof(ClassificationMinimalThreshold), value);
+        }
+
+        public ApiKeys ApiKeys
+        {
+            get => TryGetValue(nameof(ApiKeys), ApiKeys.CreateDefault());
+            set => RemoveUpdateOrInsert(nameof(ApiKeys), value);
+        }
+
+        public CardProbabilitySettings CardProbabilitySettings
+        {
+            get => TryGetValue(nameof(CardProbabilitySettings), CardProbabilitySettings.CreateDefault());
+            set => RemoveUpdateOrInsert(nameof(CardProbabilitySettings), value);
         }
     }
 }

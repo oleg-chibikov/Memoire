@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.AspNetCore.Mvc;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
 
-namespace Remembrance.WebApi.Controllers
+namespace Mémoire.WebApi.Controllers
 {
     [Route("api/words")]
     [ApiController]

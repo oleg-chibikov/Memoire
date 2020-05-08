@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("Remembrance.View")]
+[assembly: AssemblyTitle("Mémoire.View")]

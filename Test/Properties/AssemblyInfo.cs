@@ -1,3 +1,3 @@
 using System.Reflection;
 
-[assembly: AssemblyTitle("Remembrance.Test")]
+[assembly: AssemblyTitle("Mémoire.Test")]

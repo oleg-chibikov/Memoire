@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Contracts.View.Card;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.View.Card;
-using Scar.Common;
 using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowCreation;
 
-namespace Remembrance.Core.CardManagement
+namespace Mémoire.Core.CardManagement
 {
     sealed class TranslationDetailsCardManager : ITranslationDetailsCardManager
     {

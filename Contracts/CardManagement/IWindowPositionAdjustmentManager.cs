@@ -1,6 +1,6 @@
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Mémoire.Contracts.CardManagement
 {
     public interface IWindowPositionAdjustmentManager
     {

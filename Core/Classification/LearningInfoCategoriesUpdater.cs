@@ -3,51 +3,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Remembrance.Contracts;
-using Remembrance.Contracts.Classification;
-using Remembrance.Contracts.Classification.Data;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Processing.Data;
+using Easy.MessageHub;
+using Mémoire.Contracts.Classification;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Resources;
+using Scar.Common.Messages;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data;
+using Scar.Services.Contracts.Data.Classification;
 
-namespace Remembrance.Core.Classification
+namespace Mémoire.Core.Classification
 {
     sealed class LearningInfoCategoriesUpdater : ILearningInfoCategoriesUpdater
     {
-        const decimal MinMatchThreshold = 0.11M;
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly IClassificationClient _classificationClient;
+        readonly IMessageHub _messageHub;
 
-        public LearningInfoCategoriesUpdater(ILearningInfoRepository learningInfoRepository, IClassificationClient classificationClient)
+        public LearningInfoCategoriesUpdater(
+            ILearningInfoRepository learningInfoRepository,
+            IClassificationClient classificationClient,
+            IMessageHub messageHub,
+            ISharedSettingsRepository sharedSettingsRepository)
         {
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _classificationClient = classificationClient ?? throw new ArgumentNullException(nameof(classificationClient));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
         }
 
-        public async Task<IReadOnlyCollection<ClassificationCategory>> UpdateLearningInfoClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
+        public async Task UpdateLearningInfoClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
+            var minThreshold = _sharedSettingsRepository.ClassificationMinimalThreshold;
+
             // This will replace old categories if min threshold changes
-            if (translationInfo.LearningInfo.ClassificationCategories == null ||
-                translationInfo.LearningInfo.ClassificationCategories.MinMatchThreshold != MinMatchThreshold)
+            if ((translationInfo.LearningInfo.ClassificationCategories == null) || (Math.Abs(translationInfo.LearningInfo.ClassificationCategories.MinMatchThreshold - minThreshold) >= 0.01))
             {
                 var classificationCategories = await GetClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
-                translationInfo.LearningInfo.ClassificationCategories = new LearningInfoClassificationCategories { Items = classificationCategories, MinMatchThreshold = MinMatchThreshold };
+                translationInfo.LearningInfo.ClassificationCategories = new LearningInfoClassificationCategories { Items = classificationCategories, MinMatchThreshold = minThreshold };
 
                 _learningInfoRepository.Update(translationInfo.LearningInfo);
-                return classificationCategories;
             }
-
-            return translationInfo.LearningInfo.ClassificationCategories?.Items ?? Array.Empty<ClassificationCategory>();
         }
 
-        async Task<IReadOnlyCollection<ClassificationCategory>> GetClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
+        async Task<IEnumerable<ClassificationCategory>> GetClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             string? text = null;
-            if (translationInfo.TranslationEntryKey.SourceLanguage == Constants.EnLanguageTwoLetters)
+            if (translationInfo.TranslationEntryKey.SourceLanguage == LanguageConstants.EnLanguageTwoLetters)
             {
                 text = translationInfo.TranslationEntryKey.Text;
             }
-            else if (translationInfo.TranslationEntryKey.TargetLanguage == Constants.EnLanguageTwoLetters)
+            else if (translationInfo.TranslationEntryKey.TargetLanguage == LanguageConstants.EnLanguageTwoLetters)
             {
                 if (translationInfo.TranslationEntry.PriorityWords?.Count > 0)
                 {
@@ -68,28 +77,10 @@ namespace Remembrance.Core.Classification
 
             if (text != null)
             {
-                var classificationCategories = await _classificationClient.GetCategoriesAsync(text, null, cancellationToken).ConfigureAwait(false);
-                var limitedCategories = classificationCategories.Where(x => x.Match >= MinMatchThreshold);
-                var tasks = limitedCategories.Select(category => GetInnerCategoriesAsync(category, text, cancellationToken));
-                var results = await Task.WhenAll(tasks).ConfigureAwait(false);
-                return results.SelectMany(x => x).OrderByDescending(x => x.Match).ToArray();
+                return await _classificationClient.GetCategoriesAsync(text, null, null, ex => _messageHub.Publish(Errors.CannotCategorize.ToError(ex)), cancellationToken).ConfigureAwait(false);
             }
 
-            return Array.Empty<ClassificationCategory>();
-        }
-
-        async Task<IReadOnlyCollection<ClassificationCategory>> GetInnerCategoriesAsync(ClassificationCategory category, string text, CancellationToken cancellationToken)
-        {
-            var currentCategories = new List<ClassificationCategory> { category };
-            var innerClassifier = category.ClassName.TrimEnd('s') + " Topics";
-            var innerCategories = await _classificationClient.GetCategoriesAsync(text, innerClassifier, cancellationToken).ConfigureAwait(false);
-            var limitedInnerCategories = innerCategories.Where(x => x.Match >= MinMatchThreshold);
-            foreach (var innerCategory in limitedInnerCategories)
-            {
-                currentCategories.Add(innerCategory);
-            }
-
-            return currentCategories;
+            return Enumerable.Empty<ClassificationCategory>();
         }
     }
 }

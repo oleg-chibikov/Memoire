@@ -5,31 +5,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Exchange;
+using Mémoire.Contracts.Exchange.Data;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Core.CardManagement.Data;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Exchange;
-using Remembrance.Contracts.Exchange.Data;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Core.CardManagement.Data;
 using Scar.Common;
 using Scar.Common.Events;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.Core.Exchange
+namespace Mémoire.Core.Exchange
 {
     abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
         readonly ILearningInfoRepository _learningInfoRepository;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messenger;
-
         readonly ITranslationEntryProcessor _translationEntryProcessor;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
 
         protected BaseFileImporter(
@@ -92,7 +89,7 @@ namespace Remembrance.Core.Exchange
                     })
                 .ConfigureAwait(false);
 
-            return new ExchangeResult(true, (errorsList.Count > 0) ? errorsList : null, successCount);
+            return new ExchangeResult(true, errorsList.Count > 0 ? errorsList : null, successCount);
         }
 
         protected virtual IReadOnlyCollection<ManualTranslation>? GetManualTranslations(T exchangeEntry)
@@ -138,6 +135,10 @@ namespace Remembrance.Core.Exchange
             catch (JsonException ex)
             {
                 _logger.LogWarning(ex, "Cannot deserialize object");
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Cannot process argument");
             }
 
             return deserialized;

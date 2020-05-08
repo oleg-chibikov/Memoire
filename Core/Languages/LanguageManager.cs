@@ -3,35 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Languages.Data;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Languages.Data;
-using Remembrance.Contracts.Translate;
+using Scar.Common.Messages;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data;
 
-namespace Remembrance.Core.Languages
+namespace Mémoire.Core.Languages
 {
     sealed class LanguageManager : ILanguageManager
     {
+        readonly IMessageHub _messageHub;
         readonly AvailableLanguagesInfo _availableLanguages;
-
         readonly ILanguageDetector _languageDetector;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly ILogger _logger;
-
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public LanguageManager(ILocalSettingsRepository localSettingsRepository, ISharedSettingsRepository sharedSettingsRepository, ILogger<LanguageManager> logger, ILanguageDetector languageDetector)
+        public LanguageManager(
+            ILocalSettingsRepository localSettingsRepository,
+            ISharedSettingsRepository sharedSettingsRepository,
+            ILogger<LanguageManager> logger,
+            ILanguageDetector languageDetector,
+            IMessageHub messageHub)
         {
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
+            _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
 
             var cachedLanguages = _localSettingsRepository.AvailableLanguages;
             if (DateTime.Now > (_localSettingsRepository.AvailableLanguagesModifiedDate + TimeSpan.FromDays(7)))
@@ -70,8 +76,8 @@ namespace Remembrance.Core.Languages
 
             if (addAuto)
             {
-                languages[Constants.AutoDetectLanguage] = "--AutoDetect--";
-                toSelect ??= Constants.AutoDetectLanguage;
+                languages[LanguageConstants.AutoDetectLanguage] = "--AutoDetect--";
+                toSelect ??= LanguageConstants.AutoDetectLanguage;
             }
 
             var ordered = languages
@@ -87,7 +93,7 @@ namespace Remembrance.Core.Languages
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             IDictionary<string, string> languages;
 
-            if (sourceLanguage == Constants.AutoDetectLanguage)
+            if (sourceLanguage == LanguageConstants.AutoDetectLanguage)
             {
                 languages = _availableLanguages.Languages.ToDictionary(x => x.Key, x => x.Value);
             }
@@ -102,10 +108,10 @@ namespace Remembrance.Core.Languages
                 languages = _availableLanguages.Languages.Where(language => acceptableTargetLanguages.Contains(language.Key)).ToDictionary(language => language.Key, language => language.Value);
             }
 
-            languages[Constants.AutoDetectLanguage] = "--Reverse--";
+            languages[LanguageConstants.AutoDetectLanguage] = "--Reverse--";
 
             var lastUsed = _localSettingsRepository.LastUsedTargetLanguage;
-            var toSelect = (lastUsed != null) && languages.ContainsKey(lastUsed) ? lastUsed : Constants.AutoDetectLanguage;
+            var toSelect = (lastUsed != null) && languages.ContainsKey(lastUsed) ? lastUsed : LanguageConstants.AutoDetectLanguage;
             var ordered = languages
                 .OrderBy(language => GetLanguageOrder(language.Key, _sharedSettingsRepository.PreferredLanguage, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, lastUsed))
                 .ThenBy(x => x.Value)
@@ -116,7 +122,7 @@ namespace Remembrance.Core.Languages
         public async Task<string> GetSourceAutoSubstituteAsync(string text, CancellationToken cancellationToken)
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
-            var detectionResult = await _languageDetector.DetectLanguageAsync(text, cancellationToken).ConfigureAwait(false);
+            var detectionResult = await _languageDetector.DetectLanguageAsync(text, ex => _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex)), cancellationToken).ConfigureAwait(false);
             return detectionResult.Language;
         }
 
@@ -140,17 +146,21 @@ namespace Remembrance.Core.Languages
 
         static int GetLanguageOrder(string languageCode, string preferred, string currentCultureLanguage, string? lastUsed)
         {
-            return languageCode == Constants.AutoDetectLanguage ? 1 :
+            return languageCode == LanguageConstants.AutoDetectLanguage ? 1 :
                 languageCode == preferred ? 2 :
                 languageCode == currentCultureLanguage ? 3 :
-                languageCode == Constants.EnLanguageTwoLetters ? 4 :
+                languageCode == LanguageConstants.EnLanguageTwoLetters ? 4 :
                 (lastUsed != null) && (languageCode == lastUsed) ? 5 : 6;
         }
 
         async Task<AvailableLanguagesInfo> ReloadAvailableLanguagesAsync()
         {
             _logger.LogTrace("Loading available languages...");
-            var languageListResult = await _languageDetector.ListLanguagesAsync(Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName, CancellationToken.None).ConfigureAwait(false);
+            var languageListResult = await _languageDetector.ListLanguagesAsync(
+                    Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName,
+                    ex => _messageHub.Publish(Errors.CannotListLanguages.ToError(ex)),
+                    CancellationToken.None)
+                .ConfigureAwait(false);
             if (languageListResult == null)
             {
                 throw new InvalidOperationException("No languages info available");

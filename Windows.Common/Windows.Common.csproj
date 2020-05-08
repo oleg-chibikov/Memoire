@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Windows OS specific classes for remembrance</Description>
+    <Description>Windows OS specific classes for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7422.29107" />
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7422.29107" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7427.23113" />
+    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7433.33592" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Resources\Resources.csproj" />
   </ItemGroup>
 </Project>

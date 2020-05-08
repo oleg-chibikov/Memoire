@@ -1,8 +1,8 @@
+using Mémoire.Contracts;
+using Mémoire.Resources;
 using Microsoft.Win32;
-using Remembrance.Contracts;
-using Remembrance.Resources;
 
-namespace Remembrance.Windows.Common.DialogProviders
+namespace Mémoire.Windows.Common.DialogProviders
 {
     sealed class SaveFileDialogProvider : ISaveFileDialogProvider
     {

@@ -4,18 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Timers;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.ProcessMonitoring;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.ProcessMonitoring;
 
-namespace Remembrance.Core.ProcessMonitoring
+namespace Mémoire.Core.ProcessMonitoring
 {
     sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
     {
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly IPauseManager _pauseManager;
-
         readonly Timer _timer;
 
         public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository)
@@ -109,7 +108,7 @@ namespace Remembrance.Core.ProcessMonitoring
                 using (var process = Process.GetProcessById(element.Current.ProcessId))
                 {
                     var processName = process.ProcessName;
-                    if (processName == "explorer" || processName == "Remembrance")
+                    if (processName == "explorer" || processName == "Mémoire")
                     {
                         return;
                     }

@@ -1,9 +1,9 @@
 using System.Windows;
 using System.Windows.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Converters;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(Visibility))]
     sealed class PartOfSpeechToVisibilityConverter : ValueToVisibilityConverter<PartOfSpeech?>

@@ -5,37 +5,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.Classification;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.Classification;
-using Remembrance.Contracts.Classification.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
 using Scar.Common.Localization;
+using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.Classification;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationDetailsCardViewModel : BaseViewModel
     {
         readonly ICultureManager _cultureManager;
-
+        readonly ILanguageDetector _languageDetector;
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IPredictor _predictor;
-
         readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
-
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
         readonly TranslationEntryKey _translationEntryKey;
 
         public TranslationDetailsCardViewModel(
@@ -49,10 +46,12 @@ namespace Remembrance.ViewModel
             ILanguageManager languageManager,
             ICultureManager cultureManager,
             ICommandManager commandManager,
-            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater) : base(commandManager)
+            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater,
+            ILanguageDetector languageDetector) : base(commandManager)
         {
             _ = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
+            _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -116,7 +115,8 @@ namespace Remembrance.ViewModel
 
         async Task<Prepositions?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
         {
-            var predictionResult = await _predictor.PredictAsync(text, 5, cancellationToken).ConfigureAwait(false);
+            var language = await _languageDetector.DetectLanguageAsync(text, ex => _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex)), cancellationToken).ConfigureAwait(false);
+            var predictionResult = await _predictor.PredictAsync(text, 5, language.Language, ex => _messageHub.Publish(Errors.CannotPredict.ToError(ex)), cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
             {
                 return null;
@@ -147,7 +147,8 @@ namespace Remembrance.ViewModel
 
         async Task LoadClassificationCategoriesIfNotExistsAsync(TranslationInfo translationInfo, ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater)
         {
-            ClassificationCategories = await learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, CancellationToken.None).ConfigureAwait(false);
+            await learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, CancellationToken.None).ConfigureAwait(false);
+            ClassificationCategories = translationInfo.LearningInfo.ClassificationCategories?.Items.ToArray() ?? Array.Empty<ClassificationCategory>();
         }
 
         async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)

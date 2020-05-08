@@ -1,9 +1,9 @@
 using System;
+using Mémoire.Contracts.DAL.Model;
 using Newtonsoft.Json;
-using Remembrance.Contracts.DAL.Model;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL
+namespace Mémoire.DAL
 {
     abstract class BaseSettingsRepository : TrackedLiteDbRepository<ApplicationSettings, string>
     {

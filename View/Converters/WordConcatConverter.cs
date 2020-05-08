@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Converters;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(IReadOnlyCollection<TextEntry>), typeof(string))]
     sealed class WordConcatConverter : EnumerableConcatConverter

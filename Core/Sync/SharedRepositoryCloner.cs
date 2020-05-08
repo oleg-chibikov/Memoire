@@ -2,30 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Sync;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Sync;
-using Scar.Common;
+using Scar.Common.RateLimiting;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
     {
         readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly ILogger _logger;
-        readonly IRemembrancePathsProvider _remembrancePathsProvider;
+        readonly IPathsProvider _pathsProvider;
 
         public SharedRepositoryCloner(
             IReadOnlyCollection<ISharedRepository> cloneableRepositories,
             Func<IRateLimiter> rateLimiterFactory,
             ILocalSettingsRepository localSettingsRepository,
             ILogger<SharedRepositoryCloner> logger,
-            IRemembrancePathsProvider remembrancePathsProvider)
+            IPathsProvider pathsProvider)
         {
-            _remembrancePathsProvider = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
+            _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = cloneableRepositories ?? throw new ArgumentNullException(nameof(cloneableRepositories));
@@ -51,46 +52,47 @@ namespace Remembrance.Core.Sync
             var repository = (ISharedRepository)sender;
             var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];
             await rateLimiter.ThrottleAsync(
-                TimeSpan.FromSeconds(5),
-                () =>
-                {
-                    var syncBus = _localSettingsRepository.SyncEngine;
-                    if (syncBus == SyncEngine.NoSync)
+                    TimeSpan.FromSeconds(5),
+                    () =>
                     {
-                        return;
-                    }
-
-                    var fileName = repository.DbFileName + repository.DbFileExtension;
-                    var oldFilePath = Path.Combine(repository.DbDirectoryPath, fileName);
-                    var newDirectoryPath = _remembrancePathsProvider.GetSharedPath(syncBus);
-                    var newFilePath = Path.Combine(newDirectoryPath, fileName);
-
-                    try
-                    {
-                        if (!File.Exists(oldFilePath))
+                        var syncBus = _localSettingsRepository.SyncEngine;
+                        if (syncBus == SyncEngine.NoSync)
                         {
-                            throw new InvalidOperationException($"{oldFilePath} does not exist");
+                            return;
                         }
 
-                        if (!Directory.Exists(newDirectoryPath))
-                        {
-                            Directory.CreateDirectory(newDirectoryPath);
-                        }
+                        var fileName = repository.DbFileName + repository.DbFileExtension;
+                        var oldFilePath = Path.Combine(repository.DbDirectoryPath, fileName);
+                        var newDirectoryPath = _pathsProvider.GetSharedPath(syncBus);
+                        var newFilePath = Path.Combine(newDirectoryPath, fileName);
 
-                        if (File.Exists(newFilePath))
+                        try
                         {
-                            File.Delete(newFilePath);
-                        }
+                            if (!File.Exists(oldFilePath))
+                            {
+                                throw new InvalidOperationException($"{oldFilePath} does not exist");
+                            }
 
-                        File.Copy(oldFilePath, newFilePath);
-                        _logger.LogInformation("Cloned repository {0} to {1}", oldFilePath, newFilePath);
-                    }
-                    catch (IOException ex)
-                    {
-                        _logger.LogWarning(ex, "Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
-                        Repository_ChangedAsync(sender, e);
-                    }
-                }).ConfigureAwait(true);
+                            if (!Directory.Exists(newDirectoryPath))
+                            {
+                                Directory.CreateDirectory(newDirectoryPath);
+                            }
+
+                            if (File.Exists(newFilePath))
+                            {
+                                File.Delete(newFilePath);
+                            }
+
+                            File.Copy(oldFilePath, newFilePath);
+                            _logger.LogInformation("Cloned repository {0} to {1}", oldFilePath, newFilePath);
+                        }
+                        catch (IOException ex)
+                        {
+                            _logger.LogWarning(ex, "Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
+                            Repository_ChangedAsync(sender, e);
+                        }
+                    })
+                .ConfigureAwait(true);
         }
     }
 }

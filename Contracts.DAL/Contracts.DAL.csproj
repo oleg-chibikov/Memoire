@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Contracts assembly for DAL of Mémoire</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS8618</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Scar.Common" Version="1.1.7428.22852" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7427.23084" />
+    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7431.20486" />
+  </ItemGroup>
+
+</Project>

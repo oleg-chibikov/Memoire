@@ -2,5 +2,5 @@
 
 <Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
   <!--<Costura IncludeDebugSymbols="true"
-           ExcludeAssemblies="Scar.Remembrance.Resources|Scar.Remembrance.Resources.resources" />-->
+           ExcludeAssemblies="Scar.Mémoire.Resources|Scar.Mémoire.Resources.resources" />-->
 </Weavers>

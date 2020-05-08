@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL.SharedBetweenMachines
+namespace Mémoire.DAL.SharedBetweenMachines
 {
     sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
     {
         readonly Random _rand = new Random();
+        readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public LearningInfoRepository(IRemembrancePathsProvider remembrancePathsProvider, string? directoryPath = null, bool shrink = true) : base(
-            directoryPath ?? remembrancePathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(remembrancePathsProvider)),
+        public LearningInfoRepository(IPathsProvider pathsProvider, ISharedSettingsRepository sharedSettingsRepository, string? directoryPath = null, bool shrink = true) : base(
+            directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             null,
             shrink)
         {
+            _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);
             Collection.EnsureIndex(x => x.Id.TargetLanguage);
@@ -30,24 +32,29 @@ namespace Remembrance.DAL.SharedBetweenMachines
                 yield break;
             }
 
-            var chooseFavoritedItemsItemsFirst = _rand.Next(100) > 20;
-            var chooseItemsWithSmallerShowCountFirst = _rand.Next(100) > 30;
-            var chooseItemsWithLowerRepeatTypeFirst = _rand.Next(100) > 30;
-            var chooseOlderItemsFirst = _rand.Next(100) > 30;
+            var chooseFavoritedItemsItemsFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.FavoritedItems);
+            var chooseItemsWithSmallerShowCountFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.ItemsWithSmallerShowCount);
+            var chooseItemsWithLowerRepeatTypeFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.ItemsWithLowerRepeatType);
+            var chooseOlderItemsFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.OlderItems);
 
             var now = DateTime.Now;
 
             IOrderedEnumerable<LearningInfo> GetExpression()
             {
                 return Collection.Find(x => x.NextCardShowTime < now) // get entries which are ready to be shown
-                    .OrderByDescending(x => !chooseFavoritedItemsItemsFirst || x.IsFavorited) // favorited are shown first with 20% probability
-                    .ThenBy(x => chooseItemsWithSmallerShowCountFirst ? x.ShowCount : 0) // the lower the ShowCount, the greater the priority. This rule will be applied in 30% cases
-                    .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority. This rule will be applied in 30% cases
-                    .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTime.MinValue) // this gives a 30% chance of showing an old card
+                    .OrderByDescending(x => !chooseFavoritedItemsItemsFirst || x.IsFavorited ? 1 : 0) // favorited are shown first
+                    .ThenBy(x => chooseItemsWithSmallerShowCountFirst ? x.ShowCount : 0) // the lower the ShowCount, the greater the priority
+                    .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority
+                    .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTime.MinValue) // this gives a chance of showing an older card rather than a newer one first
                     .ThenBy(x => Guid.NewGuid()); // similar values are ordered randomly
             }
 
             var first = GetExpression().FirstOrDefault();
+            if (first == null)
+            {
+                yield break;
+            }
+
             yield return first;
 
             if (count == 1)
@@ -55,12 +62,12 @@ namespace Remembrance.DAL.SharedBetweenMachines
                 yield break;
             }
 
-            var other = GetExpression().Skip(1);
+            var other = GetExpression().Where(x => x.Id != first.Id);
             var firstCategory = first.ClassificationCategories?.Items.FirstOrDefault();
 
             // Take only the items where one of top 3 categories match the first one
-            other = first.ClassificationCategories != null && first.ClassificationCategories.Items.Count > 0
-                ? other.Where(x => x.ClassificationCategories != null && x.ClassificationCategories.Items.Take(3).Contains(firstCategory))
+            other = (first.ClassificationCategories != null) && first.ClassificationCategories.Items.Any()
+                ? other.Where(x => (x.ClassificationCategories != null) && x.ClassificationCategories.Items.Take(3).Contains(firstCategory))
                 : other;
             other = other.Take(count - 1);
 
@@ -80,6 +87,11 @@ namespace Remembrance.DAL.SharedBetweenMachines
             }
 
             return result;
+        }
+
+        bool GetValueByProbability(int probability)
+        {
+            return _rand.Next(100) > 100 - probability;
         }
     }
 }

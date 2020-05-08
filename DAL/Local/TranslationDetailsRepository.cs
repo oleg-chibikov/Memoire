@@ -1,10 +1,10 @@
 using System;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
 using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.DAL.LiteDB;
 
-namespace Remembrance.DAL.Local
+namespace Mémoire.DAL.Local
 {
     sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, TranslationEntryKey>, ITranslationDetailsRepository
     {

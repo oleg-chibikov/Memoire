@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using Remembrance.Contracts.ProcessMonitoring;
-using Remembrance.Contracts.ProcessMonitoring.Data;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.ProcessMonitoring;
 
-namespace Remembrance.Core.ProcessMonitoring
+namespace Mémoire.Core.ProcessMonitoring
 {
     sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {

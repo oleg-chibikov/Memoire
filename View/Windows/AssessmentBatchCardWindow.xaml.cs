@@ -1,8 +1,8 @@
 using System.Windows;
-using Remembrance.Contracts.View.Card;
-using Remembrance.ViewModel;
+using Mémoire.Contracts.View.Card;
+using Mémoire.ViewModel;
 
-namespace Remembrance.View.Windows
+namespace Mémoire.View.Windows
 {
     sealed partial class AssessmentBatchCardWindow : IAssessmentBatchCardWindow
     {

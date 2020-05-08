@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.CardManagement.Data;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Resources;
 using Scar.Common.Exceptions;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.Core.CardManagement
+namespace Mémoire.Core.CardManagement
 {
     sealed class AssessmentInfoProvider : IAssessmentInfoProvider
     {
         static readonly Random Random = new Random();
-
         readonly ILogger _logger;
 
         public AssessmentInfoProvider(ILogger<AssessmentInfoProvider> logger)

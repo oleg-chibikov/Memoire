@@ -1,12 +1,12 @@
 using System;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Resources;
 using Scar.Common.Messages;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class MessageViewModel : BaseViewModel

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Scar.Common.Events;
 
-namespace Remembrance.Contracts.Exchange
+namespace Mémoire.Contracts.Exchange
 {
     public interface ICardsExchanger
     {

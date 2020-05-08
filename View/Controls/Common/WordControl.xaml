@@ -1,0 +1,105 @@
+<commonView:BaseControl
+    x:Class="Mémoire.View.Controls.Common.WordControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:WordViewModel}"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    x:ClassModifier="internal"
+    mc:Ignorable="d">
+    <commonView:BaseControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <ResourceDictionary>
+                    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </commonView:BaseControl.Resources>
+    <DockPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" commonView:MarginSetter.Orientation="Horizontal">
+        <!--  Part of speech can be changed when language is changed  -->
+        <TextBlock
+            Cursor="Arrow"
+            FontSize="{StaticResource SmallFontSize}"
+            Foreground="{StaticResource PartOfSpeechForeground}"
+            Text="{Binding Word.PartOfSpeech, Mode=OneWay, Converter={StaticResource PartOfSpeechLocalizedConverter}, StringFormat='[{0}]'}"
+            Visibility="{Binding Word.PartOfSpeech, Mode=OneTime, Converter={StaticResource PartOfSpeechToVisibilityConverter}}" />
+        <Border Background="Transparent" CornerRadius="0">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToBooleanConverter}}" Value="True">
+                            <Setter Property="Cursor" Value="Hand" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsPriority, Mode=OneWay}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="Background.Color"
+                                            From="Transparent"
+                                            To="{StaticResource PriorityTranslationBackground}"
+                                            Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiDataTrigger.EnterActions>
+                            <MultiDataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiDataTrigger.ExitActions>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock
+                FontSize="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource AncestorType=common:WordControl}}"
+                FontWeight="{Binding FontWeight, Mode=OneTime, RelativeSource={RelativeSource AncestorType=common:WordControl}}"
+                Text="{Binding Word.Text, Mode=OneTime}">
+                <TextBlock.InputBindings>
+                    <MouseBinding Command="{Binding TogglePriorityCommand, Mode=OneTime}" MouseAction="LeftClick" />
+                </TextBlock.InputBindings>
+                <TextBlock.ContextMenu>
+                    <ContextMenu Visibility="{Binding CanEdit, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <MenuItem
+                            Command="{Binding TogglePriorityCommand, Mode=OneTime}"
+                            Header="{lex:Loc Scar.Mémoire.Resources:Texts:TogglePriority}"
+                            Visibility="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToVisibilityConverter}}" />
+                        <MenuItem
+                            Command="{Binding LearnWordCommand, Mode=OneTime}"
+                            Header="{lex:Loc Scar.Mémoire.Resources:Texts:LearnWord}"
+                            Visibility="{Binding CanLearnWord, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
+        </Border>
+        <TextBlock
+            FontSize="{StaticResource SmallFontSize}"
+            Foreground="{StaticResource WordInfoForeground}"
+            Text="{Binding WordInfo, Mode=OneTime}"
+            Visibility="{Binding WordInfo, Mode=OneTime, Converter={StaticResource NotNullToVisibilityConverter}}" />
+        <Button
+            HorizontalAlignment="{Binding SpeakerAlignment, Mode=OneTime, RelativeSource={RelativeSource AncestorType=common:WordControl}}"
+            BorderThickness="1"
+            Command="{Binding PlayTtsCommand, Mode=OneTime}"
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc Scar.Mémoire.Resources:Texts:Speak}">
+            <materialDesign:PackIcon Kind="Speaker" />
+        </Button>
+    </DockPanel>
+</commonView:BaseControl>

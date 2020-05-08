@@ -2,36 +2,59 @@
 
   <PropertyGroup>
     <UseWpf>True</UseWpf>
-    <Description>Remembrance View classes</Description>
+    <Description>Mémoire View classes</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Controls\AssessmentCardBatchCOntrol.xaml" />
     <None Remove="Controls\AssessmentTextInputCardControl.xaml" />
+    <None Remove="Fonts\Ballet-Display.ttf" />
+    <None Remove="Fonts\Galberik.otf" />
+    <None Remove="Fonts\Garineldo.otf" />
+    <None Remove="Fonts\Kleymissky_0283.otf" />
+    <None Remove="Fonts\Lucian Schoenschrift CAT.ttf" />
+    <None Remove="Fonts\miamanueva.otf" />
+    <None Remove="Fonts\Modeschrift.ttf" />
+    <None Remove="Fonts\morado sharp.ttf" />
+    <None Remove="Fonts\Neris-Light.otf" />
+    <None Remove="Fonts\QTCoronation.otf" />
+    <None Remove="Fonts\Sansation-Light.ttf" />
+    <None Remove="Fonts\SymphonieCAT.ttf" />
+    <None Remove="Fonts\WolgastRand.ttf" />
     <None Remove="Windows\AssessmentBatchCardWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.10" />
-    <PackageReference Include="Scar.Common.View.WindowFactory" Version="1.1.7422.29108" />
-    <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7422.29107" />
-    <PackageReference Include="Scar.Common.WPF.Controls.Behaviors" Version="1.1.7422.29072" />
-    <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7422.29072" />
-    <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7422.29107" />
-    <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7422.29072" />
-    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7422.29107" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7422.29107" />
-    <PackageReference Include="Scar.Common.WPF.View.AnimatedWindow" Version="1.1.7422.29154" />
+    <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7428.22850" />
+    <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7427.23080" />
+    <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7433.33613" />
+    <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7428.22879" />
+    <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7432.29532" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7427.23113" />
+    <PackageReference Include="Scar.Common.WPF.View.Core" Version="1.1.7433.33616" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Fonts\Champagne &amp; Limousines.ttf" />
-    <Resource Include="Fonts\cubic.ttf" />
+    <Resource Include="Fonts\Ballet-Display.ttf" />
+    <Resource Include="Fonts\Galberik.otf" />
+    <Resource Include="Fonts\Garineldo.otf" />
+    <Resource Include="Fonts\Kleymissky_0283.otf" />
+    <Resource Include="Fonts\Lucian Schoenschrift CAT.ttf" />
+    <Resource Include="Fonts\miamanueva.otf" />
+    <Resource Include="Fonts\Modeschrift.ttf" />
+    <Resource Include="Fonts\morado sharp.ttf" />
+    <Resource Include="Fonts\Neris-Light.otf" />
+    <Resource Include="Fonts\QTCoronation.otf" />
+    <Resource Include="Fonts\Sansation-Light.ttf" />
+    <Resource Include="Fonts\SymphonieCAT.ttf" />
+    <Resource Include="Fonts\WolgastRand.ttf" />
     <Resource Include="Images\Icon.ico" />
     <Resource Include="Images\IconAlt.ico" />
     <Resource Include="Images\IconInactive.ico" />
@@ -39,64 +62,79 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Controls\Columns\ManualTranslations\ManualTranslationMeaningColumn.xaml">
+    <Page Update="Controls\CardProbabilityControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\ManualTranslations\ManualTranslationExampleColumn.xaml">
+    <Page Update="Controls\Grid\ManualTranslationsColumns\ManualTranslationMeaningColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\ManualTranslations\ManualTranslationWordColumn.xaml">
+    <Page Update="Controls\Grid\ManualTranslationsColumns\ManualTranslationExampleColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\ManualTranslations\ManualTranslationPartOfSpeechColumn.xaml">
+    <Page Update="Controls\Grid\ManualTranslationsColumns\ManualTranslationWordColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\IsFavoritedColumn.xaml">
+    <Page Update="Controls\Grid\ManualTranslationsColumns\ManualTranslationPartOfSpeechColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\TargetLanguageColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\IsFavoritedColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\LanguageColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\TargetLanguageColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\WordColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\LanguageColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\TranslationsColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\WordColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\ReversoColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\TranslationsColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\DemoteColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\ReversoColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\LastCardShowTimeColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\DemoteColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\RepeatTypeColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\LastCardShowTimeColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\NextCardShowTimeColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\RepeatTypeColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\EditManualTranslationsColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\NextCardShowTimeColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\ShowCountColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\EditManualTranslationsColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\ModifiedDateColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\ShowCountColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\DeleteColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\ModifiedDateColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\TranslationsGrid\CreatedDateColumn.xaml">
+    <Page Update="Controls\Common\DeleteColumn.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\Columns\ProcessesBlacklist\ProcessNameColumn.xaml">
+    <Page Update="Controls\Grid\TranslationsGridColumns\CreatedDateColumn.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Settings\ProcessesBlacklistColumns\ProcessNameColumn.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\TranslationDetails\PartOfSpeechTranslationControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\TranslationDetails\ClassificationCategoriesControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\TranslationDetails\PrepositionsControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\TranslationDetails\MoreExamplesControl.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
 using Scar.Common.View.Contracts;
 
-namespace Remembrance.Contracts.Processing
+namespace Mémoire.Contracts.Processing
 {
     public interface ITranslationEntryProcessor
     {

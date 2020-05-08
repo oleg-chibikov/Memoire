@@ -6,28 +6,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Remembrance.Resources;
 using Scar.Common.Exceptions;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class EditManualTranslationsViewModel : BaseViewModel
     {
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly ITranslationEntryProcessor _translationEntryProcessor;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
 
         public EditManualTranslationsViewModel(

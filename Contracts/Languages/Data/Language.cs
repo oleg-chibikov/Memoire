@@ -1,6 +1,6 @@
 using System;
 
-namespace Remembrance.Contracts.Languages.Data
+namespace Mémoire.Contracts.Languages.Data
 {
     public sealed class Language
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Remembrance.Contracts.Languages.Data;
+using Mémoire.Contracts.Languages.Data;
 
-namespace Remembrance.Contracts.Languages
+namespace Mémoire.Contracts.Languages
 {
     public interface ILanguageManager
     {

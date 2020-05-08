@@ -5,58 +5,42 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.View.Settings;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.View.Settings;
-using Remembrance.Resources;
-using Scar.Common;
 using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Common.View.WindowCreation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TrayViewModel : BaseViewModel
     {
         const string DateTimeFormat = @"HH\:mm\:ss";
-
         const string TimeSpanFormat = @"hh\:mm\:ss";
-
         readonly IWindowFactory<IAddTranslationWindow> _addTranslationWindowFactory;
-
         readonly IApplicationTerminator _applicationTerminator;
-
         readonly Func<ICardShowTimeProvider> _cardShowTimeProviderFactory;
-
         readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IPauseManager _pauseManager;
-
         readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
         readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
-
-        readonly IWindowFactory<ISplashScreenWindow> _splashScreenWindowFactory;
-
+        readonly IWindowDisplayer _windowDisplayer;
+        readonly Func<ILoadingWindow> _loadingWindowFactory;
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
-
         readonly SynchronizationContext _synchronizationContext;
-
         readonly Timer _timer;
-
         ICardShowTimeProvider? _cardShowTimeProvider;
-
         bool _isToolTipOpened;
 
         public TrayViewModel(
@@ -65,27 +49,29 @@ namespace Remembrance.ViewModel
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             IWindowFactory<IDictionaryWindow> dictionaryWindowFactory,
             IWindowFactory<ISettingsWindow> settingsWindowFactory,
-            IWindowFactory<ISplashScreenWindow> splashScreenWindowFactory,
+            IWindowDisplayer windowDisplayer,
             Func<ICardShowTimeProvider> cardShowTimeProviderFactory,
             IPauseManager pauseManager,
             IMessageHub messageHub,
-            IRemembrancePathsProvider remembrancePathsProvider,
+            IPathsProvider pathsProvider,
             ICommandManager commandManager,
             SynchronizationContext synchronizationContext,
-            IApplicationTerminator applicationTerminator) : base(commandManager)
+            IApplicationTerminator applicationTerminator,
+            Func<ILoadingWindow> loadingWindowFactory) : base(commandManager)
         {
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            _splashScreenWindowFactory = splashScreenWindowFactory ?? throw new ArgumentNullException(nameof(splashScreenWindowFactory));
+            _windowDisplayer = windowDisplayer ?? throw new ArgumentNullException(nameof(windowDisplayer));
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _ = remembrancePathsProvider ?? throw new ArgumentNullException(nameof(remembrancePathsProvider));
+            _ = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _applicationTerminator = applicationTerminator ?? throw new ArgumentNullException(nameof(applicationTerminator));
+            _loadingWindowFactory = loadingWindowFactory ?? throw new ArgumentNullException(nameof(loadingWindowFactory));
 
             IsLoading = true;
             AddTranslationCommand = AddCommand(AddTranslationAsync);
@@ -95,9 +81,9 @@ namespace Remembrance.ViewModel
             ToolTipOpenCommand = AddCommand(ToolTipOpenAsync);
             ToolTipCloseCommand = AddCommand(ToolTipClose);
             ExitCommand = AddCommand(Exit);
-            OpenSharedFolderCommand = AddCommand(() => remembrancePathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
-            OpenSettingsFolderCommand = AddCommand(remembrancePathsProvider.OpenSettingsFolder);
-            ViewLogsCommand = AddCommand(remembrancePathsProvider.ViewLogs);
+            OpenSharedFolderCommand = AddCommand(() => pathsProvider.OpenSharedFolder(_localSettingsRepository.SyncEngine));
+            OpenSettingsFolderCommand = AddCommand(pathsProvider.OpenSettingsFolder);
+            ViewLogsCommand = AddCommand(pathsProvider.ViewLogs);
             IsActive = _localSettingsRepository.IsActive;
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
@@ -193,7 +179,7 @@ namespace Remembrance.ViewModel
                 : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
-            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.CardManagement.Data.PauseReasons.CardIsVisible).GetPauseTime();
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReasons.CardIsVisible).GetPauseTime();
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
         }
 
@@ -207,7 +193,28 @@ namespace Remembrance.ViewModel
         async Task ShowDictionaryAsync()
         {
             _logger.LogTrace("Showing dictionary...");
-            await _dictionaryWindowFactory.ShowWindowAsync(_splashScreenWindowFactory, CancellationToken.None).ConfigureAwait(false);
+            var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
+            var executeInDictionaryWindowContext = await _dictionaryWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
+
+            executeInDictionaryWindowContext(
+                dictionaryWindow =>
+                {
+                    void DictionaryWindowContentRendered(object sender, EventArgs e)
+                    {
+                        if (dictionaryWindow != null)
+                        {
+                            dictionaryWindow.ContentRendered -= DictionaryWindowContentRendered;
+                        }
+
+                        executeInLoadingWindowContext(
+                            loadingWindow =>
+                            {
+                                loadingWindow.Close();
+                            });
+                    }
+
+                    dictionaryWindow.ContentRendered += DictionaryWindowContentRendered;
+                });
         }
 
         async Task ShowSettingsAsync()
@@ -240,11 +247,11 @@ namespace Remembrance.ViewModel
             _logger.LogInformation("New state is {0}", IsActive);
             if (IsActive)
             {
-                _pauseManager.ResumeActivity(Contracts.CardManagement.Data.PauseReasons.InactiveMode);
+                _pauseManager.ResumeActivity(Contracts.DAL.Model.PauseReasons.InactiveMode);
             }
             else
             {
-                _pauseManager.PauseActivity(Contracts.CardManagement.Data.PauseReasons.InactiveMode);
+                _pauseManager.PauseActivity(Contracts.DAL.Model.PauseReasons.InactiveMode);
             }
         }
 

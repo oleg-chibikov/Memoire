@@ -1,6 +1,6 @@
 using System;
 
-namespace Remembrance.Contracts.CardManagement
+namespace Mémoire.Contracts.CardManagement
 {
     public interface ICardShowTimeProvider
     {

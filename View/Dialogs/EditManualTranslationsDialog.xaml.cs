@@ -1,4 +1,4 @@
-namespace Remembrance.View.Dialogs
+namespace Mémoire.View.Dialogs
 {
     sealed partial class EditManualTranslationsDialog
     {

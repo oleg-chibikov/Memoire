@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Remembrance.Resources {
+namespace Mémoire.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Remembrance.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Remembrance.Resources.Errors", typeof(Errors).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mémoire.Resources.Errors", typeof(Errors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,15 @@ namespace Remembrance.Resources {
         public static string CannotDownloadImage {
             get {
                 return ResourceManager.GetString("CannotDownloadImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot get extended translation for the word &apos;{0}&apos;..
+        /// </summary>
+        public static string CannotGetExtendedTranslation {
+            get {
+                return ResourceManager.GetString("CannotGetExtendedTranslation", resourceCulture);
             }
         }
         

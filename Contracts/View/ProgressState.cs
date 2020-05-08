@@ -1,4 +1,4 @@
-namespace Remembrance.Contracts.View
+namespace Mémoire.Contracts.View
 {
     public enum ProgressState
     {

@@ -1,37 +1,36 @@
-<animatedWindow:AnimatedWindow
-    x:Class="Remembrance.View.Windows.DictionaryWindow"
+<commonView:AnimatedWindow
+    x:Class="Mémoire.View.Windows.DictionaryWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animatedWindow="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View.AnimatedWindow"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:commonView="clr-namespace:Scar.Common.WPF.View;assembly=Scar.Common.WPF.View"
-    xmlns:controls="clr-namespace:Remembrance.View.Controls"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dialogs="clr-namespace:Remembrance.View.Dialogs"
+    xmlns:dialogs="clr-namespace:Mémoire.View.Dialogs"
+    xmlns:grid="clr-namespace:Mémoire.View.Controls.Grid"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Remembrance.ViewModel;assembly=Scar.Remembrance.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
     Title="{lex:Loc Title}"
-    Width="1200"
+    Width="1920"
     Height="400"
     MinWidth="1250"
     MinHeight="300"
     d:DataContext="{d:DesignInstance d:Type=viewModel:DictionaryViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Remembrance.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Scar.Remembrance.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
     ResizeMode="CanResize"
     SizeToContent="Manual"
     WindowState="Normal"
     mc:Ignorable="d">
-    <animatedWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Remembrance.View;component/DesignTimeResources.xaml" />
-    </animatedWindow:AnimatedWindow.Resources>
+    <commonView:AnimatedWindow.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+    </commonView:AnimatedWindow.Resources>
     <!--  Allow Resize  -->
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
@@ -56,17 +55,18 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
-                <controls:SearchControl VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <grid:SearchControl VerticalAlignment="Center" VerticalContentAlignment="Center" />
             </DockPanel>
-            <controls:TranslationsGridControl Grid.Row="1" Width="Auto" />
+            <grid:TranslationsGridControl Grid.Row="1" Width="Auto" />
             <DockPanel
                 Grid.Row="2"
                 commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
                 commonView:MarginSetter.Orientation="Horizontal">
                 <TextBlock
+                    Margin="0,0,50,0"
                     DockPanel.Dock="Left"
                     Style="{StaticResource Logo}"
-                    Text="Remembrance" />
+                    Text="Mémoire" />
                 <Button
                     Command="{Binding OpenSettingsCommand, Mode=OneTime}"
                     Style="{StaticResource ImageButton}"
@@ -75,7 +75,7 @@
                 </Button>
                 <TextBlock Text="{lex:Loc Total}" />
                 <TextBlock Text="{Binding Count, Mode=OneWay}" />
-                <controls:AddTranslationControl
+                <grid:AddTranslationControl
                     Width="900"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
@@ -84,4 +84,4 @@
             </DockPanel>
         </Grid>
     </materialDesign:DialogHost>
-</animatedWindow:AnimatedWindow>
+</commonView:AnimatedWindow>

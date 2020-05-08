@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Contracts assembly for Remembrance</Description>
+    <Description>Contracts assembly for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common" Version="1.1.7422.29071" />
-    <PackageReference Include="Scar.Common.DAL" Version="1.1.7422.29073" />
-    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7422.29073" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7427.23084" />
+    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7432.33420" />
+    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7431.20486" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
   </ItemGroup>
 
 </Project>

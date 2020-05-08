@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Remembrance.ViewModel;
+using Mémoire.ViewModel;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(WordViewModel), typeof(bool))]
     sealed class PriorityWordViewModelToBooleanConverter : IValueConverter

@@ -1,25 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Scar Ruleset" ToolsVersion="16.0">
+  <Include Path="basiccorrectnessrules.ruleset" Action="Default" />
+  <Include Path="basicdesignguidelinerules.ruleset" Action="Default" />
+  <Include Path="extendedcorrectnessrules.ruleset" Action="Default" />
+  <Include Path="minimumrecommendedrules.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1005" Action="Info" />
     <Rule Id="CA1011" Action="Warning" />
     <Rule Id="CA1020" Action="Info" />
+    <Rule Id="CA1040" Action="Warning" />
+    <Rule Id="CA1045" Action="Warning" />
     <Rule Id="CA1062" Action="Warning" />
+    <Rule Id="CA1300" Action="Warning" />
+    <Rule Id="CA1302" Action="Warning" />
+    <Rule Id="CA1304" Action="Warning" />
     <Rule Id="CA1305" Action="Warning" />
+    <Rule Id="CA1306" Action="Warning" />
+    <Rule Id="CA1307" Action="Warning" />
+    <Rule Id="CA1309" Action="Warning" />
     <Rule Id="CA1501" Action="Info" />
     <Rule Id="CA1502" Action="Info" />
+    <Rule Id="CA1504" Action="Warning" />
     <Rule Id="CA1505" Action="Info" />
     <Rule Id="CA1506" Action="Info" />
+    <Rule Id="CA1700" Action="Warning" />
+    <Rule Id="CA1701" Action="Warning" />
     <Rule Id="CA1702" Action="Warning" />
     <Rule Id="CA1703" Action="Warning" />
     <Rule Id="CA1704" Action="Warning" />
+    <Rule Id="CA1707" Action="Warning" />
     <Rule Id="CA1709" Action="Warning" />
     <Rule Id="CA1710" Action="Warning" />
     <Rule Id="CA1711" Action="Warning" />
+    <Rule Id="CA1712" Action="Warning" />
+    <Rule Id="CA1713" Action="Warning" />
+    <Rule Id="CA1714" Action="Warning" />
     <Rule Id="CA1715" Action="Warning" />
+    <Rule Id="CA1717" Action="Warning" />
+    <Rule Id="CA1719" Action="Warning" />
+    <Rule Id="CA1720" Action="Warning" />
+    <Rule Id="CA1721" Action="Warning" />
+    <Rule Id="CA1722" Action="Warning" />
+    <Rule Id="CA1724" Action="Warning" />
+    <Rule Id="CA1726" Action="Warning" />
+    <Rule Id="CA1800" Action="Warning" />
+    <Rule Id="CA1802" Action="Warning" />
     <Rule Id="CA1809" Action="Info" />
+    <Rule Id="CA2000" Action="Warning" />
     <Rule Id="CA2007" Action="Warning" />
+    <Rule Id="CA2103" Action="Warning" />
+    <Rule Id="CA2107" Action="Warning" />
+    <Rule Id="CA2109" Action="Warning" />
+    <Rule Id="CA2118" Action="Warning" />
+    <Rule Id="CA2151" Action="Warning" />
     <Rule Id="CA2204" Action="Warning" />
+    <Rule Id="CA5122" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="Warning" />
@@ -136,14 +171,14 @@
     <Rule Id="WTG1003" Action="Warning" />
     <Rule Id="WTG1004" Action="None" />
     <Rule Id="WTG1005" Action="Warning" />
-    <Rule Id="WTG1006" Action="None" />
-    <Rule Id="WTG1007" Action="None" />
-    <Rule Id="WTG1008" Action="None" />
+    <Rule Id="WTG1006" Action="Warning" />
+    <Rule Id="WTG1007" Action="Warning" />
+    <Rule Id="WTG1008" Action="Warning" />
     <Rule Id="WTG1009" Action="Warning" />
-    <Rule Id="WTG1010" Action="None" />
+    <Rule Id="WTG1010" Action="Warning" />
     <Rule Id="WTG1011" Action="Warning" />
-    <Rule Id="WTG1012" Action="None" />
-    <Rule Id="WTG1013" Action="None" />
+    <Rule Id="WTG1012" Action="Warning" />
+    <Rule Id="WTG1013" Action="Warning" />
     <Rule Id="WTG1014" Action="None" />
     <Rule Id="WTG1015" Action="None" />
     <Rule Id="WTG1016" Action="None" />

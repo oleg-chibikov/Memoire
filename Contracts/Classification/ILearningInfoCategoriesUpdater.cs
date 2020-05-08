@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Remembrance.Contracts.Classification.Data;
-using Remembrance.Contracts.Processing.Data;
+using Mémoire.Contracts.Processing.Data;
 
-namespace Remembrance.Contracts.Classification
+namespace Mémoire.Contracts.Classification
 {
     public interface ILearningInfoCategoriesUpdater
     {
-        Task<IReadOnlyCollection<ClassificationCategory>> UpdateLearningInfoClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken);
+        Task UpdateLearningInfoClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken);
     }
 }

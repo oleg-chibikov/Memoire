@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Remembrance.Contracts.Exchange.Data
+namespace Mémoire.Contracts.Exchange.Data
 {
     public sealed class ExchangeResult
     {

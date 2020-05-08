@@ -1,6 +1,6 @@
-using Remembrance.Contracts.View.Settings;
+using Mémoire.Contracts.View.Settings;
 
-namespace Remembrance.View.Windows
+namespace Mémoire.View.Windows
 {
     sealed partial class LoadingWindow : ILoadingWindow
     {

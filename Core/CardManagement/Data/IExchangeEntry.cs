@@ -1,4 +1,4 @@
-﻿namespace Remembrance.Core.CardManagement.Data
+﻿namespace Mémoire.Core.CardManagement.Data
 {
     interface IExchangeEntry
     {

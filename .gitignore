@@ -71,6 +71,7 @@ authors
 commits
 publish/
 Output/
-.vs/Remembrance/v14/.suo
+.vs/Mémoire/v14/.suo
 /.vs
 /Build*
+*.wxs

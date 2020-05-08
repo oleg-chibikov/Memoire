@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Sync;
 using Newtonsoft.Json;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Sync;
 
-namespace Remembrance.Core.Sync
+namespace Mémoire.Core.Sync
 {
     sealed class SettingsSyncPostProcessor : ISyncPostProcessor<ApplicationSettings>
     {

@@ -7,19 +7,18 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
+using Mémoire.Contracts.View.Card;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.View.Card;
-using Scar.Common;
 using Scar.Common.View.Contracts;
+using Scar.Common.View.WindowCreation;
 
-namespace Remembrance.Core.CardManagement
+namespace Mémoire.Core.CardManagement
 {
     sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
@@ -170,10 +169,10 @@ namespace Remembrance.Core.CardManagement
                 return;
             }
 
-            IReadOnlyCollection<TranslationInfo> translationInfos;
+            IAsyncEnumerable<TranslationInfo> translationInfos;
             try
             {
-                translationInfos = await GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos).ConfigureAwait(true);
+                translationInfos = GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos);
             }
             catch (InvalidOperationException ex)
             {
@@ -182,7 +181,7 @@ namespace Remembrance.Core.CardManagement
                 return;
             }
 
-            await CreateAndShowWindowAsync(translationInfos).ConfigureAwait(true);
+            await CreateAndShowWindowAsync(await translationInfos.ToArrayAsync().ConfigureAwait(true)).ConfigureAwait(true);
         }
 
         async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)
@@ -205,20 +204,16 @@ namespace Remembrance.Core.CardManagement
             _logger.LogInformation("Window has been opened");
         }
 
-        async Task<IReadOnlyCollection<TranslationInfo>> GetTranslationInfosForAllWordsAsync(IEnumerable<LearningInfo> mostSuitableLearningInfos)
+        async IAsyncEnumerable<TranslationInfo> GetTranslationInfosForAllWordsAsync(IEnumerable<LearningInfo> mostSuitableLearningInfos)
         {
-            // TODO: would be good to use AsyncEnumerable (but is it supported for .net framework?)
-            var translationInfos = new List<TranslationInfo>();
             foreach (var learningInfo in mostSuitableLearningInfos)
             {
                 var translationEntry = _translationEntryRepository.GetById(learningInfo.Id);
                 var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationToken.None)
                     .ConfigureAwait(false);
-                translationInfos.Add(new TranslationInfo(translationEntry, translationDetails, learningInfo));
+                yield return new TranslationInfo(translationEntry, translationDetails, learningInfo);
                 UpdateShowCount(learningInfo);
             }
-
-            return translationInfos;
         }
 
         void UpdateShowCount(LearningInfo learningInfo)

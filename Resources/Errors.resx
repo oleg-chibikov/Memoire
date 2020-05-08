@@ -168,6 +168,9 @@
   <data name="CannotTranslate" xml:space="preserve">
     <value>Cannot translate word '{0}'.</value>
   </data>
+  <data name="CannotGetExtendedTranslation" xml:space="preserve">
+    <value>Cannot get extended translation for the word '{0}'.</value>
+  </data>
   <data name="WordIsMissing" xml:space="preserve">
     <value>Word is missing.</value>
   </data>

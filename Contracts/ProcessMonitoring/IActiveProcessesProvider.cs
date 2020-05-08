@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Remembrance.Contracts.ProcessMonitoring.Data;
+using Mémoire.Contracts.DAL.Model;
 
-namespace Remembrance.Contracts.ProcessMonitoring
+namespace Mémoire.Contracts.ProcessMonitoring
 {
     public interface IActiveProcessesProvider
     {

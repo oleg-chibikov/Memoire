@@ -5,24 +5,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
+using Scar.Services.Contracts.Data;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public abstract class BaseAssessmentCardViewModel : BaseViewModel
     {
         readonly ICultureManager _cultureManager;
-
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
         readonly AssessmentBatchCardViewModel _assessmentBatchCardViewModel;
         readonly ILogger _logger;
@@ -79,11 +78,18 @@ namespace Remembrance.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
         }
 
+        public bool IsFocused { get; set; }
+
         public IEnumerable<WordViewModel> SourceLanguageSynonyms { get; }
 
         public WordViewModel CorrectAnswer { get; protected set; }
 
+        public bool IsHiding { get; private set; }
+
         public bool IsHidden { get; private set; }
+
+        [DependsOn(nameof(IsHidden), nameof(IsHiding))]
+        public bool IsEnabled => !IsHidden && !IsHiding;
 
         public string LanguagePair { get; }
 
@@ -120,8 +126,12 @@ namespace Remembrance.ViewModel
         protected async Task HideControlWithTimeoutAsync(TimeSpan closeTimeout)
         {
             _logger.LogTrace("Hiding control in {0}...", closeTimeout);
+            IsFocused = false;
+            IsHiding = true;
+            _assessmentBatchCardViewModel.NotifyChildIsClosing();
             await Task.Delay(closeTimeout).ConfigureAwait(true);
             IsHidden = true;
+            IsHiding = false;
             _assessmentBatchCardViewModel.NotifyChildClosed();
             _logger.LogDebug("Control is hidden");
         }
@@ -133,7 +143,7 @@ namespace Remembrance.ViewModel
 
         static void PrepareVerb(string sourceLanguage, BaseWord word)
         {
-            if ((sourceLanguage != Constants.EnLanguageTwoLetters) || (word.PartOfSpeech != PartOfSpeech.Verb))
+            if ((sourceLanguage != LanguageConstants.EnLanguageTwoLetters) || (word.PartOfSpeech != PartOfSpeech.Verb))
             {
                 return;
             }

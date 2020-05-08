@@ -2,18 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Database access layer for Remembrance</Description>
+    <Description>Database access layer for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7422.29078" />
-    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7422.29107" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7427.23079" />
+    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7427.23113" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remembrance.Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Remembrance.Resources\Resources.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Resources\Resources.csproj" />
   </ItemGroup>
   
 </Project>

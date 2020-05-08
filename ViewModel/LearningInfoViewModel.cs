@@ -2,28 +2,23 @@ using System;
 using System.Threading;
 using System.Windows.Input;
 using Easy.MessageHub;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class LearningInfoViewModel : BaseViewModel
     {
         readonly ILearningInfoRepository _learningInfoRepository;
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly SynchronizationContext _synchronizationContext;
-
         readonly TranslationEntryKey _translationEntryKey;
-
         RepeatType _repeatType;
 
         public LearningInfoViewModel(

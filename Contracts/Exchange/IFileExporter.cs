@@ -1,8 +1,8 @@
 using System;
-using Remembrance.Contracts.Exchange.Data;
+using Mémoire.Contracts.Exchange.Data;
 using Scar.Common.Events;
 
-namespace Remembrance.Contracts.Exchange
+namespace Mémoire.Contracts.Exchange
 {
     public interface IFileExporter
     {

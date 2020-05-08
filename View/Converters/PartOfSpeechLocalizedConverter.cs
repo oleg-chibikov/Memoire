@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.WPF.Localization;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.View.Converters
+namespace Mémoire.View.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(string))]
     sealed class PartOfSpeechLocalizedConverter : IValueConverter

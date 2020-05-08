@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.Contracts.CardManagement.Data
+namespace Mémoire.Contracts.CardManagement.Data
 {
     public sealed class AssessmentInfo
     {

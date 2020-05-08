@@ -5,30 +5,28 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Easy.MessageHub;
+using Mémoire.Contracts;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Languages;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.DAL.SharedBetweenMachines;
-using Remembrance.Contracts.Languages;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
-using Scar.Common.DAL.Model;
+using Scar.Common.DAL.Contracts.Model;
 using Scar.Common.MVVM.Commands;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class TranslationEntryViewModel : WordViewModel
     {
         readonly ILogger _logger;
-
         readonly Func<Word, TranslationEntry, PriorityWordViewModel> _priorityWordViewModelFactory;
-
         readonly SynchronizationContext _synchronizationContext;
-
         readonly ITranslationEntryRepository _translationEntryRepository;
 
         public TranslationEntryViewModel(
@@ -42,12 +40,16 @@ namespace Remembrance.ViewModel
             ILearningInfoRepository learningInfoRepository,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ILanguageManager languageManager,
-            ICommandManager commandManager) : base(
+            ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
+            IMessageHub messageHub) : base(
             new Word { Text = translationEntry?.Id.Text ?? throw new ArgumentNullException(nameof(translationEntry)) },
             translationEntry.Id.SourceLanguage,
             textToSpeechPlayer,
             translationEntryProcessor,
-            commandManager)
+            commandManager,
+            sharedSettingsRepository,
+            messageHub)
         {
             _ = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
@@ -65,12 +67,15 @@ namespace Remembrance.ViewModel
             var targetLanguageName = allLanguages[TargetLanguage].ToLowerInvariant();
             ReversoContextLink = string.Format(CultureInfo.InvariantCulture, Constants.ReversoContextUrlTemplate, sourceLanguageName, targetLanguageName, Word.Text.ToLowerInvariant());
             UpdateModifiedDate(learningInfo, translationEntry.ModifiedDate);
+            HasManualTranslations = translationEntry.ManualTranslations?.Count > 0;
 
             // no await here
             ConstructionTask = ReloadTranslationsAsync(translationEntry);
         }
 
         public override string Language => Id.SourceLanguage;
+
+        public bool HasManualTranslations { get; set; }
 
         [DoNotNotify]
         public TranslationEntryKey Id { get; }

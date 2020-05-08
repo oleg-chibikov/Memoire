@@ -1,15 +1,15 @@
 using System;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
-using Remembrance.Contracts.CardManagement;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing.Data;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
 using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentViewOnlyCardViewModel : BaseAssessmentCardViewModel

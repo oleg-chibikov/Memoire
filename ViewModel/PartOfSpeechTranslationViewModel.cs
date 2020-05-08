@@ -1,33 +1,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Remembrance.Contracts.DAL.Model;
-using Remembrance.Contracts.Processing;
-using Remembrance.Contracts.Translate;
-using Remembrance.Contracts.Translate.Data.WordsTranslator;
+using Easy.MessageHub;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Mémoire.Contracts.Processing;
+using Mémoire.Contracts.Processing.Data;
 using Scar.Common.MVVM.Commands;
+using Scar.Services.Contracts;
+using Scar.Services.Contracts.Data.Translation;
 
-namespace Remembrance.ViewModel
+namespace Mémoire.ViewModel
 {
     public sealed class PartOfSpeechTranslationViewModel : WordViewModel
     {
         public PartOfSpeechTranslationViewModel(
-            TranslationEntry translationEntry,
+            TranslationInfo translationInfo,
             PartOfSpeechTranslation partOfSpeechTranslation,
             ITextToSpeechPlayer textToSpeechPlayer,
-            Func<TranslationVariant, TranslationEntry, string, TranslationVariantViewModel> translationVariantViewModelFactory,
+            Func<TranslationVariant, TranslationInfo, string, TranslationVariantViewModel> translationVariantViewModelFactory,
             ITranslationEntryProcessor translationEntryProcessor,
-            ICommandManager commandManager) : base(
+            ICommandManager commandManager,
+            ISharedSettingsRepository sharedSettingsRepository,
+            IMessageHub messageHub) : base(
             partOfSpeechTranslation,
-            translationEntry == null ? throw new ArgumentNullException(nameof(translationEntry)) : translationEntry.Id.SourceLanguage,
+            translationInfo == null ? throw new ArgumentNullException(nameof(translationInfo)) : translationInfo.TranslationEntryKey.SourceLanguage,
             textToSpeechPlayer,
             translationEntryProcessor,
-            commandManager)
+            commandManager,
+            sharedSettingsRepository,
+            messageHub)
         {
             _ = partOfSpeechTranslation ?? throw new ArgumentNullException(nameof(partOfSpeechTranslation));
             _ = translationVariantViewModelFactory ?? throw new ArgumentNullException(nameof(translationVariantViewModelFactory));
             Transcription = partOfSpeechTranslation.Transcription;
-            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationEntry, Word.Text))
+            TranslationVariants = partOfSpeechTranslation.TranslationVariants.Select(translationVariant => translationVariantViewModelFactory(translationVariant, translationInfo, Word.Text))
                 .ToArray();
             CanLearnWord = false;
         }

@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Easy.MessageHub;
+using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts.DAL.Local;
+using Mémoire.Contracts.DAL.Model;
+using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
-using Remembrance.Contracts.CardManagement.Data;
-using Remembrance.Contracts.DAL.Local;
-using Remembrance.Resources;
 
-namespace Remembrance.Core
+namespace Mémoire.Core
 {
     sealed class PauseManager : IPauseManager, IDisposable
     {
@@ -20,15 +21,10 @@ namespace Remembrance.Core
         };
 
         readonly IDictionary<PauseReasons, string> _descriptions = new Dictionary<PauseReasons, string>();
-
         readonly ILocalSettingsRepository _localSettingsRepository;
-
         readonly object _lockObject = new object();
-
         readonly ILogger _logger;
-
         readonly IMessageHub _messageHub;
-
         readonly IDictionary<PauseReasons, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReasons, PauseInfoCollection>();
 
         public PauseManager(ILogger<PauseManager> logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
