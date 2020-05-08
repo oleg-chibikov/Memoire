@@ -16,11 +16,8 @@ using Scar.Services.Contracts.Data.Translation;
 namespace Mémoire.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public sealed class TranslationVariantViewModel : PriorityWordViewModel, IWithExtendedExamples
+    public sealed class TranslationVariantViewModel : PriorityWordViewModel
     {
-        readonly Action _loadExtendedExamples;
-        bool _isExpanded;
-
         public TranslationVariantViewModel(
             TranslationInfo translationInfo,
             TranslationVariant translationVariant,
@@ -55,44 +52,26 @@ namespace Mémoire.ViewModel
             Synonyms = translationVariant.Synonyms?.Select(synonym => priorityWordViewModelFactory(synonym, translationInfo.TranslationEntry)).ToArray();
             Meanings = translationVariant.Meanings?.Select(meaning => wordViewModelFactory(meaning, translationInfo.TranslationEntryKey.SourceLanguage)).ToArray();
             Examples = translationVariant.Examples;
-
-            var translationVariantAndSynonymsHashSet = new HashSet<BaseWord>(translationVariant.GetTranslationVariantAndSynonyms());
-            var examples = translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations.Where(
-                x => x.Translation.Text != null && translationVariantAndSynonymsHashSet.Contains(x.Translation)).ToArray();
-            HasExtendedExamples = examples?.Length > 0;
-
-            _loadExtendedExamples = () =>
-            {
-                ExtendedExamples = examples
-                    .SelectMany(x => x.ExtendedExamples)
-                    .ToArray();
-            };
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, Word), parentText);
+            ExtendedExamplesViewModel = new ExtendedExamplesViewModel(translationInfo, ti => GetExamples(ti, translationVariant), commandManager);
         }
+
+        public ExtendedExamplesViewModel ExtendedExamplesViewModel { get; }
 
         public IReadOnlyCollection<Example>? Examples { get; }
-
-        public IReadOnlyCollection<ExtendedExample>? ExtendedExamples { get; private set; }
-
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set
-            {
-                _isExpanded = value;
-                if (value && ExtendedExamples == null)
-                {
-                    _loadExtendedExamples();
-                }
-            }
-        }
-
-        public bool HasExtendedExamples { get; set; }
 
         public IReadOnlyCollection<WordViewModel>? Meanings { get; }
 
         public IReadOnlyCollection<PriorityWordViewModel>? Synonyms { get; }
 
         public WordImageViewerViewModel WordImageViewerViewModel { get; }
+
+        static IReadOnlyCollection<ExtendedPartOfSpeechTranslation>? GetExamples(TranslationInfo translationInfo, TranslationVariant translationVariant)
+        {
+            var translationVariantAndSynonymsHashSet = new HashSet<BaseWord>(translationVariant.GetTranslationVariantAndSynonyms());
+            return translationInfo.TranslationDetails.ExtendedTranslationResult?.ExtendedPartOfSpeechTranslations.Where(
+                    x => x.Translation.Text != null && translationVariantAndSynonymsHashSet.Contains(x.Translation))
+                .ToArray();
+        }
     }
 }

@@ -39,7 +39,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <translationDetails:MoreExamplesControl DataContext="{Binding TranslationDetails.TranslationResult, Mode=OneTime}" />
+                <translationDetails:MoreExamplesControl DataContext="{Binding TranslationDetails.TranslationResult.ExtendedExamplesViewModel, Mode=OneTime}" />
             </StackPanel>
         </ScrollViewer>
     </StackPanel>

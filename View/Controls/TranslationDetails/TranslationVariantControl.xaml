@@ -48,7 +48,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <translationDetails:MoreExamplesControl />
+            <translationDetails:MoreExamplesControl DataContext="{Binding ExtendedExamplesViewModel, Mode=OneTime}" />
         </StackPanel>
     </Border>
 </commonView:BaseControl>

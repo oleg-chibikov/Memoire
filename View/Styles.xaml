@@ -84,6 +84,7 @@
     <converters:BytesToImageConverter x:Key="BytesToImageConverter" />
     <converters:TextToSpanConverter x:Key="TextToSpanConverter" />
     <converters:HasManualTranslationsToBrushConverter x:Key="HasManualTranslationsToBrushConverter" />
+    <converters:StringToCursorConverter x:Key="StringToCursorConverter" />
 
     <Style x:Key="Control" TargetType="{x:Type commonView:BaseControl}">
         <Setter Property="Foreground" Value="{StaticResource Foreground}" />
