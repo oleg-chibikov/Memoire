@@ -324,6 +324,9 @@
   <data name="PauseReasonOperationInProgress" xml:space="preserve">
     <value>Выполнение длительной операции</value>
   </data>
+  <data name="PauseReasonCardIsLoading" xml:space="preserve">
+    <value>Загрузка карточек</value>
+  </data>
   <data name="AddProcessToBlacklist" xml:space="preserve">
     <value>Добавить процесс в чёрный список</value>
   </data>

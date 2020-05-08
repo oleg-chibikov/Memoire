@@ -17,7 +17,8 @@ namespace Mémoire.Core
             { PauseReasons.InactiveMode, Texts.PauseReasonInactiveMode },
             { PauseReasons.ActiveProcessBlacklisted, Texts.PauseReasonActiveProcessBlacklisted },
             { PauseReasons.CardIsVisible, Texts.PauseReasonCardIsVisible },
-            { PauseReasons.OperationInProgress, Texts.PauseReasonOperationInProgress }
+            { PauseReasons.OperationInProgress, Texts.PauseReasonOperationInProgress },
+            { PauseReasons.CardIsLoading, Texts.PauseReasonCardIsLoading }
         };
 
         readonly IDictionary<PauseReasons, string> _descriptions = new Dictionary<PauseReasons, string>();

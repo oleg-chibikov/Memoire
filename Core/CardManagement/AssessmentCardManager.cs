@@ -143,45 +143,51 @@ namespace Mémoire.Core.CardManagement
 
         async void HandleIntervalHitAsync(long x)
         {
-            _pauseManager.PauseActivity(PauseReasons.CardIsVisible);
-            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            _logger.LogTrace("Trying to show next card...");
-
-            if (!_localSettingsRepository.IsActive)
-            {
-                _logger.LogDebug("Skipped showing card due to inactivity");
-                return;
-            }
-
-            if (_hasOpenWindows)
-            {
-                _logger.LogTrace("There is another window opened. Skipping creation...");
-                return;
-            }
-
             _pauseManager.ResetPauseTimes();
-
-            _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
-            var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
-            if (mostSuitableLearningInfos.Length == 0)
-            {
-                _logger.LogDebug("Skipped showing card due to absence of suitable cards");
-                return;
-            }
-
-            IAsyncEnumerable<TranslationInfo> translationInfos;
+            _pauseManager.PauseActivity(PauseReasons.CardIsLoading);
             try
             {
-                translationInfos = GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos);
-            }
-            catch (InvalidOperationException ex)
-            {
-                // If the word cannot be found in DB // TODO: additional handling? get it from somewhere
-                _messageHub.Publish(ex);
-                return;
-            }
+                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+                _logger.LogTrace("Trying to show next card...");
 
-            await CreateAndShowWindowAsync(await translationInfos.ToArrayAsync().ConfigureAwait(true)).ConfigureAwait(true);
+                if (!_localSettingsRepository.IsActive)
+                {
+                    _logger.LogDebug("Skipped showing card due to inactivity");
+                    return;
+                }
+
+                if (_hasOpenWindows)
+                {
+                    _logger.LogTrace("There is another window opened. Skipping creation...");
+                    return;
+                }
+
+                _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
+                var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
+                if (mostSuitableLearningInfos.Length == 0)
+                {
+                    _logger.LogDebug("Skipped showing card due to absence of suitable cards");
+                    return;
+                }
+
+                IAsyncEnumerable<TranslationInfo> translationInfos;
+                try
+                {
+                    translationInfos = GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // If the word cannot be found in DB // TODO: additional handling? get it from somewhere
+                    _messageHub.Publish(ex);
+                    return;
+                }
+
+                await CreateAndShowWindowAsync(await translationInfos.ToArrayAsync().ConfigureAwait(true)).ConfigureAwait(true);
+            }
+            finally
+            {
+                _pauseManager.ResumeActivity(PauseReasons.CardIsLoading);
+            }
         }
 
         async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)

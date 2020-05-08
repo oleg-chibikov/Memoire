@@ -37,8 +37,9 @@ namespace Mémoire.ViewModel
             logger.LogTrace("Showing batch assessment window...");
 
             Title = string.Join(", ", translationInfos.Select(x => x.TranslationEntryKey.ToString()));
-            pauseManager.PauseActivity(PauseReasons.CardIsVisible, Title);
+
             WindowClosedCommand = AddCommand(WindowClosed);
+            WindowContentRenderedCommand = AddCommand(WindowContentRendered);
             NestedViewModels = translationInfos.Select(x => GetViewModelByRepeatType(x, x.LearningInfo.RepeatType)).ToArray();
             NestedViewModels.First().IsFocused = true;
             _closedCount = translationInfos.Count;
@@ -49,6 +50,8 @@ namespace Mémoire.ViewModel
         public string Title { get; }
 
         public ICommand WindowClosedCommand { get; }
+
+        public ICommand WindowContentRenderedCommand { get; }
 
         public void NotifyChildClosed()
         {
@@ -95,6 +98,11 @@ namespace Mémoire.ViewModel
                 default:
                     throw new ArgumentOutOfRangeException(nameof(repeatType));
             }
+        }
+
+        void WindowContentRendered()
+        {
+            _pauseManager.PauseActivity(PauseReasons.CardIsVisible, Title);
         }
 
         void WindowClosed()

@@ -583,6 +583,15 @@ namespace Mémoire.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assessment cards are loading.
+        /// </summary>
+        public static string PauseReasonCardIsLoading {
+            get {
+                return ResourceManager.GetString("PauseReasonCardIsLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The card is being shown now.
         /// </summary>
         public static string PauseReasonCardIsVisible {

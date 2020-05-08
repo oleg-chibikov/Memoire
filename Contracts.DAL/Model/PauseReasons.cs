@@ -9,6 +9,7 @@ namespace Mémoire.Contracts.DAL.Model
         ActiveProcessBlacklisted = 1,
         OperationInProgress = 1 << 1,
         InactiveMode = 1 << 2,
-        CardIsVisible = 1 << 3
+        CardIsVisible = 1 << 3,
+        CardIsLoading = 1 << 4
     }
 }
