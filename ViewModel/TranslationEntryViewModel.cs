@@ -209,7 +209,7 @@ namespace Mémoire.ViewModel
             {
                 _logger.LogTrace("Not found {0} in the list. Adding...", wordKey);
 
-                var translationEntry = _translationEntryRepository.GetById(wordKey.TranslationEntryKey);
+                var translationEntry = _translationEntryRepository.GetById(wordKey.Key);
                 var word = new Word { Text = wordKey.Word.Text, PartOfSpeech = wordKey.Word.PartOfSpeech };
                 var priorityWordViewModel = _priorityWordViewModelFactory(word, translationEntry);
                 _synchronizationContext.Send(x => Translations.Add(priorityWordViewModel), null);

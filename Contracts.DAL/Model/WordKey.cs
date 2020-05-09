@@ -16,10 +16,10 @@ namespace Mémoire.Contracts.DAL.Model
 
             // Creating a new copy to ensure word has the only necessary fields (the WordKeys are stored in DB)
             Word = new BaseWord(word);
-            TranslationEntryKey = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
+            Key = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
         }
 
-        public TranslationEntryKey TranslationEntryKey { get; set; }
+        public TranslationEntryKey Key { get; set; }
 
         public BaseWord Word { get; set; }
 
@@ -47,7 +47,7 @@ namespace Mémoire.Contracts.DAL.Model
         {
             unchecked
             {
-                var hashCode = TranslationEntryKey.GetHashCode();
+                var hashCode = Key.GetHashCode();
                 hashCode = (hashCode * 397) ^ Word.GetHashCode();
                 return hashCode;
             }
@@ -55,7 +55,7 @@ namespace Mémoire.Contracts.DAL.Model
 
         public override string ToString()
         {
-            return $"{TranslationEntryKey} - {Word}";
+            return $"{Key} - {Word}";
         }
 
         public bool Equals(WordKey other)
@@ -70,7 +70,7 @@ namespace Mémoire.Contracts.DAL.Model
                 return true;
             }
 
-            return Word.Equals(other.Word) && TranslationEntryKey.Equals(other.TranslationEntryKey);
+            return Word.Equals(other.Word) && Key.Equals(other.Key);
         }
     }
 }

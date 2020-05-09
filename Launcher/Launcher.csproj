@@ -24,7 +24,7 @@
     <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7427.23080" />
     <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7427.23085" />
     <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7427.23114" />
-    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7433.33595" />
+    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7434.18029" />
     <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7433.34430" />
     <PackageReference Include="Scar.Common.WebApi" Version="1.1.7428.22704" />
     <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7428.22852" />

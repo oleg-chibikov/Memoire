@@ -280,7 +280,7 @@ namespace Mémoire.ViewModel
                     async () =>
                     {
                         await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(priorityWordKey.WordKey.TranslationEntryKey));
+                        var translationEntryViewModel = _translationList.SingleOrDefault(x => x.Id.Equals(priorityWordKey.WordKey.Key));
                         _semaphore.Release();
 
                         if (translationEntryViewModel == null)

@@ -50,7 +50,7 @@ namespace Mémoire.Test
             var key = autoMock.Create<WordKey>();
             var word = key.Word;
             word.Text = FallbackSearchText;
-            var translationEntryKey = key.TranslationEntryKey;
+            var translationEntryKey = key.Key;
             translationEntryKey.SourceLanguage = LanguageConstants.RuLanguage;
             translationEntryKey.TargetLanguage = LanguageConstants.EnLanguage;
             translationEntryKey.Text = word.Text;

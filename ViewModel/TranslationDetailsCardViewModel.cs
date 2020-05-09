@@ -167,7 +167,7 @@ namespace Mémoire.ViewModel
         void HandlePriorityChanged(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
-            if (!priorityWordKey.WordKey.TranslationEntryKey.Equals(_translationEntryKey))
+            if (!priorityWordKey.WordKey.Key.Equals(_translationEntryKey))
             {
                 return;
             }

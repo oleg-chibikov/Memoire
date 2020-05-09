@@ -12,17 +12,17 @@ namespace Mémoire.DAL.Local
         {
             Collection.EnsureIndex(x => x.Id.Word.Text);
             Collection.EnsureIndex(x => x.Id.Word.PartOfSpeech);
-            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.Text);
-            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.SourceLanguage);
-            Collection.EnsureIndex(x => x.Id.TranslationEntryKey.TargetLanguage);
+            Collection.EnsureIndex(x => x.Id.Key.Text);
+            Collection.EnsureIndex(x => x.Id.Key.SourceLanguage);
+            Collection.EnsureIndex(x => x.Id.Key.TargetLanguage);
         }
 
         public void ClearForTranslationEntry(TranslationEntryKey translationEntryKey)
         {
-            Collection.Delete(
-                x => (x.Id.TranslationEntryKey.Text == translationEntryKey.Text) &&
-                     (x.Id.TranslationEntryKey.SourceLanguage == translationEntryKey.SourceLanguage) &&
-                     (x.Id.TranslationEntryKey.TargetLanguage == translationEntryKey.TargetLanguage));
+            Collection.DeleteMany(
+                x => (x.Id.Key.Text == translationEntryKey.Text) &&
+                     (x.Id.Key.SourceLanguage == translationEntryKey.SourceLanguage) &&
+                     (x.Id.Key.TargetLanguage == translationEntryKey.TargetLanguage));
         }
     }
 }
