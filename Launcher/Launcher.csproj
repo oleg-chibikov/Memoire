@@ -8,6 +8,11 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>Mémoire.Launcher.App</StartupObject>
     <OutputPath>..\Build\</OutputPath>
+    <AssemblyName>Scar.Mémoire</AssemblyName>
+    <!--<PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
     <PackageReference Include="NLog.Config" Version="4.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
@@ -54,8 +58,8 @@
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="del &quot;$(SolutionDir)Release\Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)Release\Portable.7z&quot; &quot;$(SolutionDir)Build\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
+  <Target Name="PostBuild" AfterTargets="Publish">
+    <Exec Command="del &quot;$(SolutionDir)Release\Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)7zRelease\Portable.7z&quot; &quot;$(SolutionDir)Release\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
   </Target>
 
 </Project>
