@@ -305,4 +305,49 @@
         <Setter Property="FontFamily" Value="{StaticResource LogoFont}" />
         <Setter Property="FontSize" Value="{StaticResource LogoFontSize}" />
     </Style>
+    <Style x:Key="ViewWhenMouseHover" TargetType="FrameworkElement">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard Storyboard.TargetProperty="Opacity">
+                            <DoubleAnimation To="1" Duration="0:0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard Storyboard.TargetProperty="Opacity">
+                            <DoubleAnimation To="0.1" Duration="0:0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Opacity" Value="0.1" />
+    </Style>
+    <Style
+        x:Key="ViewWhenMouseHoverExpander"
+        BasedOn="{StaticResource {x:Type Expander}}"
+        TargetType="Expander">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard Storyboard.TargetProperty="Opacity">
+                            <DoubleAnimation To="1" Duration="0:0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard Storyboard.TargetProperty="Opacity">
+                            <DoubleAnimation To="0.1" Duration="0:0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Opacity" Value="0.1" />
+    </Style>
 </ResourceDictionary>

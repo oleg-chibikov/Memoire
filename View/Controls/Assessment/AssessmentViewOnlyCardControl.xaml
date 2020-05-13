@@ -20,13 +20,12 @@
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Expander IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}">
+        <Expander IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" Style="{StaticResource ViewWhenMouseHoverExpander}">
             <Expander.Header>
                 <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc Details}" />
             </Expander.Header>
             <translationDetails:TranslationDetailsCardControl Margin="5,10" DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
         </Expander>
-        <common:LearningInfoActionsControl DataContext="{Binding LearningInfoViewModel, Mode=OneTime}" />
         <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
             <common:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
             <common:WordControl

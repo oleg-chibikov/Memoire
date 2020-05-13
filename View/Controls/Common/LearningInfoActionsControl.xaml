@@ -18,7 +18,10 @@
     <commonView:BaseControl.Resources>
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
-    <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
+    <StackPanel
+        commonView:MarginSetter.Margin="{StaticResource CommonMargin}"
+        Orientation="Horizontal"
+        Style="{StaticResource ViewWhenMouseHover}">
         <common:FavoriteButton />
         <common:DemoteButton />
         <TextBlock

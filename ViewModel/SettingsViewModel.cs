@@ -92,7 +92,7 @@ namespace Mémoire.ViewModel
             SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
             MuteSounds = _sharedSettingsRepository.MuteSounds;
             CardsToShowAtOnce = _sharedSettingsRepository.CardsToShowAtOnce;
-            ClassificationMinimalThreshold = (int)_sharedSettingsRepository.ClassificationMinimalThreshold * 100;
+            ClassificationMinimalThreshold = (int)(_sharedSettingsRepository.ClassificationMinimalThreshold * 100);
             ApiKeys = _sharedSettingsRepository.ApiKeys;
             CardProbabilitySettings = _sharedSettingsRepository.CardProbabilitySettings;
             UiLanguage = _uiLanguage = _localSettingsRepository.UiLanguage;
@@ -261,10 +261,10 @@ namespace Mémoire.ViewModel
                 _sharedSettingsRepository.CardsToShowAtOnce = CardsToShowAtOnce;
             }
 
-            if (((int)_sharedSettingsRepository.ClassificationMinimalThreshold * 100) != ClassificationMinimalThreshold)
+            if ((int)(_sharedSettingsRepository.ClassificationMinimalThreshold * 100) != ClassificationMinimalThreshold)
             {
                 // ReSharper disable once PossibleLossOfFraction
-                _sharedSettingsRepository.ClassificationMinimalThreshold = ClassificationMinimalThreshold / 100;
+                _sharedSettingsRepository.ClassificationMinimalThreshold = (double)ClassificationMinimalThreshold / 100;
             }
 
             if (!Equals(_sharedSettingsRepository.ApiKeys, ApiKeys))

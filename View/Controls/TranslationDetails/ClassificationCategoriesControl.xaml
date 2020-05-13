@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
     Padding="{StaticResource CommonMarginThickness}"
+    HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"

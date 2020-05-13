@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Scar.Mémoire/1.1.7436.19183": {
+      "Scar.Mémoire/1.1.7436.23165": {
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.0",
           "Microsoft.CodeQuality.Analyzers": "3.0.0",
@@ -2407,7 +2407,7 @@
     }
   },
   "libraries": {
-    "Scar.Mémoire/1.1.7436.19183": {
+    "Scar.Mémoire/1.1.7436.23165": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
