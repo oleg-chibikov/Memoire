@@ -8,9 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "Resources\Resources.csproj", "{0E8CE927-1859-41A0-971A-DE6425AC6852}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer", "Installer\Installer.csproj", "{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6F4F5769-673C-436C-9F84-0CAFAF21AA30} = {6F4F5769-673C-436C-9F84-0CAFAF21AA30}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "Launcher\Launcher.csproj", "{6F4F5769-673C-436C-9F84-0CAFAF21AA30}"
 EndProject
@@ -79,13 +76,11 @@ Global
 		{0E8CE927-1859-41A0-971A-DE6425AC6852}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{0E8CE927-1859-41A0-971A-DE6425AC6852}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhone.Build.0 = Release|Any CPU
 		{A2E7DAAE-8DF9-42AE-A433-8810248A0E26}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU

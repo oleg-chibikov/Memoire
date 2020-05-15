@@ -7,7 +7,7 @@ namespace Mémoire.Installer
     static class Program
     {
         const string ReleaseDir = "..\\Release";
-        const string ProductIcon = "Icon.ico";
+        const string ProductIcon = "Mémoire.ico";
         static readonly Guid UpgradeCode = new Guid("a235657a-58d6-4239-9428-9d0f8840a45b");
 
         static void Main()

@@ -6,59 +6,53 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Mémoire/1.1.7440.24206": {
+      "Mémoire/1.1.7440.32370": {
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "1.1.0",
-          "Microsoft.CodeQuality.Analyzers": "3.0.0",
-          "Microsoft.NetCore.Analyzers": "3.0.0",
-          "Microsoft.NetFramework.Analyzers": "3.0.0",
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          ".Core": "1.1.7440.29953",
+          ".DAL": "1.1.7440.29953",
+          ".Resources": "1.1.7440.29953",
+          ".View": "1.1.7440.29953",
+          ".ViewModel": "1.1.7440.29953",
+          ".WebApi": "1.1.7440.29953",
+          ".WindowCreators": "1.1.7440.29953",
+          ".Windows.Common": "1.1.7440.29953",
+          "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
           "NLog.Config": "4.7.0",
           "NLog.Web.AspNetCore": "4.9.2",
-          "Scar.CodeAnalysis": "1.0.7422.15495",
-          "Scar.Common.AutofacHttpClientProvision": "1.1.7427.23080",
-          "Scar.Common.AutofacInstantiation": "1.1.7427.23085",
+          "Scar.Common.AutofacHttpClientProvision": "1.1.7440.28983",
+          "Scar.Common.AutofacInstantiation": "1.1.7440.29014",
           "Scar.Common.Sync.Windows": "1.1.7427.23114",
-          "Scar.Common.View.AutofacWindowProvision": "1.1.7434.18029",
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430",
+          "Scar.Common.View.AutofacWindowProvision": "1.1.7440.29038",
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014",
           "Scar.Common.WPF.CollectionView": "1.1.7428.22852",
-          "Scar.Common.WPF.Startup": "1.1.7428.22998",
-          "Scar.Common.WPF.View.WindowCreation": "1.1.7433.34444",
+          "Scar.Common.WPF.Startup": "1.1.7440.29038",
+          "Scar.Common.WPF.View.WindowCreation": "1.1.7440.29038",
           "Scar.Common.WebApi": "1.1.7428.22704",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.Core": "1.1.7440.22967",
-          "Scar.Mémoire.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.Resources": "1.1.7440.22967",
-          "Scar.Mémoire.View": "1.1.7440.22967",
-          "Scar.Mémoire.ViewModel": "1.1.7440.22967",
-          "Scar.Mémoire.WebApi": "1.1.7440.22967",
-          "Scar.Mémoire.WindowCreators": "1.1.7440.22967",
-          "Scar.Mémoire.Windows.Common": "1.1.7440.22967",
-          "Scar.Services.ImageDownload": "1.1.7440.17652",
-          "Scar.Services.Qwant": "1.1.7440.17652",
-          "Scar.Services.UClassify": "1.1.7440.17653",
-          "Scar.Services.Yandex": "1.1.7440.17652",
-          "StyleCop.Analyzers": "1.1.118",
+          "Scar.Services.ImageDownload": "1.1.7440.27518",
+          "Scar.Services.Qwant": "1.1.7440.27519",
+          "Scar.Services.UClassify": "1.1.7440.27519",
+          "Scar.Services.Yandex": "1.1.7440.27518",
           "System.Runtime.CompilerServices.Unsafe": "4.7.1",
-          "WTG.Analyzers": "2.10.0",
           "System.Reactive.Reference": "4.4.0.0"
         },
         "runtime": {
           "Mémoire.dll": {}
         }
       },
-      "Autofac/5.1.4": {
+      "Autofac/5.2.0": {
         "runtime": {
           "lib/netstandard2.1/Autofac.dll": {
-            "assemblyVersion": "5.1.4.0",
-            "fileVersion": "5.1.4.0"
+            "assemblyVersion": "5.2.0.0",
+            "fileVersion": "5.2.0.0"
           }
         }
       },
       "Autofac.Extensions.DependencyInjection/6.0.0": {
         "dependencies": {
-          "Autofac": "5.1.4",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3"
+          "Autofac": "5.2.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4"
         },
         "runtime": {
           "lib/netstandard2.1/Autofac.Extensions.DependencyInjection.dll": {
@@ -87,30 +81,30 @@
           }
         }
       },
-      "LiteDB/5.0.7": {
+      "LiteDB/5.0.8": {
         "runtime": {
           "lib/netstandard2.0/LiteDB.dll": {
-            "assemblyVersion": "5.0.7.0",
-            "fileVersion": "5.0.7.0"
+            "assemblyVersion": "5.0.8.0",
+            "fileVersion": "5.0.8.0"
           }
         }
       },
-      "MaterialDesignColors/1.2.4": {
+      "MaterialDesignColors/1.2.5": {
         "runtime": {
           "lib/netcoreapp3.1/MaterialDesignColors.dll": {
-            "assemblyVersion": "1.2.4.1361",
-            "fileVersion": "1.2.4.1361"
+            "assemblyVersion": "1.2.5.1465",
+            "fileVersion": "1.2.5.1465"
           }
         }
       },
-      "MaterialDesignThemes/3.1.1": {
+      "MaterialDesignThemes/3.1.2": {
         "dependencies": {
-          "MaterialDesignColors": "1.2.4"
+          "MaterialDesignColors": "1.2.5"
         },
         "runtime": {
           "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {
-            "assemblyVersion": "3.1.1.1361",
-            "fileVersion": "3.1.1.1361"
+            "assemblyVersion": "3.1.2.1465",
+            "fileVersion": "3.1.2.1465"
           }
         }
       },
@@ -119,14 +113,14 @@
           "Microsoft.AspNetCore.Hosting.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.Http": "2.2.0",
           "Microsoft.AspNetCore.Http.Extensions": "2.2.0",
-          "Microsoft.Extensions.Configuration": "3.1.3",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.3",
-          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.3",
-          "Microsoft.Extensions.DependencyInjection": "3.1.3",
-          "Microsoft.Extensions.FileProviders.Physical": "3.1.3",
-          "Microsoft.Extensions.Hosting.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Logging": "3.1.3",
-          "Microsoft.Extensions.Options": "3.1.3",
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.4",
+          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.4",
+          "Microsoft.Extensions.DependencyInjection": "3.1.4",
+          "Microsoft.Extensions.FileProviders.Physical": "3.1.4",
+          "Microsoft.Extensions.Hosting.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Logging": "3.1.4",
+          "Microsoft.Extensions.Options": "3.1.4",
           "System.Diagnostics.DiagnosticSource": "4.5.1",
           "System.Reflection.Metadata": "1.6.0"
         }
@@ -135,13 +129,13 @@
         "dependencies": {
           "Microsoft.AspNetCore.Hosting.Server.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
-          "Microsoft.Extensions.Hosting.Abstractions": "3.1.3"
+          "Microsoft.Extensions.Hosting.Abstractions": "3.1.4"
         }
       },
       "Microsoft.AspNetCore.Hosting.Server.Abstractions/2.2.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "2.2.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.3"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4"
         }
       },
       "Microsoft.AspNetCore.Http/2.2.0": {
@@ -149,7 +143,7 @@
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.WebUtilities": "2.2.0",
           "Microsoft.Extensions.ObjectPool": "2.2.0",
-          "Microsoft.Extensions.Options": "3.1.3",
+          "Microsoft.Extensions.Options": "3.1.4",
           "Microsoft.Net.Http.Headers": "2.2.0"
         }
       },
@@ -162,14 +156,14 @@
       "Microsoft.AspNetCore.Http.Extensions/2.2.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
-          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.3",
+          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.4",
           "Microsoft.Net.Http.Headers": "2.2.0",
           "System.Buffers": "4.5.0"
         }
       },
       "Microsoft.AspNetCore.Http.Features/2.2.0": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.3"
+          "Microsoft.Extensions.Primitives": "3.1.4"
         }
       },
       "Microsoft.AspNetCore.WebUtilities/2.2.0": {
@@ -178,330 +172,327 @@
           "System.Text.Encodings.Web": "4.5.0"
         }
       },
-      "Microsoft.Bcl.AsyncInterfaces/1.1.0": {
+      "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "4.700.19.56404"
+            "fileVersion": "4.700.20.21406"
           }
         }
       },
-      "Microsoft.CodeQuality.Analyzers/3.0.0": {},
-      "Microsoft.Extensions.Configuration/3.1.3": {
+      "Microsoft.Extensions.Configuration/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.3"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.Abstractions/3.1.3": {
+      "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.3"
+          "Microsoft.Extensions.Primitives": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.Abstractions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.Binder/3.1.3": {
+      "Microsoft.Extensions.Configuration.Binder/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.Binder.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.CommandLine/3.1.3": {
+      "Microsoft.Extensions.Configuration.CommandLine/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.CommandLine.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.EnvironmentVariables/3.1.3": {
+      "Microsoft.Extensions.Configuration.EnvironmentVariables/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.EnvironmentVariables.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.FileExtensions/3.1.3": {
+      "Microsoft.Extensions.Configuration.FileExtensions/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3",
-          "Microsoft.Extensions.FileProviders.Physical": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "Microsoft.Extensions.FileProviders.Physical": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.FileExtensions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.Json/3.1.3": {
+      "Microsoft.Extensions.Configuration.Json/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3",
-          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "Microsoft.Extensions.Configuration.FileExtensions": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.Json.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Configuration.UserSecrets/3.1.3": {
+      "Microsoft.Extensions.Configuration.UserSecrets/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Json": "3.1.3"
+          "Microsoft.Extensions.Configuration.Json": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.UserSecrets.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.DependencyInjection/3.1.3": {
+      "Microsoft.Extensions.DependencyInjection/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.3": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.4": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.FileProviders.Abstractions/3.1.3": {
+      "Microsoft.Extensions.FileProviders.Abstractions/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.3"
+          "Microsoft.Extensions.Primitives": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.FileProviders.Physical/3.1.3": {
+      "Microsoft.Extensions.FileProviders.Physical/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.3",
-          "Microsoft.Extensions.FileSystemGlobbing": "3.1.3"
+          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.4",
+          "Microsoft.Extensions.FileSystemGlobbing": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.FileSystemGlobbing/3.1.3": {
+      "Microsoft.Extensions.FileSystemGlobbing/3.1.4": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Hosting/3.1.3": {
+      "Microsoft.Extensions.Hosting/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "3.1.3",
-          "Microsoft.Extensions.Configuration.CommandLine": "3.1.3",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.3",
-          "Microsoft.Extensions.Configuration.UserSecrets": "3.1.3",
-          "Microsoft.Extensions.DependencyInjection": "3.1.3",
-          "Microsoft.Extensions.FileProviders.Physical": "3.1.3",
-          "Microsoft.Extensions.Hosting.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Logging": "3.1.3",
-          "Microsoft.Extensions.Logging.Console": "3.1.3",
-          "Microsoft.Extensions.Logging.Debug": "3.1.3",
-          "Microsoft.Extensions.Logging.EventLog": "3.1.3",
-          "Microsoft.Extensions.Logging.EventSource": "3.1.3"
+          "Microsoft.Extensions.Configuration": "3.1.4",
+          "Microsoft.Extensions.Configuration.CommandLine": "3.1.4",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.4",
+          "Microsoft.Extensions.Configuration.UserSecrets": "3.1.4",
+          "Microsoft.Extensions.DependencyInjection": "3.1.4",
+          "Microsoft.Extensions.FileProviders.Physical": "3.1.4",
+          "Microsoft.Extensions.Hosting.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Logging": "3.1.4",
+          "Microsoft.Extensions.Logging.Console": "3.1.4",
+          "Microsoft.Extensions.Logging.Debug": "3.1.4",
+          "Microsoft.Extensions.Logging.EventLog": "3.1.4",
+          "Microsoft.Extensions.Logging.EventSource": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Hosting.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Hosting.Abstractions/3.1.3": {
+      "Microsoft.Extensions.Hosting.Abstractions/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.3",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3",
-          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4",
+          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Hosting.Abstractions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Http/3.1.3": {
+      "Microsoft.Extensions.Http/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Logging": "3.1.3",
-          "Microsoft.Extensions.Options": "3.1.3"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Logging": "3.1.4",
+          "Microsoft.Extensions.Options": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Http.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging/3.1.3": {
+      "Microsoft.Extensions.Logging/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Binder": "3.1.3",
-          "Microsoft.Extensions.DependencyInjection": "3.1.3",
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Options": "3.1.3"
+          "Microsoft.Extensions.Configuration.Binder": "3.1.4",
+          "Microsoft.Extensions.DependencyInjection": "3.1.4",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Options": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/3.1.3": {
+      "Microsoft.Extensions.Logging.Abstractions/3.1.4": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.Configuration/3.1.3": {
+      "Microsoft.Extensions.Logging.Configuration/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.3",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.3"
+          "Microsoft.Extensions.Logging": "3.1.4",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Configuration.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.Console/3.1.3": {
+      "Microsoft.Extensions.Logging.Console/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Logging": "3.1.3",
-          "Microsoft.Extensions.Logging.Configuration": "3.1.3"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Logging": "3.1.4",
+          "Microsoft.Extensions.Logging.Configuration": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Console.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.Debug/3.1.3": {
+      "Microsoft.Extensions.Logging.Debug/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.3"
+          "Microsoft.Extensions.Logging": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Debug.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.EventLog/3.1.3": {
+      "Microsoft.Extensions.Logging.EventLog/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.3",
+          "Microsoft.Extensions.Logging": "3.1.4",
           "System.Diagnostics.EventLog": "4.7.0"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.EventLog.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Logging.EventSource/3.1.3": {
+      "Microsoft.Extensions.Logging.EventSource/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.3"
+          "Microsoft.Extensions.Logging": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Logging.EventSource.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
       "Microsoft.Extensions.ObjectPool/2.2.0": {},
-      "Microsoft.Extensions.Options/3.1.3": {
+      "Microsoft.Extensions.Options/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Primitives": "3.1.3"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Primitives": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Options.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Options.ConfigurationExtensions/3.1.3": {
+      "Microsoft.Extensions.Options.ConfigurationExtensions/3.1.4": {
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Configuration.Binder": "3.1.3",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.3",
-          "Microsoft.Extensions.Options": "3.1.3"
+          "Microsoft.Extensions.Configuration.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Configuration.Binder": "3.1.4",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.4",
+          "Microsoft.Extensions.Options": "3.1.4"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Options.ConfigurationExtensions.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
-      "Microsoft.Extensions.Primitives/3.1.3": {
+      "Microsoft.Extensions.Primitives/3.1.4": {
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {
-            "assemblyVersion": "3.1.3.0",
-            "fileVersion": "3.100.320.12802"
+            "assemblyVersion": "3.1.4.0",
+            "fileVersion": "3.100.420.21409"
           }
         }
       },
       "Microsoft.Net.Http.Headers/2.2.0": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "3.1.3",
+          "Microsoft.Extensions.Primitives": "3.1.4",
           "System.Buffers": "4.5.0"
         }
       },
-      "Microsoft.NetCore.Analyzers/3.0.0": {},
       "Microsoft.NETCore.Platforms/3.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
-      "Microsoft.NetFramework.Analyzers/3.0.0": {},
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.0",
@@ -665,7 +656,7 @@
       },
       "NLog.Extensions.Logging/1.6.2": {
         "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.3",
+          "Microsoft.Extensions.Logging": "3.1.4",
           "NLog": "4.7.0"
         },
         "runtime": {
@@ -825,36 +816,31 @@
           }
         }
       },
-      "Scar.CodeAnalysis/1.0.7422.15495": {
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        }
-      },
-      "Scar.Common/1.1.7428.22852": {
+      "Scar.Common/1.1.7440.22677": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22677",
+            "fileVersion": "1.1.7440.22677"
           }
         }
       },
-      "Scar.Common.ApplicationLifetime.Contracts/1.1.7427.23079": {
+      "Scar.Common.ApplicationLifetime.Contracts/1.1.7440.22655": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.ApplicationLifetime.Contracts.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22655",
+            "fileVersion": "1.1.7440.22655"
           }
         }
       },
-      "Scar.Common.ApplicationLifetime.Core/1.1.7428.22989": {
+      "Scar.Common.ApplicationLifetime.Core/1.1.7440.29014": {
         "dependencies": {
           "Autofac.Extensions.DependencyInjection": "6.0.0",
           "Easy.MessageHub": "5.0.0",
-          "Microsoft.Extensions.Hosting": "3.1.3",
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
-          "Scar.Common": "1.1.7428.22852",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7427.23079",
-          "Scar.Common.Localization": "1.1.7427.23080"
+          "Microsoft.Extensions.Hosting": "3.1.4",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
+          "Scar.Common": "1.1.7440.22677",
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7440.22655",
+          "Scar.Common.Localization": "1.1.7440.22654"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.ApplicationLifetime.Core.dll": {
@@ -863,9 +849,9 @@
           }
         }
       },
-      "Scar.Common.Async/1.1.7427.23079": {
+      "Scar.Common.Async/1.1.7440.28982": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3"
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.Async.dll": {
@@ -874,10 +860,10 @@
           }
         }
       },
-      "Scar.Common.AutofacHttpClientProvision/1.1.7427.23080": {
+      "Scar.Common.AutofacHttpClientProvision/1.1.7440.28983": {
         "dependencies": {
-          "Autofac": "5.1.4",
-          "Microsoft.Extensions.Http": "3.1.3"
+          "Autofac": "5.2.0",
+          "Microsoft.Extensions.Http": "3.1.4"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.AutofacHttpClientProvision.dll": {
@@ -886,9 +872,9 @@
           }
         }
       },
-      "Scar.Common.AutofacInstantiation/1.1.7427.23085": {
+      "Scar.Common.AutofacInstantiation/1.1.7440.29014": {
         "dependencies": {
-          "Autofac": "5.1.4"
+          "Autofac": "5.2.0"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.AutofacInstantiation.dll": {
@@ -897,18 +883,18 @@
           }
         }
       },
-      "Scar.Common.DAL.Contracts/1.1.7427.23084": {
+      "Scar.Common.DAL.Contracts/1.1.7440.22677": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.DAL.Contracts.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22677",
+            "fileVersion": "1.1.7440.22677"
           }
         }
       },
-      "Scar.Common.DAL.LiteDB/1.1.7434.18431": {
+      "Scar.Common.DAL.LiteDB/1.1.7440.28982": {
         "dependencies": {
-          "LiteDB": "5.0.7",
-          "Scar.Common.DAL.Contracts": "1.1.7427.23084"
+          "LiteDB": "5.0.8",
+          "Scar.Common.DAL.Contracts": "1.1.7440.22677"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.DAL.LiteDB.dll": {
@@ -925,46 +911,46 @@
           }
         }
       },
-      "Scar.Common.Localization/1.1.7427.23080": {
+      "Scar.Common.Localization/1.1.7440.22654": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.Localization.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22654",
+            "fileVersion": "1.1.7440.22654"
           }
         }
       },
-      "Scar.Common.MVVM.CollectionView/1.1.7427.23078": {
+      "Scar.Common.MVVM.CollectionView/1.1.7440.22655": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.MVVM.CollectionView.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22655",
+            "fileVersion": "1.1.7440.22655"
           }
         }
       },
-      "Scar.Common.MVVM.Commands/1.1.7427.23078": {
+      "Scar.Common.MVVM.Commands/1.1.7440.22602": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.MVVM.Commands.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22602",
+            "fileVersion": "1.1.7440.22602"
           }
         }
       },
-      "Scar.Common.MVVM.ViewModel/1.1.7427.23114": {
+      "Scar.Common.MVVM.ViewModel/1.1.7440.22654": {
         "dependencies": {
-          "Scar.Common.MVVM.Commands": "1.1.7427.23078"
+          "Scar.Common.MVVM.Commands": "1.1.7440.22602"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.MVVM.ViewModel.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22654",
+            "fileVersion": "1.1.7440.22654"
           }
         }
       },
-      "Scar.Common.RateLimiting/1.1.7427.23085": {
+      "Scar.Common.RateLimiting/1.1.7440.22677": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.RateLimiting.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22677",
+            "fileVersion": "1.1.7440.22677"
           }
         }
       },
@@ -988,10 +974,10 @@
           }
         }
       },
-      "Scar.Common.View.AutofacWindowProvision/1.1.7434.18029": {
+      "Scar.Common.View.AutofacWindowProvision/1.1.7440.29038": {
         "dependencies": {
-          "Autofac": "5.1.4",
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430"
+          "Autofac": "5.2.0",
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.View.AutofacWindowProvision.dll": {
@@ -1000,17 +986,17 @@
           }
         }
       },
-      "Scar.Common.View.Contracts/1.1.7432.33420": {
+      "Scar.Common.View.Contracts/1.1.7440.22655": {
         "runtime": {
           "lib/netstandard2.0/Scar.Common.View.Contracts.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22655",
+            "fileVersion": "1.1.7440.22655"
           }
         }
       },
-      "Scar.Common.View.WindowCreation/1.1.7433.34430": {
+      "Scar.Common.View.WindowCreation/1.1.7440.29014": {
         "dependencies": {
-          "Scar.Common.View.Contracts": "1.1.7432.33420"
+          "Scar.Common.View.Contracts": "1.1.7440.22655"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Common.View.WindowCreation.dll": {
@@ -1043,7 +1029,7 @@
       },
       "Scar.Common.WPF.CollectionView/1.1.7428.22852": {
         "dependencies": {
-          "Scar.Common.MVVM.CollectionView": "1.1.7427.23078"
+          "Scar.Common.MVVM.CollectionView": "1.1.7440.22655"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.CollectionView.dll": {
@@ -1054,7 +1040,7 @@
       },
       "Scar.Common.WPF.Controls.AutoCompleteTextBox/1.1.7428.22850": {
         "dependencies": {
-          "Scar.Common.RateLimiting": "1.1.7427.23085"
+          "Scar.Common.RateLimiting": "1.1.7440.22677"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.Controls.AutoCompleteTextBox.dll": {
@@ -1092,7 +1078,7 @@
       },
       "Scar.Common.WPF.Converters/1.1.7432.29532": {
         "dependencies": {
-          "Scar.Common": "1.1.7428.22852",
+          "Scar.Common": "1.1.7440.22677",
           "System.Drawing.Common": "4.7.0"
         },
         "runtime": {
@@ -1102,11 +1088,11 @@
           }
         }
       },
-      "Scar.Common.WPF.Localization/1.1.7427.23113": {
+      "Scar.Common.WPF.Localization/1.1.7440.28983": {
         "dependencies": {
-          "Scar.Common.Localization": "1.1.7427.23080",
-          "Scar.Common.MVVM.CollectionView": "1.1.7427.23078",
-          "WPFLocalizeExtension": "3.5.0"
+          "Scar.Common.Localization": "1.1.7440.22654",
+          "Scar.Common.MVVM.CollectionView": "1.1.7440.22655",
+          "WPFLocalizeExtension": "3.6.1"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.Localization.dll": {
@@ -1115,18 +1101,18 @@
           }
         }
       },
-      "Scar.Common.WPF.Screen/1.1.7427.23078": {
+      "Scar.Common.WPF.Screen/1.1.7440.22656": {
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.Screen.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22656",
+            "fileVersion": "1.1.7440.22656"
           }
         }
       },
-      "Scar.Common.WPF.Startup/1.1.7428.22998": {
+      "Scar.Common.WPF.Startup/1.1.7440.29038": {
         "dependencies": {
-          "Scar.Common.ApplicationLifetime.Core": "1.1.7428.22989",
-          "Scar.Common.WPF.Localization": "1.1.7427.23113"
+          "Scar.Common.ApplicationLifetime.Core": "1.1.7440.29014",
+          "Scar.Common.WPF.Localization": "1.1.7440.28983"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.Startup.dll": {
@@ -1135,27 +1121,27 @@
           }
         }
       },
-      "Scar.Common.WPF.View.Contracts/1.1.7433.33592": {
+      "Scar.Common.WPF.View.Contracts/1.1.7440.22656": {
         "dependencies": {
-          "Scar.Common.View.Contracts": "1.1.7432.33420"
+          "Scar.Common.View.Contracts": "1.1.7440.22655"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.View.Contracts.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "1.1.7440.22656",
+            "fileVersion": "1.1.7440.22656"
           }
         }
       },
-      "Scar.Common.WPF.View.Core/1.1.7433.33616": {
+      "Scar.Common.WPF.View.Core/1.1.7440.29014": {
         "dependencies": {
-          "MaterialDesignThemes": "3.1.1",
+          "MaterialDesignThemes": "3.1.2",
           "Microsoft.Xaml.Behaviors.Wpf": "1.1.19",
-          "Scar.Common.MVVM.ViewModel": "1.1.7427.23114",
-          "Scar.Common.RateLimiting": "1.1.7427.23085",
-          "Scar.Common.View.Contracts": "1.1.7432.33420",
-          "Scar.Common.WPF.Screen": "1.1.7427.23078",
-          "Scar.Common.WPF.View.Contracts": "1.1.7433.33592",
-          "WPFLocalizeExtension": "3.5.0"
+          "Scar.Common.MVVM.ViewModel": "1.1.7440.22654",
+          "Scar.Common.RateLimiting": "1.1.7440.22677",
+          "Scar.Common.View.Contracts": "1.1.7440.22655",
+          "Scar.Common.WPF.Screen": "1.1.7440.22656",
+          "Scar.Common.WPF.View.Contracts": "1.1.7440.22656",
+          "WPFLocalizeExtension": "3.6.1"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.View.Core.dll": {
@@ -1164,9 +1150,9 @@
           }
         }
       },
-      "Scar.Common.WPF.View.WindowCreation/1.1.7433.34444": {
+      "Scar.Common.WPF.View.WindowCreation/1.1.7440.29038": {
         "dependencies": {
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430"
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.View.WindowCreation.dll": {
@@ -1175,7 +1161,7 @@
           }
         }
       },
-      "Scar.Services.Common/1.1.7427.33519": {
+      "Scar.Services.Common/1.1.7440.27492": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
@@ -1186,7 +1172,7 @@
           }
         }
       },
-      "Scar.Services.Contracts/1.1.7440.17611": {
+      "Scar.Services.Contracts/1.1.7440.27492": {
         "runtime": {
           "lib/netstandard2.0/Scar.Services.Contracts.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -1194,11 +1180,11 @@
           }
         }
       },
-      "Scar.Services.ImageDownload/1.1.7440.17652": {
+      "Scar.Services.ImageDownload/1.1.7440.27518": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "NAudio": "1.10.0",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Services.ImageDownload.dll": {
@@ -1207,13 +1193,13 @@
           }
         }
       },
-      "Scar.Services.Qwant/1.1.7440.17652": {
+      "Scar.Services.Qwant/1.1.7440.27519": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common.RateLimiting": "1.1.7427.23085",
-          "Scar.Services.Common": "1.1.7427.33519",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          "Scar.Common.RateLimiting": "1.1.7440.22677",
+          "Scar.Services.Common": "1.1.7440.27492",
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Services.Qwant.dll": {
@@ -1222,11 +1208,11 @@
           }
         }
       },
-      "Scar.Services.UClassify/1.1.7440.17653": {
+      "Scar.Services.UClassify/1.1.7440.27519": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Services.Common": "1.1.7427.33519",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          "Scar.Services.Common": "1.1.7440.27492",
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Services.UClassify.dll": {
@@ -1235,14 +1221,14 @@
           }
         }
       },
-      "Scar.Services.Yandex/1.1.7440.17652": {
+      "Scar.Services.Yandex/1.1.7440.27518": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "NAudio": "1.10.0",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common": "1.1.7428.22852",
-          "Scar.Services.Common": "1.1.7427.33519",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          "Scar.Common": "1.1.7440.22677",
+          "Scar.Services.Common": "1.1.7440.27492",
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "lib/netstandard2.0/Scar.Services.Yandex.dll": {
@@ -1251,7 +1237,6 @@
           }
         }
       },
-      "StyleCop.Analyzers/1.1.118": {},
       "System.AppContext/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0"
@@ -2216,66 +2201,65 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "WPFLocalizeExtension/3.5.0": {
+      "WPFLocalizeExtension/3.6.1": {
         "dependencies": {
           "Microsoft.Windows.Compatibility": "3.1.0",
-          "XAMLMarkupExtensions": "1.8.0"
+          "XAMLMarkupExtensions": "1.9.0"
         },
         "runtime": {
           "lib/netcoreapp3.1/WPFLocalizeExtension.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.6.1.0",
+            "fileVersion": "3.6.1.0"
           }
         }
       },
-      "WTG.Analyzers/2.10.0": {},
-      "XAMLMarkupExtensions/1.8.0": {
+      "XAMLMarkupExtensions/1.9.0": {
         "dependencies": {
           "Microsoft.Windows.Compatibility": "3.1.0"
         },
         "runtime": {
           "lib/netcoreapp3.1/XAMLMarkupExtensions.dll": {
-            "assemblyVersion": "1.8.0.0",
-            "fileVersion": "1.8.0.0"
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.0"
           }
         }
       },
-      "Scar.Mémoire.Contracts/1.1.7440.22967": {
+      ".Contracts/1.1.7440.29953": {
         "dependencies": {
-          "Scar.Common.DAL.Contracts": "1.1.7427.23084",
-          "Scar.Common.View.Contracts": "1.1.7432.33420",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          ".Contracts.DAL": "1.1.7440.29953",
+          "Scar.Common.DAL.Contracts": "1.1.7440.22677",
+          "Scar.Common.View.Contracts": "1.1.7440.22655",
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "Mémoire.Contracts.dll": {}
         }
       },
-      "Scar.Mémoire.Contracts.DAL/1.1.7440.22967": {
+      ".Contracts.DAL/1.1.7440.29953": {
         "dependencies": {
-          "Scar.Common": "1.1.7428.22852",
-          "Scar.Common.DAL.Contracts": "1.1.7427.23084",
-          "Scar.Services.Contracts": "1.1.7440.17611"
+          "Scar.Common": "1.1.7440.22677",
+          "Scar.Common.DAL.Contracts": "1.1.7440.22677",
+          "Scar.Services.Contracts": "1.1.7440.27492"
         },
         "runtime": {
           "Mémoire.Contracts.DAL.dll": {}
         }
       },
-      "Scar.Mémoire.Core/1.1.7440.22967": {
+      ".Core/1.1.7440.29953": {
         "dependencies": {
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          ".Resources": "1.1.7440.29953",
           "Easy.MessageHub": "5.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "NAudio": "1.10.0",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7427.23079",
-          "Scar.Common.AutofacInstantiation": "1.1.7427.23085",
-          "Scar.Common.Localization": "1.1.7427.23080",
-          "Scar.Common.RateLimiting": "1.1.7427.23085",
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7440.22655",
+          "Scar.Common.AutofacInstantiation": "1.1.7440.29014",
+          "Scar.Common.Localization": "1.1.7440.22654",
+          "Scar.Common.RateLimiting": "1.1.7440.22677",
           "Scar.Common.Sync.Contracts": "1.1.7427.23081",
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.Resources": "1.1.7440.22967",
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014",
           "System.Linq.Async": "4.1.1",
           "System.Management": "4.7.0",
           "System.Reactive.Linq": "4.4.1"
@@ -2284,23 +2268,23 @@
           "Mémoire.Core.dll": {}
         }
       },
-      "Scar.Mémoire.DAL/1.1.7440.22967": {
+      ".DAL/1.1.7440.29953": {
         "dependencies": {
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          ".Resources": "1.1.7440.29953",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7427.23079",
-          "Scar.Common.DAL.LiteDB": "1.1.7434.18431",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.Resources": "1.1.7440.22967"
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7440.22655",
+          "Scar.Common.DAL.LiteDB": "1.1.7440.28982"
         },
         "runtime": {
           "Mémoire.DAL.dll": {}
         }
       },
-      "Scar.Mémoire.Resources/1.1.7440.22967": {
+      ".Resources/1.1.7440.29953": {
         "dependencies": {
+          ".Contracts": "1.1.7440.29953",
           "Scar.Common.IO": "1.1.7433.33591",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
           "System.Configuration.ConfigurationManager": "4.7.0",
           "System.Runtime.CompilerServices.Unsafe": "4.7.1"
         },
@@ -2313,19 +2297,19 @@
           }
         }
       },
-      "Scar.Mémoire.View/1.1.7440.22967": {
+      ".View/1.1.7440.29953": {
         "dependencies": {
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          ".ViewModel": "1.1.7440.29953",
           "Hardcodet.NotifyIcon.Wpf.NetCore": "1.0.10",
           "Scar.Common.WPF.Controls.AutoCompleteTextBox": "1.1.7428.22850",
           "Scar.Common.WPF.Controls.ExternalBrowserHyperlink": "1.1.7427.23080",
           "Scar.Common.WPF.Controls.NumericUpDown": "1.1.7433.33613",
           "Scar.Common.WPF.Controls.Styles": "1.1.7428.22879",
           "Scar.Common.WPF.Converters": "1.1.7432.29532",
-          "Scar.Common.WPF.Localization": "1.1.7427.23113",
-          "Scar.Common.WPF.View.Core": "1.1.7433.33616",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.ViewModel": "1.1.7440.22967"
+          "Scar.Common.WPF.Localization": "1.1.7440.28983",
+          "Scar.Common.WPF.View.Core": "1.1.7440.29014"
         },
         "runtime": {
           "Mémoire.View.dll": {}
@@ -2336,52 +2320,51 @@
           }
         }
       },
-      "Scar.Mémoire.ViewModel/1.1.7440.22967": {
+      ".ViewModel/1.1.7440.29953": {
         "dependencies": {
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          ".Resources": "1.1.7440.29953",
           "Easy.MessageHub": "5.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.3",
           "PropertyChanged.Fody": "3.2.8",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7427.23079",
-          "Scar.Common.Async": "1.1.7427.23079",
-          "Scar.Common.Localization": "1.1.7427.23080",
-          "Scar.Common.MVVM.CollectionView": "1.1.7427.23078",
-          "Scar.Common.MVVM.ViewModel": "1.1.7427.23114",
-          "Scar.Common.RateLimiting": "1.1.7427.23085",
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967",
-          "Scar.Mémoire.Resources": "1.1.7440.22967"
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7440.22655",
+          "Scar.Common.Async": "1.1.7440.28982",
+          "Scar.Common.Localization": "1.1.7440.22654",
+          "Scar.Common.MVVM.CollectionView": "1.1.7440.22655",
+          "Scar.Common.MVVM.ViewModel": "1.1.7440.22654",
+          "Scar.Common.RateLimiting": "1.1.7440.22677",
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014"
         },
         "runtime": {
           "Mémoire.ViewModel.dll": {}
         }
       },
-      "Scar.Mémoire.WebApi/1.1.7440.22967": {
+      ".WebApi/1.1.7440.29953": {
         "dependencies": {
-          "Scar.Common.WebApi": "1.1.7428.22704",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Contracts.DAL": "1.1.7440.22967"
+          ".Contracts": "1.1.7440.29953",
+          ".Contracts.DAL": "1.1.7440.29953",
+          "Scar.Common.WebApi": "1.1.7428.22704"
         },
         "runtime": {
           "Mémoire.WebApi.dll": {}
         }
       },
-      "Scar.Mémoire.WindowCreators/1.1.7440.22967": {
+      ".WindowCreators/1.1.7440.29953": {
         "dependencies": {
-          "Scar.Common.View.WindowCreation": "1.1.7433.34430",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.ViewModel": "1.1.7440.22967"
+          ".Contracts": "1.1.7440.29953",
+          ".ViewModel": "1.1.7440.29953",
+          "Scar.Common.View.WindowCreation": "1.1.7440.29014"
         },
         "runtime": {
           "Mémoire.WindowCreators.dll": {}
         }
       },
-      "Scar.Mémoire.Windows.Common/1.1.7440.22967": {
+      ".Windows.Common/1.1.7440.29953": {
         "dependencies": {
-          "Scar.Common.WPF.Localization": "1.1.7427.23113",
-          "Scar.Common.WPF.View.Contracts": "1.1.7433.33592",
-          "Scar.Mémoire.Contracts": "1.1.7440.22967",
-          "Scar.Mémoire.Resources": "1.1.7440.22967"
+          ".Contracts": "1.1.7440.29953",
+          ".Resources": "1.1.7440.29953",
+          "Scar.Common.WPF.Localization": "1.1.7440.28983",
+          "Scar.Common.WPF.View.Contracts": "1.1.7440.22656"
         },
         "runtime": {
           "Mémoire.Windows.Common.dll": {}
@@ -2398,17 +2381,17 @@
     }
   },
   "libraries": {
-    "Mémoire/1.1.7440.24206": {
+    "Mémoire/1.1.7440.32370": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Autofac/5.1.4": {
+    "Autofac/5.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-MsAEZJNCBTwZ21cBaFosWvR+zNG3VXB8y8qn3HmYl6m9iR/CDqDQykqBzfApbqj3N1l2I4qVBPA2exIdHJvANQ==",
-      "path": "autofac/5.1.4",
-      "hashPath": "autofac.5.1.4.nupkg.sha512"
+      "sha512": "sha512-V8dBH0dsv75uDzl7Sw+HkhKDPUw2eXnlMjcSVMH+tLo2s67MpTKGyDj1pDcpR+IF2u4YRs0s3/x7R88YJzIWvg==",
+      "path": "autofac/5.2.0",
+      "hashPath": "autofac.5.2.0.nupkg.sha512"
     },
     "Autofac.Extensions.DependencyInjection/6.0.0": {
       "type": "package",
@@ -2438,26 +2421,26 @@
       "path": "hardcodet.notifyicon.wpf.netcore/1.0.10",
       "hashPath": "hardcodet.notifyicon.wpf.netcore.1.0.10.nupkg.sha512"
     },
-    "LiteDB/5.0.7": {
+    "LiteDB/5.0.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pwoPsonlbOLulXmRpAJ+UIfqZ2Q/F54D/LHh0U84TSdl0SQed+wNvoMDie15UYbz85bXUyLgTICJMXqIosWM1g==",
-      "path": "litedb/5.0.7",
-      "hashPath": "litedb.5.0.7.nupkg.sha512"
+      "sha512": "sha512-lqwQnweoa3Lko87uo9FzZYf6BFh3AULas5yosG95LPVHIoACtJJ2BjBPQ7d7vUYDQYSV3rUco2+vMilVoBQ3WA==",
+      "path": "litedb/5.0.8",
+      "hashPath": "litedb.5.0.8.nupkg.sha512"
     },
-    "MaterialDesignColors/1.2.4": {
+    "MaterialDesignColors/1.2.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1bdii2AfMlkTWS0sYumkECko1cQFRuTYMQOYAQCAWUy2cV39v6BMdVFJ1KFBjv+gvwhaxOs0fYbAUqMeOhgGlw==",
-      "path": "materialdesigncolors/1.2.4",
-      "hashPath": "materialdesigncolors.1.2.4.nupkg.sha512"
+      "sha512": "sha512-RrgpDKLrU3j++fIeKc3wnYZUbIvgVjVQEttIyCvIV4/UyOnnDvRXGw2FjMJFvHIArRI6gBYS3hcZBP3mjVuOng==",
+      "path": "materialdesigncolors/1.2.5",
+      "hashPath": "materialdesigncolors.1.2.5.nupkg.sha512"
     },
-    "MaterialDesignThemes/3.1.1": {
+    "MaterialDesignThemes/3.1.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4pZcQ50ZTK6KAWdb2rXOI0G4t2UFmNGTCpkQMtPyrAPWGqcePo4N1y6KnHLVZ1JHOfPJ078KXV1Tq7kT9uNAWQ==",
-      "path": "materialdesignthemes/3.1.1",
-      "hashPath": "materialdesignthemes.3.1.1.nupkg.sha512"
+      "sha512": "sha512-A0r3ZTwUq9zLdtdLOM02gU9ecCwuDJARS4uA98PTQQn1ngf94vI8zWshieoXK2VUD5V4HauJpJF/WAFfzvdwpg==",
+      "path": "materialdesignthemes/3.1.2",
+      "hashPath": "materialdesignthemes.3.1.2.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Hosting/2.2.7": {
       "type": "package",
@@ -2515,180 +2498,173 @@
       "path": "microsoft.aspnetcore.webutilities/2.2.0",
       "hashPath": "microsoft.aspnetcore.webutilities.2.2.0.nupkg.sha512"
     },
-    "Microsoft.Bcl.AsyncInterfaces/1.1.0": {
+    "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1Am6l4Vpn3/K32daEqZI+FFr96OlZkgwK2LcT3pZ2zWubR5zTPW3/FkO1Rat9kb7oQOa4rxgl9LJHc5tspCWfg==",
-      "path": "microsoft.bcl.asyncinterfaces/1.1.0",
-      "hashPath": "microsoft.bcl.asyncinterfaces.1.1.0.nupkg.sha512"
+      "sha512": "sha512-yuvf07qFWFqtK3P/MRkEKLhn5r2UbSpVueRziSqj0yJQIKFwG1pq9mOayK3zE5qZCTs0CbrwL9M6R8VwqyGy2w==",
+      "path": "microsoft.bcl.asyncinterfaces/1.1.1",
+      "hashPath": "microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512"
     },
-    "Microsoft.CodeQuality.Analyzers/3.0.0": {
+    "Microsoft.Extensions.Configuration/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pOROTgdPa+15sYfEMvDlWlDEedCO1SuRLrRjX36Ltli3SmhZawC2Vgws4crz1XMs9WRzBo8WIJM5WRzGNsOSmQ==",
-      "path": "microsoft.codequality.analyzers/3.0.0",
-      "hashPath": "microsoft.codequality.analyzers.3.0.0.nupkg.sha512"
+      "sha512": "sha512-+NsYvQ00h+9kSp4/60iCAhPUp9S6joS2rsEmfCVrUmVATCveTewcHdrMB+9pJDYkWzCEqPQoJuMfsxe/299Z0w==",
+      "path": "microsoft.extensions.configuration/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration/3.1.3": {
+    "Microsoft.Extensions.Configuration.Abstractions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-nTr4JgTSJScDBD3lahIh1jUBH8A43oG1cqID1qLoHSZhtegslpIyTYxmnehtUKi6xdY5j9R0oWeeGEP+JTcmAg==",
-      "path": "microsoft.extensions.configuration/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.3.1.3.nupkg.sha512"
+      "sha512": "sha512-k7IJME4US5S5JFOGYaei5TLwutp8IqUvcBWtliKXETGn/JScmCgfej21xq5+ttxi0qZhiyJY06y9dw+cLh3kiQ==",
+      "path": "microsoft.extensions.configuration.abstractions/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.abstractions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.Abstractions/3.1.3": {
+    "Microsoft.Extensions.Configuration.Binder/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-d3vpIJdw+hRtkW1WoNTXhCczakVVId30Tj58li5GbJxz6MVGi8gy4+7JdLBb/wuHFd4+25cZe+Z0WPi207rBbQ==",
-      "path": "microsoft.extensions.configuration.abstractions/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.abstractions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-rN0FlUcOmHpGX1BFGZbtTgsXWwHO9pRTocynckXpqCvcMzqehS36aN+lfIlG3PriFulHF2kzwNVfhBakc072iw==",
+      "path": "microsoft.extensions.configuration.binder/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.binder.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.Binder/3.1.3": {
+    "Microsoft.Extensions.Configuration.CommandLine/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GouLlU6JOffNNudJpC+eGtGMe9o5ds2oH9dsJUEH1QS13eLl60eNX9rHicaE40c252e7Aixn3sS7yregDfpQ8g==",
-      "path": "microsoft.extensions.configuration.binder/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.binder.3.1.3.nupkg.sha512"
+      "sha512": "sha512-0ybafQPw4p571Kfhm6XpwLwnLcSmRDWWOanySSrZIBtmTDtEsO0idyZF3ZIILOWBCyIX+wQ8ttLMLxRJqVUlXQ==",
+      "path": "microsoft.extensions.configuration.commandline/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.commandline.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.CommandLine/3.1.3": {
+    "Microsoft.Extensions.Configuration.EnvironmentVariables/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-qcwjfZRYPcPxwpOJmIiYwfJnD7Raxfol5Csx6P2k7Or4bPUBjSJsA0AkoodNoET/h9MHhqgYpLn7VZ5dNMfnOg==",
-      "path": "microsoft.extensions.configuration.commandline/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.commandline.3.1.3.nupkg.sha512"
+      "sha512": "sha512-hA9lDxkgeQSpsi0PWgRb0iX0FCuX1o+/sF36mfkSJORg1GROjrda9IzWbZeUsYyGUr6sCmK6Qge8cJEhcmlIsA==",
+      "path": "microsoft.extensions.configuration.environmentvariables/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.environmentvariables.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.EnvironmentVariables/3.1.3": {
+    "Microsoft.Extensions.Configuration.FileExtensions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-t5BD/niDDCbandVbtzNsiDH8AayQ+YX/0WOzbQTg7pd/NnPQmXovrgwOGiwPwvCa8Pjk2MlFjV0qLlttfesUgA==",
-      "path": "microsoft.extensions.configuration.environmentvariables/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.environmentvariables.3.1.3.nupkg.sha512"
+      "sha512": "sha512-wgYJ6AxEuk7HkhUaiDwzX9LLVaeum5p8BS94xtMqgiCJ9Fxncy6z+jVHrkih+Ww6gBGbuPn5buu56MPWYlwBdg==",
+      "path": "microsoft.extensions.configuration.fileextensions/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.fileextensions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.FileExtensions/3.1.3": {
+    "Microsoft.Extensions.Configuration.Json/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-elAAhku4duLMFnoambYY3VUp6AWHkMYu1j9ctWQkSfsCPwx9FlQ8luk4LS5oMQmOT0eY8E0zWG8jZM60GXIyNA==",
-      "path": "microsoft.extensions.configuration.fileextensions/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.fileextensions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-PYSg1spPvu5V+qk3gpLdIKa0VHURlIAv1uInxkmIXUYbb3AlBk6wywlbFFUWf+CRWA62eD/LJnfpePODlbQ5CA==",
+      "path": "microsoft.extensions.configuration.json/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.json.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.Json/3.1.3": {
+    "Microsoft.Extensions.Configuration.UserSecrets/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-E26XwzU3Y+J4etuXwX0ScOxNwuBdifU/BGM0nI/GwY7SjvVkkBQDgYphUcujaiAZWJ7h7yh1KL9tBAMPgGthqg==",
-      "path": "microsoft.extensions.configuration.json/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.json.3.1.3.nupkg.sha512"
+      "sha512": "sha512-cbUQmzKpLI5lJ5hL7ijeoZnw7hHerlWfC0wMI6BAzG6/Ily+exUHoM3SGR1838+JeJs0BzIarMPSsQiVKKMVQQ==",
+      "path": "microsoft.extensions.configuration.usersecrets/3.1.4",
+      "hashPath": "microsoft.extensions.configuration.usersecrets.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Configuration.UserSecrets/3.1.3": {
+    "Microsoft.Extensions.DependencyInjection/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5Xy5b5m+WW77enehS0xnQPQ3GCjlHX/rpOqns2eMSdzmr9uKldDO59Bug7Fd+lX12glTTrGW0G+lYx+TmRKfJw==",
-      "path": "microsoft.extensions.configuration.usersecrets/3.1.3",
-      "hashPath": "microsoft.extensions.configuration.usersecrets.3.1.3.nupkg.sha512"
+      "sha512": "sha512-dAWhz6BEjUFIVLUPbT1s1sUrPTwbUWdw2iBRRe3ej3xXcKS+oo64dKrIWFxRjYP6TWyESpGFNY5NGeA5FcHVlg==",
+      "path": "microsoft.extensions.dependencyinjection/3.1.4",
+      "hashPath": "microsoft.extensions.dependencyinjection.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.DependencyInjection/3.1.3": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-H/d/jt4Pdp2iYx28shLkxfgQpk9S7cCCTEjtS/61PbZcFAT/mc4cemmOlBdED7+CqmEAIDg8X4Fo0KtADaNizg==",
-      "path": "microsoft.extensions.dependencyinjection/3.1.3",
-      "hashPath": "microsoft.extensions.dependencyinjection.3.1.3.nupkg.sha512"
+      "sha512": "sha512-AceHamXNKDMDwIoZqEoApLp8s3935wSC3VXrPaRWa0wWOaEcYdDlo1nWQ1zLiezoDmpJzV7FqDm53E0Ty/hEMg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/3.1.4",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.3": {
+    "Microsoft.Extensions.FileProviders.Abstractions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-woeS5XeBChU76EmtFCwGHKgBfsYIn76u3myDq4zNY2ZrcwzBMNEViK2FRgXDgF11PBNbGdKCXsWFFZDtqPW0nQ==",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/3.1.3",
-      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-NNJA8JAoIaxlnb/bdQ8N0kA4T9ZaBAaUFM79pnT7j/x61Wne6K4lznU9u+NDgSAB3wrSx94mz169jNtle7KrSA==",
+      "path": "microsoft.extensions.fileproviders.abstractions/3.1.4",
+      "hashPath": "microsoft.extensions.fileproviders.abstractions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Abstractions/3.1.3": {
+    "Microsoft.Extensions.FileProviders.Physical/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vr1V6dj8NONgaTA/EdlwtJOaNXRBf6f/din15pkWM/RfTbdoqrr0mKcTRx4MD/AGwxgM0+G2rUT2pDQGa2tNtA==",
-      "path": "microsoft.extensions.fileproviders.abstractions/3.1.3",
-      "hashPath": "microsoft.extensions.fileproviders.abstractions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-vxBVwWxczp+5dnZ6FoulhxCLYzRjp5tu64iAlGMJtN0w7XLBZoY+6FvAnCRZDdwCbhVbz5VUPsbYVlL+l3sDxQ==",
+      "path": "microsoft.extensions.fileproviders.physical/3.1.4",
+      "hashPath": "microsoft.extensions.fileproviders.physical.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Physical/3.1.3": {
+    "Microsoft.Extensions.FileSystemGlobbing/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CvCLmVfb90Wkm99Ho6izWoZ9WaY/SQbou0LSEvBQxKk0IPAWKfUw29QLqlszIkXp81VR1BwdprlGKFdFfZpZFA==",
-      "path": "microsoft.extensions.fileproviders.physical/3.1.3",
-      "hashPath": "microsoft.extensions.fileproviders.physical.3.1.3.nupkg.sha512"
+      "sha512": "sha512-PGbPg8h8cUYXEovoeNvpHgdFhKnx/539E14zF1vxFz2V6cc1QmQGONbfVHEJcjbuyGyyiNyqgpPInymsVup7ow==",
+      "path": "microsoft.extensions.filesystemglobbing/3.1.4",
+      "hashPath": "microsoft.extensions.filesystemglobbing.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileSystemGlobbing/3.1.3": {
+    "Microsoft.Extensions.Hosting/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-bAmmKRNZM7n7cEhmdywgfvd53MF8pUL9u6orliWvJmI3tQCuDaJalNr4z9FfMu/e6Baw5NTSV+ZsWdWIiOi1Rw==",
-      "path": "microsoft.extensions.filesystemglobbing/3.1.3",
-      "hashPath": "microsoft.extensions.filesystemglobbing.3.1.3.nupkg.sha512"
+      "sha512": "sha512-J7V+0nCTUUfHr6UBT6UbEfLx0wU45ocI5UE6IstSu0hh5Lkos2jEZZ34SBcCpXFT3qifFP48BqrH4acirV4lVw==",
+      "path": "microsoft.extensions.hosting/3.1.4",
+      "hashPath": "microsoft.extensions.hosting.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Hosting/3.1.3": {
+    "Microsoft.Extensions.Hosting.Abstractions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ba7h9rU+XIHp4ORrUbbhTHwD+moNwHB9jKEKSeKAErY71NYHo6c6+g1S6DILXOS3KlOp1seU1YEGIVDOr1iObA==",
-      "path": "microsoft.extensions.hosting/3.1.3",
-      "hashPath": "microsoft.extensions.hosting.3.1.3.nupkg.sha512"
+      "sha512": "sha512-w1Zildlb70fJ8qqysyt6HaueWBQ89qQmcSCsh/6+1TKmipU0AOjwduqY72eqHZ39j4jZYaXaoXQ/zqXZ1nYgCg==",
+      "path": "microsoft.extensions.hosting.abstractions/3.1.4",
+      "hashPath": "microsoft.extensions.hosting.abstractions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Hosting.Abstractions/3.1.3": {
+    "Microsoft.Extensions.Http/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QBVyz//TkXEGPIEhL57LyA9dnwSLRlJh5OtEqoUZUqU2INcGjPxcP99mPjngSLjIcN2IfEEfkgOwjBQDlIo4Cg==",
-      "path": "microsoft.extensions.hosting.abstractions/3.1.3",
-      "hashPath": "microsoft.extensions.hosting.abstractions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-7Dllyya8eO03dB2nRDFp+NcF383OjGl80cHiHKHgJ1x8YN+HXLqrWaVBIQipKdb0eYOGq+iqlsb1P2ygmIRNRg==",
+      "path": "microsoft.extensions.http/3.1.4",
+      "hashPath": "microsoft.extensions.http.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Http/3.1.3": {
+    "Microsoft.Extensions.Logging/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QV5ODk9CFm+//AsZQSm8sH33Li1a19PTy44Ln+FCd7YnNRcxxXgZGNCdQtJpKFBpaLjfdfaGUfqWWq3LID1GdA==",
-      "path": "microsoft.extensions.http/3.1.3",
-      "hashPath": "microsoft.extensions.http.3.1.3.nupkg.sha512"
+      "sha512": "sha512-FZDJ0cnW2hZRYCA88XQUOrAwgk6+Df/fSz+wfZkZneEQgJZp7XJ6pRvzt4ug118wJ7JGZehWkbMwwigBDcYZPA==",
+      "path": "microsoft.extensions.logging/3.1.4",
+      "hashPath": "microsoft.extensions.logging.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging/3.1.3": {
+    "Microsoft.Extensions.Logging.Abstractions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-mAuOMhgB73dgVYeJzrksGU6BUBr7vIruFJyxssYK1nmDS+ude0kShILrXPq2iGHOvYNacczW4VSa6zcssUh4iQ==",
-      "path": "microsoft.extensions.logging/3.1.3",
-      "hashPath": "microsoft.extensions.logging.3.1.3.nupkg.sha512"
+      "sha512": "sha512-JNPxhw2XwhjfGFyIkA5eBfzUDPNpa6Q50HJ2F6lCAMoSa1GquAktTrl4PhEyTYFNmu09B0E90WhYsUb3kmSkOA==",
+      "path": "microsoft.extensions.logging.abstractions/3.1.4",
+      "hashPath": "microsoft.extensions.logging.abstractions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Abstractions/3.1.3": {
+    "Microsoft.Extensions.Logging.Configuration/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-j6r0E+OVinD4s13CIZASYJLLLApStb1yh5Vig7moB2FE1UsMRj4TYJ/xioDjreVA0dyOFpbWny1/n2iSJMbmNg==",
-      "path": "microsoft.extensions.logging.abstractions/3.1.3",
-      "hashPath": "microsoft.extensions.logging.abstractions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-FwFVjkeYkiXtBBH6xJDsxhO6hDCxJ0I6c2qDUHBRiDUIrn6N7eXvdwQNQ+cL7XO7n6Xi3pkT+z3EQRvglIkEuQ==",
+      "path": "microsoft.extensions.logging.configuration/3.1.4",
+      "hashPath": "microsoft.extensions.logging.configuration.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Configuration/3.1.3": {
+    "Microsoft.Extensions.Logging.Console/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-G9lcPzZaY8osbEgxMMbVyKwR3MaUmdvdeAZYrc632Nc6qGH5/3wUVX0lc+5muGMGoje+GMnS9IFeFpLx1ZuF+g==",
-      "path": "microsoft.extensions.logging.configuration/3.1.3",
-      "hashPath": "microsoft.extensions.logging.configuration.3.1.3.nupkg.sha512"
+      "sha512": "sha512-Solz/9q7CaEJBGUVWCzxrJ4VW4Hff202s4spSbTizEn4BoL94WfeXliK8k8+PTJuqj0U5tsoTJFv4tql/7nz9Q==",
+      "path": "microsoft.extensions.logging.console/3.1.4",
+      "hashPath": "microsoft.extensions.logging.console.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Console/3.1.3": {
+    "Microsoft.Extensions.Logging.Debug/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GxwoWXQKlVoOw5l1/bZ6KWV7CWE4QkCLHVnXEqnlZk2XFEY1hZCmfY6DES7AkPmfQ+HdXSlKOWW+F468HBmVYg==",
-      "path": "microsoft.extensions.logging.console/3.1.3",
-      "hashPath": "microsoft.extensions.logging.console.3.1.3.nupkg.sha512"
+      "sha512": "sha512-tPBo2IZIK1aic+cLjiLtdzb/2Vk8KPNF4E3Qz6KiS9KVdcwLCm7v6TYx0zV4OHOGDHllxDqnTUo0DtEbJ6g6dg==",
+      "path": "microsoft.extensions.logging.debug/3.1.4",
+      "hashPath": "microsoft.extensions.logging.debug.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Debug/3.1.3": {
+    "Microsoft.Extensions.Logging.EventLog/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-2jeHnrFTE83jMGLKmIaGcNYuI5s3A8bJLcTPNyFrl96T5DDWyjwVxGrNmdokwjbYxzMbOuyv0DZLy+aFAXEkCA==",
-      "path": "microsoft.extensions.logging.debug/3.1.3",
-      "hashPath": "microsoft.extensions.logging.debug.3.1.3.nupkg.sha512"
+      "sha512": "sha512-mjNYT/oSteLEeO097sti0YpoL+qOQt/MpVJwvrAQDwJ9MfSXkWu4IMijkk4MfdjLy72OytWx+oeHsqix8f/QiA==",
+      "path": "microsoft.extensions.logging.eventlog/3.1.4",
+      "hashPath": "microsoft.extensions.logging.eventlog.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.EventLog/3.1.3": {
+    "Microsoft.Extensions.Logging.EventSource/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-NvTRcwuU1rhY5Lord6zibAuiMc9FgeMZ0HusRwHKRrqXTLPXjrsGsQS6t1gthRmTvAS5lJ9M0Ubxv6j8PifRQw==",
-      "path": "microsoft.extensions.logging.eventlog/3.1.3",
-      "hashPath": "microsoft.extensions.logging.eventlog.3.1.3.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Logging.EventSource/3.1.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-OCOB7+ubyvpmsquE9wX1FmrnmQWSA42pe9OsfZzHsXL1VxdD0NKuBRmn0AJHaD16dVLGBnZ8WzETnHepljSALw==",
-      "path": "microsoft.extensions.logging.eventsource/3.1.3",
-      "hashPath": "microsoft.extensions.logging.eventsource.3.1.3.nupkg.sha512"
+      "sha512": "sha512-wARH2BQVpZuAQ0rwyKVMxjfSwsDWVwyHIE4vtLeOwljWUcLwrZii1dlUHFLlu9Mgg1hqH/bcGnnWEGJu80l2ww==",
+      "path": "microsoft.extensions.logging.eventsource/3.1.4",
+      "hashPath": "microsoft.extensions.logging.eventsource.3.1.4.nupkg.sha512"
     },
     "Microsoft.Extensions.ObjectPool/2.2.0": {
       "type": "package",
@@ -2697,26 +2673,26 @@
       "path": "microsoft.extensions.objectpool/2.2.0",
       "hashPath": "microsoft.extensions.objectpool.2.2.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Options/3.1.3": {
+    "Microsoft.Extensions.Options/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RyOSOg/kHW3AXojWGSdOs3BXJJnE9Sc6RVvP4LhnY5oaC2Da4k8CWfIw7I+QThxV8HTCPjzmON9c+QO+JZggNg==",
-      "path": "microsoft.extensions.options/3.1.3",
-      "hashPath": "microsoft.extensions.options.3.1.3.nupkg.sha512"
+      "sha512": "sha512-ntWmD8i6UmAo0nn5MiCXIVl3+75aybVHgP/NxL9B16zwsbGkSfs+66BullsGEDNvrimgIFVDO+iB/h0yWfATWg==",
+      "path": "microsoft.extensions.options/3.1.4",
+      "hashPath": "microsoft.extensions.options.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Options.ConfigurationExtensions/3.1.3": {
+    "Microsoft.Extensions.Options.ConfigurationExtensions/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Z0xe960FJ43sni/HNGGi4x35ee9Y6Ej2Ithzxy9mc1efGaJruWMgy7pV/CZpQV5PKjd/5/ugpYQs622huBELgA==",
-      "path": "microsoft.extensions.options.configurationextensions/3.1.3",
-      "hashPath": "microsoft.extensions.options.configurationextensions.3.1.3.nupkg.sha512"
+      "sha512": "sha512-tTXDVrLUv+cqCu7piSoVWk4BNcDAPGCIsoir19VEjMzefpBPS/HlXtR26RctHDsdo2qdAeyPNSEqtNc2g/7/qg==",
+      "path": "microsoft.extensions.options.configurationextensions/3.1.4",
+      "hashPath": "microsoft.extensions.options.configurationextensions.3.1.4.nupkg.sha512"
     },
-    "Microsoft.Extensions.Primitives/3.1.3": {
+    "Microsoft.Extensions.Primitives/3.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5gK6qeq9CBCHBfB3Tim3jCJTLafT9FXFBAZZq39rC8adz8mxcjVAuQSw3jGgHqoRk0jwtXKFhXJUVur8vfeuFg==",
-      "path": "microsoft.extensions.primitives/3.1.3",
-      "hashPath": "microsoft.extensions.primitives.3.1.3.nupkg.sha512"
+      "sha512": "sha512-tLR9n5ltwA56nr1t5M6q5IBfGLXtMS+XgumtqVENmtPQOWUD+m0Kgo1U6GWr06Y875WUN3sOGnmqkvW4an7fYA==",
+      "path": "microsoft.extensions.primitives/3.1.4",
+      "hashPath": "microsoft.extensions.primitives.3.1.4.nupkg.sha512"
     },
     "Microsoft.Net.Http.Headers/2.2.0": {
       "type": "package",
@@ -2724,13 +2700,6 @@
       "sha512": "sha512-iZNkjYqlo8sIOI0bQfpsSoMTmB/kyvmV2h225ihyZT33aTp48ZpF6qYnXxzSXmHt8DpBAwBTX+1s1UFLbYfZKg==",
       "path": "microsoft.net.http.headers/2.2.0",
       "hashPath": "microsoft.net.http.headers.2.2.0.nupkg.sha512"
-    },
-    "Microsoft.NetCore.Analyzers/3.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-JdjhkobYjmQAu4JpsEALDAr7xig2pzXMsXGilHJ2gvmUaUSBjYObw53CBaIkRXmPu0DaDPN8ze9LCtsRd1R8UA==",
-      "path": "microsoft.netcore.analyzers/3.0.0",
-      "hashPath": "microsoft.netcore.analyzers.3.0.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/3.1.0": {
       "type": "package",
@@ -2745,13 +2714,6 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
-    },
-    "Microsoft.NetFramework.Analyzers/3.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Q0sB3JYld9JMa9/HKtioIxhqmOohEku1FkfSC/uf0usGcCIhm6GYWU565klP64jC2kzmjFIu/6fkHEIYRqZCQQ==",
-      "path": "microsoft.netframework.analyzers/3.0.0",
-      "hashPath": "microsoft.netframework.analyzers.3.0.0.nupkg.sha512"
     },
     "Microsoft.Win32.Primitives/4.3.0": {
       "type": "package",
@@ -2917,7 +2879,7 @@
     "runtime.native.System.IO.Compression/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-b+V9JC/Ii3sR659flBeaBJww111425tgjcDS1k+hqV4sGh9FALRDBvJnDtQ895gAzpPTUOFDHdqaZ2Et7BpZMg==",
+      "sha512": "sha512-INBPonS5QPEgn7naufQFXJEp3zX6L4bwHgJ/ZH78aBTpeNfQMtf7C6VrAFhlq2xxWBveIOWyFzQjJ8XzHMhdOQ==",
       "path": "runtime.native.system.io.compression/4.3.0",
       "hashPath": "runtime.native.system.io.compression.4.3.0.nupkg.sha512"
     },
@@ -2987,7 +2949,7 @@
     "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-T5NvFgmHX0WH4c7lP72krsnk+IJI10vJf2j2twGE+5QBRA4RyRAgD+ZjEgdmpLOjW4B+nZGaadewTCUcR899OQ==",
+      "sha512": "sha512-nyFNiCk/r+VOiIqreLix8yN+q3Wga9+SE8BCgkf+2BwEKiNx6DyvFjCgkfV743/grxv8jHJ8gUK4XEQw7yzRYg==",
       "path": "runtime.rhel.7-x64.runtime.native.system.security.cryptography.openssl/4.3.0",
       "hashPath": "runtime.rhel.7-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512"
     },
@@ -3033,68 +2995,61 @@
       "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
       "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
     },
-    "Scar.CodeAnalysis/1.0.7422.15495": {
+    "Scar.Common/1.1.7440.22677": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-zVTJ/YJRl0eSGmy7CRUwxZy/eorBXwboG3RM5nrLp+afzj2Z6ZIiv1DVXlj2XTx5aFLZIcvzh2l2wy5MDdH1bA==",
-      "path": "scar.codeanalysis/1.0.7422.15495",
-      "hashPath": "scar.codeanalysis.1.0.7422.15495.nupkg.sha512"
+      "sha512": "sha512-8EG3PuXA0kC/8I50gHrd4ax8tpbpCuB/Id08yk6vZuV+Y2VCyt/QWVE5K9F8bdIRsSuiP6l9PrEFoV/VUNzI2Q==",
+      "path": "scar.common/1.1.7440.22677",
+      "hashPath": "scar.common.1.1.7440.22677.nupkg.sha512"
     },
-    "Scar.Common/1.1.7428.22852": {
+    "Scar.Common.ApplicationLifetime.Contracts/1.1.7440.22655": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-SHjiKDa2x3Y0mjrjh+IH7xYv4Vm+YEVHCnfri6RKfath35EkwB+FuqdhB9ZsOtGnvGMlmS4Qg6XYnbBPNOhLoQ==",
-      "path": "scar.common/1.1.7428.22852",
-      "hashPath": "scar.common.1.1.7428.22852.nupkg.sha512"
+      "sha512": "sha512-mZNXhG4YupRRKUnX0/BhjkxF3yusJMuLh2GvXvP1FMDRqIJTrgdYGiXyB/KwrkEVF9GO8/Z39nThzZ9AxXzIwg==",
+      "path": "scar.common.applicationlifetime.contracts/1.1.7440.22655",
+      "hashPath": "scar.common.applicationlifetime.contracts.1.1.7440.22655.nupkg.sha512"
     },
-    "Scar.Common.ApplicationLifetime.Contracts/1.1.7427.23079": {
+    "Scar.Common.ApplicationLifetime.Core/1.1.7440.29014": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-i1HU0ARnOLxoU9Rvvp03d5umu/xXl+OUWeyCNEDyysijeq3Nd5WKQ6WKiDR3VrvQokYDRQjk8jmgm4icLijXYw==",
-      "path": "scar.common.applicationlifetime.contracts/1.1.7427.23079",
-      "hashPath": "scar.common.applicationlifetime.contracts.1.1.7427.23079.nupkg.sha512"
+      "sha512": "sha512-ti/XD6lER6vz6cH4voNGTZRHBdjtwbTG7RmPNFW17cvp8gj404lW54hsbMzcY819MIkiOmWf3wN5ocjFIDPLvg==",
+      "path": "scar.common.applicationlifetime.core/1.1.7440.29014",
+      "hashPath": "scar.common.applicationlifetime.core.1.1.7440.29014.nupkg.sha512"
     },
-    "Scar.Common.ApplicationLifetime.Core/1.1.7428.22989": {
+    "Scar.Common.Async/1.1.7440.28982": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1iwKWIC1xC3RTtzJTY3/Bd4rI2qEd9Wolcuui2DSrPGQFxh7zj+O2X91JbQEoMjlCrJftGGsClNqRVZ0RwmT8g==",
-      "path": "scar.common.applicationlifetime.core/1.1.7428.22989",
-      "hashPath": "scar.common.applicationlifetime.core.1.1.7428.22989.nupkg.sha512"
+      "sha512": "sha512-bxsqdJyOtBSoN299uZqLBdFgWTI63EJsV0LglOdgrfJKGF8XXb04QvgbDi+XoqEIzd1oOXiKzgvvMHrRoRCNMw==",
+      "path": "scar.common.async/1.1.7440.28982",
+      "hashPath": "scar.common.async.1.1.7440.28982.nupkg.sha512"
     },
-    "Scar.Common.Async/1.1.7427.23079": {
+    "Scar.Common.AutofacHttpClientProvision/1.1.7440.28983": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-I8/e7oOU1yGh0sWz4GGYLWlpeu0Ns4Iku3ALmpLaUFFiSUm+G9vgXzul5HanIzpZnRfw5hOeBIJONZEFA5ymKA==",
-      "path": "scar.common.async/1.1.7427.23079",
-      "hashPath": "scar.common.async.1.1.7427.23079.nupkg.sha512"
+      "sha512": "sha512-JMci0I5yE2rCooQPuC74MQz+TychQlmAm6bGlrDR9D/f8jAdmbV+wm4BH19hOF2nC58OcZtyuj47VI8VeR6kpQ==",
+      "path": "scar.common.autofachttpclientprovision/1.1.7440.28983",
+      "hashPath": "scar.common.autofachttpclientprovision.1.1.7440.28983.nupkg.sha512"
     },
-    "Scar.Common.AutofacHttpClientProvision/1.1.7427.23080": {
+    "Scar.Common.AutofacInstantiation/1.1.7440.29014": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ei6A4INEKm3P86BCRuVKET+t8SKwrTfbfUDulHn7x0sTwTkb9Ge9E3e6EuQ2VvDhA0P+q6Xmg7zzG3dTaF+EBA==",
-      "path": "scar.common.autofachttpclientprovision/1.1.7427.23080",
-      "hashPath": "scar.common.autofachttpclientprovision.1.1.7427.23080.nupkg.sha512"
+      "sha512": "sha512-uc56Xcmhb7a/iJr1IoPlosjmmvHaWK8IfX4SaGC+HrxankA2WZ7DhmxYFPxamhR6x9PNoYfIsHvKg1kkDFj43g==",
+      "path": "scar.common.autofacinstantiation/1.1.7440.29014",
+      "hashPath": "scar.common.autofacinstantiation.1.1.7440.29014.nupkg.sha512"
     },
-    "Scar.Common.AutofacInstantiation/1.1.7427.23085": {
+    "Scar.Common.DAL.Contracts/1.1.7440.22677": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-tEuGcMu5N2PyrK0AYeyNaohfYQrnYjQBL0Dd8SAJFUbN+6Oansdi04vSbR5x8G0wcwmHxceuOVfrrEIXdRyrEQ==",
-      "path": "scar.common.autofacinstantiation/1.1.7427.23085",
-      "hashPath": "scar.common.autofacinstantiation.1.1.7427.23085.nupkg.sha512"
+      "sha512": "sha512-m9nlJ+/2QdJSxKAtmDnsMofuYF2zoPNy1alW50s5/G1qzYdDs7kDdopxknRZE/ECo8LMUSg3qC5YKKD56oMq4A==",
+      "path": "scar.common.dal.contracts/1.1.7440.22677",
+      "hashPath": "scar.common.dal.contracts.1.1.7440.22677.nupkg.sha512"
     },
-    "Scar.Common.DAL.Contracts/1.1.7427.23084": {
+    "Scar.Common.DAL.LiteDB/1.1.7440.28982": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-bX2793AlvN7V/YkY57uvUrHcK2b5dU3ol5++0nACim21sDOSrjGAZtM25WG8RRH5tqyjW5ba5gjDqK1nXGSmGw==",
-      "path": "scar.common.dal.contracts/1.1.7427.23084",
-      "hashPath": "scar.common.dal.contracts.1.1.7427.23084.nupkg.sha512"
-    },
-    "Scar.Common.DAL.LiteDB/1.1.7434.18431": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-eo2C/js5oT8Tn1fKfAwS13tt8nlvzsBCz5I6XZGn4Npr3//zXEhskOGu9g39TZSRtzd5DpMsikqPmdSoFvByJQ==",
-      "path": "scar.common.dal.litedb/1.1.7434.18431",
-      "hashPath": "scar.common.dal.litedb.1.1.7434.18431.nupkg.sha512"
+      "sha512": "sha512-3Fcqe0Xe1Ei8k3eYy7Eh9GcNaZELuK3upAzVMWtQjs50Pb6eNBBNUA4ccZ5h6uIXpwgHY9OIkkdxz3L1RcSseg==",
+      "path": "scar.common.dal.litedb/1.1.7440.28982",
+      "hashPath": "scar.common.dal.litedb.1.1.7440.28982.nupkg.sha512"
     },
     "Scar.Common.IO/1.1.7433.33591": {
       "type": "package",
@@ -3103,40 +3058,40 @@
       "path": "scar.common.io/1.1.7433.33591",
       "hashPath": "scar.common.io.1.1.7433.33591.nupkg.sha512"
     },
-    "Scar.Common.Localization/1.1.7427.23080": {
+    "Scar.Common.Localization/1.1.7440.22654": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-qZ9Ij/Hm3Kkv8xLbbEg//pSJzXkWwcU/hGjkQ5+QhAF+bjL2cwEce+xDJ2Gdtud8FoOw8PAfDyTLVVoy8SVbQA==",
-      "path": "scar.common.localization/1.1.7427.23080",
-      "hashPath": "scar.common.localization.1.1.7427.23080.nupkg.sha512"
+      "sha512": "sha512-OGXOQrViBo5XUW0xbV9qqNX289oe0W4iQe5SaJaKnHTz2x1fqVd/N6HeYsYKOV0u1OXlJXLQ9Y2SK7JZJNSovQ==",
+      "path": "scar.common.localization/1.1.7440.22654",
+      "hashPath": "scar.common.localization.1.1.7440.22654.nupkg.sha512"
     },
-    "Scar.Common.MVVM.CollectionView/1.1.7427.23078": {
+    "Scar.Common.MVVM.CollectionView/1.1.7440.22655": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-y/6fVp21ISMO7BXqzVS+y3Y1NcmB20wtJdheI0yJ0NR8DwVKxoLidSaejWxoo0P+W+SqQ8BnspZmxpqsErWbXQ==",
-      "path": "scar.common.mvvm.collectionview/1.1.7427.23078",
-      "hashPath": "scar.common.mvvm.collectionview.1.1.7427.23078.nupkg.sha512"
+      "sha512": "sha512-j/lqs0+2FOWAEJ8UAHaHNroq2XxO391h4CSQev1ppRu+ub12WLvFJz+ZOiLxD7UetL8Zr6i4MGYHMm3RXRT8/A==",
+      "path": "scar.common.mvvm.collectionview/1.1.7440.22655",
+      "hashPath": "scar.common.mvvm.collectionview.1.1.7440.22655.nupkg.sha512"
     },
-    "Scar.Common.MVVM.Commands/1.1.7427.23078": {
+    "Scar.Common.MVVM.Commands/1.1.7440.22602": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-q7VyRm0x8jyhnI13e2NHrZUlwsHWfwShtUvJxhpEJxO5glk62AIBi/9RLgO5G8Eydka5mJpsQO6js2KLVNB/7A==",
-      "path": "scar.common.mvvm.commands/1.1.7427.23078",
-      "hashPath": "scar.common.mvvm.commands.1.1.7427.23078.nupkg.sha512"
+      "sha512": "sha512-ZR1BC4qqKuN0VAeY68rk7emnFsWz6Tuc7t69xpOtIo6ob69iJXRRqS2zB2Oz0DkOZUaNEyOOw4ZD3CNX2LqkCA==",
+      "path": "scar.common.mvvm.commands/1.1.7440.22602",
+      "hashPath": "scar.common.mvvm.commands.1.1.7440.22602.nupkg.sha512"
     },
-    "Scar.Common.MVVM.ViewModel/1.1.7427.23114": {
+    "Scar.Common.MVVM.ViewModel/1.1.7440.22654": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pm4DnTV/D+DwazBGbxJh2eeVasPowdMr1uF0UQZ3KZNQU7591i6WpYgsIq1gUJ20PRziCuh10uMLZO94QL6KLQ==",
-      "path": "scar.common.mvvm.viewmodel/1.1.7427.23114",
-      "hashPath": "scar.common.mvvm.viewmodel.1.1.7427.23114.nupkg.sha512"
+      "sha512": "sha512-Zldk3o1SWSaKVI2CHuuz0EYjqdOu0rQdz4BcqW96PuWhJ2zwSit9wyRLp22HrTqduAC3jM1UCDS/haMZsY8YnA==",
+      "path": "scar.common.mvvm.viewmodel/1.1.7440.22654",
+      "hashPath": "scar.common.mvvm.viewmodel.1.1.7440.22654.nupkg.sha512"
     },
-    "Scar.Common.RateLimiting/1.1.7427.23085": {
+    "Scar.Common.RateLimiting/1.1.7440.22677": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DcwAQyDJXk7ropuGmuo/RviYqI8Mr7GHsTeRep36KUrnPewoTeZzXaXlSnJ6z0B5a2j+hGeo3CVr9OcK1UTUCA==",
-      "path": "scar.common.ratelimiting/1.1.7427.23085",
-      "hashPath": "scar.common.ratelimiting.1.1.7427.23085.nupkg.sha512"
+      "sha512": "sha512-D9vQMKF1+6TCbARfe5D8qnoTjlLJukImIi4+0OApLYqbciusD2D1S3Vo5g0B3WeHcv9ZaopOoT2wBBWv6no0KQ==",
+      "path": "scar.common.ratelimiting/1.1.7440.22677",
+      "hashPath": "scar.common.ratelimiting.1.1.7440.22677.nupkg.sha512"
     },
     "Scar.Common.Sync.Contracts/1.1.7427.23081": {
       "type": "package",
@@ -3152,26 +3107,26 @@
       "path": "scar.common.sync.windows/1.1.7427.23114",
       "hashPath": "scar.common.sync.windows.1.1.7427.23114.nupkg.sha512"
     },
-    "Scar.Common.View.AutofacWindowProvision/1.1.7434.18029": {
+    "Scar.Common.View.AutofacWindowProvision/1.1.7440.29038": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-D4cFmh+vv/qvXduyFIXEqBVnLlBWnFyvwpBLgouTM5GxX21vyClrkQirGrzFpMBg3I6vTEbvt+P1yk6+oxvuLQ==",
-      "path": "scar.common.view.autofacwindowprovision/1.1.7434.18029",
-      "hashPath": "scar.common.view.autofacwindowprovision.1.1.7434.18029.nupkg.sha512"
+      "sha512": "sha512-tQhV73SVUfm2uteqjXjK8SNrhNq43aSDJhzVp6RbByZWsPqUx12voNmdyPc0Om1bxYQjoH5U/MWABO48T/ud1g==",
+      "path": "scar.common.view.autofacwindowprovision/1.1.7440.29038",
+      "hashPath": "scar.common.view.autofacwindowprovision.1.1.7440.29038.nupkg.sha512"
     },
-    "Scar.Common.View.Contracts/1.1.7432.33420": {
+    "Scar.Common.View.Contracts/1.1.7440.22655": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-btNu+fhbOYQT1CIyENYHsoUn7r9E6EypU2D2EkePkb12nQnlHVvrnL+rt7H1j2qxO68uTMRbWOBkeXSv2TV/1w==",
-      "path": "scar.common.view.contracts/1.1.7432.33420",
-      "hashPath": "scar.common.view.contracts.1.1.7432.33420.nupkg.sha512"
+      "sha512": "sha512-BIVtAtGAUUWTFiVh2I5EbD15jNC38ORVyjeRC3DMY3F6B078P7lIWhe0i9Cvm7VoRZ1W/8FkisdPyDIZEpV1lw==",
+      "path": "scar.common.view.contracts/1.1.7440.22655",
+      "hashPath": "scar.common.view.contracts.1.1.7440.22655.nupkg.sha512"
     },
-    "Scar.Common.View.WindowCreation/1.1.7433.34430": {
+    "Scar.Common.View.WindowCreation/1.1.7440.29014": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3h75VZ7izqbz/TheQfIakqz+1h4xOT2wWRSNJpmd1Gd1M+P9slSTY69kgWYFROcFFAWgbMJi+nxmmDSXXndLXQ==",
-      "path": "scar.common.view.windowcreation/1.1.7433.34430",
-      "hashPath": "scar.common.view.windowcreation.1.1.7433.34430.nupkg.sha512"
+      "sha512": "sha512-fJpnCZ3uzG011CIyPSQSiDAE3BbOUZgkhy/Ft4T1gm10QatCR3mTO1cGRtgJkThqrxKzMuA4nULdZiaxHvJd+w==",
+      "path": "scar.common.view.windowcreation/1.1.7440.29014",
+      "hashPath": "scar.common.view.windowcreation.1.1.7440.29014.nupkg.sha512"
     },
     "Scar.Common.WebApi/1.1.7428.22704": {
       "type": "package",
@@ -3229,96 +3184,89 @@
       "path": "scar.common.wpf.converters/1.1.7432.29532",
       "hashPath": "scar.common.wpf.converters.1.1.7432.29532.nupkg.sha512"
     },
-    "Scar.Common.WPF.Localization/1.1.7427.23113": {
+    "Scar.Common.WPF.Localization/1.1.7440.28983": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kOgZbOHuHicHltcFcMT2/H6tdJM/Q1rKH+sx8Vs6fDNlh0O5CDc6bNSFuR8K9pO9Its1q8N3gE0mLcozt4gwTQ==",
-      "path": "scar.common.wpf.localization/1.1.7427.23113",
-      "hashPath": "scar.common.wpf.localization.1.1.7427.23113.nupkg.sha512"
+      "sha512": "sha512-VHUQqGGR82xdq/Ms7dyqhyVIiVkkzyqb+iHFtuDqGJXyhEeOQymcOSDRHlufcek+Djc0V9jPG5qI/F0RPWTtlA==",
+      "path": "scar.common.wpf.localization/1.1.7440.28983",
+      "hashPath": "scar.common.wpf.localization.1.1.7440.28983.nupkg.sha512"
     },
-    "Scar.Common.WPF.Screen/1.1.7427.23078": {
+    "Scar.Common.WPF.Screen/1.1.7440.22656": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-BtygiGKq3oNYGbd0yP6LHK5jreQD49AkQtmQq+aHCOMYIJfwP7W/ZBAcr/GPP2/0Jd64L4pHI72LQeWZEgLZtg==",
-      "path": "scar.common.wpf.screen/1.1.7427.23078",
-      "hashPath": "scar.common.wpf.screen.1.1.7427.23078.nupkg.sha512"
+      "sha512": "sha512-vPMsNAWukyNuJ4MDZMJDHJlcdAfdQqF3giJ7BhM3Ly7DqH9nLBAGrxzIBIe+8QPnpYUR6qK5T/hdsN96bhfd5g==",
+      "path": "scar.common.wpf.screen/1.1.7440.22656",
+      "hashPath": "scar.common.wpf.screen.1.1.7440.22656.nupkg.sha512"
     },
-    "Scar.Common.WPF.Startup/1.1.7428.22998": {
+    "Scar.Common.WPF.Startup/1.1.7440.29038": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0J3/Q3w7xiRKyFnMaTHHjf/luN7zcukyOlrnC1TQ04o5KeKwjahPNQjgkakzFpBOQsiGcBs1AcuJ9RyiECaxVQ==",
-      "path": "scar.common.wpf.startup/1.1.7428.22998",
-      "hashPath": "scar.common.wpf.startup.1.1.7428.22998.nupkg.sha512"
+      "sha512": "sha512-TR4rQEosMZGSc0rTlhfxmU1ic+ajFw7EeU/RrXtna6cdarHppFDEJhN5eUw+mpwWs6VVF10jmJ72CqNUz7aMbA==",
+      "path": "scar.common.wpf.startup/1.1.7440.29038",
+      "hashPath": "scar.common.wpf.startup.1.1.7440.29038.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.Contracts/1.1.7433.33592": {
+    "Scar.Common.WPF.View.Contracts/1.1.7440.22656": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-IjipxDb7V9ZuCqjmizfcfOTD4CX2S0RPurKzvUVOvvqW9jJA9es8hN80LdkPY/PyGmE7k4r5OV2b8oafs/BCgQ==",
-      "path": "scar.common.wpf.view.contracts/1.1.7433.33592",
-      "hashPath": "scar.common.wpf.view.contracts.1.1.7433.33592.nupkg.sha512"
+      "sha512": "sha512-t+fpak8UwVzMd7NmUPqR56+IoZ8lA5w8RSdnhZhHqBshQstQ+I3A/saEV2PaPnasWOuR4cXCsh1Ib4Lo3kl26Q==",
+      "path": "scar.common.wpf.view.contracts/1.1.7440.22656",
+      "hashPath": "scar.common.wpf.view.contracts.1.1.7440.22656.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.Core/1.1.7433.33616": {
+    "Scar.Common.WPF.View.Core/1.1.7440.29014": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wO6sFJ68mrQayKT7s6NbcPJhPbh7ncY8qx+Eaopx2+5oKEe5QsT6Xqw1us7OZOU3bnnuDEyDKIAqZIr78nMUDQ==",
-      "path": "scar.common.wpf.view.core/1.1.7433.33616",
-      "hashPath": "scar.common.wpf.view.core.1.1.7433.33616.nupkg.sha512"
+      "sha512": "sha512-bvG/q/jz4/LMoFcoyHLd3xhQfT2qIYwfm3E+3LqhxHxN6ctlORWQSq550/A8cRSath/nYCHAkSLRE4xw4xMPEQ==",
+      "path": "scar.common.wpf.view.core/1.1.7440.29014",
+      "hashPath": "scar.common.wpf.view.core.1.1.7440.29014.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.WindowCreation/1.1.7433.34444": {
+    "Scar.Common.WPF.View.WindowCreation/1.1.7440.29038": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DeuqWSQ/a7yQSflMFD1sULuE97rrdognU1uwpxZH/S32eLfW+JXshl0/9t2QOX1fHWndQ7OV1ugKPi+YXD/wyg==",
-      "path": "scar.common.wpf.view.windowcreation/1.1.7433.34444",
-      "hashPath": "scar.common.wpf.view.windowcreation.1.1.7433.34444.nupkg.sha512"
+      "sha512": "sha512-CSaO5l1aVxxZc876CJz9+v86VW8hqlOpBWs6FwqQyLehKoGGoepo5Yzx10+J5rlGSOokv7C0rKef8dTnR2RhJw==",
+      "path": "scar.common.wpf.view.windowcreation/1.1.7440.29038",
+      "hashPath": "scar.common.wpf.view.windowcreation.1.1.7440.29038.nupkg.sha512"
     },
-    "Scar.Services.Common/1.1.7427.33519": {
+    "Scar.Services.Common/1.1.7440.27492": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-w5Lj0NGFB1Kf6UVvhrEPWHyylSDHCPxrHkL+g2N94swEEy8Op8R27UG0T2AKC8H0dYSy9wG6QoLwPePfI7H7ww==",
-      "path": "scar.services.common/1.1.7427.33519",
-      "hashPath": "scar.services.common.1.1.7427.33519.nupkg.sha512"
+      "sha512": "sha512-8668GRgPhryZAyN3OLaOpPd7oax/PgFF+HfbY3YX3Xju+P4ng8bV1ejEflgd0r0FVOZLcS0ixWQyYrDVYaYeuQ==",
+      "path": "scar.services.common/1.1.7440.27492",
+      "hashPath": "scar.services.common.1.1.7440.27492.nupkg.sha512"
     },
-    "Scar.Services.Contracts/1.1.7440.17611": {
+    "Scar.Services.Contracts/1.1.7440.27492": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-zLJSq/i4iUvDnaU94RTgn0mLvd8g4teRFzAjY3Ymz66KCB+hZEes/7NgmOU5JWyN9kosEgFYP6lu5wyvj8F5ZQ==",
-      "path": "scar.services.contracts/1.1.7440.17611",
-      "hashPath": "scar.services.contracts.1.1.7440.17611.nupkg.sha512"
+      "sha512": "sha512-1WcBRAyOjPVO5Ceiztz2zofPl1FuCdY5HRjNuMl0+99IMVfE4PWERPlWcY6ZGdJATUlCKJrw2C0Pkclz+Wt+0Q==",
+      "path": "scar.services.contracts/1.1.7440.27492",
+      "hashPath": "scar.services.contracts.1.1.7440.27492.nupkg.sha512"
     },
-    "Scar.Services.ImageDownload/1.1.7440.17652": {
+    "Scar.Services.ImageDownload/1.1.7440.27518": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cu+KbRYY5T8WmN4y3eCvzJc1IYhDhDRpBxUBjqhJ+jdCLAS85p3B230GX7bLTar/GzY0X9rdp4l7WJJZuys1Pw==",
-      "path": "scar.services.imagedownload/1.1.7440.17652",
-      "hashPath": "scar.services.imagedownload.1.1.7440.17652.nupkg.sha512"
+      "sha512": "sha512-LnIRvQ8VKj91SQsBOxZRtH+Ys4HJ9hCBScA7MMvw70jLnUYfE3R19QjfZ2//NL+W+LlE6A1S0kOtIEQwbLQrpw==",
+      "path": "scar.services.imagedownload/1.1.7440.27518",
+      "hashPath": "scar.services.imagedownload.1.1.7440.27518.nupkg.sha512"
     },
-    "Scar.Services.Qwant/1.1.7440.17652": {
+    "Scar.Services.Qwant/1.1.7440.27519": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-sLmVfiGbpGr7XADpTo11GQlZvcu9jrZGNTyVlqPhpoxkHnpnyjhTbqNnEOJ+IvOZKPF7D2dpwAzCPejpwqequA==",
-      "path": "scar.services.qwant/1.1.7440.17652",
-      "hashPath": "scar.services.qwant.1.1.7440.17652.nupkg.sha512"
+      "sha512": "sha512-W6PAkuYgD1fnzRo/lgIb9MHA8TAQ2IzOb4w9MywXqdDHv4A7PaJtlnYb/QPKkqnZSvVX0rJe8v0GwvVdo6GU9A==",
+      "path": "scar.services.qwant/1.1.7440.27519",
+      "hashPath": "scar.services.qwant.1.1.7440.27519.nupkg.sha512"
     },
-    "Scar.Services.UClassify/1.1.7440.17653": {
+    "Scar.Services.UClassify/1.1.7440.27519": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-9HwCCjA7/Pw6uV1rCy1rg2GJzrt1C2IK3IBG7JGzaBg1oT/m4N0jevqqSAVqwNG09HvWT2KvW56rcArGAErQkw==",
-      "path": "scar.services.uclassify/1.1.7440.17653",
-      "hashPath": "scar.services.uclassify.1.1.7440.17653.nupkg.sha512"
+      "sha512": "sha512-ECGEd+XaDZWiyTBkoyisOifAZW5HIE1fw64BtqVXg5eUpVSqJWxdr/4DciGSXUx+KmmffWslePTbKl9BlWGqpg==",
+      "path": "scar.services.uclassify/1.1.7440.27519",
+      "hashPath": "scar.services.uclassify.1.1.7440.27519.nupkg.sha512"
     },
-    "Scar.Services.Yandex/1.1.7440.17652": {
+    "Scar.Services.Yandex/1.1.7440.27518": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6atnfs8984fEu8ZdM9NkOyp+NLOj/cO3jCixTfD3XQYE6ZrBCACG+sy4RRzFpahxr2nAv98ZsuBk8NINAJSf3g==",
-      "path": "scar.services.yandex/1.1.7440.17652",
-      "hashPath": "scar.services.yandex.1.1.7440.17652.nupkg.sha512"
-    },
-    "StyleCop.Analyzers/1.1.118": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Onx6ovGSqXSK07n/0eM3ZusiNdB6cIlJdabQhWGgJp3Vooy9AaLS/tigeybOJAobqbtggTamoWndz72JscZBvw==",
-      "path": "stylecop.analyzers/1.1.118",
-      "hashPath": "stylecop.analyzers.1.1.118.nupkg.sha512"
+      "sha512": "sha512-DilJUqi6RSZeWSVX9+adgzl3/O7yVb9hS1JHV8GmlCCIy+u312XP6mJYtEilEPRZ5YNzYLwWW9jQ8Yik3BmPIQ==",
+      "path": "scar.services.yandex/1.1.7440.27518",
+      "hashPath": "scar.services.yandex.1.1.7440.27518.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
@@ -4013,73 +3961,66 @@
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
     },
-    "WPFLocalizeExtension/3.5.0": {
+    "WPFLocalizeExtension/3.6.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-z6zHM3782Z6OlmrykDZQLXKhEbzoF/Jr6aNPVhJ3qeUbUsxY9hZDlPKCES4+HSNe6gzDD5N3j18LIAbwnIO5hA==",
-      "path": "wpflocalizeextension/3.5.0",
-      "hashPath": "wpflocalizeextension.3.5.0.nupkg.sha512"
+      "sha512": "sha512-qqsAxv7qxChBQHr8BDB5A19BrwHDqrTdeTxvM023ctO7Jy5qKLWWPtKZ7pTm3hsRdxbWN8fr/kl7O7/8QToW0Q==",
+      "path": "wpflocalizeextension/3.6.1",
+      "hashPath": "wpflocalizeextension.3.6.1.nupkg.sha512"
     },
-    "WTG.Analyzers/2.10.0": {
+    "XAMLMarkupExtensions/1.9.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Ak2gSpiH4TswZp+VduoqdWf1v07/6WBuiWX0Xw94/9T7PjudT0e+2OCM3HxvbCc/8MAEQPigYAeF5pK81jJvJA==",
-      "path": "wtg.analyzers/2.10.0",
-      "hashPath": "wtg.analyzers.2.10.0.nupkg.sha512"
+      "sha512": "sha512-IoyFAFeKxbZ4lZLN9Z1U25VzJ2u87iPvE6OLEgRxDF7FZcbVekQbQ4wfRyPz1o0DCmxfvUUAsIWHO1UtU2NnDw==",
+      "path": "xamlmarkupextensions/1.9.0",
+      "hashPath": "xamlmarkupextensions.1.9.0.nupkg.sha512"
     },
-    "XAMLMarkupExtensions/1.8.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-u6NDpNAXfIi6CfPI9wjsEkTHpGRxAO0vm90vo4LT1Fbwc3+VRSYVpKLYMMkjE00ODmujM8yNaHlxK6Qmcq6i1w==",
-      "path": "xamlmarkupextensions/1.8.0",
-      "hashPath": "xamlmarkupextensions.1.8.0.nupkg.sha512"
-    },
-    "Scar.Mémoire.Contracts/1.1.7440.22967": {
+    ".Contracts/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.Contracts.DAL/1.1.7440.22967": {
+    ".Contracts.DAL/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.Core/1.1.7440.22967": {
+    ".Core/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.DAL/1.1.7440.22967": {
+    ".DAL/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.Resources/1.1.7440.22967": {
+    ".Resources/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.View/1.1.7440.22967": {
+    ".View/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.ViewModel/1.1.7440.22967": {
+    ".ViewModel/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.WebApi/1.1.7440.22967": {
+    ".WebApi/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.WindowCreators/1.1.7440.22967": {
+    ".WindowCreators/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Scar.Mémoire.Windows.Common/1.1.7440.22967": {
+    ".Windows.Common/1.1.7440.29953": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <Description>Installer for Mémoire</Description>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>IconAlt.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject>Mémoire.Installer.Program</StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -16,11 +16,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icon.ico" />
+    <Resource Include="IconAlt.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="echo Packing $(TargetName)...&#xD;&#xA;&#xD;&#xA;&quot;$(TargetPath)&quot;" />
+  <ItemGroup>
+    <None Update="Mémoire.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <Exec Command="&quot;$(TargetDir)$(SolutionName).Installer.exe&quot;" />
+    <Message Text="XCOPY &quot;$(TargetDir)$(SolutionName).msi&quot; &quot;$(SolutionDir)7zRelease\&quot; /Y" />
     <Exec Command="XCOPY &quot;$(TargetDir)$(SolutionName).msi&quot; &quot;$(SolutionDir)7zRelease\&quot; /Y" />
   </Target>
 </Project>
