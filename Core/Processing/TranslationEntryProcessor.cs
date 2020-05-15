@@ -273,9 +273,9 @@ namespace Mémoire.Core.Processing
         {
             // Used En as ui language to simplify conversion of common words to the enums
             var extendedTranslationResult = await _wordsTranslator.GetExtendedTranslationAsync(
+                    translationEntryKey.Text,
                     translationEntryKey.SourceLanguage,
                     translationEntryKey.TargetLanguage,
-                    translationEntryKey.Text,
                     LanguageConstants.EnLanguage,
                     ex => _messageHub.Publish(
                         string.Format(
@@ -407,9 +407,9 @@ namespace Mémoire.Core.Processing
         {
             // Used En as ui language to simplify conversion of common words to the enums
             var translationResult = await _wordsTranslator.GetTranslationAsync(
+                    translationEntryKey.Text,
                     translationEntryKey.SourceLanguage,
                     translationEntryKey.TargetLanguage,
-                    translationEntryKey.Text,
                     LanguageConstants.EnLanguage,
                     ex => _messageHub.Publish(
                         string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, translationEntryKey.Text + $" [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")

@@ -34,10 +34,10 @@
     <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7428.22852" />
     <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7428.22998" />
     <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7433.34444" />
-    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7431.28817" />
-    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7431.20504" />
-    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7431.20504" />
-    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7431.28817" />
+    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7440.17652" />
+    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7440.17652" />
+    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7440.17653" />
+    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7440.17652" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
@@ -58,7 +58,11 @@
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="Publish">
+  <Target Name="AutoPublish" AfterTargets="Build">
+    <CallTarget Targets="Publish"/>
+  </Target>
+
+  <Target Name="PackRelease" AfterTargets="Publish">
     <Exec Command="del &quot;$(SolutionDir)Release\Portable.7z&quot;&#xD;&#xA;&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)7zRelease\Portable.7z&quot; &quot;$(SolutionDir)Release\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
   </Target>
 
