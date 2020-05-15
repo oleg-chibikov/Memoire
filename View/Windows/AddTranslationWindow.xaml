@@ -7,24 +7,24 @@
     xmlns:grid="clr-namespace:Mémoire.View.Controls.Grid"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     Title="{lex:Loc Title}"
     Width="900"
     d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     AdvancedWindowStartupLocation="BottomLeft"
     Background="{StaticResource DarkerBackground}"
     Draggable="False"
-    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     SizeToContent="Height"
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
     <grid:AddTranslationControl VerticalAlignment="Center" VerticalContentAlignment="Center" />
     <commonView:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:AnimatedWindow.Resources>
 </commonView:AnimatedWindow>

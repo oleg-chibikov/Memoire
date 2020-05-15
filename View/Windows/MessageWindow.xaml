@@ -6,19 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     Title="{lex:Loc Title}"
     d:DataContext="{d:DesignInstance d:Type=viewModel:MessageViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     AdvancedWindowStartupLocation="TopLeft"
     AutoCloseTimeout="{Binding AutoCloseTimeout, Mode=OneTime}"
     Draggable="False"
     Focusable="False"
-    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     ShowActivated="False"
     ShowInTaskbar="False"
     SizeToContent="WidthAndHeight"
@@ -26,7 +26,7 @@
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
     <commonView:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:AnimatedWindow.Resources>
     <Border
         Padding="10"

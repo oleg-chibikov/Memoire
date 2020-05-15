@@ -6,19 +6,19 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
-    xmlns:model="clr-namespace:Mémoire.Contracts.DAL.Model;assembly=Scar.Mémoire.Contracts.DAL"
+    xmlns:model="clr-namespace:Mémoire.Contracts.DAL.Model;assembly=Mémoire.Contracts.DAL"
     d:DataContext="{d:DesignInstance d:Type=model:ProcessInfo}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
-    Header="{lex:Loc Scar.Mémoire.Resources:Texts:ProcessIcon}"
+    Header="{lex:Loc Mémoire.Resources:Texts:ProcessIcon}"
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
             <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
             </DataTemplate.Resources>
             <Image
                 MaxWidth="20"

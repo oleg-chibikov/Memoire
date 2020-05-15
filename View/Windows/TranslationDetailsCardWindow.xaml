@@ -6,17 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:translationDetails="clr-namespace:Mémoire.View.Controls.TranslationDetails"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationDetailsCardViewModel}"
     x:ClassModifier="internal"
     Background="{StaticResource DarkerBackground}"
     Focusable="False"
-    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     ShowActivated="false"
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
     <translationDetails:TranslationDetailsCardControl />
     <commonView:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:AnimatedWindow.Resources>
 </commonView:AnimatedWindow>

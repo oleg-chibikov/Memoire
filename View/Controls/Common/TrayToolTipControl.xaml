@@ -6,19 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -37,7 +37,7 @@
             <TextBlock Style="{StaticResource Logo}" Text="Mémoire" />
             <Control
                 Style="{StaticResource BusyAnimationStyle}"
-                ToolTip="{lex:Loc Scar.Mémoire.Resources:Texts:Loading}"
+                ToolTip="{lex:Loc Mémoire.Resources:Texts:Loading}"
                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
             <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Visibility="{Binding IsLoading, Converter={StaticResource ReverseBoolToVisibilityConverter}, Mode=OneWay}">
                 <TextBlock

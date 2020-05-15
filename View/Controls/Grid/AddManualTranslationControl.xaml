@@ -9,17 +9,17 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.AutoCompleteTextBox"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:EditManualTranslationsViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <Grid commonView:MarginSetter.Margin="{StaticResource CommonMargin}" commonView:MarginSetter.Orientation="Horizontal">
         <Grid.ColumnDefinitions>

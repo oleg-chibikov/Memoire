@@ -6,21 +6,21 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     MinWidth="100"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
-    Header="{lex:Loc Scar.Mémoire.Resources:Texts:Repeat}"
+    Header="{lex:Loc Mémoire.Resources:Texts:Repeat}"
     SortMemberPath="LearningInfoViewModel.RepeatType"
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
             <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
             </DataTemplate.Resources>
             <TextBlock d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}" Text="{Binding LearningInfoViewModel.RepeatType, Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
         </DataTemplate>

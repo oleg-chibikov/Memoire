@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,10 +22,7 @@ using Scar.Common.WPF.Controls;
 using Scar.Common.WPF.View.WindowCreation;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-[assembly: AssemblyCompany("Scar")]
-[assembly: AssemblyCopyright("Copyright © Scar 2020")]
 [assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
-[assembly: AssemblyProduct("Mémoire")]
 
 namespace Mémoire.Launcher
 {

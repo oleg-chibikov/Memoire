@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     xmlns:grid="clr-namespace:Mémoire.View.Controls.Grid"
     xmlns:manualTranslationsColumns="clr-namespace:Mémoire.View.Controls.Grid.ManualTranslationsColumns"
     xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
@@ -17,7 +17,7 @@
     Style="{StaticResource Control}"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <!--  OneWay bindings are used instead of OneTime as the whole underlying viewmodel might be exchanged  -->
     <Grid

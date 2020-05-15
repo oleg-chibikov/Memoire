@@ -12,16 +12,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:numericUpDown="clr-namespace:Scar.Common.WPF.Controls;assembly=Scar.Common.WPF.Controls.NumericUpDown"
     xmlns:settings="clr-namespace:Mémoire.View.Controls.Settings"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     Width="700"
     d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     Background="{StaticResource DarkerBackground}"
-    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     SizeToContent="Height"
     mc:Ignorable="d">
     <b:Interaction.Triggers>
@@ -32,7 +32,7 @@
     <commonView:AnimatedWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

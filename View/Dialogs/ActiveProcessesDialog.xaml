@@ -10,19 +10,19 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     xmlns:processesBlacklistColumns="clr-namespace:Mémoire.View.Controls.Settings.ProcessesBlacklistColumns"
     HorizontalAlignment="Stretch"
     d:DataContext="{d:DesignInstance d:Type=viewModel:ProcessBlacklistViewModel}"
     engine:LocalizeDictionary.DesignCulture="en"
     engine:LocalizeDictionary.OutputMissingKeys="True"
-    engine:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    engine:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     engine:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     Style="{StaticResource Control}"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel
         Margin="5"

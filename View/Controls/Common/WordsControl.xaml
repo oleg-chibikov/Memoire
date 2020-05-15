@@ -10,7 +10,7 @@
     x:ClassModifier="internal"
     mc:Ignorable="d">
     <ItemsControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>

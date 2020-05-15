@@ -312,143 +312,143 @@
             </Component>
 
             <Component Id="Component.Scar.M_moire.Contracts.DAL.dll_3832979416" Guid="c7ca8964-e8fc-4968-835f-895759e19c9e">
-              <File Id="Scar.M_moire.Contracts.DAL.dll_3832979416" Source="..\Build\Scar.Mémoire.Contracts.DAL.dll" />
+              <File Id="Scar.M_moire.Contracts.DAL.dll_3832979416" Source="..\Build\Mémoire.Contracts.DAL.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Contracts.DAL.pdb_1831903200" Guid="c7ca8964-e8fc-4968-835f-895787fbf742">
-              <File Id="Scar.M_moire.Contracts.DAL.pdb_1831903200" Source="..\Build\Scar.Mémoire.Contracts.DAL.pdb" />
+              <File Id="Scar.M_moire.Contracts.DAL.pdb_1831903200" Source="..\Build\Mémoire.Contracts.DAL.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Contracts.dll_3742148109" Guid="c7ca8964-e8fc-4968-835f-8957f0faa708">
-              <File Id="Scar.M_moire.Contracts.dll_3742148109" Source="..\Build\Scar.Mémoire.Contracts.dll" />
+              <File Id="Scar.M_moire.Contracts.dll_3742148109" Source="..\Build\Mémoire.Contracts.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Contracts.pdb_3271206405" Guid="c7ca8964-e8fc-4968-835f-8957fcb9f768">
-              <File Id="Scar.M_moire.Contracts.pdb_3271206405" Source="..\Build\Scar.Mémoire.Contracts.pdb" />
+              <File Id="Scar.M_moire.Contracts.pdb_3271206405" Source="..\Build\Mémoire.Contracts.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Core.dll_1875723608" Guid="c7ca8964-e8fc-4968-835f-8957df7f6822">
-              <File Id="Scar.M_moire.Core.dll_1875723608" Source="..\Build\Scar.Mémoire.Core.dll" />
+              <File Id="Scar.M_moire.Core.dll_1875723608" Source="..\Build\Mémoire.Core.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Core.dll.config_4074409759" Guid="c7ca8964-e8fc-4968-835f-895786cb9abe">
-              <File Id="Scar.M_moire.Core.dll.config_4074409759" Source="..\Build\Scar.Mémoire.Core.dll.config" />
+              <File Id="Scar.M_moire.Core.dll.config_4074409759" Source="..\Build\Mémoire.Core.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Core.pdb_1603283258" Guid="c7ca8964-e8fc-4968-835f-8957e1b78d59">
-              <File Id="Scar.M_moire.Core.pdb_1603283258" Source="..\Build\Scar.Mémoire.Core.pdb" />
+              <File Id="Scar.M_moire.Core.pdb_1603283258" Source="..\Build\Mémoire.Core.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.DAL.dll_3895693249" Guid="c7ca8964-e8fc-4968-835f-8957cf56d023">
-              <File Id="Scar.M_moire.DAL.dll_3895693249" Source="..\Build\Scar.Mémoire.DAL.dll" />
+              <File Id="Scar.M_moire.DAL.dll_3895693249" Source="..\Build\Mémoire.DAL.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.DAL.dll.config_2579784012" Guid="c7ca8964-e8fc-4968-835f-89574d105bda">
-              <File Id="Scar.M_moire.DAL.dll.config_2579784012" Source="..\Build\Scar.Mémoire.DAL.dll.config" />
+              <File Id="Scar.M_moire.DAL.dll.config_2579784012" Source="..\Build\Mémoire.DAL.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.DAL.pdb_862317289" Guid="c7ca8964-e8fc-4968-835f-8957d836ab9d">
-              <File Id="Scar.M_moire.DAL.pdb_862317289" Source="..\Build\Scar.Mémoire.DAL.pdb" />
+              <File Id="Scar.M_moire.DAL.pdb_862317289" Source="..\Build\Mémoire.DAL.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.deps.json_1754019334" Guid="c7ca8964-e8fc-4968-835f-89575cdc46f0">
-              <File Id="Scar.M_moire.Launcher.deps.json_1754019334" Source="..\Build\Scar.Mémoire.Launcher.deps.json" />
+              <File Id="Scar.M_moire.Launcher.deps.json_1754019334" Source="..\Build\Mémoire.Launcher.deps.json" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.dll_3096124811" Guid="c7ca8964-e8fc-4968-835f-8957ace0e369">
-              <File Id="Scar.M_moire.Launcher.dll_3096124811" Source="..\Build\Scar.Mémoire.Launcher.dll" />
+              <File Id="Scar.M_moire.Launcher.dll_3096124811" Source="..\Build\Mémoire.Launcher.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.dll.config_1702648323" Guid="c7ca8964-e8fc-4968-835f-89577e557166">
-              <File Id="Scar.M_moire.Launcher.dll.config_1702648323" Source="..\Build\Scar.Mémoire.Launcher.dll.config" />
+              <File Id="Scar.M_moire.Launcher.dll.config_1702648323" Source="..\Build\Mémoire.Launcher.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.exe_4190611703" Guid="c7ca8964-e8fc-4968-835f-8957cb3b477b">
-              <File Id="Scar.M_moire.Launcher.exe_4190611703" Source="..\Build\Scar.Mémoire.Launcher.exe" />
+              <File Id="Scar.M_moire.Launcher.exe_4190611703" Source="..\Build\Mémoire.Launcher.exe" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.pdb_309868973" Guid="c7ca8964-e8fc-4968-835f-89575fe1c5f7">
-              <File Id="Scar.M_moire.Launcher.pdb_309868973" Source="..\Build\Scar.Mémoire.Launcher.pdb" />
+              <File Id="Scar.M_moire.Launcher.pdb_309868973" Source="..\Build\Mémoire.Launcher.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.runtimeconfig.dev.json_909513373" Guid="c7ca8964-e8fc-4968-835f-8957480dad76">
-              <File Id="Scar.M_moire.Launcher.runtimeconfig.dev.json_909513373" Source="..\Build\Scar.Mémoire.Launcher.runtimeconfig.dev.json" />
+              <File Id="Scar.M_moire.Launcher.runtimeconfig.dev.json_909513373" Source="..\Build\Mémoire.Launcher.runtimeconfig.dev.json" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Launcher.runtimeconfig.json_2198111182" Guid="c7ca8964-e8fc-4968-835f-8957326bb6a3">
-              <File Id="Scar.M_moire.Launcher.runtimeconfig.json_2198111182" Source="..\Build\Scar.Mémoire.Launcher.runtimeconfig.json" />
+              <File Id="Scar.M_moire.Launcher.runtimeconfig.json_2198111182" Source="..\Build\Mémoire.Launcher.runtimeconfig.json" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Resources.dll_3528181406" Guid="c7ca8964-e8fc-4968-835f-8957d7b69726">
-              <File Id="Scar.M_moire.Resources.dll_3528181406" Source="..\Build\Scar.Mémoire.Resources.dll" />
+              <File Id="Scar.M_moire.Resources.dll_3528181406" Source="..\Build\Mémoire.Resources.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Resources.dll.config_2403401777" Guid="c7ca8964-e8fc-4968-835f-895709a80168">
-              <File Id="Scar.M_moire.Resources.dll.config_2403401777" Source="..\Build\Scar.Mémoire.Resources.dll.config" />
+              <File Id="Scar.M_moire.Resources.dll.config_2403401777" Source="..\Build\Mémoire.Resources.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Resources.pdb_4000695974" Guid="c7ca8964-e8fc-4968-835f-895723dc3252">
-              <File Id="Scar.M_moire.Resources.pdb_4000695974" Source="..\Build\Scar.Mémoire.Resources.pdb" />
+              <File Id="Scar.M_moire.Resources.pdb_4000695974" Source="..\Build\Mémoire.Resources.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.View.dll_282520180" Guid="c7ca8964-e8fc-4968-835f-89571da074c7">
-              <File Id="Scar.M_moire.View.dll_282520180" Source="..\Build\Scar.Mémoire.View.dll" />
+              <File Id="Scar.M_moire.View.dll_282520180" Source="..\Build\Mémoire.View.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.View.dll.config_1776487885" Guid="c7ca8964-e8fc-4968-835f-8957832ed9cf">
-              <File Id="Scar.M_moire.View.dll.config_1776487885" Source="..\Build\Scar.Mémoire.View.dll.config" />
+              <File Id="Scar.M_moire.View.dll.config_1776487885" Source="..\Build\Mémoire.View.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.View.pdb_3068776018" Guid="c7ca8964-e8fc-4968-835f-8957eca5f6b9">
-              <File Id="Scar.M_moire.View.pdb_3068776018" Source="..\Build\Scar.Mémoire.View.pdb" />
+              <File Id="Scar.M_moire.View.pdb_3068776018" Source="..\Build\Mémoire.View.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.ViewModel.dll_739584173" Guid="c7ca8964-e8fc-4968-835f-8957a7c4c251">
-              <File Id="Scar.M_moire.ViewModel.dll_739584173" Source="..\Build\Scar.Mémoire.ViewModel.dll" />
+              <File Id="Scar.M_moire.ViewModel.dll_739584173" Source="..\Build\Mémoire.ViewModel.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.ViewModel.dll.config_3896442480" Guid="c7ca8964-e8fc-4968-835f-8957df987198">
-              <File Id="Scar.M_moire.ViewModel.dll.config_3896442480" Source="..\Build\Scar.Mémoire.ViewModel.dll.config" />
+              <File Id="Scar.M_moire.ViewModel.dll.config_3896442480" Source="..\Build\Mémoire.ViewModel.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.ViewModel.pdb_1211836581" Guid="c7ca8964-e8fc-4968-835f-8957a973ed60">
-              <File Id="Scar.M_moire.ViewModel.pdb_1211836581" Source="..\Build\Scar.Mémoire.ViewModel.pdb" />
+              <File Id="Scar.M_moire.ViewModel.pdb_1211836581" Source="..\Build\Mémoire.ViewModel.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WebApi.dll_1269019195" Guid="c7ca8964-e8fc-4968-835f-8957312f5b9a">
-              <File Id="Scar.M_moire.WebApi.dll_1269019195" Source="..\Build\Scar.Mémoire.WebApi.dll" />
+              <File Id="Scar.M_moire.WebApi.dll_1269019195" Source="..\Build\Mémoire.WebApi.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WebApi.dll.config_413370758" Guid="c7ca8964-e8fc-4968-835f-8957cdaf85e8">
-              <File Id="Scar.M_moire.WebApi.dll.config_413370758" Source="..\Build\Scar.Mémoire.WebApi.dll.config" />
+              <File Id="Scar.M_moire.WebApi.dll.config_413370758" Source="..\Build\Mémoire.WebApi.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WebApi.pdb_461925833" Guid="c7ca8964-e8fc-4968-835f-8957c14b283a">
-              <File Id="Scar.M_moire.WebApi.pdb_461925833" Source="..\Build\Scar.Mémoire.WebApi.pdb" />
+              <File Id="Scar.M_moire.WebApi.pdb_461925833" Source="..\Build\Mémoire.WebApi.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WindowCreators.dll_1847583864" Guid="c7ca8964-e8fc-4968-835f-895727a0caa3">
-              <File Id="Scar.M_moire.WindowCreators.dll_1847583864" Source="..\Build\Scar.Mémoire.WindowCreators.dll" />
+              <File Id="Scar.M_moire.WindowCreators.dll_1847583864" Source="..\Build\Mémoire.WindowCreators.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WindowCreators.dll.config_1270356993" Guid="c7ca8964-e8fc-4968-835f-895774478cb2">
-              <File Id="Scar.M_moire.WindowCreators.dll.config_1270356993" Source="..\Build\Scar.Mémoire.WindowCreators.dll.config" />
+              <File Id="Scar.M_moire.WindowCreators.dll.config_1270356993" Source="..\Build\Mémoire.WindowCreators.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.WindowCreators.pdb_3010907586" Guid="c7ca8964-e8fc-4968-835f-895788f6ecea">
-              <File Id="Scar.M_moire.WindowCreators.pdb_3010907586" Source="..\Build\Scar.Mémoire.WindowCreators.pdb" />
+              <File Id="Scar.M_moire.WindowCreators.pdb_3010907586" Source="..\Build\Mémoire.WindowCreators.pdb" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Windows.Common.dll_4156768611" Guid="c7ca8964-e8fc-4968-835f-895795e48e8b">
-              <File Id="Scar.M_moire.Windows.Common.dll_4156768611" Source="..\Build\Scar.Mémoire.Windows.Common.dll" />
+              <File Id="Scar.M_moire.Windows.Common.dll_4156768611" Source="..\Build\Mémoire.Windows.Common.dll" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Windows.Common.dll.config_510498880" Guid="c7ca8964-e8fc-4968-835f-89579250f3c7">
-              <File Id="Scar.M_moire.Windows.Common.dll.config_510498880" Source="..\Build\Scar.Mémoire.Windows.Common.dll.config" />
+              <File Id="Scar.M_moire.Windows.Common.dll.config_510498880" Source="..\Build\Mémoire.Windows.Common.dll.config" />
             </Component>
 
             <Component Id="Component.Scar.M_moire.Windows.Common.pdb_2638263113" Guid="c7ca8964-e8fc-4968-835f-89578e315ffc">
-              <File Id="Scar.M_moire.Windows.Common.pdb_2638263113" Source="..\Build\Scar.Mémoire.Windows.Common.pdb" />
+              <File Id="Scar.M_moire.Windows.Common.pdb_2638263113" Source="..\Build\Mémoire.Windows.Common.pdb" />
             </Component>
 
             <Component Id="Component.Scar.RemembR.Contracts.DAL.dll_2684035192" Guid="c7ca8964-e8fc-4968-835f-8957504f1509">
@@ -737,11 +737,11 @@
             <Directory Id="INSTALLDIR.ru_RU" Name="ru-RU">
 
               <Component Id="Component.Scar.M_moire.Resources.resources.dll_2350465295" Guid="c7ca8964-e8fc-4968-835f-895704ac53ce">
-                <File Id="Scar.M_moire.Resources.resources.dll_2350465295" Source="..\Build\ru-RU\Scar.Mémoire.Resources.resources.dll" />
+                <File Id="Scar.M_moire.Resources.resources.dll_2350465295" Source="..\Build\ru-RU\Mémoire.Resources.resources.dll" />
               </Component>
 
               <Component Id="Component.Scar.M_moire.View.resources.dll_2438825828" Guid="c7ca8964-e8fc-4968-835f-8957735d394d">
-                <File Id="Scar.M_moire.View.resources.dll_2438825828" Source="..\Build\ru-RU\Scar.Mémoire.View.resources.dll" />
+                <File Id="Scar.M_moire.View.resources.dll_2438825828" Source="..\Build\ru-RU\Mémoire.View.resources.dll" />
               </Component>
 
               <Component Id="Component.Scar.RemembR.Resources.resources.dll_1636606696" Guid="c7ca8964-e8fc-4968-835f-8957ef93cd87">

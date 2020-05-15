@@ -4,7 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/Styles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Mémoire.View;component/Styles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/ScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

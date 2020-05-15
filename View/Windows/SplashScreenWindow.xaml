@@ -24,6 +24,6 @@
         </TextBlock.Effect>
     </TextBlock>
     <commonView:AnimatedWindowWithoutTemplate.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:AnimatedWindowWithoutTemplate.Resources>
 </commonView:AnimatedWindowWithoutTemplate>

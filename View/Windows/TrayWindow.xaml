@@ -10,27 +10,27 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="http://www.hardcodet.net/taskbar"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
-    Icon="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico"
+    Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     ShowInTaskbar="False"
     SizeToContent="WidthAndHeight"
     Visibility="Hidden"
     WindowState="Minimized"
     mc:Ignorable="d">
     <Window.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
             DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"
             LeftClickCommand="{Binding ToggleActiveCommand, Mode=OneTime}"
-            ToolTipText="{lex:Loc Scar.Mémoire.Resources:Texts:Title}">
+            ToolTipText="{lex:Loc Mémoire.Resources:Texts:Title}">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="TrayToolTipClose">
                     <b:InvokeCommandAction Command="{Binding ToolTipCloseCommand, Mode=OneTime}" />
@@ -47,19 +47,19 @@
                             <Setter Property="Height" Value="16" />
                         </Style>
                     </ContextMenu.Resources>
-                    <MenuItem Command="{Binding ShowSettingsCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:Settings}">
+                    <MenuItem Command="{Binding ShowSettingsCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:Settings}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="Settings" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Command="{Binding AddTranslationCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:AddTranslation}">
+                    <MenuItem Command="{Binding AddTranslationCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:AddTranslation}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="PlusBox" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Command="{Binding ShowDictionaryCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:Dictionary}">
+                    <MenuItem Command="{Binding ShowDictionaryCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:Dictionary}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="Dictionary" />
                         </MenuItem.Icon>
@@ -67,7 +67,7 @@
 
                     <MenuItem
                         Command="{Binding ToggleActiveCommand, Mode=OneTime}"
-                        Header="{lex:Loc Scar.Mémoire.Resources:Texts:Deactivate}"
+                        Header="{lex:Loc Mémoire.Resources:Texts:Deactivate}"
                         Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ToggleSwitchOff" />
@@ -76,7 +76,7 @@
 
                     <MenuItem
                         Command="{Binding ToggleActiveCommand, Mode=OneTime}"
-                        Header="{lex:Loc Scar.Mémoire.Resources:Texts:Activate}"
+                        Header="{lex:Loc Mémoire.Resources:Texts:Activate}"
                         Visibility="{Binding IsActive, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ToggleSwitch" />
@@ -85,19 +85,19 @@
 
                     <Separator />
 
-                    <MenuItem Command="{Binding ViewLogsCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:ViewLogs}">
+                    <MenuItem Command="{Binding ViewLogsCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:ViewLogs}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="FileDocument" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Command="{Binding OpenSharedFolderCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:OpenSharedFolder}">
+                    <MenuItem Command="{Binding OpenSharedFolderCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:OpenSharedFolder}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="Dropbox" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:OpenSettingsFolder}">
+                    <MenuItem Command="{Binding OpenSettingsFolderCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:OpenSettingsFolder}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="Folder" />
                         </MenuItem.Icon>
@@ -105,7 +105,7 @@
 
                     <Separator />
 
-                    <MenuItem Command="{Binding ExitCommand, Mode=OneTime}" Header="{lex:Loc Scar.Mémoire.Resources:Texts:Exit}">
+                    <MenuItem Command="{Binding ExitCommand, Mode=OneTime}" Header="{lex:Loc Mémoire.Resources:Texts:Exit}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ExitToApp" />
                         </MenuItem.Icon>
@@ -114,13 +114,13 @@
             </tb:TaskbarIcon.ContextMenu>
             <tb:TaskbarIcon.Style>
                 <Style TargetType="tb:TaskbarIcon">
-                    <Setter Property="IconSource" Value="pack://application:,,/Scar.Mémoire.View;component/Images/IconAlt.ico" />
+                    <Setter Property="IconSource" Value="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsPaused, Mode=OneWay}" Value="True">
-                            <Setter Property="IconSource" Value="pack://application:,,/Scar.Mémoire.View;component/Images/IconPaused.ico" />
+                            <Setter Property="IconSource" Value="pack://application:,,/Mémoire.View;component/Images/IconPaused.ico" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsActive, Mode=OneWay}" Value="False">
-                            <Setter Property="IconSource" Value="pack://application:,,/Scar.Mémoire.View;component/Images/IconInactive.ico" />
+                            <Setter Property="IconSource" Value="pack://application:,,/Mémoire.View;component/Images/IconInactive.ico" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

@@ -8,18 +8,18 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Scar.Mémoire.ViewModel"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     d:DataContext="{d:DesignInstance d:Type=viewModel:WordViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
-    lex:ResxLocalizationProvider.DefaultAssembly="Scar.Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Scar.Mémoire.View;component/DesignTimeResources.xaml" />
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
                 <ResourceDictionary>
                     <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock" />
                 </ResourceDictionary>
@@ -78,11 +78,11 @@
                     <ContextMenu Visibility="{Binding CanEdit, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}">
                         <MenuItem
                             Command="{Binding TogglePriorityCommand, Mode=OneTime}"
-                            Header="{lex:Loc Scar.Mémoire.Resources:Texts:TogglePriority}"
+                            Header="{lex:Loc Mémoire.Resources:Texts:TogglePriority}"
                             Visibility="{Binding Mode=OneTime, Converter={StaticResource PriorityWordViewModelToVisibilityConverter}}" />
                         <MenuItem
                             Command="{Binding LearnWordCommand, Mode=OneTime}"
-                            Header="{lex:Loc Scar.Mémoire.Resources:Texts:LearnWord}"
+                            Header="{lex:Loc Mémoire.Resources:Texts:LearnWord}"
                             Visibility="{Binding CanLearnWord, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </ContextMenu>
                 </TextBlock.ContextMenu>
@@ -98,7 +98,7 @@
             BorderThickness="1"
             Command="{Binding PlayTtsCommand, Mode=OneTime}"
             Style="{StaticResource ImageButton}"
-            ToolTip="{lex:Loc Scar.Mémoire.Resources:Texts:Speak}">
+            ToolTip="{lex:Loc Mémoire.Resources:Texts:Speak}">
             <materialDesign:PackIcon Kind="Speaker" />
         </Button>
     </DockPanel>

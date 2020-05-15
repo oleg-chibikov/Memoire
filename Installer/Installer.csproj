@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.Installer" Version="1.1.7434.18099" />
+    <PackageReference Include="Scar.Common.Installer" Version="1.1.7440.22786" />
     <PackageReference Include="WixSharp.wix.bin" Version="3.11.2" />
   </ItemGroup>
 
@@ -19,4 +19,8 @@
     <Resource Include="Icon.ico" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo Packing $(TargetName)...&#xD;&#xA;&#xD;&#xA;&quot;$(TargetPath)&quot;" />
+    <Exec Command="XCOPY &quot;$(TargetDir)$(SolutionName).msi&quot; &quot;$(SolutionDir)7zRelease\&quot; /Y" />
+  </Target>
 </Project>
