@@ -28,7 +28,7 @@ namespace Mémoire.Contracts.Languages.Data
         {
             unchecked
             {
-                return (Code.GetHashCode() * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(DisplayName);
+                return (Code.GetHashCode(StringComparison.OrdinalIgnoreCase) * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(DisplayName);
             }
         }
 

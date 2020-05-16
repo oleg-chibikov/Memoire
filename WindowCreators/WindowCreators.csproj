@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>WindowCreators for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7440.29014" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7441.17422" />
   </ItemGroup>
 
   <ItemGroup>

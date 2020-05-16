@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>Contracts assembly for DAL of Mémoire</Description>
   </PropertyGroup>
 
@@ -12,9 +12,9 @@
     <NoWarn>1701;1702;CS8618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Scar.Common" Version="1.1.7428.22852" />
-    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7427.23084" />
-    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7440.27492" />
+    <PackageReference Include="Scar.Common" Version="1.1.7441.17281" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7441.17391" />
+    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7441.18384" />
   </ItemGroup>
 
 </Project>
