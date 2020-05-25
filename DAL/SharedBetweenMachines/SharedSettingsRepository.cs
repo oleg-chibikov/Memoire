@@ -2,6 +2,8 @@ using System;
 using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
+using Scar.Common.DAL.Contracts.Model;
+using Scar.Common.DAL.LiteDB;
 using Scar.Services.Contracts.Data;
 using Scar.Services.Contracts.Data.TextToSpeech;
 

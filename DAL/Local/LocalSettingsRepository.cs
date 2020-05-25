@@ -5,6 +5,8 @@ using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;
 using Scar.Common.ApplicationLifetime.Contracts;
+using Scar.Common.DAL.Contracts.Model;
+using Scar.Common.DAL.LiteDB;
 using Scar.Services.Contracts.Data;
 
 namespace Mémoire.DAL.Local

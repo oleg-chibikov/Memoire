@@ -20,12 +20,6 @@
         <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
     </commonView:BaseControl.Resources>
     <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}">
-        <Expander IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" Style="{StaticResource ViewWhenMouseHoverExpander}">
-            <Expander.Header>
-                <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc Details}" />
-            </Expander.Header>
-            <translationDetails:TranslationDetailsCardControl Margin="5,10" DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
-        </Expander>
         <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
             <common:WordImageViewerControl DataContext="{Binding WordImageViewerViewModel, Mode=OneTime}" />
             <common:WordControl
@@ -51,5 +45,11 @@
             FontSize="{StaticResource SmallFontSize}"
             Foreground="{StaticResource SourceLanguageSynonymsForeground}"
             ItemsSource="{Binding SourceLanguageSynonyms, Mode=OneTime}" />
+        <Expander IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" Style="{StaticResource ViewWhenMouseHoverExpander}">
+            <Expander.Header>
+                <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc Details}" />
+            </Expander.Header>
+            <translationDetails:TranslationDetailsCardControl Margin="5,10" DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
+        </Expander>
     </StackPanel>
 </commonView:BaseControl>

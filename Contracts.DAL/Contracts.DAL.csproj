@@ -13,8 +13,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Scar.Common" Version="1.1.7441.17281" />
-    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7441.17391" />
-    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7441.18384" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7442.19757" />
+    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7446.18047" />
   </ItemGroup>
 
 </Project>

@@ -15,10 +15,8 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentBatchCardViewModel : BaseViewModel
     {
-        readonly Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentTextInputCardViewModel> _assessmentTextInputCardViewModelFactory;
-        readonly Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentViewOnlyCardViewModel> _assessmentViewOnlyCardViewModelFactory;
         readonly IPauseManager _pauseManager;
-        int _closedCount;
+        int _notAnsweredCount;
 
         public AssessmentBatchCardViewModel(
             ILogger<AssessmentBatchCardViewModel> logger,
@@ -28,8 +26,8 @@ namespace Mémoire.ViewModel
             Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentViewOnlyCardViewModel> assessmentViewOnlyCardViewModelFactory,
             IPauseManager pauseManager) : base(commandManager)
         {
-            _assessmentTextInputCardViewModelFactory = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
-            _assessmentViewOnlyCardViewModelFactory = assessmentViewOnlyCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentViewOnlyCardViewModelFactory));
+            _ = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
+            _ = assessmentViewOnlyCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentViewOnlyCardViewModelFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationInfos ?? throw new ArgumentNullException(nameof(translationInfos));
@@ -40,9 +38,21 @@ namespace Mémoire.ViewModel
 
             WindowClosedCommand = AddCommand(WindowClosed);
             WindowContentRenderedCommand = AddCommand(WindowContentRendered);
-            NestedViewModels = translationInfos.Select(x => GetViewModelByRepeatType(x, x.LearningInfo.RepeatType)).ToArray();
+            NestedViewModels = translationInfos.Select(
+                    x =>
+                    {
+                        if (ShouldUserInputTextForTranslation(x.LearningInfo.RepeatType))
+                        {
+                            return (BaseAssessmentCardViewModel)assessmentViewOnlyCardViewModelFactory(x, this);
+                        }
+                        else
+                        {
+                            _notAnsweredCount++;
+                            return assessmentTextInputCardViewModelFactory(x, this);
+                        }
+                    })
+                .ToArray();
             NestedViewModels.First().IsFocused = true;
-            _closedCount = translationInfos.Count;
         }
 
         public IReadOnlyCollection<BaseAssessmentCardViewModel> NestedViewModels { get; }
@@ -55,7 +65,7 @@ namespace Mémoire.ViewModel
 
         public void NotifyChildClosed()
         {
-            if (--_closedCount == 0)
+            if (--_notAnsweredCount == 0)
             {
                 CloseWindow();
             }
@@ -70,30 +80,30 @@ namespace Mémoire.ViewModel
             }
         }
 
-        BaseAssessmentCardViewModel GetViewModelByRepeatType(TranslationInfo x, RepeatType repeatType)
+        static bool ShouldUserInputTextForTranslation(RepeatType repeatType)
         {
             switch (repeatType)
             {
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
-                    {
-                        return _assessmentViewOnlyCardViewModelFactory(x, this);
-                    }
+                {
+                    return false;
+                }
 
                 case RepeatType.PreIntermediate:
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
-                    {
-                        return _assessmentTextInputCardViewModelFactory(x, this);
-                    }
+                {
+                    return false;
+                }
 
                 case RepeatType.Advanced:
                 case RepeatType.Proficiency:
                 case RepeatType.Expert:
-                    {
-                        return _assessmentTextInputCardViewModelFactory(x, this);
-                    }
+                {
+                    return true;
+                }
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(repeatType));

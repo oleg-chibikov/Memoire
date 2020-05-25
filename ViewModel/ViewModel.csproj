@@ -8,13 +8,13 @@
   <ItemGroup>
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7441.17293" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7442.19851" />
     <PackageReference Include="Scar.Common.Async" Version="1.1.7441.17392" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7441.17295" />
-    <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7441.17294" />
-    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7441.17422" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7442.19852" />
+    <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7442.19851" />
+    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7442.19875" />
     <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7441.17392" />
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7441.17422" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7442.19878" />
   </ItemGroup>
 
   <ItemGroup>

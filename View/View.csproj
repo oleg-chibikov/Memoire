@@ -31,8 +31,8 @@
     <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7441.17422" />
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7441.17391" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7441.17422" />
-    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7441.17422" />
-    <PackageReference Include="Scar.Common.WPF.View.Core" Version="1.1.7441.17463" />
+    <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7442.19875" />
+    <PackageReference Include="Scar.Common.WPF.View.Core" Version="1.1.7442.19905" />
   </ItemGroup>
 
   <ItemGroup>

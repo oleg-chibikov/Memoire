@@ -6,37 +6,37 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Mémoire/1.1.7441.19159": {
+      "Mémoire/1.1.7450.33365": {
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
           "Microsoft.CodeQuality.Analyzers": "3.0.0",
           "Microsoft.NetCore.Analyzers": "3.0.0",
           "Microsoft.NetFramework.Analyzers": "3.0.0",
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Mémoire.Core": "1.1.7441.19096",
-          "Mémoire.DAL": "1.1.7441.19096",
-          "Mémoire.Resources": "1.1.7441.19096",
-          "Mémoire.View": "1.1.7441.19096",
-          "Mémoire.ViewModel": "1.1.7441.19096",
-          "Mémoire.WebApi": "1.1.7441.19096",
-          "Mémoire.WindowCreators": "1.1.7441.19096",
-          "Mémoire.Windows.Common": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Mémoire.Core": "1.1.7450.33340",
+          "Mémoire.DAL": "1.1.7450.33339",
+          "Mémoire.Resources": "1.1.7450.33340",
+          "Mémoire.View": "1.1.7450.33340",
+          "Mémoire.ViewModel": "1.1.7450.33340",
+          "Mémoire.WebApi": "1.1.7450.33340",
+          "Mémoire.WindowCreators": "1.1.7450.33340",
+          "Mémoire.Windows.Common": "1.1.7450.33340",
           "NLog.Config": "4.7.0",
           "NLog.Web.AspNetCore": "4.9.2",
           "Scar.CodeAnalysis": "1.0.7422.15495",
-          "Scar.Common.AutofacHttpClientProvision": "1.1.7441.17294",
+          "Scar.Common.AutofacHttpClientProvision": "1.1.7442.19852",
           "Scar.Common.AutofacInstantiation": "1.1.7441.17393",
           "Scar.Common.Sync.Windows": "1.1.7441.17423",
-          "Scar.Common.View.AutofacWindowProvision": "1.1.7441.17463",
-          "Scar.Common.WPF.CollectionView": "1.1.7441.17423",
-          "Scar.Common.WPF.Startup": "1.1.7441.17463",
-          "Scar.Common.WPF.View.WindowCreation": "1.1.7441.17463",
+          "Scar.Common.View.AutofacWindowProvision": "1.1.7442.19892",
+          "Scar.Common.WPF.CollectionView": "1.1.7442.19878",
+          "Scar.Common.WPF.Startup": "1.1.7442.19890",
+          "Scar.Common.WPF.View.WindowCreation": "1.1.7442.19892",
           "Scar.Common.WebApi": "1.1.7441.17392",
-          "Scar.Services.ImageDownload": "1.1.7441.18395",
-          "Scar.Services.Qwant": "1.1.7441.18394",
-          "Scar.Services.UClassify": "1.1.7441.18395",
-          "Scar.Services.Yandex": "1.1.7441.18394",
+          "Scar.Services.ImageDownload": "1.1.7447.539",
+          "Scar.Services.Qwant": "1.1.7447.539",
+          "Scar.Services.UClassify": "1.1.7446.18264",
+          "Scar.Services.Yandex": "1.1.7447.540",
           "StyleCop.Analyzers": "1.1.118",
           "System.Runtime.CompilerServices.Unsafe": "4.7.1",
           "WTG.Analyzers": "2.10.0",
@@ -837,7 +837,7 @@
           }
         }
       },
-      "Scar.Common.ApplicationLifetime.Contracts/1.1.7441.17293": {
+      "Scar.Common.ApplicationLifetime.Contracts/1.1.7442.19851": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.ApplicationLifetime.Contracts.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -845,15 +845,15 @@
           }
         }
       },
-      "Scar.Common.ApplicationLifetime.Core/1.1.7441.17422": {
+      "Scar.Common.ApplicationLifetime.Core/1.1.7442.19878": {
         "dependencies": {
           "Autofac.Extensions.DependencyInjection": "6.0.0",
           "Easy.MessageHub": "5.0.0",
           "Microsoft.Extensions.Hosting": "3.1.4",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "Scar.Common": "1.1.7441.17281",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7441.17293",
-          "Scar.Common.Localization": "1.1.7441.17295"
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7442.19851",
+          "Scar.Common.Localization": "1.1.7442.19852"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Common.ApplicationLifetime.Core.dll": {
@@ -873,7 +873,7 @@
           }
         }
       },
-      "Scar.Common.AutofacHttpClientProvision/1.1.7441.17294": {
+      "Scar.Common.AutofacHttpClientProvision/1.1.7442.19852": {
         "dependencies": {
           "Autofac": "5.2.0",
           "Microsoft.Extensions.Http": "3.1.4"
@@ -896,7 +896,7 @@
           }
         }
       },
-      "Scar.Common.DAL.Contracts/1.1.7441.17391": {
+      "Scar.Common.DAL.Contracts/1.1.7442.19757": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.DAL.Contracts.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -904,10 +904,11 @@
           }
         }
       },
-      "Scar.Common.DAL.LiteDB/1.1.7441.17421": {
+      "Scar.Common.DAL.LiteDB/1.1.7442.19773": {
         "dependencies": {
           "LiteDB": "5.0.8",
-          "Scar.Common.DAL.Contracts": "1.1.7441.17391"
+          "Newtonsoft.Json": "12.0.3",
+          "Scar.Common.DAL.Contracts": "1.1.7442.19757"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Common.DAL.LiteDB.dll": {
@@ -916,7 +917,7 @@
           }
         }
       },
-      "Scar.Common.IO/1.1.7441.17293": {
+      "Scar.Common.IO/1.1.7442.19851": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.IO.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -924,7 +925,7 @@
           }
         }
       },
-      "Scar.Common.Localization/1.1.7441.17295": {
+      "Scar.Common.Localization/1.1.7442.19852": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.Localization.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -932,7 +933,7 @@
           }
         }
       },
-      "Scar.Common.MVVM.CollectionView/1.1.7441.17294": {
+      "Scar.Common.MVVM.CollectionView/1.1.7442.19851": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.MVVM.CollectionView.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -940,7 +941,7 @@
           }
         }
       },
-      "Scar.Common.MVVM.Commands/1.1.7441.17294": {
+      "Scar.Common.MVVM.Commands/1.1.7442.19853": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.MVVM.Commands.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -948,9 +949,9 @@
           }
         }
       },
-      "Scar.Common.MVVM.ViewModel/1.1.7441.17422": {
+      "Scar.Common.MVVM.ViewModel/1.1.7442.19875": {
         "dependencies": {
-          "Scar.Common.MVVM.Commands": "1.1.7441.17294"
+          "Scar.Common.MVVM.Commands": "1.1.7442.19853"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Common.MVVM.ViewModel.dll": {
@@ -987,10 +988,10 @@
           }
         }
       },
-      "Scar.Common.View.AutofacWindowProvision/1.1.7441.17463": {
+      "Scar.Common.View.AutofacWindowProvision/1.1.7442.19892": {
         "dependencies": {
           "Autofac": "5.2.0",
-          "Scar.Common.View.WindowCreation": "1.1.7441.17422"
+          "Scar.Common.View.WindowCreation": "1.1.7442.19878"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Common.View.AutofacWindowProvision.dll": {
@@ -999,7 +1000,7 @@
           }
         }
       },
-      "Scar.Common.View.Contracts/1.1.7441.17294": {
+      "Scar.Common.View.Contracts/1.1.7442.19852": {
         "runtime": {
           "lib/netstandard2.1/Scar.Common.View.Contracts.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -1007,9 +1008,9 @@
           }
         }
       },
-      "Scar.Common.View.WindowCreation/1.1.7441.17422": {
+      "Scar.Common.View.WindowCreation/1.1.7442.19878": {
         "dependencies": {
-          "Scar.Common.View.Contracts": "1.1.7441.17294"
+          "Scar.Common.View.Contracts": "1.1.7442.19852"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Common.View.WindowCreation.dll": {
@@ -1040,9 +1041,9 @@
           }
         }
       },
-      "Scar.Common.WPF.CollectionView/1.1.7441.17423": {
+      "Scar.Common.WPF.CollectionView/1.1.7442.19878": {
         "dependencies": {
-          "Scar.Common.MVVM.CollectionView": "1.1.7441.17294"
+          "Scar.Common.MVVM.CollectionView": "1.1.7442.19851"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.CollectionView.dll": {
@@ -1101,10 +1102,10 @@
           }
         }
       },
-      "Scar.Common.WPF.Localization/1.1.7441.17422": {
+      "Scar.Common.WPF.Localization/1.1.7442.19875": {
         "dependencies": {
-          "Scar.Common.Localization": "1.1.7441.17295",
-          "Scar.Common.MVVM.CollectionView": "1.1.7441.17294",
+          "Scar.Common.Localization": "1.1.7442.19852",
+          "Scar.Common.MVVM.CollectionView": "1.1.7442.19851",
           "WPFLocalizeExtension": "3.6.1"
         },
         "runtime": {
@@ -1122,10 +1123,10 @@
           }
         }
       },
-      "Scar.Common.WPF.Startup/1.1.7441.17463": {
+      "Scar.Common.WPF.Startup/1.1.7442.19890": {
         "dependencies": {
-          "Scar.Common.ApplicationLifetime.Core": "1.1.7441.17422",
-          "Scar.Common.WPF.Localization": "1.1.7441.17422"
+          "Scar.Common.ApplicationLifetime.Core": "1.1.7442.19878",
+          "Scar.Common.WPF.Localization": "1.1.7442.19875"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.Startup.dll": {
@@ -1134,9 +1135,9 @@
           }
         }
       },
-      "Scar.Common.WPF.View.Contracts/1.1.7441.17422": {
+      "Scar.Common.WPF.View.Contracts/1.1.7442.19875": {
         "dependencies": {
-          "Scar.Common.View.Contracts": "1.1.7441.17294"
+          "Scar.Common.View.Contracts": "1.1.7442.19852"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.View.Contracts.dll": {
@@ -1145,15 +1146,15 @@
           }
         }
       },
-      "Scar.Common.WPF.View.Core/1.1.7441.17463": {
+      "Scar.Common.WPF.View.Core/1.1.7442.19905": {
         "dependencies": {
           "MaterialDesignThemes": "3.1.2",
           "Microsoft.Xaml.Behaviors.Wpf": "1.1.19",
-          "Scar.Common.MVVM.ViewModel": "1.1.7441.17422",
+          "Scar.Common.MVVM.ViewModel": "1.1.7442.19875",
           "Scar.Common.RateLimiting": "1.1.7441.17392",
-          "Scar.Common.View.Contracts": "1.1.7441.17294",
+          "Scar.Common.View.Contracts": "1.1.7442.19852",
           "Scar.Common.WPF.Screen": "1.1.7441.17391",
-          "Scar.Common.WPF.View.Contracts": "1.1.7441.17422",
+          "Scar.Common.WPF.View.Contracts": "1.1.7442.19875",
           "WPFLocalizeExtension": "3.6.1"
         },
         "runtime": {
@@ -1163,9 +1164,9 @@
           }
         }
       },
-      "Scar.Common.WPF.View.WindowCreation/1.1.7441.17463": {
+      "Scar.Common.WPF.View.WindowCreation/1.1.7442.19892": {
         "dependencies": {
-          "Scar.Common.View.WindowCreation": "1.1.7441.17422"
+          "Scar.Common.View.WindowCreation": "1.1.7442.19878"
         },
         "runtime": {
           "lib/netcoreapp3.1/Scar.Common.WPF.View.WindowCreation.dll": {
@@ -1174,7 +1175,7 @@
           }
         }
       },
-      "Scar.Services.Common/1.1.7441.18384": {
+      "Scar.Services.Common/1.1.7446.18045": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
@@ -1185,7 +1186,7 @@
           }
         }
       },
-      "Scar.Services.Contracts/1.1.7441.18384": {
+      "Scar.Services.Contracts/1.1.7446.18047": {
         "runtime": {
           "lib/netstandard2.1/Scar.Services.Contracts.dll": {
             "assemblyVersion": "0.0.0.0",
@@ -1193,11 +1194,12 @@
           }
         }
       },
-      "Scar.Services.ImageDownload/1.1.7441.18395": {
+      "Scar.Services.ImageDownload/1.1.7447.539": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "NAudio": "1.10.0",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Scar.Services.Common": "1.1.7446.18045",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Services.ImageDownload.dll": {
@@ -1206,13 +1208,13 @@
           }
         }
       },
-      "Scar.Services.Qwant/1.1.7441.18394": {
+      "Scar.Services.Qwant/1.1.7447.539": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "Newtonsoft.Json": "12.0.3",
           "Scar.Common.RateLimiting": "1.1.7441.17392",
-          "Scar.Services.Common": "1.1.7441.18384",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Scar.Services.Common": "1.1.7446.18045",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Services.Qwant.dll": {
@@ -1221,11 +1223,11 @@
           }
         }
       },
-      "Scar.Services.UClassify/1.1.7441.18395": {
+      "Scar.Services.UClassify/1.1.7446.18264": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Services.Common": "1.1.7441.18384",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Scar.Services.Common": "1.1.7446.18045",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Services.UClassify.dll": {
@@ -1234,14 +1236,14 @@
           }
         }
       },
-      "Scar.Services.Yandex/1.1.7441.18394": {
+      "Scar.Services.Yandex/1.1.7447.540": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
           "NAudio": "1.10.0",
           "Newtonsoft.Json": "12.0.3",
           "Scar.Common": "1.1.7441.17281",
-          "Scar.Services.Common": "1.1.7441.18384",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Scar.Services.Common": "1.1.7446.18045",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "lib/netstandard2.1/Scar.Services.Yandex.dll": {
@@ -2239,42 +2241,42 @@
           }
         }
       },
-      "Mémoire.Contracts/1.1.7441.19096": {
+      "Mémoire.Contracts/1.1.7450.33340": {
         "dependencies": {
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Scar.Common.DAL.Contracts": "1.1.7441.17391",
-          "Scar.Common.View.Contracts": "1.1.7441.17294",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Scar.Common.DAL.Contracts": "1.1.7442.19757",
+          "Scar.Common.View.Contracts": "1.1.7442.19852",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "Mémoire.Contracts.dll": {}
         }
       },
-      "Mémoire.Contracts.DAL/1.1.7441.19096": {
+      "Mémoire.Contracts.DAL/1.1.7450.33340": {
         "dependencies": {
           "Scar.Common": "1.1.7441.17281",
-          "Scar.Common.DAL.Contracts": "1.1.7441.17391",
-          "Scar.Services.Contracts": "1.1.7441.18384"
+          "Scar.Common.DAL.Contracts": "1.1.7442.19757",
+          "Scar.Services.Contracts": "1.1.7446.18047"
         },
         "runtime": {
           "Mémoire.Contracts.DAL.dll": {}
         }
       },
-      "Mémoire.Core/1.1.7441.19096": {
+      "Mémoire.Core/1.1.7450.33340": {
         "dependencies": {
           "Easy.MessageHub": "5.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.4",
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Mémoire.Resources": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Mémoire.Resources": "1.1.7450.33340",
           "NAudio": "1.10.0",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7441.17293",
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7442.19851",
           "Scar.Common.AutofacInstantiation": "1.1.7441.17393",
-          "Scar.Common.Localization": "1.1.7441.17295",
+          "Scar.Common.Localization": "1.1.7442.19852",
           "Scar.Common.RateLimiting": "1.1.7441.17392",
           "Scar.Common.Sync.Contracts": "1.1.7441.17392",
-          "Scar.Common.View.WindowCreation": "1.1.7441.17422",
+          "Scar.Common.View.WindowCreation": "1.1.7442.19878",
           "System.Linq.Async": "4.1.1",
           "System.Management": "4.7.0",
           "System.Reactive.Linq": "4.4.1"
@@ -2283,23 +2285,23 @@
           "Mémoire.Core.dll": {}
         }
       },
-      "Mémoire.DAL/1.1.7441.19096": {
+      "Mémoire.DAL/1.1.7450.33339": {
         "dependencies": {
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Mémoire.Resources": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Mémoire.Resources": "1.1.7450.33340",
           "Newtonsoft.Json": "12.0.3",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7441.17293",
-          "Scar.Common.DAL.LiteDB": "1.1.7441.17421"
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7442.19851",
+          "Scar.Common.DAL.LiteDB": "1.1.7442.19773"
         },
         "runtime": {
           "Mémoire.DAL.dll": {}
         }
       },
-      "Mémoire.Resources/1.1.7441.19096": {
+      "Mémoire.Resources/1.1.7450.33340": {
         "dependencies": {
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Scar.Common.IO": "1.1.7441.17293",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Scar.Common.IO": "1.1.7442.19851",
           "System.Configuration.ConfigurationManager": "4.7.0",
           "System.Runtime.CompilerServices.Unsafe": "4.7.1"
         },
@@ -2312,19 +2314,19 @@
           }
         }
       },
-      "Mémoire.View/1.1.7441.19096": {
+      "Mémoire.View/1.1.7450.33340": {
         "dependencies": {
           "Hardcodet.NotifyIcon.Wpf.NetCore": "1.0.10",
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Mémoire.ViewModel": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Mémoire.ViewModel": "1.1.7450.33340",
           "Scar.Common.WPF.Controls.AutoCompleteTextBox": "1.1.7441.17422",
           "Scar.Common.WPF.Controls.ExternalBrowserHyperlink": "1.1.7441.17392",
           "Scar.Common.WPF.Controls.NumericUpDown": "1.1.7441.17422",
           "Scar.Common.WPF.Controls.Styles": "1.1.7441.17391",
           "Scar.Common.WPF.Converters": "1.1.7441.17422",
-          "Scar.Common.WPF.Localization": "1.1.7441.17422",
-          "Scar.Common.WPF.View.Core": "1.1.7441.17463"
+          "Scar.Common.WPF.Localization": "1.1.7442.19875",
+          "Scar.Common.WPF.View.Core": "1.1.7442.19905"
         },
         "runtime": {
           "Mémoire.View.dll": {}
@@ -2335,50 +2337,50 @@
           }
         }
       },
-      "Mémoire.ViewModel/1.1.7441.19096": {
+      "Mémoire.ViewModel/1.1.7450.33340": {
         "dependencies": {
           "Easy.MessageHub": "5.0.0",
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
-          "Mémoire.Resources": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
+          "Mémoire.Resources": "1.1.7450.33340",
           "PropertyChanged.Fody": "3.2.8",
-          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7441.17293",
+          "Scar.Common.ApplicationLifetime.Contracts": "1.1.7442.19851",
           "Scar.Common.Async": "1.1.7441.17392",
-          "Scar.Common.Localization": "1.1.7441.17295",
-          "Scar.Common.MVVM.CollectionView": "1.1.7441.17294",
-          "Scar.Common.MVVM.ViewModel": "1.1.7441.17422",
+          "Scar.Common.Localization": "1.1.7442.19852",
+          "Scar.Common.MVVM.CollectionView": "1.1.7442.19851",
+          "Scar.Common.MVVM.ViewModel": "1.1.7442.19875",
           "Scar.Common.RateLimiting": "1.1.7441.17392",
-          "Scar.Common.View.WindowCreation": "1.1.7441.17422"
+          "Scar.Common.View.WindowCreation": "1.1.7442.19878"
         },
         "runtime": {
           "Mémoire.ViewModel.dll": {}
         }
       },
-      "Mémoire.WebApi/1.1.7441.19096": {
+      "Mémoire.WebApi/1.1.7450.33340": {
         "dependencies": {
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Contracts.DAL": "1.1.7441.19096",
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Contracts.DAL": "1.1.7450.33340",
           "Scar.Common.WebApi": "1.1.7441.17392"
         },
         "runtime": {
           "Mémoire.WebApi.dll": {}
         }
       },
-      "Mémoire.WindowCreators/1.1.7441.19096": {
+      "Mémoire.WindowCreators/1.1.7450.33340": {
         "dependencies": {
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.ViewModel": "1.1.7441.19096",
-          "Scar.Common.View.WindowCreation": "1.1.7441.17422"
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.ViewModel": "1.1.7450.33340",
+          "Scar.Common.View.WindowCreation": "1.1.7442.19878"
         },
         "runtime": {
           "Mémoire.WindowCreators.dll": {}
         }
       },
-      "Mémoire.Windows.Common/1.1.7441.19096": {
+      "Mémoire.Windows.Common/1.1.7450.33340": {
         "dependencies": {
-          "Mémoire.Contracts": "1.1.7441.19096",
-          "Mémoire.Resources": "1.1.7441.19096",
-          "Scar.Common.WPF.View.Contracts": "1.1.7441.17422"
+          "Mémoire.Contracts": "1.1.7450.33340",
+          "Mémoire.Resources": "1.1.7450.33340",
+          "Scar.Common.WPF.View.Contracts": "1.1.7442.19875"
         },
         "runtime": {
           "Mémoire.Windows.Common.dll": {}
@@ -2395,7 +2397,7 @@
     }
   },
   "libraries": {
-    "Mémoire/1.1.7441.19159": {
+    "Mémoire/1.1.7450.33365": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -3044,19 +3046,19 @@
       "path": "scar.common/1.1.7441.17281",
       "hashPath": "scar.common.1.1.7441.17281.nupkg.sha512"
     },
-    "Scar.Common.ApplicationLifetime.Contracts/1.1.7441.17293": {
+    "Scar.Common.ApplicationLifetime.Contracts/1.1.7442.19851": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-mXzlAqwMpkVSVm7SqdrlvZRVT3354z522/I7wkghHEPKeJeEIJ0FtdWGG5hUC3aXjolsWvqBnzwkYzTsQcDknw==",
-      "path": "scar.common.applicationlifetime.contracts/1.1.7441.17293",
-      "hashPath": "scar.common.applicationlifetime.contracts.1.1.7441.17293.nupkg.sha512"
+      "sha512": "sha512-+EF6R0DXBGFZibYAbKgPpsEnPYjYf7886qrmxkyD+7RaSI6EevkLHuCxaGeSJkZG3HnI1Bejt5JWzuWDmTlCsw==",
+      "path": "scar.common.applicationlifetime.contracts/1.1.7442.19851",
+      "hashPath": "scar.common.applicationlifetime.contracts.1.1.7442.19851.nupkg.sha512"
     },
-    "Scar.Common.ApplicationLifetime.Core/1.1.7441.17422": {
+    "Scar.Common.ApplicationLifetime.Core/1.1.7442.19878": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-I9ppFRhGLPaN+pEB1EUkP/6RB2K/6OXKhA+2MwWUVgHJ9uHMZ13vi8Bwi1WEyGWN7VMJ4GCeSS+toVutiqnOjw==",
-      "path": "scar.common.applicationlifetime.core/1.1.7441.17422",
-      "hashPath": "scar.common.applicationlifetime.core.1.1.7441.17422.nupkg.sha512"
+      "sha512": "sha512-JIQHzeHb6T4cZc7sAqLPxHxTTmPxIUkc1Jhci81l7MKIDwfbjSM7EkYZa9YZAu05j5XzUwIO3lon38Hfk1m7fg==",
+      "path": "scar.common.applicationlifetime.core/1.1.7442.19878",
+      "hashPath": "scar.common.applicationlifetime.core.1.1.7442.19878.nupkg.sha512"
     },
     "Scar.Common.Async/1.1.7441.17392": {
       "type": "package",
@@ -3065,12 +3067,12 @@
       "path": "scar.common.async/1.1.7441.17392",
       "hashPath": "scar.common.async.1.1.7441.17392.nupkg.sha512"
     },
-    "Scar.Common.AutofacHttpClientProvision/1.1.7441.17294": {
+    "Scar.Common.AutofacHttpClientProvision/1.1.7442.19852": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-eh06PFWN4f0XyDXuJeQnV/V/s4gK64RWwYZYEPDjmgfa8PXQOQxFNp0T38mGHLQ++GLeUNiXht+3cWXVI3VUfg==",
-      "path": "scar.common.autofachttpclientprovision/1.1.7441.17294",
-      "hashPath": "scar.common.autofachttpclientprovision.1.1.7441.17294.nupkg.sha512"
+      "sha512": "sha512-rLeIW/m5cQre4fwdOQDT52Cr6InjUZd91jCQa92HXOQxOZIQWvRjjGZ8q+rtLMedSA93z6BnUbukV72GC/W4AQ==",
+      "path": "scar.common.autofachttpclientprovision/1.1.7442.19852",
+      "hashPath": "scar.common.autofachttpclientprovision.1.1.7442.19852.nupkg.sha512"
     },
     "Scar.Common.AutofacInstantiation/1.1.7441.17393": {
       "type": "package",
@@ -3079,54 +3081,54 @@
       "path": "scar.common.autofacinstantiation/1.1.7441.17393",
       "hashPath": "scar.common.autofacinstantiation.1.1.7441.17393.nupkg.sha512"
     },
-    "Scar.Common.DAL.Contracts/1.1.7441.17391": {
+    "Scar.Common.DAL.Contracts/1.1.7442.19757": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-n1NOx3quCob4/IoZ0cLA75ODtRSwMg0CpOAAr+2yY42tlvddI1tG/es7YSd0aG+CZtEvTdFven1b0bFYz4rx5w==",
-      "path": "scar.common.dal.contracts/1.1.7441.17391",
-      "hashPath": "scar.common.dal.contracts.1.1.7441.17391.nupkg.sha512"
+      "sha512": "sha512-FvU+L15Zk3+JczsaX7OJcGrUiQSsZ0SoMIOu9yziE5DAXUCwRxjo4CT7Gr5Ty4+C7hHc5yGx9pvzTGJfogD4Gw==",
+      "path": "scar.common.dal.contracts/1.1.7442.19757",
+      "hashPath": "scar.common.dal.contracts.1.1.7442.19757.nupkg.sha512"
     },
-    "Scar.Common.DAL.LiteDB/1.1.7441.17421": {
+    "Scar.Common.DAL.LiteDB/1.1.7442.19773": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rcInx8c1eSrWs33/eGYbkINfUJnodNzITUVFvUTIqONgGrNYPMod6FawnJuy9DRqA9PP0Dll/SGSRVSoT+qHbg==",
-      "path": "scar.common.dal.litedb/1.1.7441.17421",
-      "hashPath": "scar.common.dal.litedb.1.1.7441.17421.nupkg.sha512"
+      "sha512": "sha512-1b3zN8R7usA0eCwmCrCbrqdeK6U/9R0ZGF7f1oIIcUHProdr5yipgCsbW8zqeKMVzs+Kbo2D9oU0pP2sTAg7bw==",
+      "path": "scar.common.dal.litedb/1.1.7442.19773",
+      "hashPath": "scar.common.dal.litedb.1.1.7442.19773.nupkg.sha512"
     },
-    "Scar.Common.IO/1.1.7441.17293": {
+    "Scar.Common.IO/1.1.7442.19851": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-KGdV3nMfEGyQqbkQ+jHlAXIcVJAKr8oqQo1IcVjWBdFJaW1xNq1VxL1Ggx7dQP2xHzMJnGhBZDWuKlN9VkVNqw==",
-      "path": "scar.common.io/1.1.7441.17293",
-      "hashPath": "scar.common.io.1.1.7441.17293.nupkg.sha512"
+      "sha512": "sha512-h6sLR2lv4QE2LHX6eWtgCIZYuhz31i1QYx958ByJfxb66gGNjkebyttIR/6F8Q9SN9TOU6LuWypM2HtuN24eqw==",
+      "path": "scar.common.io/1.1.7442.19851",
+      "hashPath": "scar.common.io.1.1.7442.19851.nupkg.sha512"
     },
-    "Scar.Common.Localization/1.1.7441.17295": {
+    "Scar.Common.Localization/1.1.7442.19852": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YXKEjOL6KOLh00PjzR+nbRrbHa0nvPDzsiJjxllbIl21t/ybHOAf4Ur2HaAH9Xtqmv58q/UHU2Llh20rWo37Ew==",
-      "path": "scar.common.localization/1.1.7441.17295",
-      "hashPath": "scar.common.localization.1.1.7441.17295.nupkg.sha512"
+      "sha512": "sha512-YHgzUdkS2VpELR/sOI5Y/n/dUjdh3gtELKqFeUM/toDtfxcF8Y2+jhP1v1fiF8bZAaLtldMM0MDOZJ564bAF/Q==",
+      "path": "scar.common.localization/1.1.7442.19852",
+      "hashPath": "scar.common.localization.1.1.7442.19852.nupkg.sha512"
     },
-    "Scar.Common.MVVM.CollectionView/1.1.7441.17294": {
+    "Scar.Common.MVVM.CollectionView/1.1.7442.19851": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6NdCxODsn/68jbi1fZtF96uIda+F1mEM5vTvSwrv0vuxXFmMWMwiBM8HrG4R7gSloQy7+v7qNal0c7TBJ6ezzg==",
-      "path": "scar.common.mvvm.collectionview/1.1.7441.17294",
-      "hashPath": "scar.common.mvvm.collectionview.1.1.7441.17294.nupkg.sha512"
+      "sha512": "sha512-hvTkRII0uC8Givbq0ys2f1OAK1wZHK6WycEO2X39xaHM1G/EyGUKj+GLp9Ke2PKhMz8n01wCau/1JZJC+e2hRw==",
+      "path": "scar.common.mvvm.collectionview/1.1.7442.19851",
+      "hashPath": "scar.common.mvvm.collectionview.1.1.7442.19851.nupkg.sha512"
     },
-    "Scar.Common.MVVM.Commands/1.1.7441.17294": {
+    "Scar.Common.MVVM.Commands/1.1.7442.19853": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5ppex8TXtZj+92hlPfa0Twhh1U8EpuA6kv5ea+vPlDn7Gro6GWhvUgwqKwwM3likziDN2J9BUfvbebeVhbSPRQ==",
-      "path": "scar.common.mvvm.commands/1.1.7441.17294",
-      "hashPath": "scar.common.mvvm.commands.1.1.7441.17294.nupkg.sha512"
+      "sha512": "sha512-vadkFU5OzAVDu0OPH+2YFECBqPvC+OfON+4bvfG3Al0SV6fWEyBH+xae4K9ebcqm5M/P2dMo1rk7SNjVAM2H2A==",
+      "path": "scar.common.mvvm.commands/1.1.7442.19853",
+      "hashPath": "scar.common.mvvm.commands.1.1.7442.19853.nupkg.sha512"
     },
-    "Scar.Common.MVVM.ViewModel/1.1.7441.17422": {
+    "Scar.Common.MVVM.ViewModel/1.1.7442.19875": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RCaUkV3orVNDMVRZG/PZu0IEVlqJH6/HXrKAtFqF2BxA1MCDag6kn+NjNPlalmHHAseufpmzCPeJXFcHddat6A==",
-      "path": "scar.common.mvvm.viewmodel/1.1.7441.17422",
-      "hashPath": "scar.common.mvvm.viewmodel.1.1.7441.17422.nupkg.sha512"
+      "sha512": "sha512-hOVYcg8tGrKVXKKKcs9cx0bYJljmT7tYRfngcf3iPU5ZHuF1O60ppuXVhJmYUsPNH9systfposB5D6rXGtAiJQ==",
+      "path": "scar.common.mvvm.viewmodel/1.1.7442.19875",
+      "hashPath": "scar.common.mvvm.viewmodel.1.1.7442.19875.nupkg.sha512"
     },
     "Scar.Common.RateLimiting/1.1.7441.17392": {
       "type": "package",
@@ -3149,26 +3151,26 @@
       "path": "scar.common.sync.windows/1.1.7441.17423",
       "hashPath": "scar.common.sync.windows.1.1.7441.17423.nupkg.sha512"
     },
-    "Scar.Common.View.AutofacWindowProvision/1.1.7441.17463": {
+    "Scar.Common.View.AutofacWindowProvision/1.1.7442.19892": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6xJuFTgNdskbD8NTDVlBiqfcjFVD7ojO3sn4d7/MtAxy8qjoDH2N6ZaB7bkxLYed0bLd8FW+3s2yHMY4RFYBhg==",
-      "path": "scar.common.view.autofacwindowprovision/1.1.7441.17463",
-      "hashPath": "scar.common.view.autofacwindowprovision.1.1.7441.17463.nupkg.sha512"
+      "sha512": "sha512-IotSiFkhAvp37DVvktBEGABwxKRZZAejsb5DNNnOD8sC0d24EO92wfBLlwg8nv8SZR2EdIJFYAGi+ypW2nDogw==",
+      "path": "scar.common.view.autofacwindowprovision/1.1.7442.19892",
+      "hashPath": "scar.common.view.autofacwindowprovision.1.1.7442.19892.nupkg.sha512"
     },
-    "Scar.Common.View.Contracts/1.1.7441.17294": {
+    "Scar.Common.View.Contracts/1.1.7442.19852": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kaL4U8qUA/cS4CNy19G9HUDLWxhtHbHzvVi+l/ydydoM4LbNpxM6+97zqvB0HoCi/hsN3MM2inPq/H+fpxfStA==",
-      "path": "scar.common.view.contracts/1.1.7441.17294",
-      "hashPath": "scar.common.view.contracts.1.1.7441.17294.nupkg.sha512"
+      "sha512": "sha512-TLqqc8zdlf+Y1cxJOUm8JeuNP20hFUUnVB09+89c3nWFCBbcouoeqLTe4IbV5L7S3ogdWodIcwl5LqZ0uEaAwg==",
+      "path": "scar.common.view.contracts/1.1.7442.19852",
+      "hashPath": "scar.common.view.contracts.1.1.7442.19852.nupkg.sha512"
     },
-    "Scar.Common.View.WindowCreation/1.1.7441.17422": {
+    "Scar.Common.View.WindowCreation/1.1.7442.19878": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yy4CPGIjpkqOi+RNebYjLSW197w1vr3oVXpI0exIZqXx9PjLexxWZGdW+PMGDC3w+dHouVwyDwqPS/0jQg0n+Q==",
-      "path": "scar.common.view.windowcreation/1.1.7441.17422",
-      "hashPath": "scar.common.view.windowcreation.1.1.7441.17422.nupkg.sha512"
+      "sha512": "sha512-R2fn/AWCzh6mPDB1+/U7Er6dSsPo2cgGi0hPc3Jrmil0ym3aY5Z7N2Gny+WoASj0R7fAGXyBsC64TQjz/2gdSg==",
+      "path": "scar.common.view.windowcreation/1.1.7442.19878",
+      "hashPath": "scar.common.view.windowcreation.1.1.7442.19878.nupkg.sha512"
     },
     "Scar.Common.WebApi/1.1.7441.17392": {
       "type": "package",
@@ -3184,12 +3186,12 @@
       "path": "scar.common.wpf.behaviors/1.1.7441.17391",
       "hashPath": "scar.common.wpf.behaviors.1.1.7441.17391.nupkg.sha512"
     },
-    "Scar.Common.WPF.CollectionView/1.1.7441.17423": {
+    "Scar.Common.WPF.CollectionView/1.1.7442.19878": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-iOorTk25RUxjUDwOH/cxGLBS42OkK7ChF0YyKzLl3/Rq4Hc70RhMHUw531Gb8aQNEq7Dmvi2A3njDkTfIQNUhg==",
-      "path": "scar.common.wpf.collectionview/1.1.7441.17423",
-      "hashPath": "scar.common.wpf.collectionview.1.1.7441.17423.nupkg.sha512"
+      "sha512": "sha512-FQoHHYRXxP5DR2KpDm0JwSINzLZ595eV9p1usdLYYW/y4/K+1xVwYkKXqxzvar+HwJNEK8YZMnGeQRTmQBX5XA==",
+      "path": "scar.common.wpf.collectionview/1.1.7442.19878",
+      "hashPath": "scar.common.wpf.collectionview.1.1.7442.19878.nupkg.sha512"
     },
     "Scar.Common.WPF.Controls.AutoCompleteTextBox/1.1.7441.17422": {
       "type": "package",
@@ -3226,12 +3228,12 @@
       "path": "scar.common.wpf.converters/1.1.7441.17422",
       "hashPath": "scar.common.wpf.converters.1.1.7441.17422.nupkg.sha512"
     },
-    "Scar.Common.WPF.Localization/1.1.7441.17422": {
+    "Scar.Common.WPF.Localization/1.1.7442.19875": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-biuIHtNwVTXoiMhH7+USf7dM3iEumw3mBLAxr+a1AV6RQhv9Kt/YXNO9kHeD0rSeZ0emvtoy8kwImShLMbv+4A==",
-      "path": "scar.common.wpf.localization/1.1.7441.17422",
-      "hashPath": "scar.common.wpf.localization.1.1.7441.17422.nupkg.sha512"
+      "sha512": "sha512-5LS6eOdORWMYksnv+fuCzam1TCvubbm01lCYRRlBgRugfSRIbH+WSPPlsn4aGVWtJXxer8nAsZTyOx/lrTee/g==",
+      "path": "scar.common.wpf.localization/1.1.7442.19875",
+      "hashPath": "scar.common.wpf.localization.1.1.7442.19875.nupkg.sha512"
     },
     "Scar.Common.WPF.Screen/1.1.7441.17391": {
       "type": "package",
@@ -3240,75 +3242,75 @@
       "path": "scar.common.wpf.screen/1.1.7441.17391",
       "hashPath": "scar.common.wpf.screen.1.1.7441.17391.nupkg.sha512"
     },
-    "Scar.Common.WPF.Startup/1.1.7441.17463": {
+    "Scar.Common.WPF.Startup/1.1.7442.19890": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RvFINWv4QUBdf7xJKE6fnVhTv5FrnDczxDLmLT16/GIjmtjAlzClRVk0OW2X39Fm4Oft6YnM5Vz0GkihgwN5qQ==",
-      "path": "scar.common.wpf.startup/1.1.7441.17463",
-      "hashPath": "scar.common.wpf.startup.1.1.7441.17463.nupkg.sha512"
+      "sha512": "sha512-nsuTFxnXb6ElRU2f0dD066+ikzjEwmyq1lqJv+5d4i++SfbLD72DACly2OQPJansIv7dxnUB6SUk/4EHRyF0tQ==",
+      "path": "scar.common.wpf.startup/1.1.7442.19890",
+      "hashPath": "scar.common.wpf.startup.1.1.7442.19890.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.Contracts/1.1.7441.17422": {
+    "Scar.Common.WPF.View.Contracts/1.1.7442.19875": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cmxiXPUtZ1+O+2gUYUidOiOAUWvxJ45GwxkxGhaYtcTpHxP+25L2EhfAFBiEOU2aeEY0JqscK/VdrIDLH6Ct7g==",
-      "path": "scar.common.wpf.view.contracts/1.1.7441.17422",
-      "hashPath": "scar.common.wpf.view.contracts.1.1.7441.17422.nupkg.sha512"
+      "sha512": "sha512-GIlJfXhkPzHIhtma3NoIx9adsDGIC0MoVRzDFv6F4eSoORAkvsN1zNVYvGVYjCTK2grCK58KOjeDVzXmtowKkA==",
+      "path": "scar.common.wpf.view.contracts/1.1.7442.19875",
+      "hashPath": "scar.common.wpf.view.contracts.1.1.7442.19875.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.Core/1.1.7441.17463": {
+    "Scar.Common.WPF.View.Core/1.1.7442.19905": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-eFSkYl9zFMkHTLFjgGJPjRTq0yPk2kwAyJNbLRwDi6fYGa9u2Bgg4opW18dWsuELI0gK3B6nYs4zU5YUy4fx1Q==",
-      "path": "scar.common.wpf.view.core/1.1.7441.17463",
-      "hashPath": "scar.common.wpf.view.core.1.1.7441.17463.nupkg.sha512"
+      "sha512": "sha512-Wbr1XpQQF27dvdvgqSivsRKkNhrJmhkLItqJzb9XKtxP0q3NmHM3r33Ut6I2fSKKWabQ+97IexO/HoEx9QCMqA==",
+      "path": "scar.common.wpf.view.core/1.1.7442.19905",
+      "hashPath": "scar.common.wpf.view.core.1.1.7442.19905.nupkg.sha512"
     },
-    "Scar.Common.WPF.View.WindowCreation/1.1.7441.17463": {
+    "Scar.Common.WPF.View.WindowCreation/1.1.7442.19892": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gm6XVv3JqcdgyRXsNWwLfAPOkQTW+pELVb8/8ra7EnZkuN8QXDu9HlJu4+qRWXoypzrEFi3oMYqmdcsAV9f3tQ==",
-      "path": "scar.common.wpf.view.windowcreation/1.1.7441.17463",
-      "hashPath": "scar.common.wpf.view.windowcreation.1.1.7441.17463.nupkg.sha512"
+      "sha512": "sha512-w2p6n9WqgSdfGZe+dAQRwH107ACV8WeCt9OvrDmuJNVAJdryTIeMFxQUkKHCcJwcedGdwfg5ktOucA3JGURdLw==",
+      "path": "scar.common.wpf.view.windowcreation/1.1.7442.19892",
+      "hashPath": "scar.common.wpf.view.windowcreation.1.1.7442.19892.nupkg.sha512"
     },
-    "Scar.Services.Common/1.1.7441.18384": {
+    "Scar.Services.Common/1.1.7446.18045": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-zaEa0HsvcA2JIAA5zH9xdAcOANaxzcHYMOUAQarR5JOQy5ld5eC+193IjH+Dx2FpDQ/mIJlknobUcu4B2SGwMA==",
-      "path": "scar.services.common/1.1.7441.18384",
-      "hashPath": "scar.services.common.1.1.7441.18384.nupkg.sha512"
+      "sha512": "sha512-t7hdOVrqhltasRdVgbPtIrpGDOWMsXNHi3Rn4ggCQgEGJm2T2bJrFVZKhI1lyrlBhQFzgGLi+VTmNwiTz+d3Pw==",
+      "path": "scar.services.common/1.1.7446.18045",
+      "hashPath": "scar.services.common.1.1.7446.18045.nupkg.sha512"
     },
-    "Scar.Services.Contracts/1.1.7441.18384": {
+    "Scar.Services.Contracts/1.1.7446.18047": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-U4ihaRL9b0dSi/Sq7t980RNQXZsuCbmbYPsNterwkX8G/uMc8uBsLoK2iqapv2CuHlS6r6GoWIot2f8x1Xj4rQ==",
-      "path": "scar.services.contracts/1.1.7441.18384",
-      "hashPath": "scar.services.contracts.1.1.7441.18384.nupkg.sha512"
+      "sha512": "sha512-GePstf2wMcDrGwrSiuQpd2kvUXewKVyov07ph4zLK19OHTTyj1/pwQJqFGok8gocz1NbIMd6t0oYbXCQgKVakg==",
+      "path": "scar.services.contracts/1.1.7446.18047",
+      "hashPath": "scar.services.contracts.1.1.7446.18047.nupkg.sha512"
     },
-    "Scar.Services.ImageDownload/1.1.7441.18395": {
+    "Scar.Services.ImageDownload/1.1.7447.539": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-TCMjl5uoy44fuy4zi/hFblklU4N9foIcmC4M4Yp9zXF+BUiMv05m/qfext+W6xOQKbI83kaenpsINL+U9oBA5A==",
-      "path": "scar.services.imagedownload/1.1.7441.18395",
-      "hashPath": "scar.services.imagedownload.1.1.7441.18395.nupkg.sha512"
+      "sha512": "sha512-eVf8Y+rnNg0hw9AnvIoPAUIbTevy2TD0iH4enIKJxt8YkpbC06zRkWlNAA6bQ4SF7f6sJ3XJI+CGRDQti8UVbw==",
+      "path": "scar.services.imagedownload/1.1.7447.539",
+      "hashPath": "scar.services.imagedownload.1.1.7447.539.nupkg.sha512"
     },
-    "Scar.Services.Qwant/1.1.7441.18394": {
+    "Scar.Services.Qwant/1.1.7447.539": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PZkinV9C8abO+gaHAEj85iqLMjS/WKx6uMy2QOfdVxdIktCGuWq8HoeSYtMMBfTyMiQtIllFP7RdJ7fLMeKilw==",
-      "path": "scar.services.qwant/1.1.7441.18394",
-      "hashPath": "scar.services.qwant.1.1.7441.18394.nupkg.sha512"
+      "sha512": "sha512-2KCEl0bx/cmbe6i99/BnK6Y0Y3jnHAbrSokeawwdqgGAziwOEm9M5L1MZPiM2nScvifhovaHHCTBtLvQ4eOfzA==",
+      "path": "scar.services.qwant/1.1.7447.539",
+      "hashPath": "scar.services.qwant.1.1.7447.539.nupkg.sha512"
     },
-    "Scar.Services.UClassify/1.1.7441.18395": {
+    "Scar.Services.UClassify/1.1.7446.18264": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hGWaNgrc2u0AHRcJl92u8DMIFFC8HJfhie+ic7lRidJJS5TvtQgyEm+eF+AiPiOQyGfUqBjvAirs2s2wowPSSQ==",
-      "path": "scar.services.uclassify/1.1.7441.18395",
-      "hashPath": "scar.services.uclassify.1.1.7441.18395.nupkg.sha512"
+      "sha512": "sha512-QWleHgCmYHxp/VbL8UpC75VxWYfu67CiPFE8GyQPSfv0X+SSBoMr9Lauv28SHjrSSNPQc0BPu+XG62K3swEO6Q==",
+      "path": "scar.services.uclassify/1.1.7446.18264",
+      "hashPath": "scar.services.uclassify.1.1.7446.18264.nupkg.sha512"
     },
-    "Scar.Services.Yandex/1.1.7441.18394": {
+    "Scar.Services.Yandex/1.1.7447.540": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/8TxDLp0LWdSd8R8VLI2WJqn5hrXMP5FL/Aewikso+P9AnseAQ+GVugCvYwCgUkvt5HBcqv/jBZP1t8KWOPJkA==",
-      "path": "scar.services.yandex/1.1.7441.18394",
-      "hashPath": "scar.services.yandex.1.1.7441.18394.nupkg.sha512"
+      "sha512": "sha512-epQmrlbCX4Gxjdveilvps6qV08VaoVNDZrgb6LKa4txzB8fumsdEGD3j1QrbVT5jB5Nv5VfB4qXZBCc6kg0uDA==",
+      "path": "scar.services.yandex/1.1.7447.540",
+      "hashPath": "scar.services.yandex.1.1.7447.540.nupkg.sha512"
     },
     "StyleCop.Analyzers/1.1.118": {
       "type": "package",
@@ -4031,52 +4033,52 @@
       "path": "xamlmarkupextensions/1.9.0",
       "hashPath": "xamlmarkupextensions.1.9.0.nupkg.sha512"
     },
-    "Mémoire.Contracts/1.1.7441.19096": {
+    "Mémoire.Contracts/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.Contracts.DAL/1.1.7441.19096": {
+    "Mémoire.Contracts.DAL/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.Core/1.1.7441.19096": {
+    "Mémoire.Core/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.DAL/1.1.7441.19096": {
+    "Mémoire.DAL/1.1.7450.33339": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.Resources/1.1.7441.19096": {
+    "Mémoire.Resources/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.View/1.1.7441.19096": {
+    "Mémoire.View/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.ViewModel/1.1.7441.19096": {
+    "Mémoire.ViewModel/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.WebApi/1.1.7441.19096": {
+    "Mémoire.WebApi/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.WindowCreators/1.1.7441.19096": {
+    "Mémoire.WindowCreators/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Mémoire.Windows.Common/1.1.7441.19096": {
+    "Mémoire.Windows.Common/1.1.7450.33340": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

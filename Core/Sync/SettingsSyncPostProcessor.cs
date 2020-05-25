@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Easy.MessageHub;
-using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Sync;
 using Newtonsoft.Json;
+using Scar.Common.DAL.Contracts.Model;
 
 namespace Mémoire.Core.Sync
 {
