@@ -13,7 +13,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
         readonly Random _rand = new Random();
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
-        public LearningInfoRepository(IPathsProvider pathsProvider, ISharedSettingsRepository sharedSettingsRepository, string? directoryPath = null, bool shrink = true) : base(
+        public LearningInfoRepository(IPathsProvider pathsProvider, ISharedSettingsRepository sharedSettingsRepository, string? directoryPath = null, bool shrink = false) : base(
             directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             null,
             shrink)

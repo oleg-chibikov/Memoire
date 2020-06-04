@@ -19,7 +19,8 @@ namespace Mémoire.DAL.Local
 
         public LocalSettingsRepository(IPathsProvider pathsProvider, IAssemblyInfoProvider assemblyInfoProvider) : base(
             assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),
-            nameof(ApplicationSettings))
+            nameof(ApplicationSettings),
+            shrink: false)
         {
             _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
         }

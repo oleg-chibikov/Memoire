@@ -8,7 +8,9 @@ namespace Mémoire.DAL.Local
 {
     sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, TranslationEntryKey>, IPrepositionsInfoRepository
     {
-        public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
+        public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(
+            assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),
+            shrink: false)
         {
             Collection.EnsureIndex(x => x.Id.Text);
             Collection.EnsureIndex(x => x.Id.SourceLanguage);

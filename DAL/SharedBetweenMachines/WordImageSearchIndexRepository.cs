@@ -8,7 +8,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
 {
     sealed class WordImageSearchIndexRepository : TrackedLiteDbRepository<WordImageSearchIndex, WordKey>, IWordImageSearchIndexRepository
     {
-        public WordImageSearchIndexRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = true) : base(
+        public WordImageSearchIndexRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = false) : base(
             directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             null,
             shrink)

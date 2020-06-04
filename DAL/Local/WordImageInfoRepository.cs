@@ -8,7 +8,9 @@ namespace Mémoire.DAL.Local
 {
     sealed class WordImageInfoRepository : LiteDbRepository<WordImageInfo, WordKey>, IWordImageInfoRepository
     {
-        public WordImageInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)))
+        public WordImageInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(
+            assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),
+            shrink: false)
         {
             Collection.EnsureIndex(x => x.Id.Word.Text);
             Collection.EnsureIndex(x => x.Id.Word.PartOfSpeech);
@@ -20,9 +22,7 @@ namespace Mémoire.DAL.Local
         public void ClearForTranslationEntry(TranslationEntryKey translationEntryKey)
         {
             Collection.DeleteMany(
-                x => (x.Id.Key.Text == translationEntryKey.Text) &&
-                     (x.Id.Key.SourceLanguage == translationEntryKey.SourceLanguage) &&
-                     (x.Id.Key.TargetLanguage == translationEntryKey.TargetLanguage));
+                x => (x.Id.Key.Text == translationEntryKey.Text) && (x.Id.Key.SourceLanguage == translationEntryKey.SourceLanguage) && (x.Id.Key.TargetLanguage == translationEntryKey.TargetLanguage));
         }
     }
 }

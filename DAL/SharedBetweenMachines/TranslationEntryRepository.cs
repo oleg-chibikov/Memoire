@@ -8,7 +8,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
 {
     sealed class TranslationEntryRepository : TrackedLiteDbRepository<TranslationEntry, TranslationEntryKey>, ITranslationEntryRepository
     {
-        public TranslationEntryRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = true) : base(
+        public TranslationEntryRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = false) : base(
             directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),
             null,
             shrink)
