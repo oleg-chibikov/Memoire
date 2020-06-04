@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7442.19875" />
+    <PackageReference Include="Scar.Common.WPF.View.Contracts" Version="1.1.7459.30945" />
   </ItemGroup>
 
   <ItemGroup>
