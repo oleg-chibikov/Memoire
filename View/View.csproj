@@ -25,14 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.10" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.11" />
     <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7459.30894" />
     <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7459.30893" />
     <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7459.30945" />
     <PackageReference Include="Scar.Common.WPF.Controls.Styles" Version="1.1.7459.30893" />
     <PackageReference Include="Scar.Common.WPF.Converters" Version="1.1.7459.30945" />
     <PackageReference Include="Scar.Common.WPF.Localization" Version="1.1.7459.30945" />
-    <PackageReference Include="Scar.Common.WPF.View.Core" Version="1.1.7459.31020" />
+    <PackageReference Include="Scar.Common.WPF.View.Core" Version="1.1.7465.39816" />
   </ItemGroup>
 
   <ItemGroup>

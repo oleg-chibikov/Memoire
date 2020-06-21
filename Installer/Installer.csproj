@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.Installer" Version="1.1.7459.30893" />
+    <PackageReference Include="Scar.Common.Installer" Version="1.1.7477.22579" />
     <PackageReference Include="WixSharp.wix.bin" Version="3.11.2" />
   </ItemGroup>
 

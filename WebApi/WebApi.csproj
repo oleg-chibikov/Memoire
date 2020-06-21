@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7441.17392" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7477.22583" />
   </ItemGroup>
 
   <ItemGroup>
