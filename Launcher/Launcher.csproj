@@ -25,14 +25,14 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
     <PackageReference Include="NLog.Config" Version="4.7.2" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
-    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7467.16785" />
-    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7441.17393" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7459.30945" />
-    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7459.30974" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7477.22583" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7459.30949" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7477.22581" />
-    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7459.30975" />
+    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7481.37125" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7481.37132" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7481.37224" />
+    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7481.37233" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7481.37123" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7481.37238" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7481.37220" />
+    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7481.37239" />
     <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7477.21915" />
     <PackageReference Include="Scar.Services.Qwant" Version="1.1.7477.21916" />
     <PackageReference Include="Scar.Services.UClassify" Version="1.1.7460.22245" />
