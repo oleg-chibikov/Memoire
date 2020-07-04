@@ -41,7 +41,7 @@ namespace Mémoire.ViewModel
             NestedViewModels = translationInfos.Select(
                     x =>
                     {
-                        if (ShouldUserInputTextForTranslation(x.LearningInfo.RepeatType))
+                        if (!ShouldUserInputTextForTranslation(x.LearningInfo.RepeatType))
                         {
                             return (BaseAssessmentCardViewModel)assessmentViewOnlyCardViewModelFactory(x, this);
                         }
