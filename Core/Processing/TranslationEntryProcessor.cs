@@ -94,68 +94,13 @@ namespace Mémoire.Core.Processing
 
         public async Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
-            CancellationToken cancellationToken,
             IDisplayable? ownerWindow,
             bool needPostProcess,
-            IReadOnlyCollection<ManualTranslation>? manualTranslations)
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
+            CancellationToken cancellationToken)
         {
-            _cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
-            _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
-            _logger.LogTrace("Adding new word translation for {0}...", translationEntryAdditionInfo);
-
-            var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
-
-            try
-            {
-                if (!manualTranslations?.Any() == true)
-                {
-                    manualTranslations = null;
-                }
-
-                CapitalizeManualTranslations(manualTranslations);
-
-                // This method replaces translation with the actual one
-                var translationEntryKey = await GetTranslationKeyAsync(translationEntryAdditionInfo, cancellationToken).ConfigureAwait(false);
-                if (translationEntryKey == null)
-                {
-                    return null;
-                }
-
-                var (translationResult, extendedTranslationResult) = await GetTranslationsAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
-                if (translationResult == null)
-                {
-                    return null;
-                }
-
-                var translationEntry = new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
-                _translationEntryRepository.Upsert(translationEntry);
-
-                var translationDetails = new TranslationDetails(translationResult, extendedTranslationResult, translationEntryKey);
-                _translationDetailsRepository.Upsert(translationDetails);
-                var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryKey);
-
-                var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
-
-                // no await here
-                // ReSharper disable once AssignmentIsFullyDiscarded
-                _ = _learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
-                if (needPostProcess)
-                {
-                    // no await here
-                    // ReSharper disable once AssignmentIsFullyDiscarded
-                    _ = PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
-                }
-
-                _logger.LogInformation("Processing finished for word {0}", translationEntryKey);
-                return translationInfo;
-            }
-            finally
-            {
-                executeInLoadingWindowContext(loadingWindow =>
-                {
-                    loadingWindow.Close();
-                });
-            }
+            return await Task.Run(() => AddOrUpdateTranslationEntryInternalAsync(translationEntryAdditionInfo, ownerWindow, needPostProcess, manualTranslations, cancellationToken), cancellationToken)
+                .ConfigureAwait(false);
         }
 
         public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord)
@@ -267,6 +212,72 @@ namespace Mémoire.Core.Processing
                         .ToArray()
                 });
             return partOfSpeechTranslations.Concat(manualPartOfSpeechTranslations);
+        }
+
+        async Task<TranslationInfo?> AddOrUpdateTranslationEntryInternalAsync(
+            TranslationEntryAdditionInfo translationEntryAdditionInfo,
+            IDisplayable? ownerWindow,
+            bool needPostProcess,
+            IReadOnlyCollection<ManualTranslation>? manualTranslations,
+            CancellationToken cancellationToken)
+        {
+            _cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
+            _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
+            _logger.LogTrace("Adding new word translation for {0}...", translationEntryAdditionInfo);
+
+            var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
+
+            try
+            {
+                if (!manualTranslations?.Any() == true)
+                {
+                    manualTranslations = null;
+                }
+
+                CapitalizeManualTranslations(manualTranslations);
+
+                // This method replaces translation with the actual one
+                var translationEntryKey = await GetTranslationKeyAsync(translationEntryAdditionInfo, cancellationToken).ConfigureAwait(false);
+                if (translationEntryKey == null)
+                {
+                    return null;
+                }
+
+                var (translationResult, extendedTranslationResult) = await GetTranslationsAsync(translationEntryKey, manualTranslations, cancellationToken).ConfigureAwait(false);
+                if (translationResult == null)
+                {
+                    return null;
+                }
+
+                var translationEntry = new TranslationEntry(translationEntryKey) { Id = translationEntryKey, ManualTranslations = manualTranslations };
+                _translationEntryRepository.Upsert(translationEntry);
+
+                var translationDetails = new TranslationDetails(translationResult, extendedTranslationResult, translationEntryKey);
+                _translationDetailsRepository.Upsert(translationDetails);
+                var learningInfo = _learningInfoRepository.GetOrInsert(translationEntryKey);
+
+                var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
+
+                // no await here
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = _learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
+                if (needPostProcess)
+                {
+                    // no await here
+                    // ReSharper disable once AssignmentIsFullyDiscarded
+                    _ = PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
+                }
+
+                _logger.LogInformation("Processing finished for word {0}", translationEntryKey);
+                return translationInfo;
+            }
+            finally
+            {
+                executeInLoadingWindowContext(loadingWindow =>
+                {
+                    loadingWindow.Close();
+                });
+            }
         }
 
         async Task<ExtendedTranslationResult?> GetExtendedTranslationAsync(TranslationEntryKey translationEntryKey, CancellationToken cancellationToken)

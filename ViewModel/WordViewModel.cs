@@ -101,7 +101,7 @@ namespace Mémoire.ViewModel
 
         async Task LearnWordAsync()
         {
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Word.Text, Language), CancellationToken.None).ConfigureAwait(false);
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(Word.Text, Language)).ConfigureAwait(false);
         }
 
         async Task PlayTtsAsync()

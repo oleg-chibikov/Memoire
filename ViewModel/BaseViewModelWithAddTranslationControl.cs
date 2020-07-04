@@ -156,7 +156,7 @@ namespace Mémoire.ViewModel
             ManualTranslation = null;
 
             var window = await GetWindowAsync().ConfigureAwait(false);
-            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, CancellationTokenSource.Token, window, manualTranslations: manualTranslation)
+            await TranslationEntryProcessor.AddOrUpdateTranslationEntryAsync(translationEntryAdditionInfo, window, manualTranslations: manualTranslation, cancellationToken: CancellationTokenSource.Token)
                 .ConfigureAwait(false);
         }
     }

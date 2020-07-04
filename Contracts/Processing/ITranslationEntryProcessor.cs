@@ -11,18 +11,18 @@ namespace Mémoire.Contracts.Processing
     {
         Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
-            CancellationToken cancellationToken,
             IDisplayable? ownerWindow = null,
             bool needPostProcess = true,
-            IReadOnlyCollection<ManualTranslation>? manualTranslations = null);
+            IReadOnlyCollection<ManualTranslation>? manualTranslations = null,
+            CancellationToken cancellationToken = default);
 
         void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord = true);
 
         Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
             TranslationEntryKey translationEntryKey,
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default);
 
-        Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken);
+        Task<TranslationInfo> UpdateManualTranslationsAsync(TranslationEntryKey translationEntryKey, IReadOnlyCollection<ManualTranslation>? manualTranslations, CancellationToken cancellationToken = default);
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Mémoire.Contracts.Processing;
 using Mémoire.Contracts.Processing.Data;
@@ -23,7 +22,7 @@ namespace Mémoire.WebApi.Controllers
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
 
-            await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
+            await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word)).ConfigureAwait(false);
         }
 
         [HttpPut("{word}")]
@@ -31,7 +30,7 @@ namespace Mémoire.WebApi.Controllers
         {
             _ = word ?? throw new ArgumentNullException(nameof(word));
 
-            await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word), CancellationToken.None).ConfigureAwait(false);
+            await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(new TranslationEntryAdditionInfo(word)).ConfigureAwait(false);
         }
     }
 }

@@ -148,10 +148,10 @@ namespace Mémoire.Core.Exchange
         {
             return await _translationEntryProcessor.AddOrUpdateTranslationEntryAsync(
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
-                    cancellationToken,
                     null,
                     false,
-                    manualTranslations)
+                    manualTranslations,
+                    cancellationToken)
                 .ConfigureAwait(false);
         }
 
