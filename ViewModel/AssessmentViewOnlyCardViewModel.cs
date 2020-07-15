@@ -2,6 +2,7 @@ using System;
 using Easy.MessageHub;
 using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
@@ -18,6 +19,7 @@ namespace Mémoire.ViewModel
         bool _isExpanded;
 
         public AssessmentViewOnlyCardViewModel(
+            ILearningInfoRepository learningInfoRepository,
             TranslationInfo translationInfo,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel,
             IMessageHub messageHub,
@@ -41,6 +43,7 @@ namespace Mémoire.ViewModel
             commandManager,
             assessmentBatchCardViewModel)
         {
+            _ = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationDetailsCardViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
@@ -51,6 +54,7 @@ namespace Mémoire.ViewModel
             // Learning info will be saved and published by the caller
             var learningInfo = TranslationInfo.LearningInfo;
             learningInfo.IncreaseRepeatType();
+            learningInfoRepository.Update(learningInfo);
             logger.LogInformation("Increased repeat type for {0}", learningInfo);
         }
 
