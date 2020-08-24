@@ -23,20 +23,20 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-    <PackageReference Include="NLog.Config" Version="4.7.2" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
+    <PackageReference Include="NLog.Config" Version="4.7.4" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.3" />
     <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7481.37125" />
     <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7481.37132" />
     <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7481.37224" />
     <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7481.37233" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7481.37123" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7507.20503" />
     <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7481.37238" />
     <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7481.37220" />
     <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7481.37239" />
-    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7477.21915" />
-    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7477.21916" />
-    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7460.22245" />
-    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7477.21915" />
+    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7501.21795" />
+    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7501.21789" />
+    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7501.21790" />
+    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7501.21789" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Mémoire.View.Converters
 {
-    [ValueConversion(typeof(DateTime), typeof(Brush))]
+    [ValueConversion(typeof(DateTimeOffset), typeof(Brush))]
     sealed class DateTimeToBrushConverter : IValueConverter
     {
         readonly Brush _notReadyBrush;
@@ -20,7 +20,7 @@ namespace Mémoire.View.Converters
 
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            return (value == null) || ((DateTime)value > DateTime.Now) ? _notReadyBrush : _readyBrush;
+            return (value == null) || ((DateTimeOffset)value > DateTimeOffset.Now) ? _notReadyBrush : _readyBrush;
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

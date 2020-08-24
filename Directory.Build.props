@@ -1,14 +1,14 @@
 ﻿<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

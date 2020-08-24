@@ -4,19 +4,19 @@ namespace Mémoire.Contracts.DAL.Model
 {
     public sealed class PauseInfo
     {
-        public PauseInfo(DateTime startTime, DateTime? endTime = null)
+        public PauseInfo(DateTimeOffset startTime, DateTimeOffset? endTime = null)
         {
             StartTime = startTime;
             EndTime = endTime;
         }
 
-        public DateTime? EndTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTimeOffset StartTime { get; set; }
 
         public TimeSpan GetPauseTime()
         {
-            return (EndTime ?? DateTime.Now) - StartTime;
+            return (EndTime ?? DateTimeOffset.Now) - StartTime;
         }
     }
 }

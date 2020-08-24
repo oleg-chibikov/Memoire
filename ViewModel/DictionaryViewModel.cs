@@ -437,8 +437,8 @@ namespace Mémoire.ViewModel
                 {
                     var translationEntryViewModel = (TranslationEntryViewModel)obj;
                     return string.IsNullOrWhiteSpace(text) ||
-                           (translationEntryViewModel.Id.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                           translationEntryViewModel.Translations.Any(translation => translation.Word.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
+                           translationEntryViewModel.Id.Text.Contains(text, StringComparison.OrdinalIgnoreCase) ||
+                           translationEntryViewModel.Translations.Any(translation => translation.Word.Text.Contains(text, StringComparison.OrdinalIgnoreCase));
                 };
 
             _filterChanged = true;
@@ -452,7 +452,7 @@ namespace Mémoire.ViewModel
             foreach (var translation in _translationList)
             {
                 var time = translation.LearningInfoViewModel.NextCardShowTime;
-                if (time > DateTime.Now)
+                if (time > DateTimeOffset.Now)
                 {
                     translation.LearningInfoViewModel.ReRenderNextCardShowTime();
                 }

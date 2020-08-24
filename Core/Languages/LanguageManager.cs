@@ -40,7 +40,7 @@ namespace Mémoire.Core.Languages
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
 
             var cachedLanguages = _localSettingsRepository.AvailableLanguages;
-            if (DateTime.Now > (_localSettingsRepository.AvailableLanguagesModifiedDate + TimeSpan.FromDays(7)))
+            if (DateTimeOffset.Now > (_localSettingsRepository.AvailableLanguagesModifiedDate + TimeSpan.FromDays(7)))
             {
                 cachedLanguages = null;
             }

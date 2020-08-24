@@ -48,16 +48,16 @@ namespace Mémoire.ViewModel
 
         public bool IsFavorited { get; private set; }
 
-        public DateTime LastCardShowTime { get; private set; }
+        public DateTimeOffset LastCardShowTime { get; private set; }
 
-        public DateTime ModifiedDate { get; private set; }
+        public DateTimeOffset ModifiedDate { get; private set; }
 
-        public DateTime CreatedDate { get; private set; }
+        public DateTimeOffset CreatedDate { get; private set; }
 
         [DependsOn(nameof(CreatedDate), nameof(ModifiedDate))]
         public string DateInfo => CreatedDate == ModifiedDate ? $"{CreatedDate:dd MMM yy HH:mm}" : $"{CreatedDate:dd MMM yy HH:mm}->{ModifiedDate:dd MMM yy HH:mm}";
 
-        public DateTime NextCardShowTime { get; private set; }
+        public DateTimeOffset NextCardShowTime { get; private set; }
 
         public RepeatType RepeatType
         {

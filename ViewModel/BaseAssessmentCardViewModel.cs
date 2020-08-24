@@ -38,6 +38,7 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel) : base(commandManager)
         {
+            _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -69,7 +70,7 @@ namespace Mémoire.ViewModel
             if (CorrectAnswer.Word.Text.Length > 2)
             {
                 var text = CorrectAnswer.Word.Text;
-                Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(x => '*')) + text[text.Length - 1];
+                Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(x => '*')) + text[^1];
             }
 
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer), assessmentInfo.Word.Text, true);

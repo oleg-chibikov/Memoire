@@ -152,7 +152,7 @@ namespace Mémoire.Core.Exchange
 
         string? ShowSaveFileDialog()
         {
-            _saveFileDialog.FileName = $"{nameof(Mémoire)} {DateTime.Now:yyyy-MM-dd hh-mm-ss}.json";
+            _saveFileDialog.FileName = $"{nameof(Mémoire)} {DateTimeOffset.Now:yyyy-MM-dd hh-mm-ss}.json";
             return _saveFileDialog.ShowDialog() == true ? _saveFileDialog.FileName : null;
         }
     }

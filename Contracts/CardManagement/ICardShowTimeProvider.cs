@@ -6,9 +6,9 @@ namespace Mémoire.Contracts.CardManagement
     {
         TimeSpan CardShowFrequency { get; }
 
-        DateTime? LastCardShowTime { get; }
+        DateTimeOffset? LastCardShowTime { get; }
 
-        DateTime NextCardShowTime { get; }
+        DateTimeOffset NextCardShowTime { get; }
 
         TimeSpan TimeLeftToShowCard { get; }
     }

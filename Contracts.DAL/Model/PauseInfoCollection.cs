@@ -33,7 +33,7 @@ namespace Mémoire.Contracts.DAL.Model
                 return false;
             }
 
-            Add(new PauseInfo(DateTime.Now));
+            Add(new PauseInfo(DateTimeOffset.Now));
             return true;
         }
 
@@ -45,7 +45,7 @@ namespace Mémoire.Contracts.DAL.Model
                 return false;
             }
 
-            last.EndTime = DateTime.Now;
+            last.EndTime = DateTimeOffset.Now;
             return true;
         }
     }

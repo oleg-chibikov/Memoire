@@ -98,7 +98,7 @@ namespace Mémoire.ViewModel
 
         public string? CardVisiblePauseTime { get; private set; }
 
-        public DateTime CurrentTime { get; private set; }
+        public DateTimeOffset CurrentTime { get; private set; }
 
         public ICommand ExitCommand { get; }
 
@@ -166,7 +166,7 @@ namespace Mémoire.ViewModel
 
         async Task SetTimesInfoAsync()
         {
-            CurrentTime = DateTime.Now;
+            CurrentTime = DateTimeOffset.Now;
             PauseReasons = _pauseManager.GetPauseReasons();
 
             await _semaphore.WaitAsync().ConfigureAwait(false);

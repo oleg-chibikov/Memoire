@@ -7,19 +7,19 @@ namespace Mémoire.Contracts.DAL.Model
     public sealed class LearningInfo : TrackedEntity<TranslationEntryKey>
     {
         LinkedListNode<RepeatType> _current;
-        DateTime _lastCardShowTime;
+        DateTimeOffset _lastCardShowTime;
         RepeatType _repeatType;
 
         public LearningInfo()
         {
-            LastCardShowTime = DateTime.Now;
+            LastCardShowTime = DateTimeOffset.Now;
             RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
             _current = RepeatTypeSettings.RepeatTypes.First;
         }
 
         public bool IsFavorited { get; set; }
 
-        public DateTime LastCardShowTime
+        public DateTimeOffset LastCardShowTime
         {
             get => _lastCardShowTime;
             set
@@ -29,7 +29,7 @@ namespace Mémoire.Contracts.DAL.Model
             }
         }
 
-        public DateTime NextCardShowTime { get; set; }
+        public DateTimeOffset NextCardShowTime { get; set; }
 
         public RepeatType RepeatType
         {

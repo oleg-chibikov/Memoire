@@ -22,7 +22,7 @@ namespace Mémoire.Core.CardManagement
 {
     sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
-        readonly DateTime _initTime;
+        readonly DateTimeOffset _initTime;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly ISharedSettingsRepository _sharedSettingsRepository;
@@ -64,7 +64,7 @@ namespace Mémoire.Core.CardManagement
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _localSettingsRepository = localSettingsRepository;
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            _initTime = DateTime.Now;
+            _initTime = DateTimeOffset.Now;
             CardShowFrequency = sharedSettingsRepository.CardShowFrequency;
             LastCardShowTime = localSettingsRepository.LastCardShowTime;
 
@@ -81,16 +81,16 @@ namespace Mémoire.Core.CardManagement
 
         public TimeSpan CardShowFrequency { get; private set; }
 
-        public DateTime? LastCardShowTime { get; private set; }
+        public DateTimeOffset? LastCardShowTime { get; private set; }
 
-        public DateTime NextCardShowTime => DateTime.Now + TimeLeftToShowCard;
+        public DateTimeOffset NextCardShowTime => DateTimeOffset.Now + TimeLeftToShowCard;
 
         public TimeSpan TimeLeftToShowCard
         {
             get
             {
                 var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReasons.CardIsVisible).GetPauseTime();
-                var alreadyPassedTime = DateTime.Now - (LastCardShowTime ?? _initTime);
+                var alreadyPassedTime = DateTimeOffset.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
         }
@@ -162,7 +162,7 @@ namespace Mémoire.Core.CardManagement
                     return;
                 }
 
-                _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTime.Now;
+                _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTimeOffset.Now;
                 var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
                 if (mostSuitableLearningInfos.Length == 0)
                 {
@@ -225,7 +225,7 @@ namespace Mémoire.Core.CardManagement
         void UpdateShowCount(LearningInfo learningInfo)
         {
             learningInfo.ShowCount++; // single place to update show count - no need to synchronize
-            learningInfo.LastCardShowTime = DateTime.Now;
+            learningInfo.LastCardShowTime = DateTimeOffset.Now;
             _learningInfoRepository.Update(learningInfo);
             _messageHub.Publish(learningInfo);
         }

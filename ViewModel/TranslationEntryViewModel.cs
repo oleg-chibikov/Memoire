@@ -82,7 +82,7 @@ namespace Mémoire.ViewModel
 
         public LearningInfoViewModel LearningInfoViewModel { get; }
 
-        public DateTime ModifiedDate { get; private set; }
+        public DateTimeOffset ModifiedDate { get; private set; }
 
         public string TargetLanguage => Id.TargetLanguage;
 
@@ -140,7 +140,7 @@ namespace Mémoire.ViewModel
                 null);
         }
 
-        public void Update(LearningInfo learningInfo, DateTime translationEntryModifiedDate)
+        public void Update(LearningInfo learningInfo, DateTimeOffset translationEntryModifiedDate)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
             LearningInfoViewModel.UpdateLearningInfo(learningInfo);
@@ -217,7 +217,7 @@ namespace Mémoire.ViewModel
             }
         }
 
-        void UpdateModifiedDate(ITrackedEntity learningInfo, DateTime translationEntryModifiedDate)
+        void UpdateModifiedDate(ITrackedEntity learningInfo, DateTimeOffset translationEntryModifiedDate)
         {
             ModifiedDate = learningInfo.ModifiedDate > translationEntryModifiedDate ? learningInfo.ModifiedDate : translationEntryModifiedDate;
         }

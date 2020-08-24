@@ -9,7 +9,7 @@
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
     <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.Async" Version="1.1.7481.37144" />
+    <PackageReference Include="Scar.Common.Async" Version="1.1.7500.33322" />
     <PackageReference Include="Scar.Common.Localization" Version="1.1.7481.37120" />
     <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7481.37117" />
     <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7481.37226" />

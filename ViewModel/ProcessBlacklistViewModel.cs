@@ -38,7 +38,7 @@ namespace Mémoire.ViewModel
             DeleteBatchCommand = AddCommand<IList>(DeleteBatch);
             ClearFilterCommand = AddCommand(ClearFilter);
             AvailableProcessesView = collectionViewSource.GetDefaultView(AvailableProcesses);
-            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || (((ProcessInfo)o).Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) >= 0);
+            AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
         }
 
         public ICommand AddFromActiveProcessesCommand { get; }

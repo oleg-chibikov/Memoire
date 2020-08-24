@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.11" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.13" />
     <PackageReference Include="Scar.Common.WPF.Controls.AutoCompleteTextBox" Version="1.1.7481.37213" />
     <PackageReference Include="Scar.Common.WPF.Controls.ExternalBrowserHyperlink" Version="1.1.7481.37114" />
     <PackageReference Include="Scar.Common.WPF.Controls.NumericUpDown" Version="1.1.7481.37215" />

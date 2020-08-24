@@ -10,11 +10,11 @@ namespace Mémoire.Contracts.DAL.Local
 
         AvailableLanguagesInfo? AvailableLanguages { get; set; }
 
-        DateTime? AvailableLanguagesModifiedDate { get; }
+        DateTimeOffset? AvailableLanguagesModifiedDate { get; }
 
         bool IsActive { get; set; }
 
-        DateTime? LastCardShowTime { get; set; }
+        DateTimeOffset? LastCardShowTime { get; set; }
 
         string? LastUsedSourceLanguage { get; set; }
 
@@ -26,10 +26,10 @@ namespace Mémoire.Contracts.DAL.Local
 
         void AddOrUpdatePauseInfo(PauseReasons pauseReasons, PauseInfoCollection? pauseInfo);
 
-        void AddOrUpdateSyncTime(string repository, DateTime syncTime);
+        void AddOrUpdateSyncTime(string repository, DateTimeOffset syncTime);
 
         PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons);
 
-        DateTime GetSyncTime(string repository);
+        DateTimeOffset GetSyncTime(string repository);
     }
 }

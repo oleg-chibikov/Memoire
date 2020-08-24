@@ -31,7 +31,7 @@ namespace Mémoire.DAL.Local
             set => RemoveUpdateOrInsert(nameof(AvailableLanguages), value);
         }
 
-        public DateTime? AvailableLanguagesModifiedDate => TryGetById(nameof(AvailableLanguages))?.ModifiedDate;
+        public DateTimeOffset? AvailableLanguagesModifiedDate => TryGetById(nameof(AvailableLanguages))?.ModifiedDate;
 
         public bool IsActive
         {
@@ -39,9 +39,9 @@ namespace Mémoire.DAL.Local
             set => RemoveUpdateOrInsert(nameof(IsActive), (bool?)value);
         }
 
-        public DateTime? LastCardShowTime
+        public DateTimeOffset? LastCardShowTime
         {
-            get => TryGetValue<DateTime?>(nameof(LastCardShowTime));
+            get => TryGetValue<DateTimeOffset?>(nameof(LastCardShowTime));
             set => RemoveUpdateOrInsert(nameof(LastCardShowTime), value);
         }
 
@@ -93,7 +93,7 @@ namespace Mémoire.DAL.Local
             RemoveUpdateOrInsert(PauseTimeKey + pauseReasons, pauseInfo);
         }
 
-        public void AddOrUpdateSyncTime(string repository, DateTime syncTime)
+        public void AddOrUpdateSyncTime(string repository, DateTimeOffset syncTime)
         {
             RemoveUpdateOrInsert(SyncTimeKey + repository, syncTime);
         }
@@ -103,9 +103,9 @@ namespace Mémoire.DAL.Local
             return TryGetValue(PauseTimeKey + pauseReasons, () => new PauseInfoCollection());
         }
 
-        public DateTime GetSyncTime(string repository)
+        public DateTimeOffset GetSyncTime(string repository)
         {
-            return TryGetValue(SyncTimeKey + repository, DateTime.MinValue);
+            return TryGetValue(SyncTimeKey + repository, DateTimeOffset.MinValue);
         }
     }
 }

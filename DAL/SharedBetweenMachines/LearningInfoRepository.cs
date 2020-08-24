@@ -37,7 +37,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
             var chooseItemsWithLowerRepeatTypeFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.ItemsWithLowerRepeatType);
             var chooseOlderItemsFirst = GetValueByProbability(_sharedSettingsRepository.CardProbabilitySettings.OlderItems);
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.Now;
 
             IOrderedEnumerable<LearningInfo> GetExpression()
             {
@@ -45,7 +45,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
                     .OrderByDescending(x => !chooseFavoritedItemsItemsFirst || x.IsFavorited ? 1 : 0) // favorited are shown first
                     .ThenBy(x => chooseItemsWithSmallerShowCountFirst ? x.ShowCount : 0) // the lower the ShowCount, the greater the priority
                     .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority
-                    .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTime.MinValue) // this gives a chance of showing an older card rather than a newer one first
+                    .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTimeOffset.MinValue) // this gives a chance of showing an older card rather than a newer one first
                     .ThenBy(x => Guid.NewGuid()); // similar values are ordered randomly
             }
 
