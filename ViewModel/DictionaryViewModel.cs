@@ -179,8 +179,14 @@ namespace Mémoire.ViewModel
 
             _logger.LogTrace("Deleting {0} from the list...", translationEntryViewModel);
 
+            var deleted = false;
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-            var deleted = _translationList.Remove(translationEntryViewModel);
+            _synchronizationContext.Send(
+                x =>
+                {
+                    deleted = _translationList.Remove(translationEntryViewModel);
+                },
+                null);
             _semaphore.Release();
 
             if (!deleted)

@@ -27,7 +27,6 @@ namespace Mémoire.ViewModel
     public sealed class TranslationDetailsCardViewModel : BaseViewModel
     {
         readonly ICultureManager _cultureManager;
-        readonly ILanguageDetector _languageDetector;
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IPredictor _predictor;
@@ -46,12 +45,10 @@ namespace Mémoire.ViewModel
             ILanguageManager languageManager,
             ICultureManager cultureManager,
             ICommandManager commandManager,
-            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater,
-            ILanguageDetector languageDetector) : base(commandManager)
+            ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater) : base(commandManager)
         {
             _ = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
-            _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
             _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -74,7 +71,7 @@ namespace Mémoire.ViewModel
 
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
-            _ = LoadPrepositionsIfNotExistsAsync(translationInfo.TranslationEntryKey.Text, translationInfo.TranslationDetails, CancellationToken.None);
+            _ = LoadPrepositionsIfNotExistsAsync(translationInfo, CancellationToken.None);
 
             // no await here
             // ReSharper disable once AssignmentIsFullyDiscarded
@@ -113,10 +110,9 @@ namespace Mémoire.ViewModel
             }
         }
 
-        async Task<Prepositions?> GetPrepositionsCollectionAsync(string text, CancellationToken cancellationToken)
+        async Task<Prepositions?> GetPrepositionsCollectionAsync(TranslationEntryKey translationEntryKey, CancellationToken cancellationToken)
         {
-            var language = await _languageDetector.DetectLanguageAsync(text, ex => _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex)), cancellationToken).ConfigureAwait(false);
-            var predictionResult = await _predictor.PredictAsync(text, 5, language.Language, ex => _messageHub.Publish(Errors.CannotPredict.ToError(ex)), cancellationToken).ConfigureAwait(false);
+            var predictionResult = await _predictor.PredictAsync(translationEntryKey.Text, 5, translationEntryKey.SourceLanguage, ex => _messageHub.Publish(Errors.CannotPredict.ToError(ex)), cancellationToken).ConfigureAwait(false);
             if (predictionResult == null)
             {
                 return null;
@@ -126,19 +122,20 @@ namespace Mémoire.ViewModel
             return prepositionsCollection;
         }
 
-        async Task LoadPrepositionsIfNotExistsAsync(string text, TranslationDetails translationDetails, CancellationToken cancellationToken)
+        async Task LoadPrepositionsIfNotExistsAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
-            var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationDetails.Id);
+            var translationEntryKey = translationInfo.TranslationEntryKey;
+            var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationEntryKey);
             if (prepositionsInfo == null)
             {
-                _logger.LogTrace("Reloading preposition for {0}...", translationDetails.Id);
-                var prepositions = await GetPrepositionsCollectionAsync(text, cancellationToken).ConfigureAwait(false);
+                _logger.LogTrace("Reloading preposition for {0}...", translationEntryKey);
+                var prepositions = await GetPrepositionsCollectionAsync(translationEntryKey, cancellationToken).ConfigureAwait(false);
                 if (prepositions == null)
                 {
                     return;
                 }
 
-                prepositionsInfo = new PrepositionsInfo(translationDetails.Id, prepositions);
+                prepositionsInfo = new PrepositionsInfo(translationEntryKey, prepositions);
                 _prepositionsInfoRepository.Insert(prepositionsInfo);
             }
 

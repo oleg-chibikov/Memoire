@@ -36,6 +36,7 @@ using Scar.Services.ImageDownload;
 using Scar.Services.Qwant;
 using Scar.Services.UClassify;
 using Scar.Services.Yandex;
+using LanguageDetector = Mémoire.Core.Languages.LanguageDetector;
 
 namespace Mémoire.Launcher
 {
@@ -44,9 +45,7 @@ namespace Mémoire.Launcher
         public static ContainerBuilder RegisterServices(this ContainerBuilder builder)
         {
             builder.Register(context => context.Resolve<ISharedSettingsRepository>().ClassificationMinimalThreshold).Named<double>(nameof(ISharedSettingsRepository.ClassificationMinimalThreshold));
-            builder.Register(context => context.Resolve<ISharedSettingsRepository>().ApiKeys.YandexTranslation).Named<string>(nameof(ApiKeys.YandexTranslation));
             builder.Register(context => context.Resolve<ISharedSettingsRepository>().ApiKeys.YandexTextToSpeech).Named<string>(nameof(ApiKeys.YandexTextToSpeech));
-            builder.Register(context => context.Resolve<ISharedSettingsRepository>().ApiKeys.YandexPredictor).Named<string>(nameof(ApiKeys.YandexPredictor));
             builder.Register(context => context.Resolve<ISharedSettingsRepository>().ApiKeys.UClassify).Named<string>(nameof(ApiKeys.UClassify));
 
             builder.RegisterType<UClassifyTopicsClient>()
@@ -60,15 +59,9 @@ namespace Mémoire.Launcher
                 .AsImplementedInterfaces()
                 .SingleInstance();
             builder.RegisterType<WordsTranslator>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<TextToSpeechPlayer>()
-                .WithParameter(ResolvedParameter.ForNamed<string>(nameof(ApiKeys.YandexTextToSpeech)))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-            builder.RegisterType<Predictor>().AsImplementedInterfaces().WithParameter(ResolvedParameter.ForNamed<string>(nameof(ApiKeys.YandexPredictor))).SingleInstance();
-            builder.RegisterType<LanguageDetector>()
-                .WithParameter(ResolvedParameter.ForNamed<string>(nameof(ApiKeys.YandexTranslation)))
-                .AsImplementedInterfaces()
-                .SingleInstance();
+            builder.RegisterType<TextToSpeechPlayer>().WithParameter(ResolvedParameter.ForNamed<string>(nameof(ApiKeys.YandexTextToSpeech))).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<Predictor>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<LanguageDetector>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ImageDownloader>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<ImageSearcher>().AsImplementedInterfaces().SingleInstance();
             return builder;
@@ -149,7 +142,6 @@ namespace Mémoire.Launcher
             builder.RegisterHttpClient<WordsTranslator>();
             builder.RegisterHttpClient<TextToSpeechPlayer>();
             builder.RegisterHttpClient<Predictor>();
-            builder.RegisterHttpClient<LanguageDetector>();
             builder.RegisterHttpClient<UClassifyTopicsClient>();
             builder.RegisterHttpClient<ImageSearcher>();
             builder.RegisterHttpClient<ImageDownloader>();

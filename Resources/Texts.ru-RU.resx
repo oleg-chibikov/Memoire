@@ -384,14 +384,8 @@
   <data name="UClassify" xml:space="preserve">
     <value>UClassify</value>
   </data>
-  <data name="YandexPredictor" xml:space="preserve">
-    <value>Yandex.Predictor</value>
-  </data>
   <data name="YandexTextToSpeech" xml:space="preserve">
     <value>Yandex.TextToSpeech</value>
-  </data>
-  <data name="YandexTranslation" xml:space="preserve">
-    <value>Yandex.Translation</value>
   </data>
   <data name="ApiKeys" xml:space="preserve">
     <value>Ключи API</value>

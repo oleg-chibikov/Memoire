@@ -28,7 +28,7 @@ namespace Mémoire.View.Various
         {
             _ = textPattern ?? throw new ArgumentNullException(nameof(textPattern));
             var language = await _languageDetector.DetectLanguageAsync(textPattern, ex => _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex)), cancellationToken).ConfigureAwait(false);
-            var variants = await _predictor.PredictAsync(textPattern, 5, language.Language, ex => _messageHub.Publish(Errors.CannotPredict.ToError(ex)), cancellationToken).ConfigureAwait(false);
+            var variants = await _predictor.PredictAsync(textPattern, 5, language.Code, ex => _messageHub.Publish(Errors.CannotPredict.ToError(ex)), cancellationToken).ConfigureAwait(false);
             return variants?.Position < 0 ? variants.PredictionVariants : Enumerable.Empty<object>();
         }
     }

@@ -123,7 +123,7 @@ namespace Mémoire.Core.Languages
         {
             _ = text ?? throw new ArgumentNullException(nameof(text));
             var detectionResult = await _languageDetector.DetectLanguageAsync(text, ex => _messageHub.Publish(Errors.CannotDetectLanguage.ToError(ex)), cancellationToken).ConfigureAwait(false);
-            return detectionResult.Language;
+            return detectionResult.Code;
         }
 
         public string GetTargetAutoSubstitute(string sourceLanguage)
@@ -131,15 +131,17 @@ namespace Mémoire.Core.Languages
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             if (!_availableLanguages.Directions.TryGetValue(sourceLanguage, out var availableTargetLanguages) || !(availableTargetLanguages.Count > 0))
             {
-                throw new InvalidOperationException($"No target languages available for source language {sourceLanguage}");
+                _logger.LogWarning($"No target languages available for source language {sourceLanguage}");
+                return LanguageConstants.EnLanguageTwoLetters;
             }
 
-            var ordered = availableTargetLanguages.OrderBy(
-                languageCode => GetLanguageOrder(
-                    languageCode,
-                    _sharedSettingsRepository.PreferredLanguage,
-                    Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName,
-                    _localSettingsRepository.LastUsedTargetLanguage));
+            var ordered = availableTargetLanguages.Where(x => x != sourceLanguage)
+                .OrderBy(
+                    languageCode => GetLanguageOrder(
+                        languageCode,
+                        _sharedSettingsRepository.PreferredLanguage,
+                        Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName,
+                        _localSettingsRepository.LastUsedTargetLanguage));
 
             return ordered.First();
         }

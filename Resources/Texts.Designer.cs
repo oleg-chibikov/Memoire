@@ -925,29 +925,11 @@ namespace Mémoire.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Yandex.Predictor.
-        /// </summary>
-        public static string YandexPredictor {
-            get {
-                return ResourceManager.GetString("YandexPredictor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Yandex.TextToSpeech.
         /// </summary>
         public static string YandexTextToSpeech {
             get {
                 return ResourceManager.GetString("YandexTextToSpeech", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Yandex.Translation.
-        /// </summary>
-        public static string YandexTranslation {
-            get {
-                return ResourceManager.GetString("YandexTranslation", resourceCulture);
             }
         }
     }

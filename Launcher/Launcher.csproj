@@ -33,10 +33,10 @@
     <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7481.37238" />
     <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7481.37220" />
     <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7481.37239" />
-    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7501.21795" />
-    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7501.21789" />
-    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7501.21790" />
-    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7501.21789" />
+    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7541.39757" />
+    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7541.40114" />
+    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7541.40114" />
+    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7541.40114" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 

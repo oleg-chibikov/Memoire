@@ -14,56 +14,38 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     x:ClassModifier="internal"
     mc:Ignorable="d">
-    <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
-    </commonView:BaseControl.Resources>
-    <Expander IsExpanded="False">
-        <Expander.Header>
-            <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc ApiKeys}" />
-        </Expander.Header>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
+  <commonView:BaseControl.Resources>
+    <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
+  </commonView:BaseControl.Resources>
+  <Expander IsExpanded="False">
+    <Expander.Header>
+      <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc ApiKeys}" />
+    </Expander.Header>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <TextBlock
                 Grid.Row="0"
-                Grid.Column="0"
-                Text="{lex:Loc YandexTranslation}" />
-            <TextBox
-                Grid.Row="0"
-                Grid.Column="1"
-                Text="{Binding YandexTranslation, Mode=TwoWay}" />
-            <TextBlock
-                Grid.Row="1"
                 Grid.Column="0"
                 Text="{lex:Loc YandexTextToSpeech}" />
-            <TextBox
-                Grid.Row="1"
+      <TextBox
+                Grid.Row="0"
                 Grid.Column="1"
                 Text="{Binding YandexTextToSpeech, Mode=TwoWay}" />
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="0"
-                Text="{lex:Loc YandexPredictor}" />
-            <TextBox
-                Grid.Row="2"
-                Grid.Column="1"
-                Text="{Binding YandexPredictor, Mode=TwoWay}" />
-            <TextBlock
-                Grid.Row="3"
+      <TextBlock
+                Grid.Row="1"
                 Grid.Column="0"
                 Text="{lex:Loc UClassify}" />
-            <TextBox
-                Grid.Row="3"
+      <TextBox
+                Grid.Row="1"
                 Grid.Column="1"
                 Text="{Binding UClassify, Mode=TwoWay}" />
-        </Grid>
-    </Expander>
+    </Grid>
+  </Expander>
 </commonView:BaseControl>
