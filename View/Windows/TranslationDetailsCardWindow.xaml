@@ -12,7 +12,7 @@
     Background="{StaticResource DarkerBackground}"
     Focusable="False"
     Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
-    ShowActivated="false"
+    ShowActivated="true"
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
     <translationDetails:TranslationDetailsCardControl />
