@@ -6,14 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Scar.NugetCopier/1.1.7546.17972": {
+      "Scar.NugetCopier/1.1.7546.18264": {
         "dependencies": {
           "Microsoft.CodeQuality.Analyzers": "3.3.0",
           "Microsoft.NetCore.Analyzers": "3.3.0",
           "Microsoft.NetFramework.Analyzers": "3.3.0",
           "Scar.CodeAnalysis": "1.0.7422.15495",
           "Scar.Common.IO": "1.1.7441.17293",
-          "Scar.Utilities": "1.1.7546.17897",
+          "Scar.Utilities": "1.1.7546.18252",
           "StyleCop.Analyzers": "1.1.118",
           "WTG.Analyzers": "2.10.0"
         },
@@ -1097,7 +1097,7 @@
         }
       },
       "WTG.Analyzers/2.10.0": {},
-      "Scar.Utilities/1.1.7546.17897": {
+      "Scar.Utilities/1.1.7546.18252": {
         "dependencies": {
           "Microsoft.Extensions.Hosting": "3.1.7",
           "Microsoft.Extensions.Hosting.Abstractions": "3.1.7",
@@ -1112,7 +1112,7 @@
     }
   },
   "libraries": {
-    "Scar.NugetCopier/1.1.7546.17972": {
+    "Scar.NugetCopier/1.1.7546.18264": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1922,7 +1922,7 @@
       "path": "wtg.analyzers/2.10.0",
       "hashPath": "wtg.analyzers.2.10.0.nupkg.sha512"
     },
-    "Scar.Utilities/1.1.7546.17897": {
+    "Scar.Utilities/1.1.7546.18252": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

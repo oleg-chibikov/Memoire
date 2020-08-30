@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7512.22574" />
-    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7481.37114" />
+    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7546.21914" />
     <PackageReference Include="Scar.Services.Contracts" Version="1.1.7541.40099" />
   </ItemGroup>
 

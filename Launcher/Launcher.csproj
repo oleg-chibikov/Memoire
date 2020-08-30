@@ -25,18 +25,18 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
     <PackageReference Include="NLog.Config" Version="4.7.4" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.3" />
-    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7481.37125" />
+    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7546.22479" />
     <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7481.37132" />
     <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7481.37224" />
-    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7481.37233" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7507.20503" />
+    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7546.22107" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7546.36685" />
     <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7481.37238" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7481.37220" />
-    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7481.37239" />
-    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7541.39757" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7546.37546" />
+    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7546.22493" />
+    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7547.7" />
     <PackageReference Include="Scar.Services.Qwant" Version="1.1.7541.40114" />
     <PackageReference Include="Scar.Services.UClassify" Version="1.1.7541.40114" />
-    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7541.40114" />
+    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7547.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
@@ -60,6 +60,7 @@
   <Target Name="PackRelease" AfterTargets="Publish">
     <Exec Command="del &quot;$(SolutionDir)7zRelease\Portable.7z&quot;" Condition="Exists('$(SolutionDir)7zRelease\Portable.7z')" />
     <Exec Command="&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)7zRelease\Portable.7z&quot; &quot;$(SolutionDir)Release\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
+    <MSBuild Projects="..\Installer\Installer.csproj" Properties="Configuration=Release;TargetFramework=net472" />
   </Target>
 
 </Project>

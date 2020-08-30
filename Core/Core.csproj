@@ -16,7 +16,7 @@
     <PackageReference Include="Scar.Common.Localization" Version="1.1.7481.37120" />
     <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7481.37131" />
     <PackageReference Include="Scar.Common.Sync.Contracts" Version="1.1.7481.37126" />
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7481.37233" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7546.21986" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />

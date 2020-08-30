@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7512.22649" />
+    <PackageReference Include="Scar.Common.DAL.LiteDB" Version="1.1.7546.22848" />
   </ItemGroup>
 
   <ItemGroup>
