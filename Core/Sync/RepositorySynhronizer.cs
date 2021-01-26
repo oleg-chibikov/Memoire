@@ -101,7 +101,7 @@ namespace Mémoire.Core.Sync
             var lastSyncedRecordModifiedTime = _localSettingsRepository.GetSyncTime(FileName);
 
             var changed = remoteRepository.GetModifiedAfter(lastSyncedRecordModifiedTime).Cast<TEntity>().ToArray();
-            if (!(changed.Length > 0))
+            if (changed.Length == 0)
             {
                 return;
             }

@@ -22,6 +22,8 @@ namespace Mémoire.Core
             LocalSharedDataPath = Path.Combine(_assemblyInfoProvider.SettingsPath, "Shared");
         }
 
+        public static string LogsPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Scar", "Mémoire", "Logs", "log.txt");
+
         public string? OneDrivePath { get; }
 
         public string? DropBoxPath { get; }
@@ -52,7 +54,7 @@ namespace Mémoire.Core
 
         public void ViewLogs()
         {
-            $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Scar\Mémoire\Logs\Full.log".OpenPathWithDefaultAction();
+            LogsPath.OpenPathWithDefaultAction();
         }
     }
 }

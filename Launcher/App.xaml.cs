@@ -8,18 +8,18 @@ using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.ProcessMonitoring;
 using Mémoire.Contracts.Sync;
 using Mémoire.Contracts.View.Settings;
+using Mémoire.Core;
 using Mémoire.View.Windows;
 using Mémoire.ViewModel;
 using Mémoire.WebApi.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Web;
 using Scar.Common.ApplicationLifetime.Core;
 using Scar.Common.Messages;
 using Scar.Common.WebApi;
 using Scar.Common.WPF.Controls;
 using Scar.Common.WPF.View.WindowCreation;
+using Serilog;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
@@ -34,7 +34,7 @@ namespace Mémoire.Launcher
         readonly Action _closeSplashScreen;
 
         public App() : base(
-            hostBuilder => ApiHostingHelper.RegisterWebApiHost(hostBuilder, new Uri("http://localhost:2053")).UseNLog(),
+            hostBuilder => ApiHostingHelper.RegisterWebApiHost(hostBuilder, new Uri("http://localhost:2053")),
             services =>
             {
                 services.AddHttpClient();
@@ -42,8 +42,11 @@ namespace Mémoire.Launcher
             },
             (h, loggingBuilder) =>
             {
-                NLogBuilder.ConfigureNLog("NLog.config");
-                loggingBuilder.ClearProviders();
+                Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
+                    .WriteTo.File(PathsProvider.LogsPath)
+                    .CreateLogger();
+
+                loggingBuilder.ClearProviders().AddSerilog();
                 loggingBuilder.SetMinimumLevel(LogLevel.Trace);
             },
             newInstanceHandling: NewInstanceHandling.Restart)
@@ -85,7 +88,7 @@ namespace Mémoire.Launcher
 
         protected override void OnExit(ExitEventArgs e)
         {
-            LogManager.Shutdown();
+            Log.CloseAndFlush();
             base.OnExit(e);
         }
 
