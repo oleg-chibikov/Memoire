@@ -26,9 +26,10 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager,
             ICollectionViewSource collectionViewSource) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ = collectionViewSource ?? throw new ArgumentNullException(nameof(collectionViewSource));
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             OpenProcessesListCommand = AddCommand(OpenProcessesList);
             AddFromActiveProcessesCommand = AddCommand<IList>(AddFromActiveProcesses);
@@ -39,6 +40,7 @@ namespace Mémoire.ViewModel
             ClearFilterCommand = AddCommand(ClearFilter);
             AvailableProcessesView = collectionViewSource.GetDefaultView(AvailableProcesses);
             AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public ICommand AddFromActiveProcessesCommand { get; }

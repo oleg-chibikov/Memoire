@@ -9,6 +9,7 @@ using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing.Data;
 using Mémoire.Resources;
+using Microsoft.Extensions.Logging;
 using Scar.Common.Messages;
 using Scar.Services.Contracts;
 using Scar.Services.Contracts.Data;
@@ -24,15 +25,19 @@ namespace Mémoire.Core.Classification
         readonly IMessageHub _messageHub;
 
         public LearningInfoCategoriesUpdater(
+            ILogger<ILearningInfoCategoriesUpdater> logger,
             ILearningInfoRepository learningInfoRepository,
             IClassificationClient classificationClient,
             IMessageHub messageHub,
             ISharedSettingsRepository sharedSettingsRepository)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _classificationClient = classificationClient ?? throw new ArgumentNullException(nameof(classificationClient));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public async Task UpdateLearningInfoClassificationCategoriesAsync(TranslationInfo translationInfo, CancellationToken cancellationToken)

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Easy.MessageHub;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Sync;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Scar.Common.DAL.Contracts.Model;
 
@@ -12,12 +13,15 @@ namespace Mémoire.Core.Sync
     {
         readonly IMessageHub _messageHub;
 
-        public SettingsSyncPostProcessor(IMessageHub messageHub)
+        public SettingsSyncPostProcessor(IMessageHub messageHub, ILogger<SettingsSyncPostProcessor> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
-        public Task AfterEntityChangedAsync(ApplicationSettings oldValue, ApplicationSettings newValue)
+        public Task AfterEntityChangedAsync(ApplicationSettings? oldValue, ApplicationSettings newValue)
         {
             _ = newValue ?? throw new ArgumentNullException(nameof(newValue));
             if (newValue.Id != nameof(ISharedSettingsRepository.CardShowFrequency))

@@ -33,9 +33,10 @@ namespace Mémoire.Core.Languages
             ILanguageDetector languageDetector,
             IMessageHub messageHub)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
 
@@ -46,6 +47,7 @@ namespace Mémoire.Core.Languages
             }
 
             _availableLanguages = cachedLanguages ?? ReloadAvailableLanguagesAsync().Result;
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public bool CheckTargetLanguageIsValid(string sourceLanguage, string targetLanguage)

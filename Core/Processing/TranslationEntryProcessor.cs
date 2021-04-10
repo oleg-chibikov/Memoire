@@ -71,6 +71,8 @@ namespace Mémoire.Core.Processing
             ISharedSettingsRepository sharedSettingsRepository,
             IWindowDisplayer windowDisplayer)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
@@ -87,9 +89,9 @@ namespace Mémoire.Core.Processing
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
             _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public async Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(

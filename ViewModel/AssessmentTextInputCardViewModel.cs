@@ -46,12 +46,11 @@ namespace Mémoire.ViewModel
             commandManager,
             assessmentBatchCardViewModel)
         {
-            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            _logger.LogTrace("Showing text input card...");
+            _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
             ProvideAnswerCommand = AddCommand(ProvideAnswer);
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public bool? Accepted { get; private set; }

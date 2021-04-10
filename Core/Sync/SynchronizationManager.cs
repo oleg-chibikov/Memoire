@@ -32,6 +32,8 @@ namespace Mémoire.Core.Sync
             IMessageHub messageHub,
             IPathsProvider pathsProvider)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!(synchronizers.Count > 0))
@@ -42,7 +44,6 @@ namespace Mémoire.Core.Sync
             _ = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
             _synchronizers = synchronizers.ToDictionary(x => x.FileName, x => x);
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _fileSystemWatcher = new FileSystemWatcher { IncludeSubdirectories = true, InternalBufferSize = 64 * 1024, NotifyFilter = NotifyFilters.FileName };
@@ -51,6 +52,7 @@ namespace Mémoire.Core.Sync
             OnSyncBusChanged(localSettingsRepository.SyncEngine);
 
             _subscriptionTokens.Add(messageHub.Subscribe<SyncEngine>(OnSyncBusChanged));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public void Dispose()

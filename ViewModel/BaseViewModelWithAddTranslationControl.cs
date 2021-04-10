@@ -36,8 +36,9 @@ namespace Mémoire.ViewModel
             ILogger<BaseViewModelWithAddTranslationControl> logger,
             ICommandManager commandManager) : base(commandManager)
         {
-            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
+            TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 

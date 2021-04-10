@@ -28,9 +28,11 @@ namespace Mémoire.Core.Exchange
 
         public FileExporter(ITranslationEntryRepository translationEntryRepository, ILogger<FileExporter> logger, ILearningInfoRepository learningInfoRepository)
         {
-            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
+            _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public event EventHandler<ProgressEventArgs>? Progress;

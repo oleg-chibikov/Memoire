@@ -75,3 +75,5 @@ Output/
 /.vs
 /Build*
 *.wxs
+/Release/
+/7zRelease/

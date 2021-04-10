@@ -59,6 +59,8 @@ namespace Mémoire.ViewModel
             IApplicationTerminator applicationTerminator,
             Func<ILoadingWindow> loadingWindowFactory) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -67,7 +69,6 @@ namespace Mémoire.ViewModel
             _dictionaryWindowFactory = dictionaryWindowFactory ?? throw new ArgumentNullException(nameof(dictionaryWindowFactory));
             _settingsWindowFactory = settingsWindowFactory ?? throw new ArgumentNullException(nameof(settingsWindowFactory));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _applicationTerminator = applicationTerminator ?? throw new ArgumentNullException(nameof(applicationTerminator));
@@ -88,6 +89,7 @@ namespace Mémoire.ViewModel
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public bool IsLoading { get; private set; }

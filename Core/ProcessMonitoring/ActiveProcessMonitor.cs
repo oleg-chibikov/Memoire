@@ -8,6 +8,7 @@ using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.ProcessMonitoring;
+using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.ProcessMonitoring
 {
@@ -17,8 +18,10 @@ namespace Mémoire.Core.ProcessMonitoring
         readonly IPauseManager _pauseManager;
         readonly Timer _timer;
 
-        public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository)
+        public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository, ILogger<ActiveProcessMonitor> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             CheckActiveProcess();
@@ -29,6 +32,7 @@ namespace Mémoire.Core.ProcessMonitoring
             _timer.Elapsed += Timer_Tick;
 
             // Automation.AddAutomationFocusChangedEventHandler(OnFocusChangedHandler);
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public void Dispose()

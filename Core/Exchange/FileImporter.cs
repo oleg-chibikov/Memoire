@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,6 +22,9 @@ namespace Mémoire.Core.Exchange
             IMessageHub messenger,
             ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         protected override IReadOnlyCollection<ManualTranslation>? GetManualTranslations(ExchangeEntry exchangeEntry)

@@ -38,12 +38,13 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager,
             AssessmentBatchCardViewModel assessmentBatchCardViewModel) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
             MessageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             TranslationInfo = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _assessmentBatchCardViewModel = assessmentBatchCardViewModel ?? throw new ArgumentNullException(nameof(assessmentBatchCardViewModel));
             WordViewModelFactory = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));

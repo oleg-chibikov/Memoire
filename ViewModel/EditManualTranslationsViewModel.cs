@@ -34,15 +34,17 @@ namespace Mémoire.ViewModel
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             EditManualTranslationsCommand = AddCommand<TranslationEntryViewModel>(EditManualTranslations);
             DeleteCommand = AddCommand<ManualTranslation>(DeleteAsync);
             CancelCommand = AddCommand(Cancel);
             AddTranslationCommand = AddCommand(AddTranslation);
             SaveCommand = AddCommand(SaveAsync);
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public static IEnumerable<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();

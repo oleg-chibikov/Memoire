@@ -52,23 +52,23 @@ namespace Mémoire.Core.CardManagement
             ILogger<AssessmentCardManager> logger,
             IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
-            _ = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _windowPositionAdjustmentManager = windowPositionAdjustmentManager ?? throw new ArgumentNullException(nameof(windowPositionAdjustmentManager));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
-            _localSettingsRepository = localSettingsRepository;
+            _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _initTime = DateTimeOffset.Now;
+
             CardShowFrequency = sharedSettingsRepository.CardShowFrequency;
             LastCardShowTime = localSettingsRepository.LastCardShowTime;
 
-            logger.LogTrace("Starting showing cards...");
             if (!_pauseManager.IsPaused)
             {
                 CreateInterval();
@@ -76,7 +76,7 @@ namespace Mémoire.Core.CardManagement
 
             _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
-            logger.LogDebug("Started showing cards");
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public TimeSpan CardShowFrequency { get; private set; }

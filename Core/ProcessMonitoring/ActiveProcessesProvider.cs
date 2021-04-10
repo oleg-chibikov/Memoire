@@ -1,14 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.ProcessMonitoring;
+using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.ProcessMonitoring
 {
     sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {
+        public ActiveProcessesProvider(ILogger<ActiveProcessesProvider> logger)
+        {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogDebug($"Initialized {GetType().Name}");
+        }
+
         public IEnumerable<ProcessInfo> GetActiveProcesses()
         {
             using var searcher = new ManagementObjectSearcher("SELECT ProcessId, ExecutablePath FROM Win32_Process");

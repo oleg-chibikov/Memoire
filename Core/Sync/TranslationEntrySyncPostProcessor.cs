@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Easy.MessageHub;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.Sync;
+using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.Sync
 {
@@ -10,9 +11,12 @@ namespace Mémoire.Core.Sync
     {
         readonly IMessageHub _messageHub;
 
-        public TranslationEntrySyncPostProcessor(IMessageHub messageHub)
+        public TranslationEntrySyncPostProcessor(IMessageHub messageHub, ILogger<TranslationEntrySyncPostProcessor> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public Task AfterEntityChangedAsync(TranslationEntry oldValue, TranslationEntry newValue)

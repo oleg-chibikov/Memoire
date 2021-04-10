@@ -31,6 +31,7 @@ namespace Mémoire.Core
         public PauseManager(ILogger<PauseManager> logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
@@ -39,6 +40,8 @@ namespace Mémoire.Core
             {
                 _pauseInfos[PauseReasons.InactiveMode].Pause();
             }
+
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public bool IsPaused

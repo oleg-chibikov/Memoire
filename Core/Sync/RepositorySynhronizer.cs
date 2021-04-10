@@ -42,14 +42,16 @@ namespace Mémoire.Core.Sync
             ISyncPreProcessor<TEntity>? syncPreProcessor = null,
             ISyncPostProcessor<TEntity>? syncPostProcessor = null)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _autofacNamedInstancesFactory = autofacNamedInstancesFactory ?? throw new ArgumentNullException(nameof(autofacNamedInstancesFactory));
             _syncPreProcessor = syncPreProcessor;
             _syncPostProcessor = syncPostProcessor;
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public string FileName => _ownRepository.DbFileName;

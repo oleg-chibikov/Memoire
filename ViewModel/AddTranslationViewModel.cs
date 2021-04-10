@@ -23,10 +23,13 @@ namespace Mémoire.ViewModel
             ILanguageManager languageManager,
             ITranslationEntryProcessor translationEntryProcessor,
             ILogger<BaseViewModelWithAddTranslationControl> baseLogger,
+            ILogger<AddTranslationViewModel> logger,
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
             ICommandManager commandManager) : base(localSettingsRepository, languageManager, translationEntryProcessor, baseLogger, commandManager)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         protected override async Task<IDisplayable?> GetWindowAsync()

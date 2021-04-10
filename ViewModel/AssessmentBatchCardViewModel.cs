@@ -26,13 +26,12 @@ namespace Mémoire.ViewModel
             Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentViewOnlyCardViewModel> assessmentViewOnlyCardViewModelFactory,
             IPauseManager pauseManager) : base(commandManager)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
             _ = assessmentViewOnlyCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentViewOnlyCardViewModelFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
-            _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = translationInfos ?? throw new ArgumentNullException(nameof(translationInfos));
-
-            logger.LogTrace("Showing batch assessment window...");
 
             Title = string.Join(", ", translationInfos.Select(x => x.TranslationEntryKey.ToString()));
 
@@ -53,6 +52,7 @@ namespace Mémoire.ViewModel
                     })
                 .ToArray();
             NestedViewModels.First().IsFocused = true;
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public IReadOnlyCollection<BaseAssessmentCardViewModel> NestedViewModels { get; }

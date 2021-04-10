@@ -52,10 +52,11 @@ namespace Mémoire.ViewModel
             IPathsProvider pathsProvider,
             ICommandManager commandManager) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _cardsExchanger = cardsExchanger ?? throw new ArgumentNullException(nameof(cardsExchanger));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
@@ -105,6 +106,7 @@ namespace Mémoire.ViewModel
             ImportCommand = AddCommand(ImportAsync);
             WindowClosingCommand = AddCommand(WindowClosing);
             _cardsExchanger.Progress += CardsExchanger_Progress;
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public IReadOnlyCollection<SyncEngine> SyncBuses { get; }

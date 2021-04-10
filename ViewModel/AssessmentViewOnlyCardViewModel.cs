@@ -49,13 +49,12 @@ namespace Mémoire.ViewModel
             var translationDetailsCardViewModel = translationDetailsCardViewModelFactory(translationInfo);
             _loadDetailsViewModel = () => TranslationDetailsCardViewModel = translationDetailsCardViewModel ?? throw new ArgumentNullException(nameof(translationDetailsCardViewModelFactory));
 
-            logger.LogTrace("Showing view only card...");
-
             // Learning info will be saved and published by the caller
             var learningInfo = TranslationInfo.LearningInfo;
             learningInfo.IncreaseRepeatType();
             learningInfoRepository.Update(learningInfo);
             logger.LogInformation("Increased repeat type for {0}", learningInfo);
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public TranslationDetailsCardViewModel? TranslationDetailsCardViewModel { get; private set; }

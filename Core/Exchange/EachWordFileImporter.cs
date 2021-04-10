@@ -34,7 +34,10 @@ namespace Mémoire.Core.Exchange
             ILanguageManager languageManager,
             ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         protected override IReadOnlyCollection<BaseWord>? GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ using Scar.Common.WebApi;
 using Scar.Common.WPF.Controls;
 using Scar.Common.WPF.View.WindowCreation;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: Guid("a3f513c3-1c4f-4b36-aa44-16619cbaf174")]
@@ -42,9 +44,12 @@ namespace Mémoire.Launcher
             },
             (h, loggingBuilder) =>
             {
-                Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
-                    .WriteTo.File(PathsProvider.LogsPath)
-                    .CreateLogger();
+                if (File.Exists(PathsProvider.LogsPath))
+                {
+                    File.Delete(PathsProvider.LogsPath);
+                }
+
+                Log.Logger = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.File(PathsProvider.LogsPath).MinimumLevel.Verbose().CreateLogger();
 
                 loggingBuilder.ClearProviders().AddSerilog();
                 loggingBuilder.SetMinimumLevel(LogLevel.Trace);
@@ -77,10 +82,10 @@ namespace Mémoire.Launcher
 
             var tasks = new[]
             {
-                ResolveInSeparateTaskAsync<ISynchronizationManager>(),
-                ResolveInSeparateTaskAsync<IAssessmentCardManager>(),
-                ResolveInSeparateTaskAsync<IActiveProcessMonitor>(),
-                ResolveInSeparateTaskAsync<ISharedRepositoryCloner>()
+                ResolveInSeparateTaskAsync<ISynchronizationManager>(logger),
+                ResolveInSeparateTaskAsync<IAssessmentCardManager>(logger),
+                ResolveInSeparateTaskAsync<IActiveProcessMonitor>(logger),
+                ResolveInSeparateTaskAsync<ISharedRepositoryCloner>(logger)
             };
             await Task.WhenAll(tasks).ConfigureAwait(false);
             _closeSplashScreen();
@@ -121,10 +126,17 @@ namespace Mémoire.Launcher
                 null);
         }
 
-        async Task ResolveInSeparateTaskAsync<T>()
+        async Task ResolveInSeparateTaskAsync<T>(ILogger logger)
             where T : class
         {
-            await Task.Run(() => Container.Resolve<T>()).ConfigureAwait(false);
+            await Task.Run(() =>
+            {
+                var type = typeof(T).Name;
+                logger.LogTrace($"Resolving {type}...");
+                var instance = Container.Resolve<T>();
+                logger.LogDebug($"Resolved {type}");
+                return instance;
+            }).ConfigureAwait(false);
         }
     }
 }

@@ -26,9 +26,10 @@ namespace Mémoire.Core.Sync
             ILogger<SharedRepositoryCloner> logger,
             IPathsProvider pathsProvider)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = cloneableRepositories ?? throw new ArgumentNullException(nameof(cloneableRepositories));
             _ = rateLimiterFactory ?? throw new ArgumentNullException(nameof(rateLimiterFactory));
             _cloneableRepositoriesWithRateLimiters = cloneableRepositories.ToDictionary(cloneableRepository => cloneableRepository, cloneableRepository => rateLimiterFactory());
@@ -37,6 +38,8 @@ namespace Mémoire.Core.Sync
             {
                 repository.Changed += Repository_ChangedAsync;
             }
+
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public void Dispose()

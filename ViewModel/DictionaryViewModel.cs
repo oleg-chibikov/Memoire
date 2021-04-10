@@ -104,8 +104,6 @@ namespace Mémoire.ViewModel
             SearchCommand = AddCommand<string>(Search);
             WindowContentRenderedCommand = AddCommand(WindowContentRenderedAsync);
 
-            _logger.LogTrace("Starting...");
-
             _translationList = new ObservableCollection<TranslationEntryViewModel>();
             _translationList.CollectionChanged += TranslationList_CollectionChanged;
             View = collectionViewSource.GetDefaultView(_translationList);
@@ -122,7 +120,7 @@ namespace Mémoire.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChangedAsync));
 
-            _logger.LogDebug("Started");
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public int Count { get; private set; }

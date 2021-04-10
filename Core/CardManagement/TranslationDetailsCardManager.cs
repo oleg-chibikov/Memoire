@@ -24,9 +24,11 @@ namespace Mémoire.Core.CardManagement
             IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _windowPositionAdjustmentManager = windowPositionAdjustmentManager ?? throw new ArgumentNullException(nameof(windowPositionAdjustmentManager));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public async Task ShowCardAsync(TranslationInfo translationInfo, IDisplayable? ownerWindow)

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
+using Microsoft.Extensions.Logging;
 using Scar.Common.ApplicationLifetime.Contracts;
 using Scar.Common.IO;
 using Scar.Common.Sync.Contracts;
@@ -12,14 +13,17 @@ namespace Mémoire.Core
     {
         readonly IAssemblyInfoProvider _assemblyInfoProvider;
 
-        public PathsProvider(IOneDrivePathProvider oneDrivePathProvider, IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider)
+        public PathsProvider(IOneDrivePathProvider oneDrivePathProvider, IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider, ILogger<PathsProvider> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _assemblyInfoProvider = assemblyInfoProvider ?? throw new ArgumentNullException(nameof(assemblyInfoProvider));
             _ = oneDrivePathProvider ?? throw new ArgumentNullException(nameof(oneDrivePathProvider));
             _ = dropBoxPathProvider ?? throw new ArgumentNullException(nameof(dropBoxPathProvider));
             OneDrivePath = oneDrivePathProvider.GetOneDrivePath();
             DropBoxPath = dropBoxPathProvider.GetDropBoxPath();
             LocalSharedDataPath = Path.Combine(_assemblyInfoProvider.SettingsPath, "Shared");
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public static string LogsPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Scar", "Mémoire", "Logs", "log.txt");

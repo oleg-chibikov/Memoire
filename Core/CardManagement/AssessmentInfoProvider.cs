@@ -19,7 +19,9 @@ namespace Mémoire.Core.CardManagement
 
         public AssessmentInfoProvider(ILogger<AssessmentInfoProvider> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public AssessmentInfo ProvideAssessmentInfo(TranslationInfo translationInfo)

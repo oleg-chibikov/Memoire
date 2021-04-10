@@ -47,6 +47,8 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager,
             ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater) : base(commandManager)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
@@ -59,7 +61,6 @@ namespace Mémoire.ViewModel
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _predictor = predictor ?? throw new ArgumentNullException(nameof(predictor));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             LearningInfoViewModel = learningInfoViewModelFactory(translationInfo.LearningInfo);
 
             Word = translationInfo.TranslationEntryKey.Text;
@@ -80,6 +81,7 @@ namespace Mémoire.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChanged));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public string LanguagePair { get; }

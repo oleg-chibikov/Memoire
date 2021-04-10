@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mémoire.Contracts.Sync;
+using Microsoft.Extensions.Logging;
 using Scar.Common.DAL.Contracts;
 using Scar.Common.DAL.Contracts.Model;
 
@@ -18,10 +19,13 @@ namespace Mémoire.Core.Sync
         readonly TDeletionEventRepository _ownRepository;
         bool _collectInfo = true;
 
-        public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository)
+        public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository, ILogger<DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository>> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _ownRepository = ownRepository ?? throw new ArgumentNullException(nameof(ownRepository));
             _ownDeletionEventsToClear = new List<TId>(_ownRepository.GetAll().Select(x => x.Id));
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public void OnSynchronizationFinished()

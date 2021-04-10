@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Scar.Services.Contracts;
 using Scar.Services.Contracts.Data;
@@ -10,18 +11,21 @@ using Scar.Services.Contracts.Data.LanguageDetection;
 
 namespace Mémoire.Core.Languages
 {
-    class LanguageDetector : ILanguageDetector
+    sealed class LanguageDetector : ILanguageDetector
     {
         const double Threshold = 0.02;
         const int ThresholdMultiplier = 3;
         readonly LanguageDetection.LanguageDetector _allLanguagesDetector;
 
-        public LanguageDetector()
+        public LanguageDetector(ILogger<LanguageDetector> logger)
         {
+            _ = logger ?? throw new ArgumentNullException(nameof(logger));
+            logger.LogTrace($"Initializing {GetType().Name}...");
             _allLanguagesDetector = new LanguageDetection.LanguageDetector();
             _allLanguagesDetector.AddAllLanguages();
             _allLanguagesDetector.ProbabilityThreshold = Threshold;
             _allLanguagesDetector.ConvergenceThreshold = Threshold;
+            logger.LogDebug($"Initialized {GetType().Name}");
         }
 
         public Task<DetectionResult> DetectLanguageAsync(string text, Action<Exception>? handleError = null, CancellationToken cancellationToken = default)
