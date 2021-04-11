@@ -75,7 +75,7 @@ namespace Mémoire.Core.CardManagement
             }
 
             _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasonAndState>(HandlePauseReasonChanged));
             logger.LogDebug($"Initialized {GetType().Name}");
         }
 
@@ -230,9 +230,9 @@ namespace Mémoire.Core.CardManagement
             _messageHub.Publish(learningInfo);
         }
 
-        void HandlePauseReasonChanged(PauseReasons pauseReasons)
+        void HandlePauseReasonChanged(PauseReasonAndState pauseReasonAndState)
         {
-            if (_pauseManager.IsPaused)
+            if (pauseReasonAndState.IsPaused)
             {
                 lock (_lockObject)
                 {

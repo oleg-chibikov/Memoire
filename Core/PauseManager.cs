@@ -26,7 +26,7 @@ namespace Mémoire.Core
         readonly object _lockObject = new object();
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
-        readonly IDictionary<PauseReasons, PauseInfoCollection> _pauseInfos = new Dictionary<PauseReasons, PauseInfoCollection>();
+        readonly IDictionary<PauseReasons, PauseInfoSummary> _pauseInfos = new Dictionary<PauseReasons, PauseInfoSummary>();
 
         public PauseManager(ILogger<PauseManager> logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
@@ -63,7 +63,7 @@ namespace Mémoire.Core
             }
         }
 
-        public PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons)
+        public PauseInfoSummary GetPauseInfo(PauseReasons pauseReasons)
         {
             lock (_lockObject)
             {
@@ -99,6 +99,7 @@ namespace Mémoire.Core
 
         public void PauseActivity(PauseReasons pauseReasons, string? description)
         {
+            bool isPaused;
             lock (_lockObject)
             {
                 if (description != null)
@@ -111,10 +112,31 @@ namespace Mémoire.Core
                     return;
                 }
 
+                isPaused = IsPaused;
+
                 _logger.LogInformation($"Paused: {pauseReasons}");
             }
 
-            _messageHub.Publish(pauseReasons);
+            _messageHub.Publish(new PauseReasonAndState(pauseReasons, isPaused));
+        }
+
+        public void ResumeActivity(PauseReasons pauseReasons)
+        {
+            bool isPaused;
+            lock (_lockObject)
+            {
+                if (!_pauseInfos[pauseReasons].Resume())
+                {
+                    return;
+                }
+
+                _descriptions.Remove(pauseReasons);
+                _localSettingsRepository.AddOrUpdatePauseInfo(pauseReasons, _pauseInfos[pauseReasons]);
+                isPaused = IsPaused;
+                _logger.LogInformation($"Resumed: {pauseReasons}");
+            }
+
+            _messageHub.Publish(new PauseReasonAndState(pauseReasons, isPaused));
         }
 
         public void ResetPauseTimes()
@@ -130,23 +152,6 @@ namespace Mémoire.Core
             }
 
             _logger.LogDebug("Paused time is reset");
-        }
-
-        public void ResumeActivity(PauseReasons pauseReasons)
-        {
-            lock (_lockObject)
-            {
-                if (!_pauseInfos[pauseReasons].Resume())
-                {
-                    return;
-                }
-
-                _descriptions.Remove(pauseReasons);
-                _localSettingsRepository.AddOrUpdatePauseInfo(pauseReasons, _pauseInfos[pauseReasons]);
-                _logger.LogInformation($"Resumed: {pauseReasons}");
-            }
-
-            _messageHub.Publish(pauseReasons);
         }
 
         static void ApplyToEveryPauseReason(Action<PauseReasons> action)

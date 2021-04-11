@@ -6,7 +6,7 @@ namespace Mémoire.Contracts.CardManagement
     {
         bool IsPaused { get; }
 
-        PauseInfoCollection GetPauseInfo(PauseReasons pauseReasons);
+        PauseInfoSummary GetPauseInfo(PauseReasons pauseReasons);
 
         string? GetPauseReasons();
 

@@ -88,7 +88,7 @@ namespace Mémoire.ViewModel
             IsActive = _localSettingsRepository.IsActive;
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasons>(HandlePauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasonAndState>(HandlePauseReasonChanged));
             logger.LogDebug($"Initialized {GetType().Name}");
         }
 
@@ -161,9 +161,9 @@ namespace Mémoire.ViewModel
             _applicationTerminator.Terminate();
         }
 
-        void HandlePauseReasonChanged(PauseReasons reasons)
+        void HandlePauseReasonChanged(PauseReasonAndState pauseReasonAndState)
         {
-            IsPaused = _pauseManager.IsPaused;
+            IsPaused = pauseReasonAndState.IsPaused;
         }
 
         async Task SetTimesInfoAsync()

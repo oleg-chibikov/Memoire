@@ -12,7 +12,7 @@
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7481.37132" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7771.42688" />
     <PackageReference Include="Scar.Common.Localization" Version="1.1.7481.37120" />
     <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7481.37131" />
     <PackageReference Include="Scar.Common.Sync.Contracts" Version="1.1.7481.37126" />
