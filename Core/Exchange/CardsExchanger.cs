@@ -67,7 +67,7 @@ namespace Mémoire.Core.Exchange
                 OnProgress(1, 1);
             }
 
-            if (exchangeResult?.Success ?? throw new InvalidOperationException(nameof(ExchangeResult)))
+            if (exchangeResult!.Success)
             {
                 _logger.LogInformation("Export to {0} has been performed", fileName);
                 _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
@@ -135,7 +135,7 @@ namespace Mémoire.Core.Exchange
             _exporter.Progress -= ImporterExporter_Progress;
         }
 
-        void ImporterExporter_Progress(object sender, ProgressEventArgs e)
+        void ImporterExporter_Progress(object? sender, ProgressEventArgs e)
         {
             Progress?.Invoke(this, e);
         }

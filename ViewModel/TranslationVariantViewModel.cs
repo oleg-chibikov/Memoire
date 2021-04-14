@@ -43,7 +43,6 @@ namespace Mémoire.ViewModel
             sharedSettingsRepository,
             messageHub)
         {
-            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
             _ = parentText ?? throw new ArgumentNullException(nameof(parentText));
             _ = translationVariant ?? throw new ArgumentNullException(nameof(translationVariant));
             _ = priorityWordViewModelFactory ?? throw new ArgumentNullException(nameof(priorityWordViewModelFactory));

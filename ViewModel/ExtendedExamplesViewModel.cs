@@ -30,7 +30,7 @@ namespace Mémoire.ViewModel
 
             _loadExtendedExamples = () =>
             {
-                ExtendedExamples = examples.SelectMany(x => x.ExtendedExamples).ToArray();
+                ExtendedExamples = (examples ?? throw new InvalidOperationException("examples are null")).SelectMany(x => x.ExtendedExamples).ToArray();
             };
 
             OpenImdbLinkCommand = AddCommand<string>(OpenImdbLink);

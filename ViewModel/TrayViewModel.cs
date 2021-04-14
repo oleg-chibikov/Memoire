@@ -181,7 +181,7 @@ namespace Mémoire.ViewModel
                 : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
             CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
-            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReasons.CardIsVisible).GetPauseTime();
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReasons.CardIsVisible).PauseTime;
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
         }
 
@@ -206,7 +206,7 @@ namespace Mémoire.ViewModel
             executeInDictionaryWindowContext(
                 dictionaryWindow =>
                 {
-                    void DictionaryWindowContentRendered(object sender, EventArgs e)
+                    void DictionaryWindowContentRendered(object? sender, EventArgs e)
                     {
                         if (dictionaryWindow != null)
                         {
@@ -230,7 +230,7 @@ namespace Mémoire.ViewModel
             await _settingsWindowFactory.ShowWindowAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        void Timer_Tick(object state)
+        void Timer_Tick(object? state)
         {
             if (!_isToolTipOpened)
             {

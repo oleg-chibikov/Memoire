@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWpf>True</UseWpf>
     <Description>Launcher application for Mémoire</Description>
     <ApplicationIcon>IconAlt.ico</ApplicationIcon>
@@ -16,15 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7772.16297" />
-    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7771.42688" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7772.1552" />
-    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7771.42689" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7772.1553" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7481.37238" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7772.1584" />
-    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7546.22493" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7773.26307" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7773.36962" />
+    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7773.37087" />
+    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7773.37132" />
+    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7773.37089" />
+    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7773.37094" />
+    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7773.37131" />
+    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7773.37139" />
     <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7547.7" />
     <PackageReference Include="Scar.Services.Qwant" Version="1.1.7541.40114" />
     <PackageReference Include="Scar.Services.UClassify" Version="1.1.7541.40114" />
@@ -32,7 +31,6 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

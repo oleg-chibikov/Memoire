@@ -21,7 +21,7 @@ namespace Mémoire.Contracts.DAL.Model
 
         public string Name { get; set; } = string.Empty;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is ProcessInfo processInfo && Equals(processInfo);
         }

@@ -7,10 +7,7 @@ namespace Mémoire.Contracts.DAL.Model
         TimeSpan _prevPauseTime = TimeSpan.Zero;
         PauseInfo? _currentPauseInfo;
 
-        public TimeSpan GetPauseTime()
-        {
-            return _prevPauseTime + _currentPauseInfo?.GetPauseTime() ?? TimeSpan.Zero;
-        }
+        public TimeSpan PauseTime => _prevPauseTime + _currentPauseInfo?.PauseTime ?? TimeSpan.Zero;
 
         public bool IsPaused() => _currentPauseInfo != null;
 

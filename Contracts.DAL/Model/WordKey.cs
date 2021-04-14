@@ -38,7 +38,7 @@ namespace Mémoire.Contracts.DAL.Model
             return !(obj1 == obj2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is WordKey key && Equals(key);
         }
@@ -58,7 +58,7 @@ namespace Mémoire.Contracts.DAL.Model
             return $"{Key} - {Word}";
         }
 
-        public bool Equals(WordKey other)
+        public bool Equals(WordKey? other)
         {
             if (other is null)
             {

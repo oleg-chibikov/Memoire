@@ -409,9 +409,9 @@ namespace Mémoire.Core.Processing
                 throw new InvalidOperationException("Empty translation result for the existing translation entry");
             }
 
-            // There are no translation details for this word
+            // There are no translation details for this word in this thread, but some other thread might have updated them concurrently - in this case - just rewrite
             translationDetails = new TranslationDetails(translationResult, extendedTranslationResult, translationEntryKey);
-            _translationDetailsRepository.Insert(translationDetails);
+            _translationDetailsRepository.Upsert(translationDetails);
 
             return (translationDetails, false);
         }

@@ -14,9 +14,6 @@ namespace Mémoire.Contracts.DAL.Model
 
         public DateTimeOffset StartTime { get; set; }
 
-        public TimeSpan GetPauseTime()
-        {
-            return (EndTime ?? DateTimeOffset.Now) - StartTime;
-        }
+        public TimeSpan PauseTime => (EndTime ?? DateTimeOffset.Now) - StartTime;
     }
 }

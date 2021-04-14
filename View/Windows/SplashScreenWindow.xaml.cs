@@ -36,7 +36,7 @@ namespace Mémoire.View.Windows
             return text;
         }
 
-        void SplashScreenWindow_Loaded(object sender, RoutedEventArgs e)
+        void SplashScreenWindow_Loaded(object? sender, RoutedEventArgs e)
         {
             var syncContext = SynchronizationContext.Current;
             _timer = new Timer(

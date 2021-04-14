@@ -50,6 +50,7 @@ namespace Mémoire.Core.ProcessMonitoring
         }
 
         [DllImport("user32.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         static extern IntPtr GetForegroundWindow();
 
         static Process? GetProcessByHandle(IntPtr hwnd)
@@ -66,6 +67,7 @@ namespace Mémoire.Core.ProcessMonitoring
         }
 
         [DllImport("user32.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 
         // ReSharper disable once StyleCop.SA1305
         static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -93,7 +95,7 @@ namespace Mémoire.Core.ProcessMonitoring
             }
         }
 
-        void Timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object? sender, EventArgs e)
         {
             CheckActiveProcess();
         }

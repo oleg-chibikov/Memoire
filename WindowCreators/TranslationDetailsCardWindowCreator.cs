@@ -31,7 +31,7 @@ namespace Mémoire.WindowCreators
             var translationDetailsCardWindowCreators = _translationDetailsCardWindowCreatorsFactory(param.TranslationInfo);
             ITranslationDetailsCardWindow? window = null;
             _synchronizationContext.Send(x => window = _translationDetailsCardWindowFactory(param.Window, translationDetailsCardWindowCreators), null);
-            return Task.FromResult(window ?? throw new InvalidOperationException("Window is null"));
+            return Task.FromResult(window!);
         }
     }
 }

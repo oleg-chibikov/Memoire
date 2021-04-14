@@ -195,7 +195,7 @@ namespace Mémoire.ViewModel
             Progress = 0;
         }
 
-        void CardsExchanger_Progress(object sender, ProgressEventArgs e)
+        void CardsExchanger_Progress(object? sender, ProgressEventArgs e)
         {
             _synchronizationContext.Send(
                 x =>

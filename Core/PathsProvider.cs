@@ -37,6 +37,7 @@ namespace Mémoire.Core
         public string GetSharedPath(SyncEngine syncEngine)
         {
             var basePath = syncEngine == SyncEngine.OneDrive ? OneDrivePath : DropBoxPath;
+            _ = basePath ?? throw new InvalidOperationException(nameof(basePath) + " is null");
             return Path.Combine(basePath, _assemblyInfoProvider.ProgramName, Environment.MachineName.SanitizePath());
         }
 

@@ -32,7 +32,7 @@ namespace Mémoire.WindowCreators
             var assessmentWindowCreators = _assessmentBatchCardWindowCreatorsFactory(translationInfos);
             IAssessmentBatchCardWindow? window = null;
             _synchronizationContext.Send(x => window = _assessmentBatchCardWindowFactory(assessmentWindowCreators), null);
-            return Task.FromResult(window ?? throw new InvalidOperationException("Window is null"));
+            return Task.FromResult(window!);
         }
     }
 }

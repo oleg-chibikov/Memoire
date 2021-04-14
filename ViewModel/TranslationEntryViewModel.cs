@@ -117,7 +117,7 @@ namespace Mémoire.ViewModel
             IEnumerable<Word> words;
             if (isPriority)
             {
-                words = translationEntry.PriorityWords.Select(baseWord => new Word { Text = baseWord.Text, PartOfSpeech = baseWord.PartOfSpeech });
+                words = translationEntry.PriorityWords!.Select(baseWord => new Word { Text = baseWord.Text, PartOfSpeech = baseWord.PartOfSpeech });
             }
             else
             {

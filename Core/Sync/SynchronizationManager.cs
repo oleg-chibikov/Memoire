@@ -79,7 +79,7 @@ namespace Mémoire.Core.Sync
 
             {
                 _thisMachineSharedPath = _pathsProvider.GetSharedPath(syncEngine);
-                _allMachinesSharedBasePath = Directory.GetParent(_thisMachineSharedPath).FullName;
+                _allMachinesSharedBasePath = (Directory.GetParent(_thisMachineSharedPath) ?? throw new InvalidOperationException("parent directory for _thisMachineSharedPath is null")).FullName;
 
                 if (!Directory.Exists(_allMachinesSharedBasePath))
                 {
@@ -93,7 +93,7 @@ namespace Mémoire.Core.Sync
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
 
-        void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        void FileSystemWatcher_Changed(object? sender, FileSystemEventArgs e)
         {
             _fileSystemWatcher.EnableRaisingEvents = false;
             var directoryPath = Path.GetDirectoryName(e.FullPath);

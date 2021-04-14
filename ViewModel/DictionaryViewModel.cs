@@ -436,7 +436,9 @@ namespace Mémoire.ViewModel
             _logger.LogTrace("Searching for {0}...", text);
 
             View.Filter = string.IsNullOrWhiteSpace(text)
+#pragma warning disable IDE0004 // Remove Unnecessary Cast
                 ? (Predicate<object>?)null
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 : obj =>
                 {
                     var translationEntryViewModel = (TranslationEntryViewModel)obj;
@@ -450,7 +452,7 @@ namespace Mémoire.ViewModel
             // Count = View.Cast<object>().Count();
         }
 
-        async void Timer_TickAsync(object state)
+        async void Timer_TickAsync(object? state)
         {
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(true);
             foreach (var translation in _translationList)
@@ -466,22 +468,28 @@ namespace Mémoire.ViewModel
         }
 
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1312:Variable names should begin with lower-case letter", Justification = "Discarded variable")]
-        void TranslationList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void TranslationList_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
+                    if (e.OldItems != null)
                     {
-                        Interlocked.Decrement(ref _count);
-                        TranslationEntryProcessor.DeleteTranslationEntry(translationEntryViewModel.Id);
+                        foreach (TranslationEntryViewModel translationEntryViewModel in e.OldItems)
+                        {
+                            Interlocked.Decrement(ref _count);
+                            TranslationEntryProcessor.DeleteTranslationEntry(translationEntryViewModel.Id);
+                        }
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Add:
-                    foreach (var _ in e.NewItems)
+                    if (e.NewItems != null)
                     {
-                        Interlocked.Increment(ref _count);
+                        foreach (var _ in e.NewItems)
+                        {
+                            Interlocked.Increment(ref _count);
+                        }
                     }
 
                     break;

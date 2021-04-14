@@ -50,8 +50,9 @@ namespace Mémoire.Core.Sync
             }
         }
 
-        async void Repository_ChangedAsync(object sender, EventArgs e)
+        async void Repository_ChangedAsync(object? sender, EventArgs e)
         {
+            _ = sender ?? throw new ArgumentNullException(nameof(sender));
             var repository = (ISharedRepository)sender;
             var rateLimiter = _cloneableRepositoriesWithRateLimiters[repository];
             await rateLimiter.ThrottleAsync(

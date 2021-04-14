@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>The main business logic assembly of Mémoire</Description>
+    <NoWarn>$(NoWarn);CA5394</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
     <PackageReference Include="LanguageDetection.NETStandard" Version="1.3.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7771.42688" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7481.37131" />
-    <PackageReference Include="Scar.Common.Sync.Contracts" Version="1.1.7481.37126" />
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7546.21986" />
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-    <PackageReference Include="System.Management" Version="4.7.0" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7773.25954" />
+    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7773.36962" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7773.26316" />
+    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7773.26310" />
+    <PackageReference Include="Scar.Common.Sync.Contracts" Version="1.1.7773.26309" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7773.37089" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

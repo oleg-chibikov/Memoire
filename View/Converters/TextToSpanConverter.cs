@@ -27,7 +27,10 @@ namespace Mémoire.View.Converters
 
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value == null || !(value is string stringValue))
+#pragma warning disable IDE0019 // Use pattern matching
+            var stringValue = value as string;
+#pragma warning restore IDE0019 // Use pattern matching
+            if (stringValue == null)
             {
                 return null;
             }

@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>Contracts assembly for DAL of Mémoire</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;CS8618</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;CS8618</NoWarn>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS8618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Scar.Common" Version="1.1.7546.36694" />
-    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7512.22574" />
+    <PackageReference Include="Scar.Common" Version="1.1.7773.36876" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7773.36876" />
     <PackageReference Include="Scar.Services.Contracts" Version="1.1.7541.40099" />
   </ItemGroup>
 

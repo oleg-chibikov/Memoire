@@ -89,7 +89,7 @@ namespace Mémoire.Core.CardManagement
         {
             get
             {
-                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReasons.CardIsVisible).GetPauseTime();
+                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReasons.CardIsVisible).PauseTime;
                 var alreadyPassedTime = DateTimeOffset.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
@@ -250,8 +250,9 @@ namespace Mémoire.Core.CardManagement
             return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHitAsync);
         }
 
-        void Window_Closed(object sender, EventArgs e)
+        void Window_Closed(object? sender, EventArgs e)
         {
+            _ = sender ?? throw new ArgumentNullException(nameof(sender));
             _hasOpenWindows = false;
             ((IDisplayable)sender).Closed -= Window_Closed;
         }

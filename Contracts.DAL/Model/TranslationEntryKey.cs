@@ -38,7 +38,7 @@ namespace Mémoire.Contracts.DAL.Model
             return !(obj1 == obj2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is TranslationEntryKey key && Equals(key);
         }
@@ -59,7 +59,7 @@ namespace Mémoire.Contracts.DAL.Model
             return $"{Text} [{SourceLanguage}->{TargetLanguage}]";
         }
 
-        public bool Equals(TranslationEntryKey other)
+        public bool Equals(TranslationEntryKey? other)
         {
             if (other is null)
             {

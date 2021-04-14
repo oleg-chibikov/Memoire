@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>ViewModel for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.Async" Version="1.1.7771.42700" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7481.37120" />
-    <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7481.37117" />
-    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7771.36959" />
-    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7481.37131" />
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7546.21986" />
+    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7773.25954" />
+    <PackageReference Include="Scar.Common.Async" Version="1.1.7773.26296" />
+    <PackageReference Include="Scar.Common.Localization" Version="1.1.7773.26316" />
+    <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7773.29699" />
+    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7774.23780" />
+    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7773.26310" />
+    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7773.37089" />
   </ItemGroup>
 
   <ItemGroup>

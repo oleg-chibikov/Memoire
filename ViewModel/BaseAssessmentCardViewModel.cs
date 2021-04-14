@@ -140,7 +140,7 @@ namespace Mémoire.ViewModel
 
         static bool HasUppercaseLettersExceptFirst(string text)
         {
-            return text.Substring(1).Any(letter => char.IsLetter(letter) && char.IsUpper(letter));
+            return text[1..].Any(letter => char.IsLetter(letter) && char.IsUpper(letter));
         }
 
         static void PrepareVerb(string sourceLanguage, BaseWord word)

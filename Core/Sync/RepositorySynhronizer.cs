@@ -132,7 +132,7 @@ namespace Mémoire.Core.Sync
 
                         if (_syncPreProcessor != null)
                         {
-                            if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(true))
+                            if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity!, remoteEntity).ConfigureAwait(true))
                             {
                                 _logger.LogDebug("Preprocessor condition not satisfied for {0}", remoteEntity);
                                 return;
@@ -152,7 +152,7 @@ namespace Mémoire.Core.Sync
 
                         if (_syncPostProcessor != null)
                         {
-                            await _syncPostProcessor.AfterEntityChangedAsync(existingEntity, remoteEntity).ConfigureAwait(true);
+                            await _syncPostProcessor.AfterEntityChangedAsync(existingEntity!, remoteEntity).ConfigureAwait(true);
                         }
                     }
                     catch (Exception ex)

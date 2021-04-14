@@ -13,8 +13,8 @@ namespace Mémoire.Contracts.DAL.Model
         public LearningInfo()
         {
             LastCardShowTime = DateTimeOffset.Now;
-            RepeatType = RepeatTypeSettings.RepeatTypes.First.Value;
-            _current = RepeatTypeSettings.RepeatTypes.First;
+            RepeatType = RepeatTypeSettings.RepeatTypes.First!.Value;
+            _current = RepeatTypeSettings.RepeatTypes.First!;
         }
 
         public bool IsFavorited { get; set; }
@@ -37,7 +37,7 @@ namespace Mémoire.Contracts.DAL.Model
             set
             {
                 _repeatType = value;
-                _current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First;
+                _current = RepeatTypeSettings.RepeatTypes.Find(value) ?? RepeatTypeSettings.RepeatTypes.First!;
                 SetNextCardShowTime();
             }
         }

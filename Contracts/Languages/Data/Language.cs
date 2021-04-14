@@ -14,7 +14,7 @@ namespace Mémoire.Contracts.Languages.Data
 
         public string DisplayName { get; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == this)
             {

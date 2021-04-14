@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>Contracts assembly for Mémoire</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7512.22574" />
-    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7546.21914" />
+    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7773.36876" />
+    <PackageReference Include="Scar.Common.View.Contracts" Version="1.1.7773.26310" />
     <PackageReference Include="Scar.Services.Contracts" Version="1.1.7541.40099" />
   </ItemGroup>
 
