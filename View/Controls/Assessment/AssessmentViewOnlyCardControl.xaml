@@ -49,7 +49,9 @@
             <Expander.Header>
                 <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc Details}" />
             </Expander.Header>
-            <translationDetails:TranslationDetailsCardControl Margin="5,10" DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
+            <Border BorderBrush="{StaticResource TranslationDetailsExpanderBorder}" BorderThickness="3" Background="{StaticResource TranslationDetailsExpanderBackground}">
+                <translationDetails:TranslationDetailsCardControl Margin="5,10" DataContext="{Binding TranslationDetailsCardViewModel, Mode=OneWay}" />
+            </Border>
         </Expander>
     </StackPanel>
 </commonView:BaseControl>

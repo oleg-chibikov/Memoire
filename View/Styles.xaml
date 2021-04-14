@@ -52,6 +52,8 @@
     <Brush x:Key="SuccessfulAnswerForeground">MediumSeaGreen</Brush>
     <Color x:Key="PriorityTranslationBackground">MediumSeaGreen</Color>
     <Brush x:Key="HasManualTranslationsForeground">MediumSeaGreen</Brush>
+    <Brush x:Key="TranslationDetailsExpanderBorder">DarkGoldenrod</Brush>
+    <Brush x:Key="TranslationDetailsExpanderBackground">DarkSlateGray</Brush>
 
     <system:Double x:Key="CommonMargin">5</system:Double>
     <Thickness x:Key="CommonMarginThickness">5</Thickness>

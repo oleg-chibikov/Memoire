@@ -143,6 +143,7 @@ namespace Mémoire.Core.CardManagement
 
         async void HandleIntervalHitAsync(long x)
         {
+            // TODO: this should not happen together with app close, otherwise the app may crash.
             _pauseManager.ResetPauseTimes();
             _pauseManager.PauseActivity(PauseReasons.CardIsLoading);
             try
