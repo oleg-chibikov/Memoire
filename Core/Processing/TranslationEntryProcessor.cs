@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts;
 using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.Classification;
 using Mémoire.Contracts.DAL.Local;
@@ -39,7 +40,7 @@ namespace Mémoire.Core.Processing
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IPrepositionsInfoRepository _prepositionsInfoRepository;
-        readonly ITextToSpeechPlayer _textToSpeechPlayer;
+        readonly ITextToSpeechPlayerWrapper _textToSpeechPlayerWrapper;
         readonly ITranslationDetailsRepository _translationDetailsRepository;
         readonly ITranslationEntryDeletionRepository _translationEntryDeletionRepository;
         readonly ITranslationEntryRepository _translationEntryRepository;
@@ -51,7 +52,7 @@ namespace Mémoire.Core.Processing
         readonly ILearningInfoCategoriesUpdater _learningInfoCategoriesUpdater;
 
         public TranslationEntryProcessor(
-            ITextToSpeechPlayer textToSpeechPlayer,
+            ITextToSpeechPlayerWrapper textToSpeechPlayerWrapper,
             ILogger<TranslationEntryProcessor> logger,
             ITranslationDetailsCardManager cardManager,
             IMessageHub messageHub,
@@ -88,7 +89,7 @@ namespace Mémoire.Core.Processing
             _wordsTranslator = wordsTranslator ?? throw new ArgumentNullException(nameof(wordsTranslator));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationDetailsRepository = translationDetailsRepository ?? throw new ArgumentNullException(nameof(translationDetailsRepository));
-            _textToSpeechPlayer = textToSpeechPlayer ?? throw new ArgumentNullException(nameof(textToSpeechPlayer));
+            _textToSpeechPlayerWrapper = textToSpeechPlayerWrapper ?? throw new ArgumentNullException(nameof(textToSpeechPlayerWrapper));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             logger.LogDebug($"Initialized {GetType().Name}");
@@ -365,12 +366,9 @@ namespace Mémoire.Core.Processing
         async Task PostProcessWordAsync(IDisplayable? ownerWindow, TranslationInfo translationInfo, CancellationToken cancellationToken)
         {
             var playTtsTask = !_sharedSettingsRepository.MuteSounds
-                ? _textToSpeechPlayer.PlayTtsAsync(
+                ? _textToSpeechPlayerWrapper.PlayTtsAsync(
                     translationInfo.TranslationEntryKey.Text,
                     translationInfo.TranslationEntryKey.SourceLanguage,
-                    _sharedSettingsRepository.TtsSpeaker,
-                    _sharedSettingsRepository.TtsVoiceEmotion,
-                    ex => _messageHub.Publish(Errors.CannotSpeak.ToError(ex)),
                     cancellationToken)
                 : Task.CompletedTask;
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);

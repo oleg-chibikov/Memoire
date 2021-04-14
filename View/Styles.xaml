@@ -160,7 +160,7 @@
         <Setter Property="ExpandDirection" Value="Down" />
         <Setter Property="materialDesign:ExpanderAssist.HorizontalHeaderPadding" Value="0" />
         <Setter Property="materialDesign:ExpanderAssist.VerticalHeaderPadding" Value="0" />
-  </Style>
+    </Style>
     <Style
         x:Key="ExpanderHeader"
         BasedOn="{StaticResource {x:Type TextBlock}}"

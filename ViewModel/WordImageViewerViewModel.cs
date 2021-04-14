@@ -70,7 +70,7 @@ namespace Mémoire.ViewModel
 
             var wordImageInfo = _wordImageInfoRepository.TryGetById(_wordKey);
             _shouldRepeat = true;
-            ConstructionTask = wordImageInfo != null ? LoadInitialImageAsync(wordImageInfo) : SetNextOrPreviousImageAsync(true);
+            ConstructionTask = wordImageInfo != null ? LoadInitialImageAsync(wordImageInfo) : SetNextOrPreviousImageAsync(true, false);
         }
 
         public IReadOnlyCollection<byte>? ThumbnailBytes { get; private set; }
@@ -118,17 +118,17 @@ namespace Mémoire.ViewModel
         internal async Task ReloadImageAsync()
         {
             _shouldRepeat = true;
-            await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
+            await SetNextOrPreviousImageAsync(true, true).ConfigureAwait(false);
         }
 
         internal async Task SetNextImageAsync()
         {
-            await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
+            await SetNextOrPreviousImageAsync(true, true).ConfigureAwait(false);
         }
 
         internal async Task SetPreviousImageAsync()
         {
-            await SetNextOrPreviousImageAsync(false).ConfigureAwait(false);
+            await SetNextOrPreviousImageAsync(false, true).ConfigureAwait(false);
         }
 
         async Task LoadInitialImageAsync(WordImageInfo wordImageInfo)
@@ -145,7 +145,7 @@ namespace Mémoire.ViewModel
         /// <remarks>
         /// This function swaps searchText every next time until one of the texts stops to give results.
         /// </remarks>
-        async Task SetNextOrPreviousImageAsync(bool increase)
+        async Task SetNextOrPreviousImageAsync(bool increase, bool showException)
         {
             if (IsFirst && !increase)
             {
@@ -198,11 +198,11 @@ namespace Mémoire.ViewModel
             _shouldRepeat = false;
 
             // after getting isAlternate
-            await SetWordImageAsync(searchIndex, SearchText).ConfigureAwait(false);
+            await SetWordImageAsync(searchIndex, SearchText, showException).ConfigureAwait(false);
             IsLoading = false;
         }
 
-        async Task SetWordImageAsync(int index, string searchText)
+        async Task SetWordImageAsync(int index, string searchText, bool showException)
         {
             WordImageInfo wordImageInfo;
             _logger.LogTrace("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
@@ -217,7 +217,13 @@ namespace Mémoire.ViewModel
                                     index,
                                     1,
                                     null,
-                                    ex => _messageHub.Publish(Errors.CannotGetQwantResults.ToError(ex)),
+                                    ex =>
+                                    {
+                                        if (showException)
+                                        {
+                                            _messageHub.Publish((Errors.CannotGetQwantResults + ": " + ex.Message).ToError(ex));
+                                        }
+                                    },
                                     cancellationToken)
                                 .ConfigureAwait(false);
                             if (imageInfos == null)
@@ -308,7 +314,7 @@ namespace Mémoire.ViewModel
             if ((image == null) || ((thumbnailBytes = image.ThumbnailBitmap) == null) || (thumbnailBytes.Count == 0))
             {
                 // Try to search the next image if the current image is not available, but has metadata
-                await SetNextOrPreviousImageAsync(true).ConfigureAwait(false);
+                await SetNextOrPreviousImageAsync(true, false).ConfigureAwait(false);
                 return;
             }
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Timers;
-using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.ProcessMonitoring;

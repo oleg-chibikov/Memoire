@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Easy.MessageHub;
 using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
@@ -16,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Scar.Common.DAL.Contracts.Model;
 using Scar.Common.MVVM.Commands;
-using Scar.Services.Contracts;
 using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.ViewModel
@@ -31,7 +29,7 @@ namespace Mémoire.ViewModel
 
         public TranslationEntryViewModel(
             TranslationEntry translationEntry,
-            ITextToSpeechPlayer textToSpeechPlayer,
+            ITextToSpeechPlayerWrapper textToSpeechPlayerWrapper,
             ITranslationEntryProcessor translationEntryProcessor,
             ILogger<TranslationEntryViewModel> logger,
             SynchronizationContext synchronizationContext,
@@ -40,16 +38,12 @@ namespace Mémoire.ViewModel
             ILearningInfoRepository learningInfoRepository,
             Func<LearningInfo, LearningInfoViewModel> learningInfoViewModelFactory,
             ILanguageManager languageManager,
-            ICommandManager commandManager,
-            ISharedSettingsRepository sharedSettingsRepository,
-            IMessageHub messageHub) : base(
+            ICommandManager commandManager) : base(
             new Word { Text = translationEntry?.Id.Text ?? throw new ArgumentNullException(nameof(translationEntry)) },
             translationEntry.Id.SourceLanguage,
-            textToSpeechPlayer,
+            textToSpeechPlayerWrapper,
             translationEntryProcessor,
-            commandManager,
-            sharedSettingsRepository,
-            messageHub)
+            commandManager)
         {
             _ = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));

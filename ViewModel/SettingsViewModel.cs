@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Easy.MessageHub;
 using Mémoire.Contracts;
-using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;

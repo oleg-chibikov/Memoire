@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
+using Mémoire.Contracts;
 using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;

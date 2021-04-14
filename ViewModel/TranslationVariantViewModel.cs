@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Easy.MessageHub;
+using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing;
@@ -9,7 +10,6 @@ using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Scar.Common.MVVM.Commands;
-using Scar.Services.Contracts;
 using Scar.Services.Contracts.Data.ExtendedTranslation;
 using Scar.Services.Contracts.Data.Translation;
 
@@ -22,7 +22,7 @@ namespace Mémoire.ViewModel
             TranslationInfo translationInfo,
             TranslationVariant translationVariant,
             string parentText,
-            ITextToSpeechPlayer textToSpeechPlayer,
+            ITextToSpeechPlayerWrapper textToSpeechPlayerWrapper,
             ITranslationEntryProcessor translationEntryProcessor,
             Func<Word, TranslationEntry, PriorityWordViewModel> priorityWordViewModelFactory,
             Func<Word, string, WordViewModel> wordViewModelFactory,
@@ -30,17 +30,15 @@ namespace Mémoire.ViewModel
             ILogger<PriorityWordViewModel> baseLogger,
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager,
-            ISharedSettingsRepository sharedSettingsRepository,
             IMessageHub messageHub) : base(
             translationInfo == null ? throw new ArgumentNullException(nameof(translationInfo)) : translationInfo.TranslationEntry,
             translationVariant,
-            textToSpeechPlayer,
+            textToSpeechPlayerWrapper,
             translationEntryProcessor,
             baseLogger,
             wordViewModelFactory,
             translationEntryRepository,
             commandManager,
-            sharedSettingsRepository,
             messageHub)
         {
             _ = parentText ?? throw new ArgumentNullException(nameof(parentText));

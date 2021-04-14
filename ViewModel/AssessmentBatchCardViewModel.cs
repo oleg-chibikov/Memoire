@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,6 @@
 using Mémoire.Contracts.DAL.Model;
 
-namespace Mémoire.Contracts.CardManagement
+namespace Mémoire.Contracts
 {
     public interface IPauseManager
     {

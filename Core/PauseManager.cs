@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Easy.MessageHub;
-using Mémoire.Contracts.CardManagement;
+using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Local;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Resources;

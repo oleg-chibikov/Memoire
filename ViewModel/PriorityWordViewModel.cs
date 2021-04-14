@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Easy.MessageHub;
+using Mémoire.Contracts;
 using Mémoire.Contracts.DAL.Model;
 using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing;
@@ -8,7 +9,6 @@ using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Scar.Common.MVVM.Commands;
-using Scar.Services.Contracts;
 using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.ViewModel
@@ -25,21 +25,18 @@ namespace Mémoire.ViewModel
         public PriorityWordViewModel(
             TranslationEntry translationEntry,
             Word word,
-            ITextToSpeechPlayer textToSpeechPlayer,
+            ITextToSpeechPlayerWrapper textToSpeechPlayerWrapper,
             ITranslationEntryProcessor translationEntryProcessor,
             ILogger<PriorityWordViewModel> logger,
             Func<Word, string, WordViewModel> wordViewModelFactory,
             ITranslationEntryRepository translationEntryRepository,
             ICommandManager commandManager,
-            ISharedSettingsRepository sharedSettingsRepository,
             IMessageHub messageHub) : base(
             word,
             translationEntry?.Id.TargetLanguage ?? throw new ArgumentNullException(nameof(translationEntry)),
-            textToSpeechPlayer,
+            textToSpeechPlayerWrapper,
             translationEntryProcessor,
-            commandManager,
-            sharedSettingsRepository,
-            messageHub)
+            commandManager)
         {
             _ = wordViewModelFactory ?? throw new ArgumentNullException(nameof(wordViewModelFactory));
             IsPriority = translationEntry.PriorityWords?.Contains(word) ?? false;
