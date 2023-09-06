@@ -11,8 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scar.Common.Installer" Version="1.1.7773.29700" />
-    <PackageReference Include="WixSharp.wix.bin" Version="3.11.2" />
+    <PackageReference Include="WixSharp.wix.bin" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Common\Installer\Installer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +32,5 @@
 
   <Target Name="PostBuild" AfterTargets="Build">
     <Exec Command="&quot;$(TargetDir)$(SolutionName).Installer.exe&quot;" />
-    <Message Text="XCOPY &quot;$(TargetDir)$(SolutionName).msi&quot; &quot;$(SolutionDir)7zRelease\&quot; /Y" />
-    <Exec Command="XCOPY &quot;$(TargetDir)$(SolutionName).msi&quot; &quot;$(SolutionDir)7zRelease\&quot; /Y" />
   </Target>
 </Project>

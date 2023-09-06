@@ -24,7 +24,6 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="$(MSBuildProjectFile.Contains('Test'))">$(MSBuildThisFileDirectory)\CodeAnalysis.Test.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <!--<OutputPath>..\BuildCommon\</OutputPath>-->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType Condition=" '$(Configuration)' == 'Release' ">None</DebugType>
     <SignAssembly>false</SignAssembly>

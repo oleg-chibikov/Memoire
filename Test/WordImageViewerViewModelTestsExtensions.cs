@@ -91,9 +91,9 @@ namespace Mémoire.Test
                     x => x.SearchImagesAsync(
                         It.Is<string>(s => (searchText == null) || (s == searchText)),
                         It.IsAny<bool>(),
-                        It.IsAny<int>(),
-                        It.IsAny<int>(),
                         It.IsAny<string>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
                         It.IsAny<Action<Exception>>(),
                         It.IsAny<CancellationToken>()),
                     times);
@@ -116,9 +116,9 @@ namespace Mémoire.Test
                     x => x.SearchImagesAsync(
                         It.Is<string>(s => (searchText == null) || (s == searchText)),
                         It.IsAny<bool>(),
-                        It.IsAny<int>(),
-                        It.IsAny<int>(),
                         It.IsAny<string>(),
+                        It.IsAny<int>(),
+                        It.IsAny<int>(),
                         It.IsAny<Action<Exception>>(),
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(imageInfos);

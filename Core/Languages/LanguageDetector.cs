@@ -43,8 +43,10 @@ namespace Mémoire.Core.Languages
 
             var deserializedDirections = JsonConvert.DeserializeObject<string[]>(directionsJson);
             var deserializedLanguages = JsonConvert.DeserializeObject<Dictionary<string, string>>(languagesJson);
-            var languageListResult = new LanguageListResult { Directions = deserializedDirections, Languages = deserializedLanguages };
-            return Task.FromResult<LanguageListResult?>(languageListResult);
+            var languageListResult = deserializedLanguages != null && deserializedDirections != null
+                ? new LanguageListResult { Directions = deserializedDirections, Languages = deserializedLanguages }
+                : null;
+            return Task.FromResult(languageListResult);
         }
 
         static DetectionResult ConvertLanguage(string language)
