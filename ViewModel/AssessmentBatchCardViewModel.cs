@@ -27,7 +27,7 @@ namespace Mémoire.ViewModel
             IPauseManager pauseManager) : base(commandManager)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
             _ = assessmentViewOnlyCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentViewOnlyCardViewModelFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
@@ -52,7 +52,7 @@ namespace Mémoire.ViewModel
                     })
                 .ToArray();
             NestedViewModels.First().IsFocused = true;
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public IReadOnlyCollection<BaseAssessmentCardViewModel> NestedViewModels { get; }

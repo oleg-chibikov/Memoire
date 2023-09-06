@@ -6,7 +6,7 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Mémoire.DAL.SharedBetweenMachines
 {
-    sealed class TranslationEntryRepository : TrackedLiteDbRepository<TranslationEntry, TranslationEntryKey>, ITranslationEntryRepository
+    public sealed class TranslationEntryRepository : TrackedLiteDbRepository<TranslationEntry, TranslationEntryKey>, ITranslationEntryRepository
     {
         public TranslationEntryRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = false) : base(
             directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),

@@ -4,7 +4,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class AddTranslationWindow : IAddTranslationWindow
+    public sealed partial class AddTranslationWindow : IAddTranslationWindow
     {
         public AddTranslationWindow(AddTranslationViewModel viewModel)
         {

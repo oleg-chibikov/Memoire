@@ -48,7 +48,7 @@ namespace Mémoire.ViewModel
             ILearningInfoCategoriesUpdater learningInfoCategoriesUpdater) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ = learningInfoCategoriesUpdater ?? throw new ArgumentNullException(nameof(learningInfoCategoriesUpdater));
             _cultureManager = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _ = translationDetailsViewModelFactory ?? throw new ArgumentNullException(nameof(translationDetailsViewModelFactory));
@@ -81,7 +81,7 @@ namespace Mémoire.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChanged));
             _subscriptionTokens.Add(messageHub.Subscribe<LearningInfo>(HandleLearningInfoReceivedAsync));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public string LanguagePair { get; }
@@ -130,7 +130,7 @@ namespace Mémoire.ViewModel
             var prepositionsInfo = _prepositionsInfoRepository.TryGetById(translationEntryKey);
             if (prepositionsInfo == null)
             {
-                _logger.LogTrace("Reloading preposition for {0}...", translationEntryKey);
+                _logger.LogTrace("Reloading preposition for {Translation}...", translationEntryKey);
                 var prepositions = await GetPrepositionsCollectionAsync(translationEntryKey, cancellationToken).ConfigureAwait(false);
                 if (prepositions == null)
                 {
@@ -158,7 +158,7 @@ namespace Mémoire.ViewModel
                 return;
             }
 
-            _logger.LogDebug("Received {0} from external source", learningInfo);
+            _logger.LogDebug("Received {LearningInfo} from external source", learningInfo);
 
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(true);
         }
@@ -178,7 +178,7 @@ namespace Mémoire.ViewModel
                     {
                         if (translationVariant.Word.Equals(priorityWordKey.WordKey.Word))
                         {
-                            _logger.LogTrace("Setting priority: {0} in translations details for translation variant...", priorityWordKey);
+                            _logger.LogTrace("Setting priority: {PriorityWordKey} in translations details for translation variant...", priorityWordKey);
                             translationVariant.SetIsPriority(priorityWordKey.IsPriority);
                             return;
                         }
@@ -190,7 +190,7 @@ namespace Mémoire.ViewModel
 
                         foreach (var synonym in translationVariant.Synonyms.Where(synonym => synonym.Word.Equals(priorityWordKey.WordKey.Word)))
                         {
-                            _logger.LogTrace("Setting priority: {0} in translations details for synonym...", priorityWordKey);
+                            _logger.LogTrace("Setting priority: {PriorityWordKey} in translations details for synonym...", priorityWordKey);
                             synonym.SetIsPriority(priorityWordKey.IsPriority);
                             return;
                         }
@@ -202,7 +202,7 @@ namespace Mémoire.ViewModel
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
-            _logger.LogTrace("Changing UI language to {0}...", cultureInfo);
+            _logger.LogTrace("Changing UI language to {CultureInfo}...", cultureInfo);
 
             await Task.Run(
                     () =>

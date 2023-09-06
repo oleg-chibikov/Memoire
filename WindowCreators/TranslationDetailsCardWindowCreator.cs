@@ -9,7 +9,7 @@ using Scar.Common.View.WindowCreation;
 
 namespace Mémoire.WindowCreators
 {
-    sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
+    public sealed class TranslationDetailsCardWindowCreator : IWindowCreator<ITranslationDetailsCardWindow, (IDisplayable Window, TranslationInfo TranslationInfo)>
     {
         readonly SynchronizationContext _synchronizationContext;
         readonly Func<TranslationInfo, TranslationDetailsCardViewModel> _translationDetailsCardWindowCreatorsFactory;
@@ -27,10 +27,10 @@ namespace Mémoire.WindowCreators
 
         public Task<ITranslationDetailsCardWindow> CreateWindowAsync((IDisplayable Window, TranslationInfo TranslationInfo) param, CancellationToken cancellationToken)
         {
-            _ = param.TranslationInfo ?? throw new ArgumentException(nameof(param.TranslationInfo) + " is null");
+            _ = param.TranslationInfo ?? throw new ArgumentException($"{nameof(param.TranslationInfo)} is null");
             var translationDetailsCardWindowCreators = _translationDetailsCardWindowCreatorsFactory(param.TranslationInfo);
             ITranslationDetailsCardWindow? window = null;
-            _synchronizationContext.Send(x => window = _translationDetailsCardWindowFactory(param.Window, translationDetailsCardWindowCreators), null);
+            _synchronizationContext.Send(_ => window = _translationDetailsCardWindowFactory(param.Window, translationDetailsCardWindowCreators), null);
             return Task.FromResult(window!);
         }
     }

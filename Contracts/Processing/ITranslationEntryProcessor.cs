@@ -13,6 +13,7 @@ namespace Mémoire.Contracts.Processing
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
             IDisplayable? ownerWindow = null,
             bool needPostProcess = true,
+            bool showLoader = true,
             IReadOnlyCollection<ManualTranslation>? manualTranslations = null,
             CancellationToken cancellationToken = default);
 

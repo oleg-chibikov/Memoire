@@ -11,7 +11,7 @@ using Scar.Services.Contracts.Data;
 
 namespace Mémoire.DAL.Local
 {
-    sealed class LocalSettingsRepository : BaseSettingsRepository, ILocalSettingsRepository
+    public sealed class LocalSettingsRepository : BaseSettingsRepository, ILocalSettingsRepository
     {
         const string PauseTimeKey = "PauseTime_";
         const string SyncTimeKey = "SyncTime_";

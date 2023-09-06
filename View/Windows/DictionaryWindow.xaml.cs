@@ -4,7 +4,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class DictionaryWindow : IDictionaryWindow
+    public sealed partial class DictionaryWindow : IDictionaryWindow
     {
         public DictionaryWindow(DictionaryViewModel viewModel)
         {

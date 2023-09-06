@@ -14,7 +14,7 @@ using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.Core.Exchange
 {
-    sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
+    public sealed class EachWordFileImporter : BaseFileImporter<EachWordExchangeEntry>
     {
         static readonly char[] Separator =
         {
@@ -35,9 +35,9 @@ namespace Mémoire.Core.Exchange
             ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         protected override IReadOnlyCollection<BaseWord>? GetPriorityTranslations(EachWordExchangeEntry exchangeEntry)

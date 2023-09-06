@@ -44,11 +44,13 @@ namespace Mémoire.ViewModel
         readonly IMessageHub _messageHub;
         readonly IRateLimiter _rateLimiter;
         readonly IScopedWindowProvider _scopedWindowProvider;
-        readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
         readonly IList<Guid> _subscriptionTokens = new List<Guid>();
         readonly SynchronizationContext _synchronizationContext;
+#pragma warning disable CA2213 // They are disposed in the Cleanup method
+        readonly SemaphoreSlim _semaphore = new (1, 1);
         readonly Timer _timer;
+#pragma warning restore CA2213
         readonly ITranslationEntryRepository _translationEntryRepository;
         readonly Func<TranslationEntry, TranslationEntryViewModel> _translationEntryViewModelFactory;
         readonly ObservableCollection<TranslationEntryViewModel> _translationList;
@@ -120,7 +122,7 @@ namespace Mémoire.ViewModel
             _subscriptionTokens.Add(messageHub.Subscribe<CultureInfo>(HandleUiLanguageChangedAsync));
             _subscriptionTokens.Add(messageHub.Subscribe<PriorityWordKey>(HandlePriorityChangedAsync));
 
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public int Count { get; private set; }
@@ -146,6 +148,7 @@ namespace Mémoire.ViewModel
             try
             {
                 _semaphore.Wait(CancellationTokenSource.Token);
+                _semaphore.Dispose();
             }
             catch (OperationCanceledException)
             {
@@ -175,12 +178,12 @@ namespace Mémoire.ViewModel
                 return;
             }
 
-            _logger.LogTrace("Deleting {0} from the list...", translationEntryViewModel);
+            _logger.LogTrace("Deleting {Translation} from the list...", translationEntryViewModel);
 
             var deleted = false;
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     deleted = _translationList.Remove(translationEntryViewModel);
                 },
@@ -189,11 +192,11 @@ namespace Mémoire.ViewModel
 
             if (!deleted)
             {
-                _logger.LogWarning("{0} is not deleted from the list", translationEntryViewModel);
+                _logger.LogWarning("{Translation} is not deleted from the list", translationEntryViewModel);
             }
             else
             {
-                _logger.LogDebug("{0} has been deleted from the list", translationEntryViewModel);
+                _logger.LogDebug("{Translation} has been deleted from the list", translationEntryViewModel);
             }
         }
 
@@ -223,7 +226,7 @@ namespace Mémoire.ViewModel
                 return false;
             }
 
-            _logger.LogTrace("Receiving translations page {0}...", pageNumber);
+            _logger.LogTrace("Receiving translations page {PageNumber}...", pageNumber);
             var translationEntries = _translationEntryRepository.GetPage(pageNumber, AppSettings.DictionaryPageSize, nameof(TranslationEntry.ModifiedDate), SortOrder.Descending);
             if (!(translationEntries.Count > 0))
             {
@@ -233,7 +236,7 @@ namespace Mémoire.ViewModel
             await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
             var viewModels = translationEntries.Select(_translationEntryViewModelFactory);
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     foreach (var translationEntryViewModel in viewModels)
                     {
@@ -245,14 +248,14 @@ namespace Mémoire.ViewModel
                 null);
 
             _semaphore.Release();
-            _logger.LogDebug("{0} translations have been received", translationEntries.Count);
+            _logger.LogDebug("{TranslationCount} translations have been received", translationEntries.Count);
             return true;
         }
 
         async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
         {
             _ = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
-            _logger.LogDebug("Received {0} from external source", learningInfo);
+            _logger.LogDebug("Received {LearningInfo} from external source", learningInfo);
 
             await Task.Run(
                     async () =>
@@ -262,13 +265,13 @@ namespace Mémoire.ViewModel
                         _semaphore.Release();
                         if (translationEntryViewModel == null)
                         {
-                            _logger.LogDebug("Translation entry is still not loaded for {0}", learningInfo);
+                            _logger.LogDebug("Translation entry is still not loaded for {LearningInfo}", learningInfo);
                             return;
                         }
 
-                        _logger.LogTrace("Updating LearningInfo for {0} in the list...", translationEntryViewModel);
+                        _logger.LogTrace("Updating LearningInfo for {Translation} in the list...", translationEntryViewModel);
                         translationEntryViewModel.Update(learningInfo, translationEntryViewModel.ModifiedDate);
-                        _logger.LogDebug("LearningInfo for {0} has been updated in the list", translationEntryViewModel);
+                        _logger.LogDebug("LearningInfo for {Translation} has been updated in the list", translationEntryViewModel);
                         ScrollTo(translationEntryViewModel);
                     },
                     CancellationTokenSource.Token)
@@ -278,7 +281,7 @@ namespace Mémoire.ViewModel
         async void HandlePriorityChangedAsync(PriorityWordKey priorityWordKey)
         {
             _ = priorityWordKey ?? throw new ArgumentNullException(nameof(priorityWordKey));
-            _logger.LogTrace("Changing priority: {0}...", priorityWordKey);
+            _logger.LogTrace("Changing priority: {PriorityWordKey}...", priorityWordKey);
 
             await Task.Run(
                     async () =>
@@ -289,7 +292,7 @@ namespace Mémoire.ViewModel
 
                         if (translationEntryViewModel == null)
                         {
-                            _logger.LogWarning("Cannot find {0} in translations list", priorityWordKey.WordKey);
+                            _logger.LogWarning("Cannot find {PriorityWordKey} in translations list", priorityWordKey.WordKey);
                             return;
                         }
 
@@ -303,7 +306,7 @@ namespace Mémoire.ViewModel
         async void HandleTranslationEntriesBatchReceivedAsync(IReadOnlyCollection<TranslationEntry> translationEntries)
         {
             _ = translationEntries ?? throw new ArgumentNullException(nameof(translationEntries));
-            _logger.LogDebug("Received a batch of translations ({0} items) from the external source...", translationEntries.Count);
+            _logger.LogDebug("Received a batch of translations ({TranslationCount} items) from the external source...", translationEntries.Count);
 
             await Task.Run(
                     async () =>
@@ -320,7 +323,7 @@ namespace Mémoire.ViewModel
         async void HandleTranslationEntryReceivedAsync(TranslationEntry translationEntry)
         {
             _ = translationEntry ?? throw new ArgumentNullException(nameof(translationEntry));
-            _logger.LogDebug("Received {0} from external source", translationEntry);
+            _logger.LogDebug("Received {Translation} from external source", translationEntry);
 
             await Task.Run(async () => await OnTranslationEntryReceivedInternalAsync(translationEntry).ConfigureAwait(false), CancellationTokenSource.Token).ConfigureAwait(true);
         }
@@ -333,7 +336,7 @@ namespace Mémoire.ViewModel
 
             if (existingTranslationEntryViewModel != null)
             {
-                _logger.LogTrace("Updating {0} in the list...", existingTranslationEntryViewModel);
+                _logger.LogTrace("Updating {Translation} in the list...", existingTranslationEntryViewModel);
                 existingTranslationEntryViewModel.HasManualTranslations = translationEntry.ManualTranslations?.Count > 0;
                 var learningInfo = _learningInfoRepository.GetOrInsert(translationEntry.Id);
                 existingTranslationEntryViewModel.Update(learningInfo, translationEntry.ModifiedDate);
@@ -342,18 +345,18 @@ namespace Mémoire.ViewModel
                 // ReSharper disable once AssignmentIsFullyDiscarded
                 _ = existingTranslationEntryViewModel.ReloadTranslationsAsync(translationEntry);
 
-                _logger.LogDebug("{0} has been updated in the list", existingTranslationEntryViewModel);
+                _logger.LogDebug("{Translation} has been updated in the list", existingTranslationEntryViewModel);
                 ScrollTo(existingTranslationEntryViewModel);
             }
             else
             {
-                _logger.LogTrace("Adding {0} to the list...", translationEntry);
+                _logger.LogTrace("Adding {Translation} to the list...", translationEntry);
                 var translationEntryViewModel = _translationEntryViewModelFactory(translationEntry);
                 await _semaphore.WaitAsync(CancellationTokenSource.Token).ConfigureAwait(false);
-                _synchronizationContext.Send(x => _translationList.Insert(0, translationEntryViewModel), null);
+                _synchronizationContext.Send(_ => _translationList.Insert(0, translationEntryViewModel), null);
                 _semaphore.Release();
 
-                _logger.LogDebug("{0} has been added to the list...", translationEntryViewModel);
+                _logger.LogDebug("{Translation} has been added to the list...", translationEntryViewModel);
                 ScrollTo(translationEntryViewModel);
             }
         }
@@ -361,7 +364,7 @@ namespace Mémoire.ViewModel
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
-            _logger.LogTrace("Changing UI language to {0}...", cultureInfo);
+            _logger.LogTrace("Changing UI language to {CultureInfo}...", cultureInfo);
 
             await Task.Run(
                     async () =>
@@ -383,7 +386,7 @@ namespace Mémoire.ViewModel
         async Task OpenDetailsAsync(TranslationEntryViewModel translationEntryViewModel)
         {
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
-            _logger.LogTrace("Opening details for {0}...", translationEntryViewModel);
+            _logger.LogTrace("Opening details for {Translation}...", translationEntryViewModel);
 
             var translationEntry = _translationEntryRepository.GetById(translationEntryViewModel.Id);
             var translationDetails = await TranslationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(translationEntry.Id, translationEntry.ManualTranslations, CancellationTokenSource.Token)
@@ -394,7 +397,7 @@ namespace Mémoire.ViewModel
             var window = await _scopedWindowProvider.GetScopedWindowAsync<ITranslationDetailsCardWindow, (IDisplayable, TranslationInfo)>((ownerWindow, translationInfo), CancellationTokenSource.Token)
                 .ConfigureAwait(false);
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     _windowPositionAdjustmentManager.AdjustActivatedWindow(window);
                     window.Restore();
@@ -412,7 +415,7 @@ namespace Mémoire.ViewModel
         void ScrollTo(TranslationEntryViewModel translationEntryViewModel)
         {
             _synchronizationContext.Post(
-                async x =>
+                async _ =>
                 {
                     if (View.CurrentItem == translationEntryViewModel)
                     {
@@ -433,7 +436,7 @@ namespace Mémoire.ViewModel
 
         void Search(string? text)
         {
-            _logger.LogTrace("Searching for {0}...", text);
+            _logger.LogTrace("Searching for {Text}...", text);
 
             View.Filter = string.IsNullOrWhiteSpace(text)
 #pragma warning disable IDE0004 // Remove Unnecessary Cast
@@ -524,7 +527,7 @@ namespace Mémoire.ViewModel
             var confirmationViewModel = _confirmationViewModelFactory(string.Format(CultureInfo.InvariantCulture, Texts.AreYouSureDelete, name), true);
 
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     var confirmationWindow = _confirmationWindowFactory(confirmationViewModel);
                     confirmationWindow.ShowDialog();

@@ -29,7 +29,7 @@ namespace Mémoire.ViewModel
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             _addTranslationWindowFactory = addTranslationWindowFactory ?? throw new ArgumentNullException(nameof(addTranslationWindowFactory));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         protected override async Task<IDisplayable?> GetWindowAsync()

@@ -12,7 +12,7 @@ using Scar.Common.RateLimiting;
 
 namespace Mémoire.Core.Sync
 {
-    sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
+    public sealed class SharedRepositoryCloner : ISharedRepositoryCloner, IDisposable
     {
         readonly IDictionary<ISharedRepository, IRateLimiter> _cloneableRepositoriesWithRateLimiters;
         readonly ILocalSettingsRepository _localSettingsRepository;
@@ -27,19 +27,19 @@ namespace Mémoire.Core.Sync
             IPathsProvider pathsProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _ = cloneableRepositories ?? throw new ArgumentNullException(nameof(cloneableRepositories));
             _ = rateLimiterFactory ?? throw new ArgumentNullException(nameof(rateLimiterFactory));
-            _cloneableRepositoriesWithRateLimiters = cloneableRepositories.ToDictionary(cloneableRepository => cloneableRepository, cloneableRepository => rateLimiterFactory());
+            _cloneableRepositoriesWithRateLimiters = cloneableRepositories.ToDictionary(cloneableRepository => cloneableRepository, _ => rateLimiterFactory());
 
             foreach (var repository in cloneableRepositories)
             {
                 repository.Changed += Repository_ChangedAsync;
             }
 
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public void Dispose()
@@ -88,11 +88,11 @@ namespace Mémoire.Core.Sync
                             }
 
                             File.Copy(oldFilePath, newFilePath);
-                            _logger.LogInformation("Cloned repository {0} to {1}", oldFilePath, newFilePath);
+                            _logger.LogInformation("Cloned repository {OldFilePath} to {NewFilePath}", oldFilePath, newFilePath);
                         }
                         catch (IOException ex)
                         {
-                            _logger.LogWarning(ex, "Cannot clone repository {0} to {1}. Retrying...", oldFilePath, newFilePath);
+                            _logger.LogWarning(ex, "Cannot clone repository {OldFilePath} to {NewFilePath}. Retrying...", oldFilePath, newFilePath);
                             Repository_ChangedAsync(sender, e);
                         }
                     })

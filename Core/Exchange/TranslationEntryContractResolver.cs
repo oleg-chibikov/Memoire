@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Mémoire.Core.Exchange
 {
-    sealed class TranslationEntryContractResolver : DefaultContractResolver
+    public sealed class TranslationEntryContractResolver : DefaultContractResolver
     {
         static readonly IDictionary<Type, string[]> Excluded = new Dictionary<Type, string[]>
         {

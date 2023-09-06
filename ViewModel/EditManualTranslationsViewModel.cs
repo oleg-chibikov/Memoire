@@ -35,7 +35,7 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {}...", GetType().Name);
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
@@ -44,7 +44,7 @@ namespace Mémoire.ViewModel
             CancelCommand = AddCommand(Cancel);
             AddTranslationCommand = AddCommand(AddTranslation);
             SaveCommand = AddCommand(SaveAsync);
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public static IEnumerable<PartOfSpeech> AvailablePartsOfSpeech { get; } = Enum.GetValues(typeof(PartOfSpeech)).Cast<PartOfSpeech>().ToArray();
@@ -59,13 +59,13 @@ namespace Mémoire.ViewModel
 
         public bool IsManualTranslationsDialogOpen { get; private set; }
 
-        public ObservableCollection<ManualTranslation> ManualTranslations { get; } = new ObservableCollection<ManualTranslation>();
+        public ObservableCollection<ManualTranslation> ManualTranslations { get; } = new ();
 
         public string? ManualTranslationText { get; set; }
 
         public ICommand SaveCommand { get; }
 
-        public TranslationEntryKey TranslationEntryKey { get; private set; } = new TranslationEntryKey();
+        public TranslationEntryKey TranslationEntryKey { get; private set; } = new ();
 
         void AddTranslation()
         {
@@ -75,7 +75,7 @@ namespace Mémoire.ViewModel
             }
 
             var newManualTranslation = new ManualTranslation(ManualTranslationText);
-            _logger.LogTrace("Adding {0}...", ManualTranslationText);
+            _logger.LogTrace("Adding {ManualTranslation}...", ManualTranslationText);
             ManualTranslationText = null;
             if (ManualTranslations.Any(x => x.Text.Equals(newManualTranslation.Text, StringComparison.OrdinalIgnoreCase)))
             {
@@ -94,7 +94,7 @@ namespace Mémoire.ViewModel
         async Task DeleteAsync(ManualTranslation manualTranslation)
         {
             _ = manualTranslation ?? throw new ArgumentNullException(nameof(manualTranslation));
-            _logger.LogTrace("Deleting manual translation {0}...", manualTranslation);
+            _logger.LogTrace("Deleting manual translation {ManualTranslation}...", manualTranslation);
             if (ManualTranslations.Count == 1)
             {
                 var translationDetails = await _translationEntryProcessor.ReloadTranslationDetailsIfNeededAsync(TranslationEntryKey, ManualTranslations, CancellationToken.None).ConfigureAwait(false);
@@ -111,7 +111,7 @@ namespace Mémoire.ViewModel
 
         void EditManualTranslations(TranslationEntryViewModel translationEntryViewModel)
         {
-            _logger.LogTrace("Editing manual translation for {0}...", translationEntryViewModel);
+            _logger.LogTrace("Editing manual translation for {Translation}...", translationEntryViewModel);
             _ = translationEntryViewModel ?? throw new ArgumentNullException(nameof(translationEntryViewModel));
             TranslationEntryKey = translationEntryViewModel.Id;
             ManualTranslations.Clear();

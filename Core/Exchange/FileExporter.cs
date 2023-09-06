@@ -14,9 +14,9 @@ using Scar.Common.Events;
 
 namespace Mémoire.Core.Exchange
 {
-    sealed class FileExporter : IFileExporter
+    public sealed class FileExporter : IFileExporter
     {
-        static readonly JsonSerializerSettings ExportEntrySerializerSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings ExportEntrySerializerSettings = new ()
         {
             ContractResolver = new TranslationEntryContractResolver(),
             NullValueHandling = NullValueHandling.Ignore
@@ -29,10 +29,10 @@ namespace Mémoire.Core.Exchange
         public FileExporter(ITranslationEntryRepository translationEntryRepository, ILogger<FileExporter> logger, ILearningInfoRepository learningInfoRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public event EventHandler<ProgressEventArgs>? Progress;

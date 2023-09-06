@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Mémoire.Core.CardManagement.Data
 {
-    sealed class EachWordExchangeEntry : IExchangeEntry
+    public sealed class EachWordExchangeEntry : IExchangeEntry
     {
         public EachWordExchangeEntry(string text, string? translation)
         {
@@ -11,7 +11,7 @@ namespace Mémoire.Core.CardManagement.Data
             Translation = translation;
         }
 
-        [JsonProperty("Translation", Required = Required.Always)]
+        [JsonProperty(nameof(Translation), Required = Required.Always)]
         public string? Translation { get; }
 
         [JsonProperty("Word", Required = Required.Always)]

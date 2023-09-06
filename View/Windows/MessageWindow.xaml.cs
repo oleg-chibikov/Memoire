@@ -4,7 +4,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class MessageWindow : IMessageWindow
+    public sealed partial class MessageWindow : IMessageWindow
     {
         public MessageWindow(MessageViewModel viewModel)
         {

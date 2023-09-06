@@ -13,7 +13,7 @@ using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.Core.Exchange
 {
-    sealed class FileImporter : BaseFileImporter<ExchangeEntry>
+    public sealed class FileImporter : BaseFileImporter<ExchangeEntry>
     {
         public FileImporter(
             ITranslationEntryRepository translationEntryRepository,
@@ -23,8 +23,8 @@ namespace Mémoire.Core.Exchange
             ILearningInfoRepository learningInfoRepository) : base(translationEntryRepository, logger, translationEntryProcessor, messenger, learningInfoRepository)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         protected override IReadOnlyCollection<ManualTranslation>? GetManualTranslations(ExchangeEntry exchangeEntry)

@@ -5,7 +5,7 @@ namespace Mémoire.Contracts.DAL.Model
 {
     public static class RepeatTypeSettings
     {
-        public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new Dictionary<RepeatType, TimeSpan>
+        public static readonly Dictionary<RepeatType, TimeSpan> RepeatTimes = new ()
         {
             { RepeatType.Elementary, TimeSpan.FromMinutes(5) },
             { RepeatType.Beginner, TimeSpan.FromHours(6) },
@@ -18,7 +18,7 @@ namespace Mémoire.Contracts.DAL.Model
             { RepeatType.Expert, TimeSpan.FromDays(100) }
         };
 
-        public static readonly LinkedList<RepeatType> RepeatTypes = new LinkedList<RepeatType>(
+        public static readonly LinkedList<RepeatType> RepeatTypes = new (
             new[]
             {
                 RepeatType.Elementary,

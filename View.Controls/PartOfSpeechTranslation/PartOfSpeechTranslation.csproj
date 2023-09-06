@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\TranslationVariant\TranslationVariant.csproj" />
+    <ProjectReference Include="..\Word\Word.csproj" />
+  </ItemGroup>
+</Project>

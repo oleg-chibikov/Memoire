@@ -156,7 +156,7 @@ namespace Mémoire.ViewModel
             var searchIndex = SearchIndex;
             if (!_shouldRepeat)
             {
-                _logger.LogTrace("Setting {1} image for {0}...", this, increase ? "next" : "previous");
+                _logger.LogTrace("Setting {WordImage} image for {Direction}...", this, increase ? "next" : "previous");
                 var swappedPosition = IsAlternate ? 0 : 1;
                 var position = IsAlternate ? 1 : 0;
 
@@ -205,7 +205,7 @@ namespace Mémoire.ViewModel
         async Task SetWordImageAsync(int index, string searchText, bool showException)
         {
             WordImageInfo wordImageInfo;
-            _logger.LogTrace("Setting new image for {0} at search index {1} with searchText {2}...", _wordKey, index, searchText);
+            _logger.LogTrace("Setting new image for {WordKey} at search index {Index} with searchText {SearchText}...", _wordKey, index, searchText);
             try
             {
                 await _cancellationTokenSourceProvider.ExecuteOperationAsync(
@@ -214,9 +214,9 @@ namespace Mémoire.ViewModel
                             var imageInfos = await _imageSearcher.SearchImagesAsync(
                                     searchText,
                                     _sharedSettingsRepository.SolveQwantCaptcha,
+                                    "en_AU", // TODO
                                     index,
                                     1,
-                                    null,
                                     ex =>
                                     {
                                         if (showException)
@@ -255,7 +255,7 @@ namespace Mémoire.ViewModel
                                     imageInfoWithBitmap = (await Task.WhenAll(imageDownloadTasks).ConfigureAwait(false)).SingleOrDefault();
                                     if (imageInfoWithBitmap == null)
                                     {
-                                        _logger.LogWarning("Cannot download image for {0}", _wordKey);
+                                        _logger.LogWarning("Cannot download image for {WordKey}", _wordKey);
                                     }
                                 }
                                 else
@@ -282,7 +282,7 @@ namespace Mémoire.ViewModel
                                     }
                                 }
 
-                                _logger.LogDebug("Image for {0} at search index {1} was saved", _wordKey, index);
+                                _logger.LogDebug("Image for {WordKey} at search index {Index} was saved", _wordKey, index);
 
                                 await UpdateImageViewAsync(wordImageInfo, wordImageSearchIndex).ConfigureAwait(false);
                             }

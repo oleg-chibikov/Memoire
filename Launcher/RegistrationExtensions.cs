@@ -10,7 +10,7 @@ using Mémoire.Contracts.View.Settings;
 using Mémoire.Core.CardManagement;
 using Mémoire.Core.Sync;
 using Mémoire.DAL.SharedBetweenMachines;
-using Mémoire.View.Controls.Assessment;
+using Mémoire.View.Windows;
 using Mémoire.ViewModel;
 using Mémoire.WindowCreators;
 using Mémoire.Windows.Common;
@@ -91,7 +91,7 @@ namespace Mémoire.Launcher
 
         public static ContainerBuilder RegisterView(this ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardControl).Assembly).AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(DictionaryWindow).Assembly).AsImplementedInterfaces().InstancePerDependency();
             return builder;
         }
 

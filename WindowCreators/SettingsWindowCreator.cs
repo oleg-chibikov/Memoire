@@ -6,7 +6,7 @@ using Scar.Common.View.WindowCreation;
 
 namespace Mémoire.WindowCreators
 {
-    sealed class SettingsWindowCreator : IWindowCreator<ISettingsWindow>
+    public sealed class SettingsWindowCreator : IWindowCreator<ISettingsWindow>
     {
         readonly IWindowFactory<IDictionaryWindow> _dictionaryWindowFactory;
         readonly Func<IDictionaryWindow?, ISettingsWindow> _settingsWindowFactory;

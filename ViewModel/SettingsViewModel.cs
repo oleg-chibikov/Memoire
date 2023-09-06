@@ -27,7 +27,7 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class SettingsViewModel : BaseViewModel
     {
-        readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        readonly CancellationTokenSource _cancellationTokenSource = new ();
         readonly ICardsExchanger _cardsExchanger;
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly ILogger _logger;
@@ -52,7 +52,7 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
@@ -105,7 +105,7 @@ namespace Mémoire.ViewModel
             ImportCommand = AddCommand(ImportAsync);
             WindowClosingCommand = AddCommand(WindowClosing);
             _cardsExchanger.Progress += CardsExchanger_Progress;
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public IReadOnlyCollection<SyncEngine> SyncBuses { get; }
@@ -197,7 +197,7 @@ namespace Mémoire.ViewModel
         void CardsExchanger_Progress(object? sender, ProgressEventArgs e)
         {
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     Progress = e.Percentage;
                     ProgressDescription = $"{e.Current} of {e.Total} ({e.Percentage} %)";

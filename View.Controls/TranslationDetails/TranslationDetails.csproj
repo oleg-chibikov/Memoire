@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\ClassificationCategories\ClassificationCategories.csproj" />
+    <ProjectReference Include="..\LearningInfoActions\LearningInfoActions.csproj" />
+    <ProjectReference Include="..\PartOfSpeechTranslation\PartOfSpeechTranslation.csproj" />
+    <ProjectReference Include="..\Prepositions\Prepositions.csproj" />
+  </ItemGroup>
+</Project>

@@ -9,7 +9,7 @@ using Scar.Services.Contracts.Data.TextToSpeech;
 
 namespace Mémoire.DAL.SharedBetweenMachines
 {
-    sealed class SharedSettingsRepository : BaseSettingsRepository, ISharedSettingsRepository
+    public sealed class SharedSettingsRepository : BaseSettingsRepository, ISharedSettingsRepository
     {
         public SharedSettingsRepository(IPathsProvider pathsProvider, string? directoryPath = null, bool shrink = false) : base(
             directoryPath ?? pathsProvider?.LocalSharedDataPath ?? throw new ArgumentNullException(nameof(pathsProvider)),

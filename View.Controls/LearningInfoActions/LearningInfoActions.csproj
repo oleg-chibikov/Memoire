@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Buttons\Buttons.csproj" />
+    <ProjectReference Include="..\CardCommonInfo\CardCommonInfo.csproj" />
+    <ProjectReference Include="..\Word\Word.csproj" />
+  </ItemGroup>
+</Project>

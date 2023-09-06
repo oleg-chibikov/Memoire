@@ -4,9 +4,9 @@ using Microsoft.Win32;
 
 namespace Mémoire.Windows.Common.DialogProviders
 {
-    sealed class OpenFileDialogProvider : IOpenFileDialogProvider
+    public sealed class OpenFileDialogProvider : IOpenFileDialogProvider
     {
-        readonly OpenFileDialog _dialog = new OpenFileDialog
+        readonly OpenFileDialog _dialog = new ()
         {
             CheckFileExists = true,
             FileName = DialogProviderConstants.DefaultFilePattern,

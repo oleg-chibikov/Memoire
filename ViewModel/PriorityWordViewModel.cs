@@ -61,7 +61,7 @@ namespace Mémoire.ViewModel
         protected override void TogglePriority()
         {
             var isPriority = !IsPriority;
-            _logger.LogTrace("Changing priority for {0} to {1}...", _wordKey, isPriority);
+            _logger.LogTrace("Changing priority for {WordKey} to {IsPriority}...", _wordKey, isPriority);
             if (isPriority)
             {
                 if (_translationEntry.PriorityWords == null)
@@ -89,7 +89,7 @@ namespace Mémoire.ViewModel
 
             _translationEntryRepository.Update(_translationEntry);
             IsPriority = isPriority;
-            _logger.LogInformation("Priority has been changed for {0}", _wordKey);
+            _logger.LogInformation("Priority has been changed for {WordKey}", _wordKey);
 
             var priorityWordKey = new PriorityWordKey(isPriority, _wordKey);
             _messageHub.Publish(priorityWordKey);

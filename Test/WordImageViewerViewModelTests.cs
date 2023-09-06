@@ -12,7 +12,7 @@ namespace Mémoire.Test
     [TestFixture]
     [Parallelizable]
     [Apartment(ApartmentState.STA)]
-    sealed class WordImageViewerViewModelTests
+    public sealed class WordImageViewerViewModelTests
     {
         [Test]
         public async Task IsLoadingIsTrueDuringProcessingAsync()

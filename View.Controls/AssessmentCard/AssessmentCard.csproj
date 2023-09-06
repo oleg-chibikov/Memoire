@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Answer\Answer.csproj" />
+    <ProjectReference Include="..\TranslationDetails\TranslationDetails.csproj" />
+  </ItemGroup>
+
+</Project>

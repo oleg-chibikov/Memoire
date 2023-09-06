@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.Sync
 {
-    sealed class SynchronizationManager : ISynchronizationManager, IDisposable
+    public sealed class SynchronizationManager : ISynchronizationManager, IDisposable
     {
         readonly FileSystemWatcher _fileSystemWatcher;
         readonly ILogger _logger;
@@ -33,7 +33,7 @@ namespace Mémoire.Core.Sync
             IPathsProvider pathsProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _pathsProvider = pathsProvider ?? throw new ArgumentNullException(nameof(pathsProvider));
             _ = synchronizers ?? throw new ArgumentNullException(nameof(synchronizers));
             if (!(synchronizers.Count > 0))
@@ -52,7 +52,7 @@ namespace Mémoire.Core.Sync
             OnSyncBusChanged(localSettingsRepository.SyncEngine);
 
             _subscriptionTokens.Add(messageHub.Subscribe<SyncEngine>(OnSyncBusChanged));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public void Dispose()
@@ -102,7 +102,7 @@ namespace Mémoire.Core.Sync
                 return;
             }
 
-            _logger.LogInformation("File system event received: {0}: {1}, {2}", e.ChangeType, e.Name, e.FullPath);
+            _logger.LogInformation("File system event received: {ChangeType}: {Name}, {FullPath}", e.ChangeType, e.Name, e.FullPath);
             SynchronizeFile(e.FullPath);
             _fileSystemWatcher.EnableRaisingEvents = true;
         }
@@ -119,7 +119,7 @@ namespace Mémoire.Core.Sync
                 paths,
                 filePath =>
                 {
-                    _logger.LogTrace("Processing file {0}...", filePath);
+                    _logger.LogTrace("Processing file {FilePath}...", filePath);
                     SynchronizeFile(filePath);
                 });
             foreach (var syncExtender in _syncExtenders)
@@ -134,7 +134,7 @@ namespace Mémoire.Core.Sync
 
             if (!_synchronizers.ContainsKey(fileName ?? throw new InvalidOperationException("fileName should not be null")))
             {
-                _logger.LogWarning("Unknown type of repository: {0}", filePath);
+                _logger.LogWarning("Unknown type of repository: {FilePath}", filePath);
                 return;
             }
 

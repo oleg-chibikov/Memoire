@@ -1,9 +1,9 @@
-<commonView:AnimatedWindowWithoutTemplate
+<customWindow:AnimatedWindowWithoutTemplate
     x:Class="Mémoire.View.Windows.SplashScreenWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
-    x:ClassModifier="internal"
+    xmlns:customWindow="clr-namespace:Scar.Common.WPF.View.CustomWindow;assembly=Scar.Common.WPF.View.CustomWindow"
     Background="Transparent"
     ShowInTaskbar="False"
     StayCentered="True"
@@ -23,7 +23,7 @@
                 Color="White" />
         </TextBlock.Effect>
     </TextBlock>
-    <commonView:AnimatedWindowWithoutTemplate.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
-    </commonView:AnimatedWindowWithoutTemplate.Resources>
-</commonView:AnimatedWindowWithoutTemplate>
+    <customWindow:AnimatedWindowWithoutTemplate.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
+    </customWindow:AnimatedWindowWithoutTemplate.Resources>
+</customWindow:AnimatedWindowWithoutTemplate>

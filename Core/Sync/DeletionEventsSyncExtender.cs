@@ -8,13 +8,13 @@ using Scar.Common.DAL.Contracts.Model;
 
 namespace Mémoire.Core.Sync
 {
-    sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
+    public sealed class DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository> : ISyncExtender<TRepository>
         where TEntity : IEntity<TId>
         where TDeletionEntity : IEntity<TId>, ITrackedEntity
         where TRepository : IRepository<TEntity, TId>, ITrackedRepository
         where TDeletionEventRepository : class, IRepository<TDeletionEntity, TId>
     {
-        readonly object _locker = new object();
+        readonly object _locker = new ();
         readonly IList<TId> _ownDeletionEventsToClear;
         readonly TDeletionEventRepository _ownRepository;
         bool _collectInfo = true;
@@ -22,10 +22,10 @@ namespace Mémoire.Core.Sync
         public DeletionEventsSyncExtender(TDeletionEventRepository ownRepository, ILogger<DeletionEventsSyncExtender<TEntity, TDeletionEntity, TId, TRepository, TDeletionEventRepository>> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ownRepository = ownRepository ?? throw new ArgumentNullException(nameof(ownRepository));
             _ownDeletionEventsToClear = new List<TId>(_ownRepository.GetAll().Select(x => x.Id));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public void OnSynchronizationFinished()

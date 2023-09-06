@@ -8,38 +8,28 @@
     <StartupObject>Mémoire.Launcher.App</StartupObject>
     <OutputPath>..\Build\</OutputPath>
     <AssemblyName>Mémoire</AssemblyName>
-    <!--<PublishTrimmed>true</PublishTrimmed>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <PublishSingleFile>true</PublishSingleFile>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
-    <PackageReference Include="Scar.Common.AutofacHttpClientProvision" Version="1.1.7773.26307" />
-    <PackageReference Include="Scar.Common.AutofacInstantiation" Version="1.1.7773.36962" />
-    <PackageReference Include="Scar.Common.Sync.Windows" Version="1.1.7773.37087" />
-    <PackageReference Include="Scar.Common.View.AutofacWindowProvision" Version="1.1.7773.37132" />
-    <PackageReference Include="Scar.Common.WebApi" Version="1.1.7773.37089" />
-    <PackageReference Include="Scar.Common.WPF.CollectionView" Version="1.1.7773.37094" />
-    <PackageReference Include="Scar.Common.WPF.Startup" Version="1.1.7773.37131" />
-    <PackageReference Include="Scar.Common.WPF.View.WindowCreation" Version="1.1.7773.37139" />
-    <PackageReference Include="Scar.Services.ImageDownload" Version="1.1.7774.32928" />
-    <PackageReference Include="Scar.Services.Qwant" Version="1.1.7774.33133" />
-    <PackageReference Include="Scar.Services.UClassify" Version="1.1.7774.32920" />
-    <PackageReference Include="Scar.Services.Yandex" Version="1.1.7774.33137" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
-    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Sync\Windows\Windows.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\AutofacHttpClientProvision\AutofacHttpClientProvision.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\View\AutofacWindowProvision\AutofacWindowProvision.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Various\CollectionView\CollectionView.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Various\Startup\Startup.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\View\WindowCreation\WindowCreation.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\ImageDownload\ImageDownload.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\Qwant\Qwant.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\UClassify\UClassify.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\Yandex\Yandex.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
-    <ProjectReference Include="..\Resources\Resources.csproj" />
-    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
     <ProjectReference Include="..\View\View.csproj" />
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
     <ProjectReference Include="..\WindowCreators\WindowCreators.csproj" />
@@ -49,11 +39,5 @@
   <ItemGroup>
     <Resource Include="IconAlt.ico" />
   </ItemGroup>
-
-  <Target Name="PackRelease" AfterTargets="Publish">
-    <Exec Command="del &quot;$(SolutionDir)7zRelease\Portable.7z&quot;" Condition="Exists('$(SolutionDir)7zRelease\Portable.7z')" />
-    <Exec Command="&quot;$(SolutionDir)Tools\7za&quot; a &quot;$(SolutionDir)7zRelease\Portable.7z&quot; &quot;$(SolutionDir)Release\*&quot; -xr!*.xml -xr!*.dll.config -xr!*.pdb" />
-    <MSBuild Projects="..\Installer\Installer.csproj" Properties="Configuration=Release;TargetFramework=net472" />
-  </Target>
 
 </Project>

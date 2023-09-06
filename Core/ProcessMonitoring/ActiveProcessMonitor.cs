@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.ProcessMonitoring
 {
-    sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
+    public sealed class ActiveProcessMonitor : IActiveProcessMonitor, IDisposable
     {
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly IPauseManager _pauseManager;
@@ -21,7 +21,7 @@ namespace Mémoire.Core.ProcessMonitoring
         public ActiveProcessMonitor(IPauseManager pauseManager, ILocalSettingsRepository localSettingsRepository, ILogger<ActiveProcessMonitor> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             CheckActiveProcess();
@@ -32,7 +32,7 @@ namespace Mémoire.Core.ProcessMonitoring
             _timer.Elapsed += Timer_Tick;
 
             // Automation.AddAutomationFocusChangedEventHandler(OnFocusChangedHandler);
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public void Dispose()

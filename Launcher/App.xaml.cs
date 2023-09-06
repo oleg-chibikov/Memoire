@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -16,9 +17,9 @@ using Mémoire.WebApi.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Scar.Common.ApplicationLifetime.Core;
+using Scar.Common.Autocomplete.Contracts;
 using Scar.Common.Messages;
 using Scar.Common.WebApi;
-using Scar.Common.WPF.Controls;
 using Scar.Common.WPF.View.WindowCreation;
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -42,14 +43,16 @@ namespace Mémoire.Launcher
                 services.AddHttpClient();
                 ApiHostingHelper.RegisterServices(services, typeof(WordsController).Assembly);
             },
-            (h, loggingBuilder) =>
+            (_, loggingBuilder) =>
             {
                 if (File.Exists(PathsProvider.LogsPath))
                 {
                     File.Delete(PathsProvider.LogsPath);
                 }
 
-                Log.Logger = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.File(PathsProvider.LogsPath).MinimumLevel.Verbose().CreateLogger();
+                Log.Logger = new LoggerConfiguration().Enrich.FromLogContext().WriteTo
+                    .File(PathsProvider.LogsPath, formatProvider: CultureInfo.InvariantCulture).MinimumLevel.Verbose()
+                    .CreateLogger();
 
                 loggingBuilder.ClearProviders().AddSerilog();
                 loggingBuilder.SetMinimumLevel(LogLevel.Trace);
@@ -62,8 +65,8 @@ namespace Mémoire.Launcher
             _closeSplashScreen = () => executeInSplashScreenWindowContext(
                 window =>
                 {
-                    window?.Close();
-                    window?.Dispose();
+                    window.Close();
+                    window.Dispose();
                 });
         }
 
@@ -117,7 +120,7 @@ namespace Mémoire.Launcher
             var viewModel = nestedLifeTimeScope.Resolve<MessageViewModel>(new TypedParameter(typeof(Message), message));
             var synchronizationContext = SynchronizationContext ?? SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null");
             synchronizationContext.Post(
-                x =>
+                _ =>
                 {
                     var window = nestedLifeTimeScope.Resolve<IMessageWindow>(new TypedParameter(typeof(MessageViewModel), viewModel));
                     window.AssociateDisposable(nestedLifeTimeScope);
@@ -132,9 +135,9 @@ namespace Mémoire.Launcher
             await Task.Run(() =>
             {
                 var type = typeof(T).Name;
-                logger.LogTrace($"Resolving {type}...");
+                logger.LogTrace("Resolving {Type}...", type);
                 var instance = Container.Resolve<T>();
-                logger.LogDebug($"Resolved {type}");
+                logger.LogDebug("Resolved {Type}", type);
                 return instance;
             }).ConfigureAwait(false);
         }

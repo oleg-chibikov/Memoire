@@ -53,8 +53,8 @@ namespace Mémoire.ViewModel
             var learningInfo = TranslationInfo.LearningInfo;
             learningInfo.IncreaseRepeatType();
             learningInfoRepository.Update(learningInfo);
-            logger.LogInformation("Increased repeat type for {0}", learningInfo);
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogInformation("Increased repeat type for {LearningInfo}", learningInfo);
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public TranslationDetailsCardViewModel? TranslationDetailsCardViewModel { get; private set; }

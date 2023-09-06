@@ -6,11 +6,11 @@ using Scar.Common.WPF.View.Contracts;
 
 namespace Mémoire.Windows.Common
 {
-    sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
+    public sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
     {
         public void AdjustAnyWindowPosition(IDisplayable window)
         {
-            if (!(window is IWindow wpfWindow))
+            if (window is not IWindow wpfWindow)
             {
                 return;
             }
@@ -28,7 +28,7 @@ namespace Mémoire.Windows.Common
 
         public void AdjustDetailsCardWindowPosition(IDisplayable window)
         {
-            if (!(window is IWindow wpfWindow))
+            if (window is not IWindow wpfWindow)
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace Mémoire.Windows.Common
 
         public void AdjustActivatedWindow(IDisplayable window)
         {
-            if (!(window is IWindow wpfWindow))
+            if (window is not IWindow wpfWindow)
             {
                 return;
             }

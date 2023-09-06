@@ -29,7 +29,7 @@ using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.Core.Processing
 {
-    sealed class TranslationEntryProcessor : ITranslationEntryProcessor
+    public sealed class TranslationEntryProcessor : ITranslationEntryProcessor
     {
         readonly ITranslationDetailsCardManager _cardManager;
         readonly ICultureManager _cultureManager;
@@ -73,7 +73,7 @@ namespace Mémoire.Core.Processing
             IWindowDisplayer windowDisplayer)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _wordImageInfoRepository = wordImageInfoRepository ?? throw new ArgumentNullException(nameof(wordImageInfoRepository));
             _prepositionsInfoRepository = prepositionsInfoRepository ?? throw new ArgumentNullException(nameof(prepositionsInfoRepository));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
@@ -92,24 +92,25 @@ namespace Mémoire.Core.Processing
             _textToSpeechPlayerWrapper = textToSpeechPlayerWrapper ?? throw new ArgumentNullException(nameof(textToSpeechPlayerWrapper));
             _cardManager = cardManager ?? throw new ArgumentNullException(nameof(cardManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public async Task<TranslationInfo?> AddOrUpdateTranslationEntryAsync(
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
             IDisplayable? ownerWindow,
             bool needPostProcess,
+            bool showLoader,
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
-            return await Task.Run(() => AddOrUpdateTranslationEntryInternalAsync(translationEntryAdditionInfo, ownerWindow, needPostProcess, manualTranslations, cancellationToken), cancellationToken)
+            return await Task.Run(() => AddOrUpdateTranslationEntryInternalAsync(translationEntryAdditionInfo, ownerWindow, needPostProcess, showLoader, manualTranslations, cancellationToken), cancellationToken)
                 .ConfigureAwait(false);
         }
 
         public void DeleteTranslationEntry(TranslationEntryKey translationEntryKey, bool needDeletionRecord)
         {
             _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
-            _logger.LogTrace("Deleting {0}{1}...", translationEntryKey, needDeletionRecord ? " with creating deletion event" : null);
+            _logger.LogTrace("Deleting {TranslationKey}{NeedDeletionRecord}...", translationEntryKey, needDeletionRecord ? " with creating deletion event" : null);
             _prepositionsInfoRepository.Delete(translationEntryKey);
             _translationDetailsRepository.Delete(translationEntryKey);
             _wordImageInfoRepository.ClearForTranslationEntry(translationEntryKey);
@@ -121,7 +122,7 @@ namespace Mémoire.Core.Processing
                 _translationEntryDeletionRepository.Upsert(new TranslationEntryDeletion(translationEntryKey));
             }
 
-            _logger.LogInformation("Deleted {0}", translationEntryKey);
+            _logger.LogInformation("Deleted {TranslationKey}", translationEntryKey);
         }
 
         public async Task<TranslationDetails> ReloadTranslationDetailsIfNeededAsync(
@@ -137,7 +138,7 @@ namespace Mémoire.Core.Processing
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
-            _logger.LogTrace("Updating manual translations for {0}...", translationEntryKey);
+            _logger.LogTrace("Updating manual translations for {TranslationKey}...", translationEntryKey);
             _ = translationEntryKey ?? throw new ArgumentNullException(nameof(translationEntryKey));
             if (!manualTranslations?.Any() == true)
             {
@@ -221,14 +222,16 @@ namespace Mémoire.Core.Processing
             TranslationEntryAdditionInfo translationEntryAdditionInfo,
             IDisplayable? ownerWindow,
             bool needPostProcess,
+            bool showLoader,
             IReadOnlyCollection<ManualTranslation>? manualTranslations,
             CancellationToken cancellationToken)
         {
             _cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
             _ = translationEntryAdditionInfo ?? throw new ArgumentNullException(nameof(translationEntryAdditionInfo));
-            _logger.LogTrace("Adding new word translation for {0}...", translationEntryAdditionInfo);
+            _logger.LogTrace("Adding new word translation for {TranslationAdditionalInfo}...", translationEntryAdditionInfo);
 
-            var executeInLoadingWindowContext = _windowDisplayer.DisplayWindow(_loadingWindowFactory);
+            var executeInLoadingWindowContext =
+                showLoader ? _windowDisplayer.DisplayWindow(_loadingWindowFactory) : null;
 
             try
             {
@@ -261,9 +264,6 @@ namespace Mémoire.Core.Processing
 
                 var translationInfo = new TranslationInfo(translationEntry, translationDetails, learningInfo);
 
-                // no await here
-                // ReSharper disable once AssignmentIsFullyDiscarded
-                _ = _learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, cancellationToken).ConfigureAwait(false);
                 if (needPostProcess)
                 {
                     // no await here
@@ -271,12 +271,12 @@ namespace Mémoire.Core.Processing
                     _ = PostProcessWordAsync(ownerWindow, translationInfo, cancellationToken).ConfigureAwait(false);
                 }
 
-                _logger.LogInformation("Processing finished for word {0}", translationEntryKey);
+                _logger.LogInformation("Processing finished for word {TranslationKey}", translationEntryKey);
                 return translationInfo;
             }
             finally
             {
-                executeInLoadingWindowContext(loadingWindow =>
+                executeInLoadingWindowContext?.Invoke(loadingWindow =>
                 {
                     loadingWindow.Close();
                 });
@@ -295,7 +295,7 @@ namespace Mémoire.Core.Processing
                         string.Format(
                                 CultureInfo.InvariantCulture,
                                 Errors.CannotGetExtendedTranslation,
-                                translationEntryKey.Text + $" [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
+                                $"{translationEntryKey.Text} [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
                             .ToError(ex)),
                     cancellationToken)
                 .ConfigureAwait(false);
@@ -373,7 +373,8 @@ namespace Mémoire.Core.Processing
                 : Task.CompletedTask;
             var showCardTask = _cardManager.ShowCardAsync(translationInfo, ownerWindow);
             _messageHub.Publish(translationInfo.TranslationEntry);
-            await Task.WhenAll(playTtsTask, showCardTask).ConfigureAwait(false);
+            var updateCategoriesTask = _learningInfoCategoriesUpdater.UpdateLearningInfoClassificationCategoriesAsync(translationInfo, cancellationToken);
+            await Task.WhenAll(playTtsTask, showCardTask, updateCategoriesTask).ConfigureAwait(false);
         }
 
         async Task<(TranslationDetails TranslationDetails, bool AlreadyExists)> ReloadTranslationDetailsIfNeededInternalAsync(
@@ -423,7 +424,10 @@ namespace Mémoire.Core.Processing
                     translationEntryKey.TargetLanguage,
                     LanguageConstants.EnLanguage,
                     ex => _messageHub.Publish(
-                        string.Format(CultureInfo.InvariantCulture, Errors.CannotTranslate, translationEntryKey.Text + $" [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
+                        string.Format(
+                                CultureInfo.InvariantCulture,
+                                Errors.CannotTranslate,
+                                $"{translationEntryKey.Text} [{translationEntryKey.SourceLanguage}->{translationEntryKey.TargetLanguage}]")
                             .ToError(ex)),
                     cancellationToken)
                 .ConfigureAwait(false);
@@ -437,7 +441,7 @@ namespace Mémoire.Core.Processing
             {
                 // replace the original text with the corrected one
                 translationEntryKey.Text = translationResult.PartOfSpeechTranslations.First().Text;
-                _logger.LogTrace("Received translation for {0}", translationEntryKey);
+                _logger.LogTrace("Received translation for {TranslationKey}", translationEntryKey);
             }
             else
             {
@@ -468,8 +472,8 @@ namespace Mémoire.Core.Processing
 
             await Task.WhenAll(getTranslationTask, getExtendedTranslationTask).ConfigureAwait(false);
 
-            var translationResult = getTranslationTask.Result;
-            var extendedTranslationResult = getExtendedTranslationTask.Result;
+            var translationResult = await getTranslationTask.ConfigureAwait(false);
+            var extendedTranslationResult = await getExtendedTranslationTask.ConfigureAwait(false);
             return (translationResult, extendedTranslationResult);
         }
     }

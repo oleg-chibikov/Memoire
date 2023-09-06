@@ -17,7 +17,7 @@ using Scar.Services.Contracts.Data;
 
 namespace Mémoire.Core.Languages
 {
-    sealed class LanguageManager : ILanguageManager
+    public sealed class LanguageManager : ILanguageManager
     {
         readonly IMessageHub _messageHub;
         readonly AvailableLanguagesInfo _availableLanguages;
@@ -34,7 +34,7 @@ namespace Mémoire.Core.Languages
             IMessageHub messageHub)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _languageDetector = languageDetector ?? throw new ArgumentNullException(nameof(languageDetector));
@@ -47,7 +47,7 @@ namespace Mémoire.Core.Languages
             }
 
             _availableLanguages = cachedLanguages ?? ReloadAvailableLanguagesAsync().Result;
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public bool CheckTargetLanguageIsValid(string sourceLanguage, string targetLanguage)
@@ -133,7 +133,7 @@ namespace Mémoire.Core.Languages
             _ = sourceLanguage ?? throw new ArgumentNullException(nameof(sourceLanguage));
             if (!_availableLanguages.Directions.TryGetValue(sourceLanguage, out var availableTargetLanguages) || !(availableTargetLanguages.Count > 0))
             {
-                _logger.LogWarning($"No target languages available for source language {sourceLanguage}");
+                _logger.LogWarning("No target languages available for source language {SourceLanguage}", sourceLanguage);
                 return LanguageConstants.EnLanguageTwoLetters;
             }
 
@@ -177,9 +177,9 @@ namespace Mémoire.Core.Languages
                 var split = direction.Split('-');
                 var from = split[0];
                 var to = split[1];
-                if (directions.ContainsKey(from))
+                if (directions.TryGetValue(from, out var hashSet))
                 {
-                    directions[from].Add(to);
+                    hashSet.Add(to);
                 }
                 else
                 {

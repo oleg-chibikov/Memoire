@@ -27,7 +27,7 @@ namespace Mémoire.ViewModel
             ICollectionViewSource collectionViewSource) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ = collectionViewSource ?? throw new ArgumentNullException(nameof(collectionViewSource));
             _activeProcessesProvider = activeProcessesProvider ?? throw new ArgumentNullException(nameof(activeProcessesProvider));
 
@@ -40,18 +40,18 @@ namespace Mémoire.ViewModel
             ClearFilterCommand = AddCommand(ClearFilter);
             AvailableProcessesView = collectionViewSource.GetDefaultView(AvailableProcesses);
             AvailableProcessesView.Filter = o => string.IsNullOrWhiteSpace(Filter) || ((ProcessInfo)o).Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public ICommand AddFromActiveProcessesCommand { get; }
 
         public ICommand AddTextCommand { get; }
 
-        public ObservableCollection<ProcessInfo> AvailableProcesses { get; } = new ObservableCollection<ProcessInfo>();
+        public ObservableCollection<ProcessInfo> AvailableProcesses { get; } = new ();
 
         public ICollectionView AvailableProcessesView { get; }
 
-        public ObservableCollection<ProcessInfo> BlacklistedProcesses { get; } = new ObservableCollection<ProcessInfo>();
+        public ObservableCollection<ProcessInfo> BlacklistedProcesses { get; } = new ();
 
         public ICommand CancelAdditionCommand { get; }
 
@@ -93,16 +93,16 @@ namespace Mémoire.ViewModel
 
         void AddProcessInfo(ProcessInfo processInfo)
         {
-            _logger.LogTrace("Adding process info {0} to the blacklist...", processInfo);
+            _logger.LogTrace("Adding process info {ProcessInfo} to the blacklist...", processInfo);
 
             if (!BlacklistedProcesses.Contains(processInfo))
             {
                 BlacklistedProcesses.Add(processInfo);
-                _logger.LogInformation("Process info {0} is added to the blacklist...", processInfo);
+                _logger.LogInformation("Process info {ProcessInfo} is added to the blacklist...", processInfo);
             }
             else
             {
-                _logger.LogDebug("Process info {0} is already in the blacklist...", processInfo);
+                _logger.LogDebug("Process info {ProcessInfo} is already in the blacklist...", processInfo);
             }
         }
 
@@ -131,7 +131,7 @@ namespace Mémoire.ViewModel
         void Delete(ProcessInfo processInfo)
         {
             _ = processInfo ?? throw new ArgumentNullException(nameof(processInfo));
-            _logger.LogTrace("Deleting process info {0} from the blacklist...", processInfo);
+            _logger.LogTrace("Deleting process info {ProcessInfo} from the blacklist...", processInfo);
 
             BlacklistedProcesses.Remove(processInfo);
         }

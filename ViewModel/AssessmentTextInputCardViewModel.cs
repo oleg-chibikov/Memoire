@@ -50,7 +50,7 @@ namespace Mémoire.ViewModel
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
 
             ProvideAnswerCommand = AddCommand(ProvideAnswer);
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public bool? Accepted { get; private set; }
@@ -66,7 +66,7 @@ namespace Mémoire.ViewModel
 
             if (Accepted == true)
             {
-                _logger.LogInformation("Answer is correct. Most suitable accepted word was {0} with distance {1}. Increasing repeat type for {2}...", mostSuitable, currentMinDistance, learningInfo);
+                _logger.LogInformation("Answer is correct. Most suitable accepted word was {MostSuitable} with distance {CurrentMinDistance}. Increasing repeat type for {LearningInfo}...", mostSuitable, currentMinDistance, learningInfo);
                 learningInfo.IncreaseRepeatType();
 
                 // The inputted answer can differ from the first one
@@ -75,7 +75,7 @@ namespace Mémoire.ViewModel
             }
             else
             {
-                _logger.LogInformation("Answer is not correct. Decreasing repeat type for {0}...", learningInfo);
+                _logger.LogInformation("Answer is not correct. Decreasing repeat type for {LearningInfo}...", learningInfo);
                 Accepted = false;
                 learningInfo.DecreaseRepeatType();
                 closeTimeout = AppSettings.AssessmentCardFailureCloseTimeout;
@@ -88,7 +88,7 @@ namespace Mémoire.ViewModel
 
         void ProvideAnswer()
         {
-            _logger.LogTrace("Providing answer {0}...", ProvidedAnswer);
+            _logger.LogTrace("Providing answer {ProvidedAnswer}...", ProvidedAnswer);
             var mostSuitable = AcceptedAnswers.First();
             var currentMinDistance = int.MaxValue;
             if (!string.IsNullOrWhiteSpace(ProvidedAnswer))

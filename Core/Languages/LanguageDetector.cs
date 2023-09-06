@@ -11,7 +11,7 @@ using Scar.Services.Contracts.Data.LanguageDetection;
 
 namespace Mémoire.Core.Languages
 {
-    sealed class LanguageDetector : ILanguageDetector
+    public sealed class LanguageDetector : ILanguageDetector
     {
         const double Threshold = 0.02;
         const int ThresholdMultiplier = 3;
@@ -20,12 +20,12 @@ namespace Mémoire.Core.Languages
         public LanguageDetector(ILogger<LanguageDetector> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _allLanguagesDetector = new LanguageDetection.LanguageDetector();
             _allLanguagesDetector.AddAllLanguages();
             _allLanguagesDetector.ProbabilityThreshold = Threshold;
             _allLanguagesDetector.ConvergenceThreshold = Threshold;
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public Task<DetectionResult> DetectLanguageAsync(string text, Action<Exception>? handleError = null, CancellationToken cancellationToken = default)
@@ -49,7 +49,7 @@ namespace Mémoire.Core.Languages
 
         static DetectionResult ConvertLanguage(string language)
         {
-            var twoLetters = language.Substring(0, 2).ToLowerInvariant();
+            var twoLetters = language[..2].ToLowerInvariant();
             var secondPart = twoLetters == "en" ? "US" : twoLetters.ToUpperInvariant();
             return new DetectionResult { Code = twoLetters, Language = $"{twoLetters}-{secondPart}" };
         }
@@ -59,7 +59,7 @@ namespace Mémoire.Core.Languages
             var detectedLanguages = _allLanguagesDetector.DetectAll(text).ToDictionary(x => x.Language, x => x.Probability);
             if (detectedLanguages.Count == 0)
             {
-                handleError?.Invoke(new InvalidOperationException("Cannot detect language for " + text));
+                handleError?.Invoke(new InvalidOperationException($"Cannot detect language for {text}"));
                 return LanguageConstants.EnLanguageTwoLetters;
             }
 

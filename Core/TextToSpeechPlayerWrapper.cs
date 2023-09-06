@@ -12,7 +12,7 @@ using Scar.Services.Contracts;
 
 namespace Mémoire.Core
 {
-    sealed class TextToSpeechPlayerWrapper : ITextToSpeechPlayerWrapper
+    public sealed class TextToSpeechPlayerWrapper : ITextToSpeechPlayerWrapper
     {
         readonly ITextToSpeechPlayer _textToSpeechPlayer;
         readonly ISharedSettingsRepository _sharedSettingsRepository;
@@ -53,7 +53,7 @@ namespace Mémoire.Core
                 ((WaveOutEvent)sender).PlaybackStopped -= PlaybackStoppedHandler;
 
                 // ReSharper disable once AccessToDisposedClosure - dispose happens only after this call is awaited
-                reset!.Set();
+                reset.Set();
             }
 
             waveOut.PlaybackStopped += PlaybackStoppedHandler;

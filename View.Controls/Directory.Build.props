@@ -1,0 +1,22 @@
+﻿<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <UseWpf>True</UseWpf>
+    <Description>Mémoire View controls</Description>    
+    <AssemblyName>$(SolutionName).View.Controls.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(SolutionName).View.Controls.$(MSBuildProjectName)</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="WPFLocalizeExtension" Version="3.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\Common\WPF\View\Core\Core.csproj" />
+    <ProjectReference Include="..\..\ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\..\View.Resources\View.Resources.csproj" />
+  </ItemGroup>
+
+</Project>

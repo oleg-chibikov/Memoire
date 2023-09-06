@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core
 {
-    sealed class PauseManager : IPauseManager, IDisposable
+    public sealed class PauseManager : IPauseManager, IDisposable
     {
         static readonly IDictionary<PauseReasons, string> PauseReasonLabels = new Dictionary<PauseReasons, string>
         {
@@ -23,7 +23,7 @@ namespace Mémoire.Core
 
         readonly IDictionary<PauseReasons, string> _descriptions = new Dictionary<PauseReasons, string>();
         readonly ILocalSettingsRepository _localSettingsRepository;
-        readonly object _lockObject = new object();
+        readonly object _lockObject = new ();
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IDictionary<PauseReasons, PauseInfoSummary> _pauseInfos = new Dictionary<PauseReasons, PauseInfoSummary>();
@@ -31,7 +31,7 @@ namespace Mémoire.Core
         public PauseManager(ILogger<PauseManager> logger, IMessageHub messageHub, ILocalSettingsRepository localSettingsRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
 
@@ -41,7 +41,7 @@ namespace Mémoire.Core
                 _pauseInfos[PauseReasons.InactiveMode].Pause();
             }
 
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public bool IsPaused
@@ -85,9 +85,9 @@ namespace Mémoire.Core
                         pauseInfo =>
                         {
                             var text = PauseReasonLabels[pauseInfo.Key];
-                            if (_descriptions.ContainsKey(pauseInfo.Key))
+                            if (_descriptions.TryGetValue(pauseInfo.Key, out var description))
                             {
-                                text += ": " + _descriptions[pauseInfo.Key];
+                                text += $": {description}";
                             }
 
                             return text;
@@ -114,7 +114,7 @@ namespace Mémoire.Core
 
                 isPaused = IsPaused;
 
-                _logger.LogInformation($"Paused: {pauseReasons}");
+                _logger.LogInformation("Paused: {PauseReasons}", pauseReasons);
             }
 
             _messageHub.Publish(new PauseReasonAndState(pauseReasons, isPaused));
@@ -133,7 +133,7 @@ namespace Mémoire.Core
                 _descriptions.Remove(pauseReasons);
                 _localSettingsRepository.AddOrUpdatePauseInfo(pauseReasons, _pauseInfos[pauseReasons]);
                 isPaused = IsPaused;
-                _logger.LogInformation($"Resumed: {pauseReasons}");
+                _logger.LogInformation("Resumed: {PauseReasons}", pauseReasons);
             }
 
             _messageHub.Publish(new PauseReasonAndState(pauseReasons, isPaused));

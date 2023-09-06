@@ -9,13 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Mémoire.Core.ProcessMonitoring
 {
-    sealed class ActiveProcessesProvider : IActiveProcessesProvider
+    public sealed class ActiveProcessesProvider : IActiveProcessesProvider
     {
         public ActiveProcessesProvider(ILogger<ActiveProcessesProvider> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public IEnumerable<ProcessInfo> GetActiveProcesses()

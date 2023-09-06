@@ -33,7 +33,7 @@ namespace Mémoire.ViewModel
         readonly ILogger _logger;
         readonly IMessageHub _messageHub;
         readonly IPauseManager _pauseManager;
-        readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        readonly SemaphoreSlim _semaphore = new (1, 1);
         readonly IWindowFactory<ISettingsWindow> _settingsWindowFactory;
         readonly IWindowDisplayer _windowDisplayer;
         readonly Func<ILoadingWindow> _loadingWindowFactory;
@@ -60,7 +60,7 @@ namespace Mémoire.ViewModel
             Func<ILoadingWindow> loadingWindowFactory) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
@@ -89,7 +89,7 @@ namespace Mémoire.ViewModel
             _timer = new Timer(Timer_Tick, null, 0, 1000);
 
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasonAndState>(HandlePauseReasonChanged));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public bool IsLoading { get; private set; }
@@ -175,14 +175,17 @@ namespace Mémoire.ViewModel
             var provider = _cardShowTimeProvider ?? await SetupCardShowTimeProviderAsync().ConfigureAwait(false);
             _semaphore.Release();
 
-            TimeLeftToShowCard = Texts.TimeToShow + ": " + provider.TimeLeftToShowCard.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
+            TimeLeftToShowCard =
+                $"{Texts.TimeToShow}: {provider.TimeLeftToShowCard.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
             LastCardShowTime = provider.LastCardShowTime == null
                 ? null
-                : Texts.LastCardShowTime + ": " + provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
-            NextCardShowTime = Texts.NextCardShowTime + ": " + provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture);
-            CardShowFrequency = Texts.CardShowFrequency + ": " + provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
+                : $"{Texts.LastCardShowTime}: {provider.LastCardShowTime.Value.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture)}";
+            NextCardShowTime =
+                $"{Texts.NextCardShowTime}: {provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture)}";
+            CardShowFrequency =
+                $"{Texts.CardShowFrequency}: {provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
             var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReasons.CardIsVisible).PauseTime;
-            CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : Texts.CardVisiblePauseTime + ": " + cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture);
+            CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : $"{Texts.CardVisiblePauseTime}: {cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
         }
 
         async Task<ICardShowTimeProvider> SetupCardShowTimeProviderAsync()
@@ -206,6 +209,9 @@ namespace Mémoire.ViewModel
             executeInDictionaryWindowContext(
                 dictionaryWindow =>
                 {
+                    dictionaryWindow.ContentRendered += DictionaryWindowContentRendered;
+                    return;
+
                     void DictionaryWindowContentRendered(object? sender, EventArgs e)
                     {
                         if (dictionaryWindow != null)
@@ -219,8 +225,6 @@ namespace Mémoire.ViewModel
                                 loadingWindow.Close();
                             });
                     }
-
-                    dictionaryWindow.ContentRendered += DictionaryWindowContentRendered;
                 });
         }
 
@@ -251,7 +255,7 @@ namespace Mémoire.ViewModel
             _logger.LogTrace("Toggling state...");
             IsActive = !IsActive;
             _localSettingsRepository.IsActive = IsActive;
-            _logger.LogInformation("New state is {0}", IsActive);
+            _logger.LogInformation("New state is {IsActive}", IsActive);
             if (IsActive)
             {
                 _pauseManager.ResumeActivity(Contracts.DAL.Model.PauseReasons.InactiveMode);

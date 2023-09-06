@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <UseWpf>True</UseWpf>
+    <Description>Mémoire View converters</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="WordMetadata.resx" />
+    <EmbeddedResource Remove="WordMetadata.ru-RU.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Various\Converters\Converters.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Various\Localization\Localization.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
+    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="WordMetadata.resx">
+      <LastGenOutput>WordMetadata.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </Resource>
+    <Resource Include="WordMetadata.ru-RU.resx">
+      <SubType>Designer</SubType>
+    </Resource>
+  </ItemGroup>
+
+</Project>

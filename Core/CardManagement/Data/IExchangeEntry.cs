@@ -1,6 +1,6 @@
-﻿namespace Mémoire.Core.CardManagement.Data
+namespace Mémoire.Core.CardManagement.Data
 {
-    interface IExchangeEntry
+    public interface IExchangeEntry
     {
         string Text { get; }
     }

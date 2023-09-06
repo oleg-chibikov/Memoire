@@ -5,7 +5,7 @@ using Mémoire.Contracts.View.Settings;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class SplashScreenWindow : ISplashScreenWindow
+    public sealed partial class SplashScreenWindow : ISplashScreenWindow
     {
         Timer? _timer;
 
@@ -26,7 +26,7 @@ namespace Mémoire.View.Windows
             var indexOfDots = text.IndexOf("...", StringComparison.Ordinal);
             if (indexOfDots != -1)
             {
-                text = text.Substring(0, indexOfDots);
+                text = text[..indexOfDots];
             }
             else
             {
@@ -40,10 +40,10 @@ namespace Mémoire.View.Windows
         {
             var syncContext = SynchronizationContext.Current;
             _timer = new Timer(
-                x =>
+                _ =>
                 {
                     syncContext?.Post(
-                        state =>
+                        _ =>
                         {
                             var text = MainText.Text;
                             text = AppendDots(text);

@@ -7,10 +7,11 @@
   <PropertyGroup>
     <NoWarn>$(NoWarn);CS8618</NoWarn>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Scar.Common" Version="1.1.7773.36876" />
-    <PackageReference Include="Scar.Common.DAL.Contracts" Version="1.1.7773.36876" />
-    <PackageReference Include="Scar.Services.Contracts" Version="1.1.7774.32834" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\DAL\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Services\Contracts\Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -65,7 +65,7 @@ namespace Mémoire.ViewModel
             private set
             {
                 _repeatType = value;
-                _synchronizationContext.Send(x => DemoteCommand.RaiseCanExecuteChanged(), null);
+                _synchronizationContext.Send(_ => DemoteCommand.RaiseCanExecuteChanged(), null);
             }
         }
 
@@ -99,7 +99,7 @@ namespace Mémoire.ViewModel
             RepeatType = learningInfo.RepeatType;
             _learningInfoRepository.Update(learningInfo);
             _messageHub.Publish(learningInfo);
-            _logger.LogInformation("Demoted {0}", learningInfo);
+            _logger.LogInformation("Demoted {LearningInfo}", learningInfo);
         }
 
         void Favorite()
@@ -109,7 +109,7 @@ namespace Mémoire.ViewModel
             _learningInfoRepository.Update(learningInfo);
             RepeatType = learningInfo.RepeatType;
             _messageHub.Publish(learningInfo);
-            _logger.LogInformation("{0} {1}", IsFavorited ? "Favorited" : "Unfavorited", learningInfo);
+            _logger.LogInformation("{Favorited} {LearningInfo}", IsFavorited ? "Favorited" : "Unfavorited", learningInfo);
         }
     }
 }

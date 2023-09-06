@@ -20,7 +20,7 @@ using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.Core.Exchange
 {
-    abstract class BaseFileImporter<T> : IFileImporter
+    public abstract class BaseFileImporter<T> : IFileImporter
         where T : IExchangeEntry
     {
         readonly ILearningInfoRepository _learningInfoRepository;
@@ -62,10 +62,10 @@ namespace Mémoire.Core.Exchange
             var successCount = 0;
             await deserialized.RunByBlocksAsync(
                     25,
-                    async (exchangeEntriesBlock, index, blocksCount) =>
+                    async (exchangeEntriesBlock, index, blockCount) =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        _logger.LogTrace("Processing block {0} out of {1} ({2} files)...", index, blocksCount, exchangeEntriesBlock.Length);
+                        _logger.LogTrace("Processing block {Index} out of {BlockCount} ({FileCount} files)...", index, blockCount, exchangeEntriesBlock.Length);
                         var importTasks = exchangeEntriesBlock.Select(
                             async exchangeEntry =>
                             {
@@ -150,6 +150,7 @@ namespace Mémoire.Core.Exchange
                     new TranslationEntryAdditionInfo(translationEntryKey.Text, translationEntryKey.SourceLanguage, translationEntryKey.TargetLanguage),
                     null,
                     false,
+                    false,
                     manualTranslations,
                     cancellationToken)
                 .ConfigureAwait(false);
@@ -162,12 +163,12 @@ namespace Mémoire.Core.Exchange
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            _logger.LogTrace("Importing {0}...", exchangeEntry.Text);
+            _logger.LogTrace("Importing {ExchangeText}...", exchangeEntry.Text);
             var translationEntryKey = await GetTranslationEntryKeyAsync(exchangeEntry, cancellationToken).ConfigureAwait(false);
             TranslationEntry? translationEntry = null;
-            if (existingTranslationEntries.ContainsKey(translationEntryKey))
+            if (existingTranslationEntries.TryGetValue(translationEntryKey, out var entry))
             {
-                translationEntry = existingTranslationEntries[translationEntryKey];
+                translationEntry = entry;
             }
 
             var manualTranslations = GetManualTranslations(exchangeEntry);
@@ -199,7 +200,7 @@ namespace Mémoire.Core.Exchange
             var learningInfoUpdated = UpdateLearningInfo(exchangeEntry, learningInfo);
             var priorityTranslationsUpdated = UpdatePriorityTranslations(exchangeEntry, translationEntry);
             changed |= priorityTranslationsUpdated;
-            _logger.LogInformation("Imported {0}", exchangeEntry.Text);
+            _logger.LogInformation("Imported {ExchangeText}", exchangeEntry.Text);
             if (changed)
             {
                 _translationEntryRepository.Update(translationEntry);
@@ -221,7 +222,7 @@ namespace Mémoire.Core.Exchange
 
         void PublishPriorityWord(TranslationEntry translationEntry, BaseWord priorityTranslation)
         {
-            _logger.LogInformation("Imported priority translation {0} for {1}", priorityTranslation, translationEntry);
+            _logger.LogInformation("Imported priority translation {PriorityTranslation} for {Translation}", priorityTranslation, translationEntry);
             var priorityWordKey = new PriorityWordKey(true, new WordKey(translationEntry.Id, priorityTranslation));
             _messenger.Publish(priorityWordKey);
         }

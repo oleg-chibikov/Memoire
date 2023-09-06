@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <UseWpf>True</UseWpf>
+    <Description>Resources fro Mémoire Views</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Controls\AutoCompleteTextBox\AutoCompleteTextBox.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Controls\ExternalBrowserHyperlink\ExternalBrowserHyperlink.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\Controls\Styles\Styles.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\View\Core\Core.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\WPF\View\CustomWindow\CustomWindow.csproj" />
+    <ProjectReference Include="..\View.Converters\View.Converters.csproj" />
+  </ItemGroup>
+</Project>

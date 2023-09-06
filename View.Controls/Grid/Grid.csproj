@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\Common\WPF\Various\Behaviors\Behaviors.csproj" />
+    <ProjectReference Include="..\Grid.Columns\Grid.Columns.csproj" />
+  </ItemGroup>
+</Project>

@@ -6,19 +6,26 @@
 
   <ItemGroup>
     <PackageReference Include="Easy.MessageHub" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
-    <PackageReference Include="Scar.Common.ApplicationLifetime.Contracts" Version="1.1.7773.25954" />
-    <PackageReference Include="Scar.Common.Async" Version="1.1.7773.26296" />
-    <PackageReference Include="Scar.Common.Localization" Version="1.1.7773.26316" />
-    <PackageReference Include="Scar.Common.MVVM.CollectionView" Version="1.1.7773.29699" />
-    <PackageReference Include="Scar.Common.MVVM.ViewModel" Version="1.1.7774.23780" />
-    <PackageReference Include="Scar.Common.RateLimiting" Version="1.1.7773.26310" />
-    <PackageReference Include="Scar.Common.View.WindowCreation" Version="1.1.7773.37089" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\ApplicationLifetime\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\MVVM\CollectionView\CollectionView.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\MVVM\ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\Async\Async.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\IO\IO.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\Localization\Localization.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\RateLimiting\RateLimiting.csproj" />
     <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\Resources\Resources.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Scar.Common.View.WindowCreation">
+      <HintPath>..\..\..\Libraries\Common\NetStandard\View\WindowCreation\bin\Debug\Scar.Common.View.WindowCreation.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\Common\WPF\Various\Behaviors\Behaviors.csproj" />
+    <ProjectReference Include="..\TranslationDetails\TranslationDetails.csproj" />
+  </ItemGroup>
+
+</Project>

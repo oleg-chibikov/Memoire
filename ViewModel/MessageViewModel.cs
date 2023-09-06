@@ -16,7 +16,7 @@ namespace Mémoire.ViewModel
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             AutoCloseTimeout = AppSettings.MessageCloseTimeout;
             Message = message ?? throw new ArgumentNullException(nameof(message));
-            logger.LogTrace("Showing message {0} and closing window in {1}...", message, AutoCloseTimeout);
+            logger.LogTrace("Showing message {Message} and closing window in {AutoCloseTimeout}...", message, AutoCloseTimeout);
         }
 
         public TimeSpan AutoCloseTimeout { get; }

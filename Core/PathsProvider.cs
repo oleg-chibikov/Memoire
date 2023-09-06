@@ -16,14 +16,14 @@ namespace Mémoire.Core
         public PathsProvider(IOneDrivePathProvider oneDrivePathProvider, IDropBoxPathProvider dropBoxPathProvider, IAssemblyInfoProvider assemblyInfoProvider, ILogger<PathsProvider> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _assemblyInfoProvider = assemblyInfoProvider ?? throw new ArgumentNullException(nameof(assemblyInfoProvider));
             _ = oneDrivePathProvider ?? throw new ArgumentNullException(nameof(oneDrivePathProvider));
             _ = dropBoxPathProvider ?? throw new ArgumentNullException(nameof(dropBoxPathProvider));
             OneDrivePath = oneDrivePathProvider.GetOneDrivePath();
             DropBoxPath = dropBoxPathProvider.GetDropBoxPath();
             LocalSharedDataPath = Path.Combine(_assemblyInfoProvider.SettingsPath, "Shared");
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public static string LogsPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Scar", "Mémoire", "Logs", "log.txt");
@@ -37,7 +37,7 @@ namespace Mémoire.Core
         public string GetSharedPath(SyncEngine syncEngine)
         {
             var basePath = syncEngine == SyncEngine.OneDrive ? OneDrivePath : DropBoxPath;
-            _ = basePath ?? throw new InvalidOperationException(nameof(basePath) + " is null");
+            _ = basePath ?? throw new InvalidOperationException($"{nameof(basePath)} is null");
             return Path.Combine(basePath, _assemblyInfoProvider.ProgramName, Environment.MachineName.SanitizePath());
         }
 

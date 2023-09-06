@@ -30,7 +30,7 @@ namespace Mémoire.Test
             var autoMock = AutoMock.GetLoose();
             autoMock.Mock<ICancellationTokenSourceProvider>()
                 .Setup(x => x.ExecuteOperationAsync(It.IsAny<Func<CancellationToken, Task>>(), It.IsAny<bool>()))
-                .Returns((Func<CancellationToken, Task> f, bool b) => f(CancellationToken.None));
+                .Returns((Func<CancellationToken, Task> f, bool _) => f(CancellationToken.None));
             autoMock.Mock<IImageDownloader>().Setup(x => x.DownloadImageAsync(It.IsAny<Uri>(), It.IsAny<Action<Exception>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new byte[1]);
             return autoMock;
         }

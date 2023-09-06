@@ -6,7 +6,7 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Mémoire.DAL.Local
 {
-    sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, TranslationEntryKey>, IPrepositionsInfoRepository
+    public sealed class PrepositionsInfoRepository : LiteDbRepository<PrepositionsInfo, TranslationEntryKey>, IPrepositionsInfoRepository
     {
         public PrepositionsInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(
             assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),

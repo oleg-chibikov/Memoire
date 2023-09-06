@@ -4,7 +4,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class TranslationDetailsCardWindow : ITranslationDetailsCardWindow
+    public sealed partial class TranslationDetailsCardWindow : ITranslationDetailsCardWindow
     {
         public TranslationDetailsCardWindow(TranslationDetailsCardViewModel viewModel, Window? ownerWindow = null)
         {

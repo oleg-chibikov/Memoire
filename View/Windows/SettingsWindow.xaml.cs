@@ -5,7 +5,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class SettingsWindow : ISettingsWindow
+    public sealed partial class SettingsWindow : ISettingsWindow
     {
         public SettingsWindow(SettingsViewModel viewModel, Window? ownerWindow = null)
         {

@@ -1,0 +1,79 @@
+<commonView:BaseControl
+    x:Class="Mémoire.View.Controls.WordImageViewer.WordImageViewerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
+    d:DataContext="{d:DesignInstance d:Type=viewModel:WordImageViewerViewModel}"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    mc:Ignorable="d">
+    <commonView:BaseControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
+                <ResourceDictionary>
+                    <DataTemplate x:Key="ImageTemplate">
+                        <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="2">
+                            <Image
+                                MaxWidth="100"
+                                Source="{Binding DataContext.ThumbnailBytes, Converter={StaticResource BytesToImageConverter}, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type commonView:BaseControl}}}"
+                                ToolTip="{Binding DataContext.ToolTip, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type commonView:BaseControl}}}" />
+                        </Border>
+                    </DataTemplate>
+                    <DataTemplate x:Key="LoadingTemplate">
+                        <Control Style="{StaticResource BusyAnimationStyle}" ToolTip="{lex:Loc Loading}" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="FailedLoadingTemplate">
+                        <materialDesign:PackIcon Kind="ImageOff" ToolTip="{lex:Loc LoadingFailed}" />
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </commonView:BaseControl.Resources>
+    <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Horizontal">
+        <Button
+            Command="{Binding SetPreviousImageCommand, Mode=OneTime}"
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc SetPreviousImage}"
+            Visibility="{Binding IsSetPreviousImageVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <materialDesign:PackIcon Kind="ChevronLeft" />
+        </Button>
+        <ContentControl>
+            <ContentControl.Style>
+                <Style TargetType="{x:Type ContentControl}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ThumbnailBytes, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}" Value="False">
+                            <Setter Property="ContentTemplate" Value="{StaticResource FailedLoadingTemplate}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsLoading, Mode=OneWay}" Value="True">
+                            <Setter Property="ContentTemplate" Value="{StaticResource LoadingTemplate}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="ContentTemplate" Value="{StaticResource ImageTemplate}" />
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <Button
+            Command="{Binding ReloadImageCommand, Mode=OneTime}"
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc Reload}"
+            Visibility="{Binding IsReloadVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <materialDesign:PackIcon Kind="Reload" />
+        </Button>
+        <Button
+            Command="{Binding SetNextImageCommand, Mode=OneTime}"
+            Style="{StaticResource ImageButton}"
+            ToolTip="{lex:Loc SetNextImage}"
+            Visibility="{Binding IsSetNextImageVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <materialDesign:PackIcon Kind="ChevronRight" />
+        </Button>
+    </StackPanel>
+</commonView:BaseControl>

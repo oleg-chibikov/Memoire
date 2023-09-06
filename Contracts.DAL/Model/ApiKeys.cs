@@ -9,7 +9,7 @@ namespace Mémoire.Contracts.DAL.Model
         public string UClassify { get; set; }
 
         public static ApiKeys CreateDefault() =>
-            new ApiKeys
+            new ()
             {
                 UClassify = "UDZpCiVwonVZ",
                 YandexTextToSpeech = "e07b8971-5fcd-477a-b141-c8620e7f06eb"

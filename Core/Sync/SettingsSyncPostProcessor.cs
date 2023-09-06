@@ -9,16 +9,16 @@ using Scar.Common.DAL.Contracts.Model;
 
 namespace Mémoire.Core.Sync
 {
-    sealed class SettingsSyncPostProcessor : ISyncPostProcessor<ApplicationSettings>
+    public sealed class SettingsSyncPostProcessor : ISyncPostProcessor<ApplicationSettings>
     {
         readonly IMessageHub _messageHub;
 
         public SettingsSyncPostProcessor(IMessageHub messageHub, ILogger<SettingsSyncPostProcessor> logger)
         {
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _messageHub = messageHub ?? throw new ArgumentNullException(nameof(messageHub));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public Task AfterEntityChangedAsync(ApplicationSettings? oldValue, ApplicationSettings newValue)

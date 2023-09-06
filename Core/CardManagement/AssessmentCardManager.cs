@@ -21,13 +21,13 @@ using Scar.Common.View.WindowCreation;
 
 namespace Mémoire.Core.CardManagement
 {
-    sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
+    public sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
         readonly DateTimeOffset _initTime;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly ISharedSettingsRepository _sharedSettingsRepository;
-        readonly object _lockObject = new object();
+        readonly object _lockObject = new ();
         readonly IMessageHub _messageHub;
         readonly IPauseManager _pauseManager;
         readonly IScopedWindowProvider _scopedWindowProvider;
@@ -54,7 +54,7 @@ namespace Mémoire.Core.CardManagement
             IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _scopedWindowProvider = scopedWindowProvider ?? throw new ArgumentNullException(nameof(scopedWindowProvider));
             _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
@@ -77,7 +77,7 @@ namespace Mémoire.Core.CardManagement
 
             _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
             _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasonAndState>(HandlePauseReasonChanged));
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public TimeSpan CardShowFrequency { get; private set; }
@@ -116,7 +116,7 @@ namespace Mémoire.Core.CardManagement
         void CreateInterval()
         {
             var delay = TimeLeftToShowCard;
-            _logger.LogDebug("Next card will be shown in: {0} (frequency is {1})", delay, CardShowFrequency);
+            _logger.LogDebug("Next card will be shown in: {Delay} (frequency is {CardShowFrequency})", delay, CardShowFrequency);
 
             lock (_lockObject)
             {
@@ -130,7 +130,7 @@ namespace Mémoire.Core.CardManagement
             CardShowFrequency = newCardShowFrequency;
             if (!_pauseManager.IsPaused)
             {
-                _logger.LogTrace("Recreating interval for new frequency {0}...", newCardShowFrequency);
+                _logger.LogTrace("Recreating interval for new frequency {CardShowFrequency}...", newCardShowFrequency);
                 lock (_lockObject)
                 {
                     CreateInterval();
@@ -138,7 +138,7 @@ namespace Mémoire.Core.CardManagement
             }
             else
             {
-                _logger.LogDebug("Skipped recreating interval for new frequency {0} as it is paused", newCardShowFrequency);
+                _logger.LogDebug("Skipped recreating interval for new frequency {CardShowFrequency} as it is paused", newCardShowFrequency);
             }
         }
 
@@ -203,7 +203,7 @@ namespace Mémoire.Core.CardManagement
 
             // CultureUtilities.ChangeCulture(LocalSettingsRepository.UiLanguage);
             _synchronizationContext.Send(
-                x =>
+                _ =>
                 {
                     _windowPositionAdjustmentManager.AdjustAnyWindowPosition(window);
                     window.Restore();

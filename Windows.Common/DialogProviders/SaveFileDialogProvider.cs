@@ -4,9 +4,9 @@ using Microsoft.Win32;
 
 namespace Mémoire.Windows.Common.DialogProviders
 {
-    sealed class SaveFileDialogProvider : ISaveFileDialogProvider
+    public sealed class SaveFileDialogProvider : ISaveFileDialogProvider
     {
-        readonly SaveFileDialog _dialog = new SaveFileDialog
+        readonly SaveFileDialog _dialog = new ()
         {
             FileName = DialogProviderConstants.DefaultFilePattern, Filter = DialogProviderConstants.JsonFilesFilter, RestoreDirectory = true, Title = $"{Texts.Title}: {Texts.Export}"
         };

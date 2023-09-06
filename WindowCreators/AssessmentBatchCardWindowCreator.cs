@@ -9,7 +9,7 @@ using Scar.Common.View.WindowCreation;
 
 namespace Mémoire.WindowCreators
 {
-    sealed class AssessmentBatchCardWindowCreator : IWindowCreator<IAssessmentBatchCardWindow, IReadOnlyCollection<TranslationInfo>>
+    public sealed class AssessmentBatchCardWindowCreator : IWindowCreator<IAssessmentBatchCardWindow, IReadOnlyCollection<TranslationInfo>>
     {
         readonly Func<IReadOnlyCollection<TranslationInfo>, AssessmentBatchCardViewModel> _assessmentBatchCardWindowCreatorsFactory;
         readonly Func<AssessmentBatchCardViewModel, IAssessmentBatchCardWindow> _assessmentBatchCardWindowFactory;
@@ -31,7 +31,7 @@ namespace Mémoire.WindowCreators
 
             var assessmentWindowCreators = _assessmentBatchCardWindowCreatorsFactory(translationInfos);
             IAssessmentBatchCardWindow? window = null;
-            _synchronizationContext.Send(x => window = _assessmentBatchCardWindowFactory(assessmentWindowCreators), null);
+            _synchronizationContext.Send(_ => window = _assessmentBatchCardWindowFactory(assessmentWindowCreators), null);
             return Task.FromResult(window!);
         }
     }

@@ -4,7 +4,7 @@ using Mémoire.ViewModel;
 
 namespace Mémoire.View.Windows
 {
-    sealed partial class AssessmentBatchCardWindow : IAssessmentBatchCardWindow
+    public sealed partial class AssessmentBatchCardWindow : IAssessmentBatchCardWindow
     {
         public AssessmentBatchCardWindow(AssessmentBatchCardViewModel viewModel, Window? ownerWindow = null)
         {

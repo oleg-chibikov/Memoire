@@ -12,20 +12,22 @@ using Scar.Services.Contracts.Data.Translation;
 
 namespace Mémoire.Core.CardManagement
 {
-    sealed class AssessmentInfoProvider : IAssessmentInfoProvider
+    public sealed class AssessmentInfoProvider : IAssessmentInfoProvider
     {
-        static readonly Random Random = new Random();
+        static readonly Random Random = new ();
         readonly ILogger _logger;
 
         public AssessmentInfoProvider(ILogger<AssessmentInfoProvider> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public AssessmentInfo ProvideAssessmentInfo(TranslationInfo translationInfo)
         {
+            _ = translationInfo ?? throw new ArgumentNullException(nameof(translationInfo));
+
             var repeatType = translationInfo.LearningInfo.RepeatType;
             var randomTranslation = repeatType >= RepeatType.Proficiency;
             var isReverse = IsReverse(repeatType);
@@ -67,7 +69,7 @@ namespace Mémoire.Core.CardManagement
             TranslationEntry translationEntry,
             bool translationEntryHasPriorityItems)
         {
-            _logger.LogTrace("Getting accepted words groups for {0}...", partOfSpeechGroup.Key);
+            _logger.LogTrace("Getting accepted words groups for {PartOfSpeechGroupKey}...", partOfSpeechGroup.Key);
             var acceptedWordGroups = partOfSpeechGroup.SelectMany(
                     partOfSpeechTranslation => partOfSpeechTranslation.TranslationVariants.Select(
                             translationVariant =>
@@ -89,7 +91,7 @@ namespace Mémoire.Core.CardManagement
                 throw new LocalizableException(Errors.NoAssessmentTranslations, "No translations found");
             }
 
-            _logger.LogDebug("There are {0} accepted words groups", acceptedWordGroups.Length);
+            _logger.LogDebug("There are {AcceptedWordGroupCount} accepted words groups", acceptedWordGroups.Length);
 
             return acceptedWordGroups;
         }
@@ -102,7 +104,7 @@ namespace Mémoire.Core.CardManagement
             hasPriorityItems = priorityPartOfSpeechTranslations.Count > 0;
             if (hasPriorityItems)
             {
-                _logger.LogDebug("There are {0} priority translations", priorityPartOfSpeechTranslations.Count);
+                _logger.LogDebug("There are {PriorityPartOfSpeechTranslationCount} priority translations", priorityPartOfSpeechTranslations.Count);
                 return priorityPartOfSpeechTranslations;
             }
 
@@ -113,7 +115,7 @@ namespace Mémoire.Core.CardManagement
         IReadOnlyCollection<Word> GetPossibleTranslations((TranslationVariant TranslationVariant, bool HasPriorityItems) translationVariantWithPriorityInfo, TranslationEntry translationEntry)
         {
             var (translationVariant, hasPriorityItems) = translationVariantWithPriorityInfo;
-            _logger.LogTrace("Getting accepted words groups for {0}...", translationVariant);
+            _logger.LogTrace("Getting accepted words groups for {TranslationVariant}...", translationVariant);
             IEnumerable<Word> result = new Word[]
             {
                 translationVariant

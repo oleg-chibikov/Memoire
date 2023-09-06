@@ -14,7 +14,7 @@ using Scar.Common.Messages;
 
 namespace Mémoire.Core.Exchange
 {
-    sealed class CardsExchanger : ICardsExchanger, IDisposable
+    public sealed class CardsExchanger : ICardsExchanger, IDisposable
     {
         readonly IFileExporter _exporter;
         readonly IFileImporter[] _importers;
@@ -55,7 +55,7 @@ namespace Mémoire.Core.Exchange
                 return;
             }
 
-            _logger.LogTrace("Performing export to {0}...", fileName);
+            _logger.LogTrace("Performing export to {FileName}...", fileName);
             ExchangeResult? exchangeResult = null;
             OnProgress(0, 1);
             try
@@ -69,13 +69,13 @@ namespace Mémoire.Core.Exchange
 
             if (exchangeResult!.Success)
             {
-                _logger.LogInformation("Export to {0} has been performed", fileName);
+                _logger.LogInformation("Export to {FileName} has been performed", fileName);
                 _messageHub.Publish(Texts.ExportSucceeded.ToMessage());
                 fileName.OpenFileInExplorer();
             }
             else
             {
-                _logger.LogWarning("Export to {0} failed", fileName);
+                _logger.LogWarning("Export to {FileName} failed", fileName);
                 _messageHub.Publish(Errors.ExportFailed.ToError());
             }
         }
@@ -96,12 +96,12 @@ namespace Mémoire.Core.Exchange
                         {
                             foreach (var importer in _importers)
                             {
-                                _logger.LogTrace("Performing import from {0} with {1}...", fileName, importer.GetType().Name);
+                                _logger.LogTrace("Performing import from {FileName} with {Importer}...", fileName, importer.GetType().Name);
                                 var exchangeResult = await importer.ImportAsync(fileName, cancellationToken).ConfigureAwait(false);
 
                                 if (exchangeResult.Success)
                                 {
-                                    _logger.LogInformation("Import from {0} has been performed", fileName);
+                                    _logger.LogInformation("Import from {FileName} has been performed", fileName);
                                     var mainMessage = string.Format(CultureInfo.InvariantCulture, Texts.ImportSucceeded, exchangeResult.Count);
                                     _messageHub.Publish(
                                         exchangeResult.Errors != null
@@ -111,7 +111,7 @@ namespace Mémoire.Core.Exchange
                                     return;
                                 }
 
-                                _logger.LogWarning("ImportAsync from {0} failed", fileName);
+                                _logger.LogWarning("ImportAsync from {FileName} failed", fileName);
                             }
 
                             _messageHub.Publish(Errors.ImportFailed.ToError());

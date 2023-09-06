@@ -8,9 +8,9 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Mémoire.DAL.SharedBetweenMachines
 {
-    sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
+    public sealed class LearningInfoRepository : TrackedLiteDbRepository<LearningInfo, TranslationEntryKey>, ILearningInfoRepository
     {
-        readonly Random _rand = new Random();
+        readonly Random _rand = new ();
         readonly ISharedSettingsRepository _sharedSettingsRepository;
 
         public LearningInfoRepository(IPathsProvider pathsProvider, ISharedSettingsRepository sharedSettingsRepository, string? directoryPath = null, bool shrink = false) : base(
@@ -46,7 +46,7 @@ namespace Mémoire.DAL.SharedBetweenMachines
                     .ThenBy(x => chooseItemsWithSmallerShowCountFirst ? x.ShowCount : 0) // the lower the ShowCount, the greater the priority
                     .ThenBy(x => chooseItemsWithLowerRepeatTypeFirst ? x.RepeatType : 0) // the lower the RepeatType, the greater the priority
                     .ThenBy(x => chooseOlderItemsFirst ? x.CreatedDate : DateTimeOffset.MinValue) // this gives a chance of showing an older card rather than a newer one first
-                    .ThenBy(x => Guid.NewGuid()); // similar values are ordered randomly
+                    .ThenBy(_ => Guid.NewGuid()); // similar values are ordered randomly
             }
 
             var first = GetExpression().FirstOrDefault();

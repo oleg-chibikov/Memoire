@@ -1,13 +1,14 @@
-<commonView:AnimatedWindow
+<customWindow:AnimatedWindow
     x:Class="Mémoire.View.Windows.AddTranslationWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:grid="clr-namespace:Mémoire.View.Controls.Grid"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
+    xmlns:customWindow="clr-namespace:Scar.Common.WPF.View.CustomWindow;assembly=Scar.Common.WPF.View.CustomWindow"
+    xmlns:grid="clr-namespace:Mémoire.View.Controls.Grid;assembly=Mémoire.View.Controls.Grid"
     Title="{lex:Loc Title}"
     Width="900"
     d:DataContext="{d:DesignInstance d:Type=viewModel:AddTranslationViewModel}"
@@ -15,7 +16,6 @@
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    x:ClassModifier="internal"
     AdvancedWindowStartupLocation="BottomLeft"
     Background="{StaticResource DarkerBackground}"
     Draggable="False"
@@ -24,7 +24,7 @@
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
     <grid:AddTranslationControl VerticalAlignment="Center" VerticalContentAlignment="Center" />
-    <commonView:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
-    </commonView:AnimatedWindow.Resources>
-</commonView:AnimatedWindow>
+    <customWindow:AnimatedWindow.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
+    </customWindow:AnimatedWindow.Resources>
+</customWindow:AnimatedWindow>

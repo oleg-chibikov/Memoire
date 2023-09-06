@@ -37,7 +37,7 @@ namespace Mémoire.ViewModel
             ICommandManager commandManager) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             TranslationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _languageManager = languageManager ?? throw new ArgumentNullException(nameof(languageManager));
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
@@ -119,7 +119,7 @@ namespace Mémoire.ViewModel
 
         public string? Text { get; set; }
 
-        protected CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource();
+        protected CancellationTokenSource CancellationTokenSource { get; } = new ();
 
         protected ITranslationEntryProcessor TranslationEntryProcessor { get; }
 
@@ -152,7 +152,7 @@ namespace Mémoire.ViewModel
                 };
             var translationEntryAdditionInfo = new TranslationEntryAdditionInfo(text, SelectedSourceLanguage, SelectedTargetLanguage);
             var addition = manualTranslation == null ? null : $" with manual translation {ManualTranslation}";
-            _logger.LogInformation($"Adding translation for {translationEntryAdditionInfo}{addition}...");
+            _logger.LogInformation("Adding translation for {Word}...", translationEntryAdditionInfo + addition);
             Text = null;
             ManualTranslation = null;
 

@@ -1,21 +1,21 @@
-<commonView:AnimatedWindow
+<customWindow:AnimatedWindow
     x:Class="Mémoire.View.Windows.AssessmentBatchCardWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:assessment="clr-namespace:Mémoire.View.Controls.Assessment"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
+    xmlns:customWindow="clr-namespace:Scar.Common.WPF.View.CustomWindow;assembly=Scar.Common.WPF.View.CustomWindow"
+    xmlns:assessmentCardBatch="clr-namespace:Mémoire.View.Controls.AssessmentCardBatch;assembly=Mémoire.View.Controls.AssessmentCardBatch"
     Title="{Binding Title, Mode=OneTime}"
     d:DataContext="{d:DesignInstance viewModel:AssessmentBatchCardViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    x:ClassModifier="internal"
     Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="Manual"
@@ -28,8 +28,8 @@
             <b:InvokeCommandAction Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <commonView:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
-    </commonView:AnimatedWindow.Resources>
-    <assessment:AssessmentCardBatchControl ItemsSource="{Binding NestedViewModels, Mode=OneWay}" />
-</commonView:AnimatedWindow>
+    <customWindow:AnimatedWindow.Resources>
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
+    </customWindow:AnimatedWindow.Resources>
+    <assessmentCardBatch:AssessmentCardBatchControl ItemsSource="{Binding NestedViewModels, Mode=OneWay}" />
+</customWindow:AnimatedWindow>

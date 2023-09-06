@@ -6,7 +6,7 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Mémoire.DAL.Local
 {
-    sealed class WordImageInfoRepository : LiteDbRepository<WordImageInfo, WordKey>, IWordImageInfoRepository
+    public sealed class WordImageInfoRepository : LiteDbRepository<WordImageInfo, WordKey>, IWordImageInfoRepository
     {
         public WordImageInfoRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(
             assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),

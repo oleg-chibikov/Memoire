@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:common="clr-namespace:Mémoire.View.Controls.Common"
     xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
@@ -11,12 +10,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
+    xmlns:trayToolTip="clr-namespace:Mémoire.View.Controls.TrayToolTip;assembly=Mémoire.View.Controls.TrayToolTip"
     d:DataContext="{d:DesignInstance d:Type=viewModel:TrayViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
-    x:ClassModifier="internal"
     Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     ShowInTaskbar="False"
     SizeToContent="WidthAndHeight"
@@ -24,7 +23,7 @@
     WindowState="Minimized"
     mc:Ignorable="d">
     <Window.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View;component/DesignTimeResources.xaml" />
+        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
     </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
@@ -126,7 +125,7 @@
                 </Style>
             </tb:TaskbarIcon.Style>
             <tb:TaskbarIcon.TrayToolTip>
-                <common:TrayToolTipControl />
+                <trayToolTip:TrayToolTipControl />
             </tb:TaskbarIcon.TrayToolTip>
         </tb:TaskbarIcon>
     </Grid>

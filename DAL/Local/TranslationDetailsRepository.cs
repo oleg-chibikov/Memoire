@@ -6,7 +6,7 @@ using Scar.Common.DAL.LiteDB;
 
 namespace Mémoire.DAL.Local
 {
-    sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, TranslationEntryKey>, ITranslationDetailsRepository
+    public sealed class TranslationDetailsRepository : LiteDbRepository<TranslationDetails, TranslationEntryKey>, ITranslationDetailsRepository
     {
         public TranslationDetailsRepository(IAssemblyInfoProvider assemblyInfoProvider) : base(
             assemblyInfoProvider?.SettingsPath ?? throw new ArgumentNullException(nameof(assemblyInfoProvider)),

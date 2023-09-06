@@ -19,7 +19,7 @@ using Scar.Common.Messages;
 
 namespace Mémoire.Core.Sync
 {
-    sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
+    public sealed class RepositorySynhronizer<TEntity, TId, TRepository> : IRepositorySynhronizer
         where TRepository : class, IRepository<TEntity, TId>, ITrackedRepository, IFileBasedRepository, IDisposable
         where TEntity : IEntity<TId>, ITrackedEntity
     {
@@ -43,7 +43,7 @@ namespace Mémoire.Core.Sync
             ISyncPostProcessor<TEntity>? syncPostProcessor = null)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ownRepository = ownRepository;
             _localSettingsRepository = localSettingsRepository ?? throw new ArgumentNullException(nameof(localSettingsRepository));
             _syncExtenders = syncExtenders ?? throw new ArgumentNullException(nameof(syncExtenders));
@@ -51,7 +51,7 @@ namespace Mémoire.Core.Sync
             _autofacNamedInstancesFactory = autofacNamedInstancesFactory ?? throw new ArgumentNullException(nameof(autofacNamedInstancesFactory));
             _syncPreProcessor = syncPreProcessor;
             _syncPostProcessor = syncPostProcessor;
-            logger.LogDebug($"Initialized {GetType().Name}");
+            logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
         public string FileName => _ownRepository.DbFileName;
@@ -134,7 +134,7 @@ namespace Mémoire.Core.Sync
                         {
                             if (!await _syncPreProcessor.BeforeEntityChangedAsync(existingEntity!, remoteEntity).ConfigureAwait(true))
                             {
-                                _logger.LogDebug("Preprocessor condition not satisfied for {0}", remoteEntity);
+                                _logger.LogDebug("Preprocessor condition not satisfied for {RemoteEntity}", remoteEntity);
                                 return;
                             }
                         }
@@ -142,12 +142,12 @@ namespace Mémoire.Core.Sync
                         if (insert)
                         {
                             _ownRepository.Insert(remoteEntity, true);
-                            _logger.LogInformation("{0} inserted", remoteEntity);
+                            _logger.LogInformation("{RemoteEntity} inserted", remoteEntity);
                         }
                         else
                         {
                             _ownRepository.Update(remoteEntity, true);
-                            _logger.LogInformation("{0} updated", remoteEntity);
+                            _logger.LogInformation("{RemoteEntity} updated", remoteEntity);
                         }
 
                         if (_syncPostProcessor != null)

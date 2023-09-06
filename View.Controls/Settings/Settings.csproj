@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\AddProcessToBlacklist\AddProcessToBlacklist.csproj" />
+    <ProjectReference Include="..\Grid.Columns\Grid.Columns.csproj" />
+    <ProjectReference Include="..\ProcessesBlacklistColumns\ProcessBlacklistColumns.csproj" />
+  </ItemGroup>
+</Project>

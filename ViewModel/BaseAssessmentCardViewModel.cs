@@ -39,7 +39,7 @@ namespace Mémoire.ViewModel
             AssessmentBatchCardViewModel assessmentBatchCardViewModel) : base(commandManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            logger.LogTrace($"Initializing {GetType().Name}...");
+            logger.LogTrace("Initializing {Type}...", GetType().Name);
             _ = wordImageViewerViewModelFactory ?? throw new ArgumentNullException(nameof(wordImageViewerViewModelFactory));
             _ = assessmentInfoProvider ?? throw new ArgumentNullException(nameof(assessmentInfoProvider));
             _ = learningInfoViewModelFactory ?? throw new ArgumentNullException(nameof(learningInfoViewModelFactory));
@@ -71,7 +71,7 @@ namespace Mémoire.ViewModel
             if (CorrectAnswer.Word.Text.Length > 2)
             {
                 var text = CorrectAnswer.Word.Text;
-                Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(x => '*')) + text[^1];
+                Tooltip = text[0] + string.Join(string.Empty, Enumerable.Range(0, text.Length - 2).Select(_ => '*')) + text[^1];
             }
 
             WordImageViewerViewModel = wordImageViewerViewModelFactory(new WordKey(translationInfo.TranslationEntryKey, assessmentInfo.CorrectAnswer), assessmentInfo.Word.Text, true);
@@ -127,7 +127,7 @@ namespace Mémoire.ViewModel
 
         protected async Task HideControlWithTimeoutAsync(TimeSpan closeTimeout)
         {
-            _logger.LogTrace("Hiding control in {0}...", closeTimeout);
+            _logger.LogTrace("Hiding control in {CloseTimeout}...", closeTimeout);
             IsFocused = false;
             IsHiding = true;
             _assessmentBatchCardViewModel.NotifyChildIsClosing();
@@ -150,7 +150,7 @@ namespace Mémoire.ViewModel
                 return;
             }
 
-            word.Text = "To " + (HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant());
+            word.Text = $"To {(HasUppercaseLettersExceptFirst(word.Text) ? word.Text : word.Text.ToLowerInvariant())}";
         }
 
         async void HandleLearningInfoReceivedAsync(LearningInfo learningInfo)
@@ -161,7 +161,7 @@ namespace Mémoire.ViewModel
                 return;
             }
 
-            _logger.LogDebug("Received {0} from external source", learningInfo);
+            _logger.LogDebug("Received {LearningInfo} from external source", learningInfo);
 
             await Task.Run(() => LearningInfoViewModel.UpdateLearningInfo(learningInfo), CancellationToken.None).ConfigureAwait(true);
         }
@@ -169,7 +169,7 @@ namespace Mémoire.ViewModel
         async void HandleUiLanguageChangedAsync(CultureInfo cultureInfo)
         {
             _ = cultureInfo ?? throw new ArgumentNullException(nameof(cultureInfo));
-            _logger.LogTrace("Changing UI language to {0}...", cultureInfo);
+            _logger.LogTrace("Changing UI language to {CultureInfo}...", cultureInfo);
 
             await Task.Run(
                     () =>

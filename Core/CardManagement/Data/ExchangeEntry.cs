@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Mémoire.Core.CardManagement.Data
 {
-    sealed class ExchangeEntry : IExchangeEntry
+    public sealed class ExchangeEntry : IExchangeEntry
     {
         public ExchangeEntry(TranslationEntry translationEntry, LearningInfo learningInfo)
         {
@@ -13,10 +13,10 @@ namespace Mémoire.Core.CardManagement.Data
             LearningInfo = learningInfo ?? throw new ArgumentNullException(nameof(learningInfo));
         }
 
-        [JsonProperty("LearningInfo", Required = Required.Always)]
+        [JsonProperty(nameof(LearningInfo), Required = Required.Always)]
         public LearningInfo LearningInfo { get; }
 
-        [JsonProperty("TranslationEntry", Required = Required.Always)]
+        [JsonProperty(nameof(TranslationEntry), Required = Required.Always)]
         public TranslationEntry TranslationEntry { get; }
 
         [JsonIgnore]
