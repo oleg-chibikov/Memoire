@@ -327,9 +327,6 @@
   <data name="PauseReasonOperationInProgress" xml:space="preserve">
     <value>Operation in progress</value>
   </data>
-  <data name="PauseReasonCardIsLoading" xml:space="preserve">
-    <value>Assessment cards are loading</value>
-  </data>
   <data name="AddProcessToBlacklist" xml:space="preserve">
     <value>Add process to blacklist</value>
   </data>
@@ -380,6 +377,9 @@
   </data>
   <data name="ClassificationMinimalThreshold" xml:space="preserve">
     <value>Classification Minimal Threshold</value>
+  </data>
+  <data name="CardWindowOpacity" xml:space="preserve">
+    <value>Card Opacity</value>
   </data>
   <data name="UClassify" xml:space="preserve">
     <value>UClassify</value>

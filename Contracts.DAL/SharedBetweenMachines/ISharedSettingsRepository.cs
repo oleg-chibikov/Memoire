@@ -18,6 +18,8 @@ namespace Mémoire.Contracts.DAL.SharedBetweenMachines
 
         bool MuteSounds { get; set; }
 
+        double CardWindowOpacity { get; set; }
+
         VoiceEmotion TtsVoiceEmotion { get; set; }
 
         int CardsToShowAtOnce { get; set; }

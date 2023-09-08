@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.MessageHub;
@@ -16,6 +14,7 @@ using Mémoire.Contracts.Processing;
 using Mémoire.Contracts.Processing.Data;
 using Mémoire.Contracts.View.Card;
 using Microsoft.Extensions.Logging;
+using Scar.Common.Async;
 using Scar.Common.View.Contracts;
 using Scar.Common.View.WindowCreation;
 
@@ -23,11 +22,11 @@ namespace Mémoire.Core.CardManagement
 {
     public sealed class AssessmentCardManager : IAssessmentCardManager, ICardShowTimeProvider, IDisposable
     {
+        readonly ICancellationTokenSourceProvider _cancellationTokenSourceProvider;
         readonly DateTimeOffset _initTime;
         readonly ILearningInfoRepository _learningInfoRepository;
         readonly ILocalSettingsRepository _localSettingsRepository;
         readonly ISharedSettingsRepository _sharedSettingsRepository;
-        readonly object _lockObject = new ();
         readonly IMessageHub _messageHub;
         readonly IPauseManager _pauseManager;
         readonly IScopedWindowProvider _scopedWindowProvider;
@@ -38,7 +37,6 @@ namespace Mémoire.Core.CardManagement
         readonly SynchronizationContext _synchronizationContext;
         readonly IWindowPositionAdjustmentManager _windowPositionAdjustmentManager;
         bool _hasOpenWindows;
-        IDisposable _interval = Disposable.Empty;
 
         public AssessmentCardManager(
             ITranslationEntryRepository translationEntryRepository,
@@ -51,7 +49,8 @@ namespace Mémoire.Core.CardManagement
             IPauseManager pauseManager,
             ISharedSettingsRepository sharedSettingsRepository,
             ILogger<AssessmentCardManager> logger,
-            IWindowPositionAdjustmentManager windowPositionAdjustmentManager)
+            IWindowPositionAdjustmentManager windowPositionAdjustmentManager,
+            ICancellationTokenSourceProvider cancellationTokenSourceProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             logger.LogTrace("Initializing {Type}...", GetType().Name);
@@ -60,6 +59,7 @@ namespace Mémoire.Core.CardManagement
             _sharedSettingsRepository = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _windowPositionAdjustmentManager = windowPositionAdjustmentManager ?? throw new ArgumentNullException(nameof(windowPositionAdjustmentManager));
+            _cancellationTokenSourceProvider = cancellationTokenSourceProvider ?? throw new ArgumentNullException(nameof(cancellationTokenSourceProvider));
             _translationEntryProcessor = translationEntryProcessor ?? throw new ArgumentNullException(nameof(translationEntryProcessor));
             _learningInfoRepository = learningInfoRepository ?? throw new ArgumentNullException(nameof(learningInfoRepository));
             _translationEntryRepository = translationEntryRepository ?? throw new ArgumentNullException(nameof(translationEntryRepository));
@@ -72,11 +72,11 @@ namespace Mémoire.Core.CardManagement
 
             if (!_pauseManager.IsPaused)
             {
-                CreateInterval();
+                ScheduleTask();
             }
 
             _subscriptionTokens.Add(messageHub.Subscribe<TimeSpan>(HandleCardShowFrequencyChanged));
-            _subscriptionTokens.Add(_messageHub.Subscribe<PauseReasonAndState>(HandlePauseReasonChanged));
+            _subscriptionTokens.Add(_messageHub.Subscribe<PauseState>(HandlePauseStateChanged));
             logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
@@ -90,10 +90,22 @@ namespace Mémoire.Core.CardManagement
         {
             get
             {
-                var requiredInterval = CardShowFrequency + _pauseManager.GetPauseInfo(PauseReasons.CardIsVisible).PauseTime;
+                var requiredInterval = CardShowFrequency;
                 var alreadyPassedTime = DateTimeOffset.Now - (LastCardShowTime ?? _initTime);
                 return alreadyPassedTime >= requiredInterval ? TimeSpan.Zero : requiredInterval - alreadyPassedTime;
             }
+        }
+
+        public void Pause(string title)
+        {
+            _pauseManager.PauseActivity(PauseReason.CardIsVisible, title);
+        }
+
+        public void ResetInterval()
+        {
+            _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTimeOffset.Now;
+            ScheduleTask();
+            _pauseManager.ResumeActivity(PauseReason.CardIsVisible);
         }
 
         public void Dispose()
@@ -105,23 +117,36 @@ namespace Mémoire.Core.CardManagement
 
             _subscriptionTokens.Clear();
 
-            lock (_lockObject)
-            {
-                _interval.Dispose();
-            }
+            _cancellationTokenSourceProvider.Cancel();
 
             _logger.LogDebug("Finished showing cards");
         }
 
-        void CreateInterval()
+        void ScheduleTask()
         {
             var delay = TimeLeftToShowCard;
-            _logger.LogDebug("Next card will be shown in: {Delay} (frequency is {CardShowFrequency})", delay, CardShowFrequency);
+            _logger.LogDebug(
+                "Next card will be shown in: {Delay} (frequency is {CardShowFrequency})",
+                delay,
+                CardShowFrequency);
 
-            lock (_lockObject)
+            _cancellationTokenSourceProvider.StartNewTaskAsync(ShowCardAfterDelayAsync);
+        }
+
+        async void ShowCardAfterDelayAsync(CancellationToken cancellationToken)
+        {
+            try
             {
-                _interval.Dispose();
-                _interval = ProvideInterval(delay);
+                await Task.Delay(TimeLeftToShowCard, cancellationToken).ConfigureAwait(true);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                await ShowCardAsync().ConfigureAwait(true);
+            }
+            catch (TaskCanceledException)
+            {
             }
         }
 
@@ -131,65 +156,58 @@ namespace Mémoire.Core.CardManagement
             if (!_pauseManager.IsPaused)
             {
                 _logger.LogTrace("Recreating interval for new frequency {CardShowFrequency}...", newCardShowFrequency);
-                lock (_lockObject)
-                {
-                    CreateInterval();
-                }
+                ScheduleTask();
             }
             else
             {
-                _logger.LogDebug("Skipped recreating interval for new frequency {CardShowFrequency} as it is paused", newCardShowFrequency);
+                _logger.LogDebug(
+                    "Skipped recreating interval for new frequency {CardShowFrequency} as it is paused",
+                    newCardShowFrequency);
             }
         }
 
-        async void HandleIntervalHitAsync(long x)
+        async Task ShowCardAsync()
         {
             // TODO: this should not happen together with app close, otherwise the app may crash.
             _pauseManager.ResetPauseTimes();
-            _pauseManager.PauseActivity(PauseReasons.CardIsLoading);
+
+            Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            _logger.LogTrace("Trying to show next card...");
+
+            if (!_localSettingsRepository.IsActive)
+            {
+                _logger.LogDebug("Skipped showing card due to inactivity");
+                return;
+            }
+
+            if (_hasOpenWindows)
+            {
+                _logger.LogTrace("There is another window opened. Skipping creation...");
+                return;
+            }
+
+            var mostSuitableLearningInfos = _learningInfoRepository
+                .GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
+            if (mostSuitableLearningInfos.Length == 0)
+            {
+                _logger.LogDebug("Skipped showing card due to absence of suitable cards");
+                return;
+            }
+
+            IAsyncEnumerable<TranslationInfo> translationInfos;
             try
             {
-                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-                _logger.LogTrace("Trying to show next card...");
-
-                if (!_localSettingsRepository.IsActive)
-                {
-                    _logger.LogDebug("Skipped showing card due to inactivity");
-                    return;
-                }
-
-                if (_hasOpenWindows)
-                {
-                    _logger.LogTrace("There is another window opened. Skipping creation...");
-                    return;
-                }
-
-                _localSettingsRepository.LastCardShowTime = LastCardShowTime = DateTimeOffset.Now;
-                var mostSuitableLearningInfos = _learningInfoRepository.GetMostSuitable(_sharedSettingsRepository.CardsToShowAtOnce).ToArray();
-                if (mostSuitableLearningInfos.Length == 0)
-                {
-                    _logger.LogDebug("Skipped showing card due to absence of suitable cards");
-                    return;
-                }
-
-                IAsyncEnumerable<TranslationInfo> translationInfos;
-                try
-                {
-                    translationInfos = GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    // If the word cannot be found in DB // TODO: additional handling? get it from somewhere
-                    _messageHub.Publish(ex);
-                    return;
-                }
-
-                await CreateAndShowWindowAsync(await translationInfos.ToArrayAsync().ConfigureAwait(true)).ConfigureAwait(true);
+                translationInfos = GetTranslationInfosForAllWordsAsync(mostSuitableLearningInfos);
             }
-            finally
+            catch (InvalidOperationException ex)
             {
-                _pauseManager.ResumeActivity(PauseReasons.CardIsLoading);
+                // If the word cannot be found in DB // TODO: additional handling? get it from somewhere
+                _messageHub.Publish(ex);
+                return;
             }
+
+            await CreateAndShowWindowAsync(await translationInfos.ToArrayAsync().ConfigureAwait(true))
+                .ConfigureAwait(true);
         }
 
         async Task CreateAndShowWindowAsync(IReadOnlyCollection<TranslationInfo> translationInfos)
@@ -232,24 +250,16 @@ namespace Mémoire.Core.CardManagement
             _messageHub.Publish(learningInfo);
         }
 
-        void HandlePauseReasonChanged(PauseReasonAndState pauseReasonAndState)
+        void HandlePauseStateChanged(PauseState pauseState)
         {
-            if (pauseReasonAndState.IsPaused)
+            if (pauseState.IsPaused)
             {
-                lock (_lockObject)
-                {
-                    _interval.Dispose();
-                }
+                _cancellationTokenSourceProvider.Cancel();
             }
             else
             {
-                CreateInterval();
+                ScheduleTask();
             }
-        }
-
-        IDisposable ProvideInterval(TimeSpan delay)
-        {
-            return Observable.Timer(delay, CardShowFrequency).Subscribe(HandleIntervalHitAsync);
         }
 
         void Window_Closed(object? sender, EventArgs e)

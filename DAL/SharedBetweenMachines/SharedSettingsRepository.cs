@@ -66,6 +66,12 @@ namespace Mémoire.DAL.SharedBetweenMachines
             set => RemoveUpdateOrInsert(nameof(ClassificationMinimalThreshold), value);
         }
 
+        public double CardWindowOpacity
+        {
+            get => TryGetValue(nameof(CardWindowOpacity), 0.9D);
+            set => RemoveUpdateOrInsert(nameof(CardWindowOpacity), value);
+        }
+
         public ApiKeys ApiKeys
         {
             get => TryGetValue(nameof(ApiKeys), ApiKeys.CreateDefault());

@@ -76,6 +76,7 @@
     <commonConverters:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
     <commonConverters:PercentageIntToDoubleConverter x:Key="PercentageIntToDoubleConverter" />
     <commonConverters:DoubleToTextTimeSpanConverter x:Key="DoubleToTextTimeSpanConverter" />
+    <commonConverters:DoubleToPercentageConverter x:Key="DoubleToPercentageConverter" />
     <commonConverters:FilePathToIconImageSourceConverter x:Key="FilePathToIconImageSourceConverter" />
 
     <converters:RepeatTypeConverter x:Key="RepeatTypeConverter" />

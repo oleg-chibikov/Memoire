@@ -19,6 +19,7 @@
     Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="Manual"
+    InitialOpacity="{Binding Opacity, Mode=OneTime}"
     mc:Ignorable="d">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Closed">

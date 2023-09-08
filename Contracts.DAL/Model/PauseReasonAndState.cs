@@ -1,15 +1,12 @@
 namespace Mémoire.Contracts.DAL.Model
 {
-    public sealed class PauseReasonAndState
+    public sealed class PauseReasonAndState : PauseState
     {
-        public PauseReasonAndState(PauseReasons pauseReason, bool isPaused)
+        public PauseReasonAndState(PauseReason pauseReason, bool isPaused) : base(isPaused)
         {
             PauseReason = pauseReason;
-            IsPaused = isPaused;
         }
 
-        public PauseReasons PauseReason { get; }
-
-        public bool IsPaused { get; }
+        public PauseReason PauseReason { get; }
     }
 }

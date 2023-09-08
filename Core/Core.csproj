@@ -13,12 +13,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Management" Version="7.0.2" />
-    <PackageReference Include="System.Reactive.Linq" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\ApplicationLifetime\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Sync\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\Async\Async.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\Autocomplete.Contracts\Autocomplete.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\AutofacInstantiation\AutofacInstantiation.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Common\NetStandard\Various\IO\IO.csproj" />

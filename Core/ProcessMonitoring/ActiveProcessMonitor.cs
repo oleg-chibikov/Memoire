@@ -87,11 +87,11 @@ namespace Mémoire.Core.ProcessMonitoring
 
             if (blacklistedProcesses?.Select(processInfo => processInfo.Name).Contains(process.ProcessName, StringComparer.OrdinalIgnoreCase) == true)
             {
-                _pauseManager.PauseActivity(PauseReasons.ActiveProcessBlacklisted, process.ProcessName);
+                _pauseManager.PauseActivity(PauseReason.ActiveProcessBlacklisted, process.ProcessName);
             }
             else
             {
-                _pauseManager.ResumeActivity(PauseReasons.ActiveProcessBlacklisted);
+                _pauseManager.ResumeActivity(PauseReason.ActiveProcessBlacklisted);
             }
         }
 

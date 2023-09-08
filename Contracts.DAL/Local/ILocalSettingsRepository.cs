@@ -24,11 +24,11 @@ namespace Mémoire.Contracts.DAL.Local
 
         string UiLanguage { get; set; }
 
-        void AddOrUpdatePauseInfo(PauseReasons pauseReasons, PauseInfoSummary? pauseInfo);
+        void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoSummary? pauseInfo);
 
         void AddOrUpdateSyncTime(string repository, DateTimeOffset syncTime);
 
-        PauseInfoSummary GetPauseInfo(PauseReasons pauseReasons);
+        PauseInfoSummary GetPauseInfo(PauseReason pauseReason);
 
         DateTimeOffset GetSyncTime(string repository);
     }

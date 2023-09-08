@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Mémoire.Contracts;
+using Mémoire.Contracts.CardManagement;
 using Mémoire.Contracts.DAL.Model;
+using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
@@ -15,22 +16,25 @@ namespace Mémoire.ViewModel
     [AddINotifyPropertyChangedInterface]
     public sealed class AssessmentBatchCardViewModel : BaseViewModel
     {
-        readonly IPauseManager _pauseManager;
+        readonly IAssessmentCardManager _assessmentCardManager;
         int _notAnsweredCount;
 
         public AssessmentBatchCardViewModel(
             ILogger<AssessmentBatchCardViewModel> logger,
+            ISharedSettingsRepository sharedSettingsRepository,
             ICommandManager commandManager,
             IReadOnlyCollection<TranslationInfo> translationInfos,
             Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentTextInputCardViewModel> assessmentTextInputCardViewModelFactory,
             Func<TranslationInfo, AssessmentBatchCardViewModel, AssessmentViewOnlyCardViewModel> assessmentViewOnlyCardViewModelFactory,
-            IPauseManager pauseManager) : base(commandManager)
+            IAssessmentCardManager assessmentCardManager) : base(commandManager)
         {
+            _ = sharedSettingsRepository ?? throw new ArgumentNullException(nameof(sharedSettingsRepository));
             _ = logger ?? throw new ArgumentNullException(nameof(logger));
             logger.LogTrace("Initializing {Type}...", GetType().Name);
+            _ = assessmentCardManager ?? throw new ArgumentNullException(nameof(assessmentCardManager));
             _ = assessmentTextInputCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentTextInputCardViewModelFactory));
             _ = assessmentViewOnlyCardViewModelFactory ?? throw new ArgumentNullException(nameof(assessmentViewOnlyCardViewModelFactory));
-            _pauseManager = pauseManager ?? throw new ArgumentNullException(nameof(pauseManager));
+            _assessmentCardManager = assessmentCardManager;
             _ = translationInfos ?? throw new ArgumentNullException(nameof(translationInfos));
 
             Title = string.Join(", ", translationInfos.Select(x => x.TranslationEntryKey.ToString()));
@@ -52,8 +56,11 @@ namespace Mémoire.ViewModel
                     })
                 .ToArray();
             NestedViewModels.First().IsFocused = true;
+            Opacity = sharedSettingsRepository.CardWindowOpacity;
             logger.LogDebug("Initialized {Type}", GetType().Name);
         }
+
+        public double Opacity { get; }
 
         public IReadOnlyCollection<BaseAssessmentCardViewModel> NestedViewModels { get; }
 
@@ -73,7 +80,7 @@ namespace Mémoire.ViewModel
 
         public void NotifyChildIsClosing()
         {
-            var firstOtherChild = NestedViewModels.OfType<IFocusableViewModel>().FirstOrDefault(x => !x.IsFocused && !x.IsHidden && !x.IsHiding);
+            var firstOtherChild = NestedViewModels.OfType<IFocusableViewModel>().FirstOrDefault(x => !x.IsFocused && x is { IsHidden: false, IsHiding: false });
             if (firstOtherChild != null)
             {
                 firstOtherChild.IsFocused = true;
@@ -112,12 +119,13 @@ namespace Mémoire.ViewModel
 
         void WindowContentRendered()
         {
-            _pauseManager.PauseActivity(PauseReasons.CardIsVisible, Title);
+            _assessmentCardManager.Pause(Title);
         }
 
         void WindowClosed()
         {
-            _pauseManager.ResumeActivity(PauseReasons.CardIsVisible);
+            // Setting the card show time as when the card was closed.
+            _assessmentCardManager.ResetInterval();
         }
     }
 }

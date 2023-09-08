@@ -92,6 +92,7 @@ namespace Mémoire.ViewModel
             SolveQwantCaptcha = _sharedSettingsRepository.SolveQwantCaptcha;
             MuteSounds = _sharedSettingsRepository.MuteSounds;
             CardsToShowAtOnce = _sharedSettingsRepository.CardsToShowAtOnce;
+            CardWindowOpacity = _sharedSettingsRepository.CardWindowOpacity;
             ClassificationMinimalThreshold = (int)(_sharedSettingsRepository.ClassificationMinimalThreshold * 100);
             ApiKeys = _sharedSettingsRepository.ApiKeys;
             CardProbabilitySettings = _sharedSettingsRepository.CardProbabilitySettings;
@@ -154,6 +155,8 @@ namespace Mémoire.ViewModel
 
         public int ClassificationMinimalThreshold { get; set; }
 
+        public double CardWindowOpacity { get; set; }
+
         public ApiKeys ApiKeys { get; set; }
 
         public CardProbabilitySettings CardProbabilitySettings { get; set; }
@@ -189,7 +192,7 @@ namespace Mémoire.ViewModel
         void BeginProgress()
         {
             ProgressState = ProgressState.Normal;
-            _pauseManager.PauseActivity(PauseReasons.OperationInProgress);
+            _pauseManager.PauseActivity(PauseReason.OperationInProgress);
             ProgressDescription = "Calculating...";
             Progress = 0;
         }
@@ -216,7 +219,7 @@ namespace Mémoire.ViewModel
         void EndProgress()
         {
             ProgressState = ProgressState.None;
-            _pauseManager.ResumeActivity(PauseReasons.OperationInProgress);
+            _pauseManager.ResumeActivity(PauseReason.OperationInProgress);
         }
 
         async Task ExportAsync()
@@ -260,6 +263,12 @@ namespace Mémoire.ViewModel
             if (_sharedSettingsRepository.CardsToShowAtOnce != CardsToShowAtOnce)
             {
                 _sharedSettingsRepository.CardsToShowAtOnce = CardsToShowAtOnce;
+            }
+
+            if (_sharedSettingsRepository.CardWindowOpacity != CardWindowOpacity)
+            {
+                // ReSharper disable once PossibleLossOfFraction
+                _sharedSettingsRepository.CardWindowOpacity = CardWindowOpacity;
             }
 
             if ((int)(_sharedSettingsRepository.ClassificationMinimalThreshold * 100) != ClassificationMinimalThreshold)

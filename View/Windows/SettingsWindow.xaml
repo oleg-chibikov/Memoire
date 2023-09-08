@@ -70,6 +70,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="220" />
@@ -229,26 +230,42 @@
                     TickPlacement="BottomRight"
                     ToolTip="{Binding Value, RelativeSource={RelativeSource Self}, Mode=OneWay}"
                     Value="{Binding ClassificationMinimalThreshold, Mode=TwoWay}" />
-                <settings:ApiKeysControl
+                <TextBlock
                     Grid.Row="9"
+                    Grid.Column="0"
+                    Text="{lex:Loc CardWindowOpacity}" />
+                <Slider
+                    Grid.Row="9"
+                    Grid.Column="1"
+                    AutoToolTipPlacement="None"
+                    AutoToolTipPrecision="2"
+                    IsSnapToTickEnabled="True"
+                    Maximum="1"
+                    Minimum="0.1"
+                    TickFrequency="0.1"
+                    TickPlacement="BottomRight"
+                    ToolTip="{Binding Value, Converter={StaticResource DoubleToPercentageConverter}, RelativeSource={RelativeSource Self}, Mode=OneWay}"
+                    Value="{Binding CardWindowOpacity, Mode=TwoWay}" />
+                <settings:ApiKeysControl
+                    Grid.Row="10"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     DataContext="{Binding ApiKeys, Mode=OneTime}" />
                 <settings:CardProbabilitySettingsControl
-                    Grid.Row="10"
+                    Grid.Row="11"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     DataContext="{Binding CardProbabilitySettings, Mode=OneTime}" />
                 <TextBlock
-                    Grid.Row="11"
+                    Grid.Row="12"
                     Grid.Column="0"
                     Text="{lex:Loc ProcessesBlacklist}" />
                 <settings:ProcessesBlacklistControl
-                    Grid.Row="11"
+                    Grid.Row="12"
                     Grid.Column="1"
                     DataContext="{Binding ProcessBlacklistViewModel, Mode=OneTime}" />
                 <StackPanel
-                    Grid.Row="12"
+                    Grid.Row="13"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     commonView:MarginSetter.Margin="{StaticResource CommonMargin}"

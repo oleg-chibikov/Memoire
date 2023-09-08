@@ -381,6 +381,9 @@
   <data name="ClassificationMinimalThreshold" xml:space="preserve">
     <value>Мин. порог классификации</value>
   </data>
+  <data name="CardWindowOpacity" xml:space="preserve">
+    <value>Непрозрачность карточки</value>
+  </data>
   <data name="UClassify" xml:space="preserve">
     <value>UClassify</value>
   </data>

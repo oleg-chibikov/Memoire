@@ -66,7 +66,7 @@ namespace Mémoire.ViewModel
 
             if (Accepted == true)
             {
-                _logger.LogInformation("Answer is correct. Most suitable accepted word was {MostSuitable} with distance {CurrentMinDistance}. Increasing repeat type for {LearningInfo}...", mostSuitable, currentMinDistance, learningInfo);
+                _logger.LogInformation("Answer {ProvidedAnswer} is correct. Most suitable accepted word was {MostSuitable} with distance {CurrentMinDistance}. Increasing repeat type for {LearningInfo}...", ProvidedAnswer, mostSuitable, currentMinDistance, learningInfo);
                 learningInfo.IncreaseRepeatType();
 
                 // The inputted answer can differ from the first one
@@ -75,7 +75,7 @@ namespace Mémoire.ViewModel
             }
             else
             {
-                _logger.LogInformation("Answer is not correct. Decreasing repeat type for {LearningInfo}...", learningInfo);
+                _logger.LogInformation("Answer {ProvidedAnswer} is not correct. Most suitable word was {MostSuitable}. Decreasing repeat type for {LearningInfo}...", ProvidedAnswer, mostSuitable, learningInfo);
                 Accepted = false;
                 learningInfo.DecreaseRepeatType();
                 closeTimeout = AppSettings.AssessmentCardFailureCloseTimeout;

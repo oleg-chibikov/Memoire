@@ -6,14 +6,14 @@ namespace Mémoire.Contracts
     {
         bool IsPaused { get; }
 
-        PauseInfoSummary GetPauseInfo(PauseReasons pauseReasons);
+        PauseInfoSummary GetPauseInfo(PauseReason pauseReason);
 
         string? GetPauseReasons();
 
-        void PauseActivity(PauseReasons pauseReasons, string? description = null);
+        void PauseActivity(PauseReason pauseReason, string? description = null);
 
         void ResetPauseTimes();
 
-        void ResumeActivity(PauseReasons pauseReasons);
+        void ResumeActivity(PauseReason pauseReason);
     }
 }

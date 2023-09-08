@@ -184,7 +184,7 @@ namespace Mémoire.ViewModel
                 $"{Texts.NextCardShowTime}: {provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture)}";
             CardShowFrequency =
                 $"{Texts.CardShowFrequency}: {provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
-            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReasons.CardIsVisible).PauseTime;
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReason.CardIsVisible).PauseTime;
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : $"{Texts.CardVisiblePauseTime}: {cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
         }
 
@@ -258,11 +258,11 @@ namespace Mémoire.ViewModel
             _logger.LogInformation("New state is {IsActive}", IsActive);
             if (IsActive)
             {
-                _pauseManager.ResumeActivity(Contracts.DAL.Model.PauseReasons.InactiveMode);
+                _pauseManager.ResumeActivity(Contracts.DAL.Model.PauseReason.InactiveMode);
             }
             else
             {
-                _pauseManager.PauseActivity(Contracts.DAL.Model.PauseReasons.InactiveMode);
+                _pauseManager.PauseActivity(Contracts.DAL.Model.PauseReason.InactiveMode);
             }
         }
 

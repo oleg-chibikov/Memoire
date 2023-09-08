@@ -19,7 +19,7 @@ namespace Mémoire.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Texts {
@@ -165,6 +165,15 @@ namespace Mémoire.Resources {
         public static string CardVisiblePauseTime {
             get {
                 return ResourceManager.GetString("CardVisiblePauseTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card Opacity.
+        /// </summary>
+        public static string CardWindowOpacity {
+            get {
+                return ResourceManager.GetString("CardWindowOpacity", resourceCulture);
             }
         }
         
@@ -579,15 +588,6 @@ namespace Mémoire.Resources {
         public static string PauseReasonActiveProcessBlacklisted {
             get {
                 return ResourceManager.GetString("PauseReasonActiveProcessBlacklisted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Assessment cards are loading.
-        /// </summary>
-        public static string PauseReasonCardIsLoading {
-            get {
-                return ResourceManager.GetString("PauseReasonCardIsLoading", resourceCulture);
             }
         }
         

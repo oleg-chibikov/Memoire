@@ -88,9 +88,9 @@ namespace Mémoire.DAL.Local
             set => RemoveUpdateOrInsert(nameof(UiLanguage), value);
         }
 
-        public void AddOrUpdatePauseInfo(PauseReasons pauseReasons, PauseInfoSummary? pauseInfo)
+        public void AddOrUpdatePauseInfo(PauseReason pauseReason, PauseInfoSummary? pauseInfo)
         {
-            RemoveUpdateOrInsert(PauseTimeKey + pauseReasons, pauseInfo);
+            RemoveUpdateOrInsert(PauseTimeKey + pauseReason, pauseInfo);
         }
 
         public void AddOrUpdateSyncTime(string repository, DateTimeOffset syncTime)
@@ -98,9 +98,9 @@ namespace Mémoire.DAL.Local
             RemoveUpdateOrInsert(SyncTimeKey + repository, syncTime);
         }
 
-        public PauseInfoSummary GetPauseInfo(PauseReasons pauseReasons)
+        public PauseInfoSummary GetPauseInfo(PauseReason pauseReason)
         {
-            return TryGetValue(PauseTimeKey + pauseReasons, () => new PauseInfoSummary());
+            return TryGetValue(PauseTimeKey + pauseReason, () => new PauseInfoSummary());
         }
 
         public DateTimeOffset GetSyncTime(string repository)
