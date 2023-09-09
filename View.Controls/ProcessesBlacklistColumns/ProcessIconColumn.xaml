@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:view="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:model="clr-namespace:Mémoire.Contracts.DAL.Model;assembly=Mémoire.Contracts.DAL"
     d:DataContext="{d:DesignInstance d:Type=model:ProcessInfo}"
     lex:LocalizeDictionary.DesignCulture="en"

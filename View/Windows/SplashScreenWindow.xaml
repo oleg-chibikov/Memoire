@@ -2,7 +2,6 @@
     x:Class="Mémoire.View.Windows.SplashScreenWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:commonView="clr-namespace:Scar.Common.WPF.View.Core;assembly=Scar.Common.WPF.View.Core"
     xmlns:customWindow="clr-namespace:Scar.Common.WPF.View.CustomWindow;assembly=Scar.Common.WPF.View.CustomWindow"
     Background="Transparent"
     ShowInTaskbar="False"
