@@ -16,9 +16,6 @@
             <b:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <ItemsControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>
             <Border

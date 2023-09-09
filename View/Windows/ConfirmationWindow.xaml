@@ -16,9 +16,6 @@
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Closed">
             <b:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />

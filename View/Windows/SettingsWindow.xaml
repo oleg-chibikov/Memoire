@@ -30,12 +30,7 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <customWindow:AnimatedWindow.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
     </customWindow:AnimatedWindow.Resources>
     <customWindow:AnimatedWindow.TaskbarItemInfo>
         <TaskbarItemInfo

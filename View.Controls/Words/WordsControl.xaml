@@ -9,9 +9,6 @@
     x:Name="Control"
     mc:Ignorable="d"
     FontSize="{StaticResource MediumFontSize}">
-    <ItemsControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </ItemsControl.Resources>
     <ItemsControl.ItemTemplate>
         <DataTemplate>
             <word:WordControl

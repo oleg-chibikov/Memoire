@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,6 +23,8 @@ using Scar.Common.Messages;
 using Scar.Common.WebApi;
 using Scar.Common.WPF.View.WindowCreation;
 using Serilog;
+using WPFLocalizeExtension.Engine;
+using WPFLocalizeExtension.Providers;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -59,6 +62,12 @@ namespace Mémoire.Launcher
             },
             newInstanceHandling: NewInstanceHandling.Restart)
         {
+            ((ResxLocalizationProvider)LocalizeDictionary.Instance.DefaultProvider).SearchCultures =
+                new List<CultureInfo>()
+                {
+                    CultureInfo.GetCultureInfo("ru-RU"),
+                    CultureInfo.GetCultureInfo("en-US"),
+                };
             InitializeComponent();
             var staThreadWindowDisplayer = new StaThreadWindowDisplayer();
             var executeInSplashScreenWindowContext = staThreadWindowDisplayer.DisplayWindow(() => new SplashScreenWindow());

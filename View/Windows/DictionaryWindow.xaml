@@ -28,9 +28,6 @@
     SizeToContent="Manual"
     WindowState="Normal"
     mc:Ignorable="d">
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
     <!--  Allow Resize  -->
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />

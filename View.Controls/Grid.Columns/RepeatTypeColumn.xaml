@@ -18,9 +18,6 @@
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
-            <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-            </DataTemplate.Resources>
             <TextBlock d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}" Text="{Binding LearningInfoViewModel.RepeatType, Converter={StaticResource RepeatTypeConverter}, Mode=OneWay}" />
         </DataTemplate>
     </DataGridTemplateColumn.CellTemplate>

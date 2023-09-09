@@ -16,9 +16,6 @@
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
-            <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-            </DataTemplate.Resources>
             <StackPanel
                 d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
                 view:MarginSetter.Margin="{StaticResource CommonMargin}"

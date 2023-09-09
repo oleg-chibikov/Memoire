@@ -14,9 +14,6 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d">
-    <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </commonView:BaseControl.Resources>
     <Expander
         Foreground="{StaticResource MoreExamplesTargetForeground}"
         IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}"

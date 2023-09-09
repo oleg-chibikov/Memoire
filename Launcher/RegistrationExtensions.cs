@@ -98,7 +98,7 @@ namespace Mémoire.Launcher
         public static ContainerBuilder RegisterViewModels(this ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(typeof(AssessmentTextInputCardViewModel).Assembly)
-                .Where(x => !x.Name.Contains("ProcessedByFody", StringComparison.CurrentCultureIgnoreCase)).AsSelf()
+                .Where(x => !x.Name.Contains("ProcessedByFody", StringComparison.OrdinalIgnoreCase)).AsSelf()
                 .InstancePerDependency();
 
             return builder;

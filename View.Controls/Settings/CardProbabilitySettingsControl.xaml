@@ -14,12 +14,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Slider.xaml" />
     </commonView:BaseControl.Resources>
     <Expander
         Margin="0"

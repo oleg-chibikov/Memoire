@@ -14,6 +14,7 @@ using Mémoire.Resources;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
 using Scar.Common.ApplicationLifetime.Contracts;
+using Scar.Common.Localization;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 using Scar.Common.View.WindowCreation;
@@ -44,6 +45,7 @@ namespace Mémoire.ViewModel
         bool _isToolTipOpened;
 
         public TrayViewModel(
+            ICultureManager cultureManager,
             ILocalSettingsRepository localSettingsRepository,
             ILogger<TrayViewModel> logger,
             IWindowFactory<IAddTranslationWindow> addTranslationWindowFactory,
@@ -59,6 +61,7 @@ namespace Mémoire.ViewModel
             IApplicationTerminator applicationTerminator,
             Func<ILoadingWindow> loadingWindowFactory) : base(commandManager)
         {
+            _ = cultureManager ?? throw new ArgumentNullException(nameof(cultureManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             logger.LogTrace("Initializing {Type}...", GetType().Name);
             _cardShowTimeProviderFactory = cardShowTimeProviderFactory ?? throw new ArgumentNullException(nameof(cardShowTimeProviderFactory));
@@ -73,6 +76,8 @@ namespace Mémoire.ViewModel
             _synchronizationContext = synchronizationContext ?? throw new ArgumentNullException(nameof(synchronizationContext));
             _applicationTerminator = applicationTerminator ?? throw new ArgumentNullException(nameof(applicationTerminator));
             _loadingWindowFactory = loadingWindowFactory ?? throw new ArgumentNullException(nameof(loadingWindowFactory));
+
+            cultureManager.ChangeCulture(CultureInfo.GetCultureInfo(_localSettingsRepository.UiLanguage));
 
             IsLoading = true;
             AddTranslationCommand = AddCommand(AddTranslationAsync);
@@ -184,7 +189,7 @@ namespace Mémoire.ViewModel
                 $"{Texts.NextCardShowTime}: {provider.NextCardShowTime.ToLocalTime().ToString(DateTimeFormat, CultureInfo.InvariantCulture)}";
             CardShowFrequency =
                 $"{Texts.CardShowFrequency}: {provider.CardShowFrequency.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
-            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(Contracts.DAL.Model.PauseReason.CardIsVisible).PauseTime;
+            var cardVisiblePauseTime = _pauseManager.GetPauseInfo(PauseReason.CardIsVisible).PauseTime;
             CardVisiblePauseTime = cardVisiblePauseTime == TimeSpan.Zero ? null : $"{Texts.CardVisiblePauseTime}: {cardVisiblePauseTime.ToString(TimeSpanFormat, CultureInfo.InvariantCulture)}";
         }
 
@@ -258,11 +263,11 @@ namespace Mémoire.ViewModel
             _logger.LogInformation("New state is {IsActive}", IsActive);
             if (IsActive)
             {
-                _pauseManager.ResumeActivity(Contracts.DAL.Model.PauseReason.InactiveMode);
+                _pauseManager.ResumeActivity(PauseReason.InactiveMode);
             }
             else
             {
-                _pauseManager.PauseActivity(Contracts.DAL.Model.PauseReason.InactiveMode);
+                _pauseManager.PauseActivity(PauseReason.InactiveMode);
             }
         }
 

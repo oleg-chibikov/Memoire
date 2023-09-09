@@ -15,9 +15,6 @@
                                      IsDesignTimeCreatable=False}"
     Style="{StaticResource Control}"
     mc:Ignorable="d">
-    <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </commonView:BaseControl.Resources>
     <!--  OneWay bindings are used instead of OneTime as the whole underlying viewmodel might be exchanged  -->
     <Grid
         Margin="5"

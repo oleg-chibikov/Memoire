@@ -18,9 +18,6 @@
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
-            <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-            </DataTemplate.Resources>
             <TextBlock
                 VerticalAlignment="Center"
                 Foreground="{Binding LearningInfoViewModel.NextCardShowTime, Converter={StaticResource DateTimeToBrushConverter}, Mode=OneWay}"

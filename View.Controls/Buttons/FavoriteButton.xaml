@@ -12,9 +12,6 @@
     Command="{Binding FavoriteCommand, Mode=OneTime}"
     ToolTip="{lex:Loc Favorite}"
     mc:Ignorable="d">
-    <Button.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </Button.Resources>
     <Button.Style>
         <StaticResource ResourceKey="ImageButton" />
     </Button.Style>

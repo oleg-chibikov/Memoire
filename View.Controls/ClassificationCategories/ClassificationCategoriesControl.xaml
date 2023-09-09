@@ -21,9 +21,6 @@
     ItemsSource="{Binding ClassificationCategories, Mode=OneWay}"
     Visibility="{Binding ClassificationCategories, Mode=OneWay, Converter={StaticResource CollectionToVisibilityConverter}}"
     mc:Ignorable="d">
-    <ItemsControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </ItemsControl.Resources>
     <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
             <WrapPanel />

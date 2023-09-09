@@ -20,9 +20,6 @@
     engine:ResxLocalizationProvider.DefaultDictionary="Texts"
     Style="{StaticResource Control}"
     mc:Ignorable="d">
-    <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </commonView:BaseControl.Resources>
     <StackPanel
         Margin="5"
         commonView:MarginSetter.Margin="{StaticResource CommonMargin}"

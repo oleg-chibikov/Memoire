@@ -22,9 +22,6 @@
     Visibility="Hidden"
     WindowState="Minimized"
     mc:Ignorable="d">
-    <Window.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </Window.Resources>
     <Grid>
         <tb:TaskbarIcon
             DoubleClickCommand="{Binding ShowDictionaryCommand, Mode=OneTime}"

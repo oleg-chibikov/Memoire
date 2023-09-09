@@ -80,7 +80,7 @@ namespace Mémoire.DAL.Local
                     () =>
                     {
                         var uiLanguage = Thread.CurrentThread.CurrentUICulture.Name;
-                        var newUiLanguage = (uiLanguage == LanguageConstants.EnLanguage) || (uiLanguage == LanguageConstants.RuLanguage) ? uiLanguage : LanguageConstants.EnLanguage;
+                        var newUiLanguage = uiLanguage is LanguageConstants.EnLanguage or LanguageConstants.RuLanguage ? uiLanguage : LanguageConstants.EnLanguage;
 
                         RemoveUpdateOrInsert(nameof(UiLanguage), newUiLanguage);
                         return newUiLanguage;

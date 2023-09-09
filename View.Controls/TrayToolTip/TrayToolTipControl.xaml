@@ -15,12 +15,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d">
     <commonView:BaseControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/Scar.Common.WPF.Controls.Styles;component/Spinner.xaml" />
     </commonView:BaseControl.Resources>
     <Border
         Padding="15"

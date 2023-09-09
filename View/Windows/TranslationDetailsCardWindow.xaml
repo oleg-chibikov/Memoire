@@ -16,7 +16,4 @@
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
     <translationDetails:TranslationDetailsCardControl />
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
 </customWindow:AnimatedWindow>

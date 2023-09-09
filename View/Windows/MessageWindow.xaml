@@ -25,9 +25,6 @@
     Topmost="True"
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
     <Border
         Padding="10"
         Background="{Binding Message.Type, Mode=OneTime, Converter={StaticResource MessageTypeToBackgroundBrushConverter}}"

@@ -29,8 +29,5 @@
             <b:InvokeCommandAction Command="{Binding WindowContentRenderedCommand, Mode=OneTime}" />
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
     <assessmentCardBatch:AssessmentCardBatchControl ItemsSource="{Binding NestedViewModels, Mode=OneWay}" />
 </customWindow:AnimatedWindow>

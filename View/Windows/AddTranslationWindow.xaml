@@ -24,7 +24,4 @@
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
     <grid:AddTranslationControl VerticalAlignment="Center" VerticalContentAlignment="Center" />
-    <customWindow:AnimatedWindow.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </customWindow:AnimatedWindow.Resources>
 </customWindow:AnimatedWindow>

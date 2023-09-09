@@ -17,9 +17,6 @@
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     mc:Ignorable="d">
-    <commonView:BaseControl.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </commonView:BaseControl.Resources>
     <Grid commonView:MarginSetter.Margin="{StaticResource CommonMargin}" commonView:MarginSetter.Orientation="Horizontal">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

@@ -15,9 +15,6 @@
     ToolTip="{lex:Loc Demote}"
     Visibility="{Binding CanDemote, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
     mc:Ignorable="d">
-    <Button.Resources>
-        <commonView:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-    </Button.Resources>
     <Button.Style>
         <StaticResource ResourceKey="ImageButton" />
     </Button.Style>

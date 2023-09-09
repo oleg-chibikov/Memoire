@@ -18,9 +18,6 @@
     mc:Ignorable="d">
     <DataGridTemplateColumn.CellTemplate>
         <DataTemplate>
-            <DataTemplate.Resources>
-                <view:DesignTimeResourceDictionary Source="pack://application:,,,/Mémoire.View.Resources;component/DesignTimeResources.xaml" />
-            </DataTemplate.Resources>
             <word:WordControl
                 HorizontalAlignment="Stretch"
                 d:DataContext="{d:DesignInstance d:Type=viewModel:TranslationEntryViewModel}"
