@@ -8,7 +8,7 @@
     xmlns:viewModel="clr-namespace:Mémoire.ViewModel;assembly=Mémoire.ViewModel"
     xmlns:assessmentCard="clr-namespace:Mémoire.View.Controls.AssessmentCard;assembly=Mémoire.View.Controls.AssessmentCard"
     d:DataContext="{d:DesignInstance viewModel:AssessmentBatchCardViewModel}"
-    AlternationCount="100"
+    AlternationCount="2"
     mc:Ignorable="d">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Closed">
@@ -18,9 +18,9 @@
     <ItemsControl.ItemTemplate>
         <DataTemplate>
             <Border
+                x:Name="CardContainer"
                 Margin="0,5"
                 Padding="{StaticResource CommonMarginThickness}"
-                Background="{StaticResource Background}"
                 BorderBrush="{StaticResource AssessmentCardBorderBrush}"
                 BorderThickness="1">
                 <ContentControl Content="{Binding Mode=OneTime}">
@@ -36,11 +36,21 @@
                     </ContentControl.Resources>
                 </ContentControl>
             </Border>
+            <DataTemplate.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="{StaticResource DarkerBackground}" TargetName="CardContainer"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="{StaticResource Background}" TargetName="CardContainer"/>
+                </Trigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
     </ItemsControl.ItemTemplate>
-    <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-            <VirtualizingStackPanel Orientation="Vertical" />
-        </ItemsPanelTemplate>
-    </ItemsControl.ItemsPanel>
+    <ItemsControl.Template>
+        <ControlTemplate>
+            <ScrollViewer HorizontalAlignment="Stretch">
+                <ItemsPresenter />
+            </ScrollViewer>
+        </ControlTemplate>
+    </ItemsControl.Template>
 </ItemsControl>

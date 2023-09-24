@@ -8,6 +8,7 @@ using Mémoire.Contracts.DAL.SharedBetweenMachines;
 using Mémoire.Contracts.Processing.Data;
 using Microsoft.Extensions.Logging;
 using PropertyChanged;
+using Scar.Common;
 using Scar.Common.MVVM.Commands;
 using Scar.Common.MVVM.ViewModel;
 
@@ -57,8 +58,14 @@ namespace Mémoire.ViewModel
                 .ToArray();
             NestedViewModels.First().IsFocused = true;
             Opacity = sharedSettingsRepository.CardWindowOpacity;
+            NestedViewModels.OfType<AssessmentViewOnlyCardViewModel>().ForEach(assessmentViewOnlyCardViewModel =>
+            {
+                assessmentViewOnlyCardViewModel.IsExpandedChanged += AssessmentViewOnlyCardViewModel_IsExpandedChanged;
+            });
             logger.LogDebug("Initialized {Type}", GetType().Name);
         }
+
+        public bool IsExpanded { get; set; }
 
         public double Opacity { get; }
 
@@ -87,6 +94,19 @@ namespace Mémoire.ViewModel
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                NestedViewModels.OfType<AssessmentViewOnlyCardViewModel>().ForEach(assessmentViewOnlyCardViewModel =>
+                {
+                    assessmentViewOnlyCardViewModel.IsExpandedChanged -=
+                        AssessmentViewOnlyCardViewModel_IsExpandedChanged;
+                });
+            }
+        }
+
         static bool ShouldUserInputTextForTranslation(RepeatType repeatType)
         {
             switch (repeatType)
@@ -94,27 +114,32 @@ namespace Mémoire.ViewModel
                 case RepeatType.Elementary:
                 case RepeatType.Beginner:
                 case RepeatType.Novice:
-                {
-                    return false;
-                }
+                    {
+                        return false;
+                    }
 
                 case RepeatType.PreIntermediate:
                 case RepeatType.Intermediate:
                 case RepeatType.UpperIntermediate:
-                {
-                    return false;
-                }
+                    {
+                        return false;
+                    }
 
                 case RepeatType.Advanced:
                 case RepeatType.Proficiency:
                 case RepeatType.Expert:
-                {
-                    return true;
-                }
+                    {
+                        return true;
+                    }
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(repeatType));
             }
+        }
+
+        void AssessmentViewOnlyCardViewModel_IsExpandedChanged(object? sender, EventArgs e)
+        {
+            IsExpanded = NestedViewModels.OfType<AssessmentViewOnlyCardViewModel>().Any(x => x.IsExpanded);
         }
 
         void WindowContentRendered()

@@ -223,7 +223,7 @@ namespace Mémoire.Core.CardManagement
             _synchronizationContext.Send(
                 _ =>
                 {
-                    _windowPositionAdjustmentManager.AdjustAnyWindowPosition(window);
+                    _windowPositionAdjustmentManager.AdjustAssessmentWindowPosition(window);
                     window.Restore();
                 },
                 null);

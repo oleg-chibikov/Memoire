@@ -20,7 +20,7 @@
     <Border
         Margin="0,5"
         Padding="{StaticResource CommonMarginThickness}"
-        Background="{StaticResource LighterBackground}"
+        Background="{StaticResource TranslationVariantBackground}"
         BorderBrush="{StaticResource BorderColor}"
         BorderThickness="1"
         CornerRadius="0">

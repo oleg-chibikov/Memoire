@@ -236,8 +236,8 @@
                     AutoToolTipPrecision="2"
                     IsSnapToTickEnabled="True"
                     Maximum="1"
-                    Minimum="0.1"
-                    TickFrequency="0.1"
+                    Minimum="0.5"
+                    TickFrequency="0.01"
                     TickPlacement="BottomRight"
                     ToolTip="{Binding Value, Converter={StaticResource DoubleToPercentageConverter}, RelativeSource={RelativeSource Self}, Mode=OneWay}"
                     Value="{Binding CardWindowOpacity, Mode=TwoWay}" />

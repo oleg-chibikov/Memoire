@@ -17,9 +17,12 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Texts"
     Icon="pack://application:,,/Mémoire.View;component/Images/IconAlt.ico"
     SizeToContent="WidthAndHeight"
+    ResizeMode="NoResize"
     WindowStartupLocation="Manual"
     InitialOpacity="{Binding Opacity, Mode=OneTime}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    MaxHeight="800"
+    MaxWidth="1000">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Closed">
             <b:InvokeCommandAction Command="{Binding WindowClosedCommand, Mode=OneTime}" />

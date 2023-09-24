@@ -53,7 +53,8 @@
     <Color x:Key="PriorityTranslationBackground">MediumSeaGreen</Color>
     <Brush x:Key="HasManualTranslationsForeground">MediumSeaGreen</Brush>
     <Brush x:Key="TranslationDetailsExpanderBorder">DarkGoldenrod</Brush>
-    <Brush x:Key="TranslationDetailsExpanderBackground">DarkSlateGray</Brush>
+    <Brush x:Key="TranslationDetailsExpanderBackground">#FF2B4141</Brush>
+    <Brush x:Key="TranslationVariantBackground">#FF294C4C</Brush>
 
     <system:Double x:Key="CommonMargin">5</system:Double>
     <Thickness x:Key="CommonMarginThickness">5</Thickness>
@@ -82,6 +83,7 @@
     <converters:RepeatTypeConverter x:Key="RepeatTypeConverter" />
     <converters:ExampleReferenceConverter x:Key="ExampleReferenceConverter" />
     <converters:DateTimeToBrushConverter x:Key="DateTimeToBrushConverter" />
+    <converters:BoolToResizeModeConverter x:Key="BoolToResizeModeConverter" />
     <converters:WordConcatConverter x:Key="WordConcatConverter" />
     <converters:PartOfSpeechToVisibilityConverter x:Key="PartOfSpeechToVisibilityConverter" />
     <converters:PriorityWordViewModelToVisibilityConverter x:Key="PriorityWordViewModelToVisibilityConverter" />

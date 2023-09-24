@@ -12,7 +12,7 @@
     lex:LocalizeDictionary.DesignCulture="en"
     lex:LocalizeDictionary.OutputMissingKeys="True"
     lex:ResxLocalizationProvider.DefaultAssembly="Mémoire.Resources"
-    lex:ResxLocalizationProvider.DefaultDictionary="Texts"
+    lex:ResxLocalizationProvider.DefaultDictionary="Texts" HorizontalAlignment="Stretch"
     mc:Ignorable="d">
     <Expander
         Foreground="{StaticResource MoreExamplesTargetForeground}"
@@ -21,7 +21,12 @@
         <Expander.Header>
             <TextBlock Style="{StaticResource ExpanderHeader}" Text="{lex:Loc MoreExamples}" />
         </Expander.Header>
-        <ScrollViewer MaxHeight="130" Margin="{StaticResource CommonMarginThickness}">
+        <ScrollViewer
+            VerticalScrollBarVisibility="Auto" 
+            HorizontalScrollBarVisibility="Disabled" 
+            HorizontalAlignment="Stretch"
+            MaxHeight="250"
+            Margin="{StaticResource CommonMarginThickness}">
             <ItemsControl ItemsSource="{Binding ExtendedExamples, Mode=OneWay}" Visibility="{Binding ExtendedExamples, Mode=OneWay, Converter={StaticResource CollectionToVisibilityConverter}}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -33,17 +38,17 @@
                             Cursor="{Binding Reference.ImdbLink, Mode=OneTime, Converter={StaticResource StringToCursorConverter}}"
                             ToolTip="{Binding Reference, Converter={StaticResource ExampleReferenceConverter}}"
                             ToolTipService.Placement="Mouse">
-                            <ScrollViewer MaxWidth="800" Margin="{StaticResource CommonMarginThickness}">
+                            <Border Margin="{StaticResource CommonMarginThickness}">
                                 <StackPanel commonView:MarginSetter.Margin="{StaticResource CommonMargin}" Orientation="Vertical">
-                                    <TextBlock commonView:TextBlockExtensions.FormattedText="{Binding SourceText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesSourceForeground}" />
-                                    <TextBlock commonView:TextBlockExtensions.FormattedText="{Binding TargetText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesTargetForeground}" />
+                                    <TextBlock TextWrapping="Wrap" commonView:TextBlockExtensions.FormattedText="{Binding SourceText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesSourceForeground}" />
+                                    <TextBlock TextWrapping="Wrap" commonView:TextBlockExtensions.FormattedText="{Binding TargetText, Mode=OneTime, Converter={StaticResource TextToSpanConverter}}" Foreground="{StaticResource MoreExamplesTargetForeground}" />
                                     <b:Interaction.Triggers>
                                         <b:EventTrigger EventName="MouseDown">
                                             <b:InvokeCommandAction Command="{Binding DataContext.OpenImdbLinkCommand, RelativeSource={RelativeSource AncestorType=commonView:BaseControl}, Mode=OneTime}" CommandParameter="{Binding Reference.ImdbLink, Mode=OneTime}" />
                                         </b:EventTrigger>
                                     </b:Interaction.Triggers>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </Border>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

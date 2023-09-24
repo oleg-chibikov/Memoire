@@ -57,6 +57,8 @@ namespace Mémoire.ViewModel
             logger.LogDebug("Initialized {Type}", GetType().Name);
         }
 
+        public event EventHandler? IsExpandedChanged;
+
         public TranslationDetailsCardViewModel? TranslationDetailsCardViewModel { get; private set; }
 
         public bool IsExpanded
@@ -65,6 +67,7 @@ namespace Mémoire.ViewModel
             set
             {
                 _isExpanded = value;
+                IsExpandedChanged?.Invoke(this, EventArgs.Empty);
                 if (value && TranslationDetailsCardViewModel == null)
                 {
                     _loadDetailsViewModel();

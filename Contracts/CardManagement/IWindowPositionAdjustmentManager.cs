@@ -4,7 +4,7 @@ namespace Mémoire.Contracts.CardManagement
 {
     public interface IWindowPositionAdjustmentManager
     {
-        void AdjustAnyWindowPosition(IDisplayable window);
+        void AdjustAssessmentWindowPosition(IDisplayable window);
 
         void AdjustDetailsCardWindowPosition(IDisplayable window);
 

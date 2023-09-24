@@ -8,14 +8,14 @@ namespace Mémoire.Windows.Common
 {
     public sealed class WindowPositionAdjustmentManager : IWindowPositionAdjustmentManager
     {
-        public void AdjustAnyWindowPosition(IDisplayable window)
+        public void AdjustAssessmentWindowPosition(IDisplayable window)
         {
             if (window is not IWindow wpfWindow)
             {
                 return;
             }
 
-            wpfWindow.Draggable = false;
+            wpfWindow.Draggable = true;
             wpfWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             if (wpfWindow.AdvancedWindowStartupLocation == AdvancedWindowStartupLocation.Default)
             {
